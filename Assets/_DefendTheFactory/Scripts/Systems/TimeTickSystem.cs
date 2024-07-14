@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CodeMonkey;
 
-public static class TimeTickSystem {
+public class TimeTickSystem {
 
     public class OnTickEventArgs : EventArgs {
         public int tick;
@@ -18,7 +18,7 @@ public static class TimeTickSystem {
     private static GameObject timeTickSystemGameObject;
     private static int tick;
 
-    public static void Create() {
+    public TimeTickSystem() {
         if (timeTickSystemGameObject == null) {
             timeTickSystemGameObject = new GameObject("TimeTickSystem");
             timeTickSystemGameObject.AddComponent<TimeTickSystemObject>();

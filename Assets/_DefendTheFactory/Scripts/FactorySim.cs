@@ -9,8 +9,8 @@ public class FactorySim : MonoBehaviour {
     int height = 50;
 
     private void Start() {
-        TimeTickSystem.Create();
-        BeltManager.Create();
+        new TimeTickSystem();
+        new BeltManager();
         new BuildingSystem(width, height);
         TilemapVisual.Instance.Init(width, height);
 

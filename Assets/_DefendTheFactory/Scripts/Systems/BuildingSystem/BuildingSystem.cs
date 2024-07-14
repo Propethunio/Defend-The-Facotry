@@ -40,7 +40,8 @@ public class BuildingSystem {
         if(Input.GetMouseButtonDown(0) && placedObjectTypeSO != null && !MyUtils.IsPointerOverUI()) {
             if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
 
-            grid.GetXZ(mousePosition, out int x, out int z);
+            int x = Mathf.FloorToInt(mousePosition.x);
+            int z = Mathf.FloorToInt(mousePosition.z);
 
             Vector2Int placedObjectOrigin = new Vector2Int(x, z);
             if(TryPlaceObject(placedObjectOrigin, placedObjectTypeSO, dir, out PlacedObject placedObject)) {
@@ -57,7 +58,8 @@ public class BuildingSystem {
         if(Input.GetMouseButton(0) && placedObjectTypeSO == GameAssets.i.placedObjectTypeSO_Refs.conveyorBelt && !MyUtils.IsPointerOverUI()) {
             if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
 
-            grid.GetXZ(mousePosition, out int x, out int z);
+            int x = Mathf.FloorToInt(mousePosition.x);
+            int z = Mathf.FloorToInt(mousePosition.z);
 
             Vector2Int placedObjectOrigin = new Vector2Int(x, z);
             TryPlaceObject(placedObjectOrigin, placedObjectTypeSO, dir, out PlacedObject placedObject);
@@ -91,14 +93,18 @@ public class BuildingSystem {
     private void HandleDemolish() {
         if(isDemolishActive && Input.GetMouseButtonDown(0) && !MyUtils.IsPointerOverUI()) {
             if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
-            PlacedObject placedObject = grid.GetGridObject(mousePosition).placedObject;
+
+            int x = Mathf.FloorToInt(mousePosition.x);
+            int z = Mathf.FloorToInt(mousePosition.z);
+
+            PlacedObject placedObject = grid.gridArray[x, z].placedObject;
             if(placedObject != null) {
                 // Demolish
                 placedObject.DestroySelf();
 
                 List<Vector2Int> gridPositionList = placedObject.GetGridPositionList();
                 foreach(Vector2Int gridPosition in gridPositionList) {
-                    grid.GetGridObject(gridPosition.x, gridPosition.y).ClearPlacedObject();
+                    grid.gridArray[gridPosition.x, gridPosition.y].ClearPlacedObject();
                 }
             }
         }
@@ -109,7 +115,7 @@ public class BuildingSystem {
             for(int y = 0; y < grid.height; y++) {
                 // Tilemap
                 TilemapVisual.Instance.SetTilemapSprite(new Vector3(x, y),
-                    grid.GetGridObject(x, y).placedObject == null ?
+                    grid.gridArray[x, y].placedObject == null ?
                     TilemapSprite.CanBuild :
                     TilemapSprite.CannotBuild);
             }
@@ -147,12 +153,12 @@ public class BuildingSystem {
         List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
         bool canBuild = true;
         foreach(Vector2Int gridPosition in gridPositionList) {
-            if(!grid.IsValidGridPositionWithPadding(gridPosition)) {
+            if(grid.gridArray[gridPosition.x, gridPosition.y] != null) {
                 // Not valid
                 canBuild = false;
                 break;
             }
-            if(grid.GetGridObject(gridPosition.x, gridPosition.y).placedObject != null) {
+            if(grid.gridArray[gridPosition.x, gridPosition.y].placedObject != null) {
                 canBuild = false;
                 break;
             }
@@ -160,12 +166,12 @@ public class BuildingSystem {
 
         if(canBuild) {
             Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
-            Vector3 placedObjectWorldPosition = grid.GetWorldPosition(placedObjectOrigin.x, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
+            Vector3 placedObjectWorldPosition = new Vector3(placedObjectOrigin.x, 0, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
 
             placedObject = PlacedObject.Create(placedObjectWorldPosition, placedObjectOrigin, dir, placedObjectTypeSO);
 
             foreach(Vector2Int gridPosition in gridPositionList) {
-                grid.GetGridObject(gridPosition.x, gridPosition.y).SetPlacedObject(placedObject);
+                grid.gridArray[gridPosition.x, gridPosition.y].SetPlacedObject(placedObject);
             }
 
             placedObject.GridSetupDone();
@@ -181,34 +187,39 @@ public class BuildingSystem {
     }
 
     public Vector2Int GetGridPosition(Vector3 worldPosition) {
-        grid.GetXZ(worldPosition, out int x, out int z);
+        int x = Mathf.FloorToInt(worldPosition.x);
+        int z = Mathf.FloorToInt(worldPosition.z);
         return new Vector2Int(x, z);
     }
 
     public Vector3 GetWorldPosition(Vector2Int gridPosition) {
-        return grid.GetWorldPosition(gridPosition.x, gridPosition.y);
+        return new Vector3(gridPosition.x, 0, gridPosition.y);
     }
 
     public GridCell GetGridObject(Vector2Int gridPosition) {
-        return grid.GetGridObject(gridPosition.x, gridPosition.y);
+        return grid.gridArray[gridPosition.x, gridPosition.y];
     }
 
     public GridCell GetGridObject(Vector3 worldPosition) {
-        return grid.GetGridObject(worldPosition);
+
+        int x = Mathf.FloorToInt(worldPosition.x);
+        int z = Mathf.FloorToInt(worldPosition.z);
+        return grid.gridArray[x, z];
     }
 
     public bool IsValidGridPosition(Vector2Int gridPosition) {
-        return grid.IsValidGridPosition(gridPosition);
+        return grid.gridArray[gridPosition.x, gridPosition.y] != null;
     }
 
     public Vector3 GetMouseWorldSnappedPosition() {
         if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return Vector3.zero;
 
-        grid.GetXZ(mousePosition, out int x, out int z);
+        int x = Mathf.FloorToInt(mousePosition.x);
+        int z = Mathf.FloorToInt(mousePosition.z);
 
         if(placedObjectTypeSO != null) {
             Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
-            Vector3 placedObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
+            Vector3 placedObjectWorldPosition = new Vector3(x, 0, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
             return placedObjectWorldPosition;
         } else {
             return mousePosition;

@@ -69,7 +69,11 @@ public class TilemapVisual : MonoBehaviour {
     }
 
     public void SetTilemapSprite(Vector3 worldPosition, TilemapSprite tilemapSprite) {
-        TilemapCell tilemapCell = grid.GetGridObject(worldPosition);
+
+        int x = Mathf.FloorToInt(worldPosition.x);
+        int z = Mathf.FloorToInt(worldPosition.z);
+
+        TilemapCell tilemapCell = grid.gridArray[x, z];
         if(tilemapCell != null) {
             tilemapCell.SetTilemapSprite(tilemapSprite);
         }
@@ -86,7 +90,7 @@ public class TilemapVisual : MonoBehaviour {
             for(int y = 0; y < grid.height; y++) {
                 int index = x * grid.height + y;
                 Vector3 quadSize = new Vector3(1, 1);
-                TilemapCell gridObject = grid.GetGridObject(x, y);
+                TilemapCell gridObject = grid.gridArray[x, y];
                 TilemapSprite tilemapSprite = gridObject.tilemapSprite;
                 Vector2 gridUV00, gridUV11;
 
@@ -99,7 +103,7 @@ public class TilemapVisual : MonoBehaviour {
                     gridUV00 = uvCoords.uv00;
                     gridUV11 = uvCoords.uv11;
                 }
-                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, grid.GetWorldPosition(x, y) + quadSize * .5f, 0f, quadSize, gridUV00, gridUV11);
+                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, new Vector3(x, 0, y) + quadSize * .5f, 0f, quadSize, gridUV00, gridUV11);
             }
         }
 

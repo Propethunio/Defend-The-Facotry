@@ -13,12 +13,6 @@ public class BeltManager {
 
     public static BeltManager Instance { get; private set; }
 
-    public static void Create() {
-        new BeltManager();
-    }
-
-
-
     public event EventHandler OnBeltAdded;
     public event EventHandler OnBeltRemoved;
 
@@ -27,7 +21,7 @@ public class BeltManager {
 
     private List<BeltPath> beltPathList;
 
-    private BeltManager() {
+    public BeltManager() {
         Instance = this;
 
         fullBeltList = new List<ConveyorBelt>();

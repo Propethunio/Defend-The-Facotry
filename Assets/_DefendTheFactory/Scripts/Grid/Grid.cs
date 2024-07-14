@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 public class Grid<GridObject> {
 
@@ -25,64 +24,7 @@ public class Grid<GridObject> {
         }
     }
 
-    public Vector3 GetWorldPosition(int x, int y) {
-        return new Vector3(x, 0, y);
-    }
-
-    public void GetXZ(Vector3 worldPosition, out int x, out int y) {
-        x = Mathf.FloorToInt(worldPosition.x);
-        y = Mathf.FloorToInt(worldPosition.y);
-    }
-
-    public void SetGridObject(int x, int y, GridObject value) {
-        if(x >= 0 && y >= 0 && x < width && y < height) {
-            gridArray[x, y] = value;
-            TriggerGridObjectChanged(x, y);
-        }
-    }
-
     public void TriggerGridObjectChanged(int x, int y) {
         OnGridObjectChanged?.Invoke(this, new OnGridObjectChangedEventArgs { x = x, y = y });
-    }
-
-    public void SetGridObject(Vector3 worldPosition, GridObject value) {
-        GetXZ(worldPosition, out int x, out int y);
-        SetGridObject(x, y, value);
-    }
-
-    public GridObject GetGridObject(int x, int y) {
-        if(x >= 0 && y >= 0 && x < width && y < height) {
-            return gridArray[x, y];
-        } else {
-            return default(GridObject);
-        }
-    }
-
-    public GridObject GetGridObject(Vector3 worldPosition) {
-        GetXZ(worldPosition, out int x, out int y);
-        return GetGridObject(x, y);
-    }
-
-    public bool IsValidGridPosition(Vector2Int gridPosition) {
-        int x = gridPosition.x;
-        int y = gridPosition.y;
-
-        if(x >= 0 && y >= 0 && x < width && y < height) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public bool IsValidGridPositionWithPadding(Vector2Int gridPosition) {
-        Vector2Int padding = new Vector2Int(2, 2);
-        int x = gridPosition.x;
-        int y = gridPosition.y;
-
-        if(x >= padding.x && y >= padding.y && x < width - padding.x && y < height - padding.y) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }
