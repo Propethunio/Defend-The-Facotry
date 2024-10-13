@@ -2,6 +2,34 @@
     "name": "InputMap",
     "maps": [
         {
+            "name": "MenuInput",
+            "id": "d4469d69-1bff-454a-960e-5fabf12c3b10",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "a91786a7-399f-4408-aab7-ae335e26064a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1469250c-42ac-4b0c-a896-77baab839bcb",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "GameInput",
             "id": "de2a862b-8eb6-4a30-bce5-04f2f7ae26bb",
             "actions": [
@@ -117,6 +145,15 @@
                     "name": "BuildingRotation",
                     "type": "Button",
                     "id": "e5f4af99-4657-4f38-8387-9a54f1021317",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "ddad131a-f331-4b42-a0cc-00460005bea2",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -420,32 +457,15 @@
                     "action": "ScrollClick",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "MenuInput",
-            "id": "d4469d69-1bff-454a-960e-5fabf12c3b10",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "a91786a7-399f-4408-aab7-ae335e26064a",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "1469250c-42ac-4b0c-a896-77baab839bcb",
-                    "path": "",
+                    "id": "df0b14cd-30c7-47d9-950c-ed0fe0cb9a72",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Back",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

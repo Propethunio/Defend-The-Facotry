@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TilemapVisual : MonoBehaviour {
@@ -32,11 +31,9 @@ public class TilemapVisual : MonoBehaviour {
 
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-
         Texture texture = GetComponent<MeshRenderer>().material.mainTexture;
         float textureWidth = texture.width;
         float textureHeight = texture.height;
-
         uvCoordsDictionary = new Dictionary<TilemapSprite, UVCoords>();
 
         foreach(TilemapSpriteUV tilemapSpriteUV in tilemapSpriteUVArray) {
@@ -48,6 +45,7 @@ public class TilemapVisual : MonoBehaviour {
     }
 
     void LateUpdate() {
+        updateMesh = true;
         if(updateMesh) {
             updateMesh = false;
             UpdateHeatMapVisual();
@@ -69,11 +67,10 @@ public class TilemapVisual : MonoBehaviour {
     }
 
     public void SetTilemapSprite(Vector3 worldPosition, TilemapSprite tilemapSprite) {
-
         int x = Mathf.FloorToInt(worldPosition.x);
-        int z = Mathf.FloorToInt(worldPosition.z);
+        int y = Mathf.FloorToInt(worldPosition.y);
+        TilemapCell tilemapCell = grid.gridArray[x, y];
 
-        TilemapCell tilemapCell = grid.gridArray[x, z];
         if(tilemapCell != null) {
             tilemapCell.SetTilemapSprite(tilemapSprite);
         }
@@ -103,7 +100,7 @@ public class TilemapVisual : MonoBehaviour {
                     gridUV00 = uvCoords.uv00;
                     gridUV11 = uvCoords.uv11;
                 }
-                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, new Vector3(x, 0, y) + quadSize * .5f, 0f, quadSize, gridUV00, gridUV11);
+                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, new Vector3(x, y) + quadSize * .5f, 0f, quadSize, gridUV00, gridUV11);
             }
         }
 

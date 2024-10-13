@@ -24,6 +24,34 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     ""name"": ""InputMap"",
     ""maps"": [
         {
+            ""name"": ""MenuInput"",
+            ""id"": ""d4469d69-1bff-454a-960e-5fabf12c3b10"",
+            ""actions"": [
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""a91786a7-399f-4408-aab7-ae335e26064a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1469250c-42ac-4b0c-a896-77baab839bcb"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""GameInput"",
             ""id"": ""de2a862b-8eb6-4a30-bce5-04f2f7ae26bb"",
             ""actions"": [
@@ -139,6 +167,15 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""name"": ""BuildingRotation"",
                     ""type"": ""Button"",
                     ""id"": ""e5f4af99-4657-4f38-8387-9a54f1021317"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Back"",
+                    ""type"": ""Button"",
+                    ""id"": ""ddad131a-f331-4b42-a0cc-00460005bea2"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -442,32 +479,15 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""action"": ""ScrollClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""MenuInput"",
-            ""id"": ""d4469d69-1bff-454a-960e-5fabf12c3b10"",
-            ""actions"": [
-                {
-                    ""name"": ""New action"",
-                    ""type"": ""Button"",
-                    ""id"": ""a91786a7-399f-4408-aab7-ae335e26064a"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
+                },
                 {
                     ""name"": """",
-                    ""id"": ""1469250c-42ac-4b0c-a896-77baab839bcb"",
-                    ""path"": """",
+                    ""id"": ""df0b14cd-30c7-47d9-950c-ed0fe0cb9a72"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Back"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -476,6 +496,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     ],
     ""controlSchemes"": []
 }");
+        // MenuInput
+        m_MenuInput = asset.FindActionMap("MenuInput", throwIfNotFound: true);
+        m_MenuInput_Newaction = m_MenuInput.FindAction("New action", throwIfNotFound: true);
         // GameInput
         m_GameInput = asset.FindActionMap("GameInput", throwIfNotFound: true);
         m_GameInput_CameraMovement = m_GameInput.FindAction("CameraMovement", throwIfNotFound: true);
@@ -491,9 +514,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         m_GameInput_TimeExtraFast = m_GameInput.FindAction("TimeExtraFast", throwIfNotFound: true);
         m_GameInput_BuildingMenu = m_GameInput.FindAction("BuildingMenu", throwIfNotFound: true);
         m_GameInput_BuildingRotation = m_GameInput.FindAction("BuildingRotation", throwIfNotFound: true);
-        // MenuInput
-        m_MenuInput = asset.FindActionMap("MenuInput", throwIfNotFound: true);
-        m_MenuInput_Newaction = m_MenuInput.FindAction("New action", throwIfNotFound: true);
+        m_GameInput_Back = m_GameInput.FindAction("Back", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -552,6 +573,52 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
+    // MenuInput
+    private readonly InputActionMap m_MenuInput;
+    private List<IMenuInputActions> m_MenuInputActionsCallbackInterfaces = new List<IMenuInputActions>();
+    private readonly InputAction m_MenuInput_Newaction;
+    public struct MenuInputActions
+    {
+        private @InputMap m_Wrapper;
+        public MenuInputActions(@InputMap wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Newaction => m_Wrapper.m_MenuInput_Newaction;
+        public InputActionMap Get() { return m_Wrapper.m_MenuInput; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MenuInputActions set) { return set.Get(); }
+        public void AddCallbacks(IMenuInputActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MenuInputActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MenuInputActionsCallbackInterfaces.Add(instance);
+            @Newaction.started += instance.OnNewaction;
+            @Newaction.performed += instance.OnNewaction;
+            @Newaction.canceled += instance.OnNewaction;
+        }
+
+        private void UnregisterCallbacks(IMenuInputActions instance)
+        {
+            @Newaction.started -= instance.OnNewaction;
+            @Newaction.performed -= instance.OnNewaction;
+            @Newaction.canceled -= instance.OnNewaction;
+        }
+
+        public void RemoveCallbacks(IMenuInputActions instance)
+        {
+            if (m_Wrapper.m_MenuInputActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMenuInputActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MenuInputActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MenuInputActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MenuInputActions @MenuInput => new MenuInputActions(this);
+
     // GameInput
     private readonly InputActionMap m_GameInput;
     private List<IGameInputActions> m_GameInputActionsCallbackInterfaces = new List<IGameInputActions>();
@@ -568,6 +635,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_GameInput_TimeExtraFast;
     private readonly InputAction m_GameInput_BuildingMenu;
     private readonly InputAction m_GameInput_BuildingRotation;
+    private readonly InputAction m_GameInput_Back;
     public struct GameInputActions
     {
         private @InputMap m_Wrapper;
@@ -585,6 +653,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         public InputAction @TimeExtraFast => m_Wrapper.m_GameInput_TimeExtraFast;
         public InputAction @BuildingMenu => m_Wrapper.m_GameInput_BuildingMenu;
         public InputAction @BuildingRotation => m_Wrapper.m_GameInput_BuildingRotation;
+        public InputAction @Back => m_Wrapper.m_GameInput_Back;
         public InputActionMap Get() { return m_Wrapper.m_GameInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -633,6 +702,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @BuildingRotation.started += instance.OnBuildingRotation;
             @BuildingRotation.performed += instance.OnBuildingRotation;
             @BuildingRotation.canceled += instance.OnBuildingRotation;
+            @Back.started += instance.OnBack;
+            @Back.performed += instance.OnBack;
+            @Back.canceled += instance.OnBack;
         }
 
         private void UnregisterCallbacks(IGameInputActions instance)
@@ -676,6 +748,9 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             @BuildingRotation.started -= instance.OnBuildingRotation;
             @BuildingRotation.performed -= instance.OnBuildingRotation;
             @BuildingRotation.canceled -= instance.OnBuildingRotation;
+            @Back.started -= instance.OnBack;
+            @Back.performed -= instance.OnBack;
+            @Back.canceled -= instance.OnBack;
         }
 
         public void RemoveCallbacks(IGameInputActions instance)
@@ -693,52 +768,10 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         }
     }
     public GameInputActions @GameInput => new GameInputActions(this);
-
-    // MenuInput
-    private readonly InputActionMap m_MenuInput;
-    private List<IMenuInputActions> m_MenuInputActionsCallbackInterfaces = new List<IMenuInputActions>();
-    private readonly InputAction m_MenuInput_Newaction;
-    public struct MenuInputActions
+    public interface IMenuInputActions
     {
-        private @InputMap m_Wrapper;
-        public MenuInputActions(@InputMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_MenuInput_Newaction;
-        public InputActionMap Get() { return m_Wrapper.m_MenuInput; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(MenuInputActions set) { return set.Get(); }
-        public void AddCallbacks(IMenuInputActions instance)
-        {
-            if (instance == null || m_Wrapper.m_MenuInputActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_MenuInputActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
-        }
-
-        private void UnregisterCallbacks(IMenuInputActions instance)
-        {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
-        }
-
-        public void RemoveCallbacks(IMenuInputActions instance)
-        {
-            if (m_Wrapper.m_MenuInputActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IMenuInputActions instance)
-        {
-            foreach (var item in m_Wrapper.m_MenuInputActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_MenuInputActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
+        void OnNewaction(InputAction.CallbackContext context);
     }
-    public MenuInputActions @MenuInput => new MenuInputActions(this);
     public interface IGameInputActions
     {
         void OnCameraMovement(InputAction.CallbackContext context);
@@ -754,9 +787,6 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         void OnTimeExtraFast(InputAction.CallbackContext context);
         void OnBuildingMenu(InputAction.CallbackContext context);
         void OnBuildingRotation(InputAction.CallbackContext context);
-    }
-    public interface IMenuInputActions
-    {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnBack(InputAction.CallbackContext context);
     }
 }

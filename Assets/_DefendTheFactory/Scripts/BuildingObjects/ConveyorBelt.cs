@@ -4,21 +4,28 @@ using UnityEngine;
 
 public class ConveyorBelt : PlacedObject, IWorldItemSlot {
 
-    private Vector2Int previousPosition;
-    private Vector2Int gridPosition;
-    private Vector2Int nextPosition;
-
-    private WorldItem worldItem;
+    Vector2Int previousPosition;
+    Vector2Int nextPosition;
+    WorldItem worldItem;
+    bool isPartOfBuilding;
 
     protected override void Setup() {
-        gridPosition = origin;
-
         previousPosition = origin + PlacedObjectTypeSO.GetDirForwardVector(dir) * -1;
         nextPosition = origin + PlacedObjectTypeSO.GetDirForwardVector(dir);
     }
 
     public override void GridSetupDone() {
         BeltManager.Instance.AddBelt(this);
+    }
+
+    public void SetupBuildingBelt(Vector2Int origin, PlacedObjectTypeSO.Dir dir) {
+        Debug.Log(origin);
+        isPartOfBuilding = true;
+        this.origin = origin;
+        this.dir = dir;
+        Setup();
+        BuildingSystem.Instance.AddGhostBeltToGrid(origin, this);
+        GridSetupDone();
     }
 
     public void ItemResetHasAlreadyMoved() {

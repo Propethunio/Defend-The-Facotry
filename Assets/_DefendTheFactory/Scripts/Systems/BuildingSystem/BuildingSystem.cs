@@ -10,15 +10,60 @@ public class BuildingSystem {
     public event EventHandler OnSelectedChanged;
     public event EventHandler OnObjectPlaced;
 
+    [SerializeField] PlacedObjectTypeSO ghostBelt;
+
     public Grid<GridCell> grid { get; private set; }
+
     PlacedObjectTypeSO placedObjectTypeSO;
     PlacedObjectTypeSO.Dir dir;
-
+    InputManager inputManager;
+    bool isBuildingSystemActive;
     bool isDemolishActive;
 
     public BuildingSystem(int width, int height) {
-        Instance = this;
+        if(Instance == null) Instance = this;
+        else return;
         grid = new Grid<GridCell>(width, height, (Grid<GridCell> g, int x, int y) => new GridCell(x, y));
+        inputManager = InputManager.Instance;
+    }
+
+    public void Test(PlacedObjectTypeSO test) {
+        EnableBuildingSystem();
+        SetSelectedPlacedObject(test);
+    }
+
+    void EnableBuildingSystem() {
+        if(isBuildingSystemActive) return;
+        else {
+            isBuildingSystemActive = true;
+            TilemapVisual.Instance.Show();
+            Subscribe();
+        }
+    }
+
+    void DisableBuildingSystem() {
+        if(!isBuildingSystemActive) return;
+        else {
+            placedObjectTypeSO = null;
+            isBuildingSystemActive = false;
+            isDemolishActive = false;
+            TilemapVisual.Instance.Hide();
+            Unsubscribe();
+        }
+    }
+
+    void Subscribe() {
+        inputManager.leftClickAction += HandleObjectPlacement;
+        inputManager.buildingRotationAction += HandleDirRotation;
+        inputManager.rightClickPerformedAction += DisableBuildingSystem;
+        inputManager.backClickAction += DisableBuildingSystem;
+    }
+
+    void Unsubscribe() {
+        inputManager.leftClickAction -= HandleObjectPlacement;
+        inputManager.buildingRotationAction -= HandleDirRotation;
+        inputManager.rightClickPerformedAction -= DisableBuildingSystem;
+        inputManager.backClickAction -= DisableBuildingSystem;
     }
 
     void Update() {
@@ -26,9 +71,8 @@ public class BuildingSystem {
             // Placing a belt, place in a line
             HandleBeltPlacement();
         } else {
-            HandleNormalObjectPlacement();
+            HandleObjectPlacement();
         }
-        HandleDirRotation();
         HandleDemolish();
 
         if(Input.GetMouseButtonDown(1)) {
@@ -36,20 +80,12 @@ public class BuildingSystem {
         }
     }
 
-    void HandleNormalObjectPlacement() {
-        if(Input.GetMouseButtonDown(0) && placedObjectTypeSO != null && !MyUtils.IsPointerOverUI()) {
-            if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
-
+    void HandleObjectPlacement() {
+        if(!MyUtils.IsPointerOverUI() && Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) {
             int x = Mathf.FloorToInt(mousePosition.x);
             int z = Mathf.FloorToInt(mousePosition.z);
-
             Vector2Int placedObjectOrigin = new Vector2Int(x, z);
-            if(TryPlaceObject(placedObjectOrigin, placedObjectTypeSO, dir, out PlacedObject placedObject)) {
-                // Object placed
-            } else {
-                // Error!
-                //UtilsClass.CreateWorldTextPopup("Cannot Build Here!", mousePosition);
-            }
+            TryPlaceObject(placedObjectOrigin);
         }
     }
 
@@ -62,7 +98,7 @@ public class BuildingSystem {
             int z = Mathf.FloorToInt(mousePosition.z);
 
             Vector2Int placedObjectOrigin = new Vector2Int(x, z);
-            TryPlaceObject(placedObjectOrigin, placedObjectTypeSO, dir, out PlacedObject placedObject);
+            //TryPlaceObject(placedObjectOrigin, placedObjectTypeSO, dir);
 
             // ###### TODO: PLACE BELTS IN A LINE
             /*
@@ -84,10 +120,8 @@ public class BuildingSystem {
         }
     }
 
-    private void HandleDirRotation() {
-        if(Input.GetKeyDown(KeyCode.R)) {
-            dir = PlacedObjectTypeSO.GetNextDir(dir);
-        }
+    void HandleDirRotation() {
+        dir = PlacedObjectTypeSO.GetNextDir(dir);
     }
 
     private void HandleDemolish() {
@@ -124,6 +158,7 @@ public class BuildingSystem {
 
     public void DeselectObjectType() {
         placedObjectTypeSO = null;
+
         isDemolishActive = false;
         RefreshSelectedObjectType();
     }
@@ -140,50 +175,27 @@ public class BuildingSystem {
         OnSelectedChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public bool TryPlaceObject(int x, int y, PlacedObjectTypeSO placedObjectTypeSO, PlacedObjectTypeSO.Dir dir) {
-        return TryPlaceObject(new Vector2Int(x, y), placedObjectTypeSO, dir, out PlacedObject placedObject);
-    }
+    bool TryPlaceObject(Vector2Int placedObjectOrigin) {
 
-    public bool TryPlaceObject(Vector2Int placedObjectOrigin, PlacedObjectTypeSO placedObjectTypeSO, PlacedObjectTypeSO.Dir dir) {
-        return TryPlaceObject(placedObjectOrigin, placedObjectTypeSO, dir, out PlacedObject placedObject);
-    }
-
-    public bool TryPlaceObject(Vector2Int placedObjectOrigin, PlacedObjectTypeSO placedObjectTypeSO, PlacedObjectTypeSO.Dir dir, out PlacedObject placedObject) {
-        // Test Can Build
         List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
-        bool canBuild = true;
+
         foreach(Vector2Int gridPosition in gridPositionList) {
-            if(grid.gridArray[gridPosition.x, gridPosition.y] != null) {
-                // Not valid
-                canBuild = false;
-                break;
-            }
-            if(grid.gridArray[gridPosition.x, gridPosition.y].placedObject != null) {
-                canBuild = false;
-                break;
+            if(grid.gridArray[gridPosition.x, gridPosition.y] == null || grid.gridArray[gridPosition.x, gridPosition.y].placedObject != null) {
+                return false;
             }
         }
 
-        if(canBuild) {
-            Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
-            Vector3 placedObjectWorldPosition = new Vector3(placedObjectOrigin.x, 0, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
+        Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
+        Vector3 placedObjectWorldPosition = new Vector3(placedObjectOrigin.x, 0, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
+        PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, placedObjectOrigin, dir, placedObjectTypeSO);
 
-            placedObject = PlacedObject.Create(placedObjectWorldPosition, placedObjectOrigin, dir, placedObjectTypeSO);
-
-            foreach(Vector2Int gridPosition in gridPositionList) {
-                grid.gridArray[gridPosition.x, gridPosition.y].SetPlacedObject(placedObject);
-            }
-
-            placedObject.GridSetupDone();
-
-            OnObjectPlaced?.Invoke(placedObject, EventArgs.Empty);
-
-            return true;
-        } else {
-            // Cannot build here
-            placedObject = null;
-            return false;
+        foreach(Vector2Int gridPosition in gridPositionList) {
+            grid.gridArray[gridPosition.x, gridPosition.y].SetPlacedObject(placedObject);
         }
+
+        placedObject.GridSetupDone();
+        OnObjectPlaced?.Invoke(placedObject, EventArgs.Empty);
+        return true;
     }
 
     public Vector2Int GetGridPosition(Vector3 worldPosition) {
@@ -252,5 +264,9 @@ public class BuildingSystem {
 
     public bool IsDemolishActive() {
         return isDemolishActive;
+    }
+
+    public void AddGhostBeltToGrid(Vector2Int beltPosition, PlacedObject belt) {
+        grid.gridArray[beltPosition.x, beltPosition.y].SetPlacedObject(belt);
     }
 }

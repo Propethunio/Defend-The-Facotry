@@ -9,11 +9,8 @@ public class Mouse3D : MonoBehaviour {
     public static bool TryGetMouseWorldPosition(out Vector3 mousePosition) => Instance.TryGetMouseWorldPosition_Instance(out mousePosition);
 
     void Awake() {
-        if(Instance == null) {
-            Instance = this;
-        } else {
-            Destroy(gameObject);
-        }
+        if(Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     bool TryGetMouseWorldPosition_Instance(out Vector3 mousePosition) {

@@ -1,14 +1,7 @@
-﻿//#define SHOW_DEBUG_VISUAL
-
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using CodeMonkey.Utils;
 
-/*
- * Manages the entire Belt System containing all Belt Paths
- * */
 public class BeltManager {
 
     public static BeltManager Instance { get; private set; }
@@ -16,68 +9,56 @@ public class BeltManager {
     public event EventHandler OnBeltAdded;
     public event EventHandler OnBeltRemoved;
 
-
-    private List<ConveyorBelt> fullBeltList; // Contains full list of all belts in the world
-
-    private List<BeltPath> beltPathList;
+    List<ConveyorBelt> fullBeltList;
+    List<BeltPath> beltPathList;
 
     public BeltManager() {
-        Instance = this;
+        if(Instance == null) Instance = this;
+        else return;
 
         fullBeltList = new List<ConveyorBelt>();
-
         beltPathList = new List<BeltPath>();
-
         TimeTickSystem.OnTick += TimeTickSystem_OnTick;
-
-#if SHOW_DEBUG_VISUAL
         new DebugVisual();
-#endif
     }
 
-    private void TimeTickSystem_OnTick(object sender, TimeTickSystem.OnTickEventArgs e) {
-        for (int i = 0; i < beltPathList.Count; i++) {
+    void TimeTickSystem_OnTick(object sender, TimeTickSystem.OnTickEventArgs e) {
+        for(int i = 0; i < beltPathList.Count; i++) {
             beltPathList[i].ItemResetHasAlreadyMoved();
         }
 
-        for (int i = 0; i < beltPathList.Count; i++) {
+        for(int i = 0; i < beltPathList.Count; i++) {
             beltPathList[i].TakeAction();
         }
     }
 
     public void AddBelt(ConveyorBelt belt) {
-        //Debug.Log("## AddBelt: " + belt.GetGridPosition());
         fullBeltList.Add(belt);
         RefreshBeltPathList();
-
-        //Debug.Log(this);
         OnBeltAdded?.Invoke(this, EventArgs.Empty);
     }
 
     public void RemoveBelt(ConveyorBelt belt) {
         fullBeltList.Remove(belt);
         RefreshBeltPathList();
-
-        //Debug.Log(this);
         OnBeltRemoved?.Invoke(this, EventArgs.Empty);
     }
 
-    private void RefreshBeltPathList() {
+    void RefreshBeltPathList() {
         beltPathList.Clear();
-
         List<ConveyorBelt> beltList = new List<ConveyorBelt>(fullBeltList);
 
         // First Iteration: Create Belt Paths
-        while (beltList.Count > 0) {
+        while(beltList.Count > 0) {
             ConveyorBelt belt = beltList[0];
             beltList.RemoveAt(0);
-
             bool foundMatchingBeltPath = false;
-            foreach (BeltPath beltPath in beltPathList) {
-                if (beltPath.IsGridPositionPartOfBeltPath(belt.GetNextGridPosition())) {
+
+            foreach(BeltPath beltPath in beltPathList) {
+                if(beltPath.IsGridPositionPartOfBeltPath(belt.GetNextGridPosition())) {
                     // This Belt can connect to this Belt Path
                     // Will it cause a loop?
-                    if (beltPath.IsGridPositionPartOfBeltPath(belt.GetPreviousGridPosition())) {
+                    if(beltPath.IsGridPositionPartOfBeltPath(belt.GetPreviousGridPosition())) {
                         // Previous Belt Position is ALSO part of this path, meaning that adding this one will create a loop
                     } else {
                         // Previous Belt Position is NOT part of this path, safe to add without causing a loop
@@ -88,7 +69,7 @@ public class BeltManager {
                 }
             }
 
-            if (!foundMatchingBeltPath) {
+            if(!foundMatchingBeltPath) {
                 // Couldn't find a Belt Path for this Belt, create new Belt Path
                 BeltPath beltPath = new BeltPath();
                 beltPath.AddBelt(belt);
@@ -99,38 +80,35 @@ public class BeltManager {
         // Second Iteration: Merge Belt Paths
         {
             int safety = 0;
-            while (TryMergeAnyBeltPath()) {
+            while(TryMergeAnyBeltPath()) {
                 // Continue Merging Belt Paths
                 safety++;
-                if (safety > 1000) break;
+                if(safety > 1000) break;
             }
 
-            if (safety > 1000) {
+            if(safety > 1000) {
                 Debug.LogError("######## SAFETY BREAK!");
             }
         }
     }
 
-    private bool TryMergeAnyBeltPath() {
-        //Debug.Log("#### SKIP MERGE BELT PATHS"); return false;
-
+    bool TryMergeAnyBeltPath() {
         // Tries to merge any belt path, returns true if successful
-        for (int i = 0; i < beltPathList.Count; i++) {
+        for(int i = 0; i < beltPathList.Count; i++) {
             BeltPath beltPathA = beltPathList[i];
 
-            for (int j = 0; j < beltPathList.Count; j++) {
-                if (j == i) continue; // Don't try to merge with itself
+            for(int j = 0; j < beltPathList.Count; j++) {
+                if(j == i) continue; // Don't try to merge with itself
                 BeltPath beltPathB = beltPathList[j];
-
                 ConveyorBelt beltFirstA = beltPathA.GetFirstBelt();
                 ConveyorBelt beltLastA = beltPathA.GetLastBelt();
                 ConveyorBelt beltFirstB = beltPathB.GetFirstBelt();
                 ConveyorBelt beltLastB = beltPathB.GetLastBelt();
 
-                if (beltLastA.GetNextGridPosition() == beltFirstB.GetGridPosition()) {
+                if(beltLastA.GetNextGridPosition() == beltFirstB.GetGridPosition()) {
                     // Next Position on the LastA is the FirstB, connect A to B
                     // Will it cause a loop?
-                    if (beltLastB.GetNextGridPosition() == beltFirstA.GetGridPosition()) {
+                    if(beltLastB.GetNextGridPosition() == beltFirstA.GetGridPosition()) {
                         // Last on B connects to First on A, this creates a loop, don't do it
                     } else {
                         // Last on B does NOT connect to First on A, safe to connect without making a loop
@@ -141,13 +119,12 @@ public class BeltManager {
                 }
             }
         }
-
         return false;
     }
 
     public override string ToString() {
         string debugString = "BeltSystem: " + "\n";
-        foreach (BeltPath beltPath in beltPathList) {
+        foreach(BeltPath beltPath in beltPathList) {
             debugString += beltPath.ToString() + "\n";
         }
         return debugString;
@@ -160,42 +137,41 @@ public class BeltManager {
     /*
      * Generates a Debug Visual for the Belt System
      * */
-    private class DebugVisual {
+    class DebugVisual {
 
-        private List<BeltPathDebugVisual> beltPathDebugVisualList;
+        List<BeltPathDebugVisual> beltPathDebugVisualList;
 
         public DebugVisual() {
-            BeltManager.Instance.OnBeltAdded += Instance_OnBeltAdded;
-            BeltManager.Instance.OnBeltRemoved += Instance_OnBeltRemoved;
-
+            Instance.OnBeltAdded += Instance_OnBeltAdded;
+            Instance.OnBeltRemoved += Instance_OnBeltRemoved;
             beltPathDebugVisualList = new List<BeltPathDebugVisual>();
             RefreshVisual();
         }
 
-        private void Instance_OnBeltAdded(object sender, EventArgs e) {
+        void Instance_OnBeltAdded(object sender, EventArgs e) {
             RefreshVisual();
         }
 
-        private void Instance_OnBeltRemoved(object sender, EventArgs e) {
+        void Instance_OnBeltRemoved(object sender, EventArgs e) {
             RefreshVisual();
         }
 
-        private void RefreshVisual() {
-            foreach (BeltPathDebugVisual beltPathDebugVisual in beltPathDebugVisualList) {
+        void RefreshVisual() {
+            foreach(BeltPathDebugVisual beltPathDebugVisual in beltPathDebugVisualList) {
                 beltPathDebugVisual.DestroySelf();
             }
 
             beltPathDebugVisualList.Clear();
 
-            foreach (BeltPath beltPath in BeltManager.Instance.beltPathList) {
+            foreach(BeltPath beltPath in BeltManager.Instance.beltPathList) {
                 beltPathDebugVisualList.Add(new BeltPathDebugVisual(beltPath));
             }
         }
 
 
-        private class BeltPathDebugVisual {
+        class BeltPathDebugVisual {
 
-            private List<Transform> transformList;
+            List<Transform> transformList;
 
             public BeltPathDebugVisual(BeltPath beltPath) {
                 transformList = new List<Transform>();
@@ -206,7 +182,7 @@ public class BeltManager {
 
                 beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.green;
 
-                if (beltPath.GetBeltList().Count == 1) {
+                if(beltPath.GetBeltList().Count == 1) {
                     // Only has a single belt
                     // Show in purple and break
                     beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.magenta;
@@ -218,7 +194,7 @@ public class BeltManager {
                 transformList.Add(beltDebugVisualNodeTransform);
                 beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.red;
 
-                for (int i=0; i<beltPath.GetBeltList().Count - 1; i++) {
+                for(int i = 0; i < beltPath.GetBeltList().Count - 1; i++) {
                     ConveyorBelt belt = beltPath.GetBeltList()[i];
                     ConveyorBelt nextBelt = beltPath.GetBeltList()[i + 1];
                     gridPosition = belt.GetGridPosition();
@@ -238,7 +214,7 @@ public class BeltManager {
             }
 
             public void DestroySelf() {
-                foreach (Transform transform in transformList) {
+                foreach(Transform transform in transformList) {
                     GameObject.Destroy(transform.gameObject);
                 }
             }
@@ -259,16 +235,16 @@ public class BeltManager {
     /*
      * Manages a single Belt Path, start to finish with all Conveyour Belts
      * */
-    private class BeltPath {
+    class BeltPath {
 
-        private List<ConveyorBelt> beltList;
+        List<ConveyorBelt> beltList;
 
         public BeltPath() {
             beltList = new List<ConveyorBelt>();
         }
 
-        private void RefreshBeltOrder() {
-            List <ConveyorBelt> newBeltList = new List<ConveyorBelt>();
+        void RefreshBeltOrder() {
+            List<ConveyorBelt> newBeltList = new List<ConveyorBelt>();
 
             ConveyorBelt firstBelt = GetFirstBelt();
             newBeltList.Add(firstBelt);
@@ -279,12 +255,12 @@ public class BeltManager {
             int safety = 0;
             do {
                 PlacedObject placedObject = BuildingSystem.Instance.GetGridObject(belt.GetNextGridPosition()).placedObject;
-                if (placedObject != null && placedObject is ConveyorBelt) {
+                if(placedObject != null && placedObject is ConveyorBelt) {
                     // Has a Belt in the next position
                     //Debug.Log("Has a Belt in the next position " + belt.GetNextGridPosition());
                     ConveyorBelt nextBelt = placedObject as ConveyorBelt;
                     // Is it part of this path?
-                    if (beltList.Contains(nextBelt)) {
+                    if(beltList.Contains(nextBelt)) {
                         // Yes it's part of this path
                         //Debug.Log("Yes it's part of this path");
                         newBeltList.Add(nextBelt);
@@ -300,19 +276,19 @@ public class BeltManager {
                     belt = null;
                 }
                 safety++;
-                if (safety > 1000) break;
-            } while (belt != null);
+                if(safety > 1000) break;
+            } while(belt != null);
 
-            if (safety > 1000) {
+            if(safety > 1000) {
                 Debug.LogError("######## SAFETY BREAK!");
             }
 
-            if (beltList.Count != newBeltList.Count) {
+            if(beltList.Count != newBeltList.Count) {
                 Debug.LogError("beltList.Count != newBeltList.Count \t " + beltList.Count + " != " + newBeltList.Count);
                 string errorString = "beltList: ";
-                foreach (ConveyorBelt b in beltList) errorString += b.GetGridPosition() + "; ";
+                foreach(ConveyorBelt b in beltList) errorString += b.GetGridPosition() + "; ";
                 errorString += "\nnewBeltList: ";
-                foreach (ConveyorBelt b in newBeltList) errorString += b.GetGridPosition() + "; ";
+                foreach(ConveyorBelt b in newBeltList) errorString += b.GetGridPosition() + "; ";
                 Debug.LogError(errorString);
             }
 
@@ -326,8 +302,8 @@ public class BeltManager {
         }
 
         public bool IsGridPositionPartOfBeltPath(Vector2Int gridPosition) {
-            foreach (ConveyorBelt belt in beltList) {
-                if (belt.GetGridPosition() == gridPosition) {
+            foreach(ConveyorBelt belt in beltList) {
+                if(belt.GetGridPosition() == gridPosition) {
                     return true;
                 }
             }
@@ -337,22 +313,22 @@ public class BeltManager {
         public ConveyorBelt GetFirstBelt() {
             List<ConveyorBelt> tmpBeltList = new List<ConveyorBelt>(beltList);
 
-            for (int i = 0; i < beltList.Count; i++) {
+            for(int i = 0; i < beltList.Count; i++) {
                 ConveyorBelt belt = beltList[i];
 
                 PlacedObject placedObject = BuildingSystem.Instance.GetGridObject(belt.GetNextGridPosition()).placedObject;
-                if (placedObject != null && placedObject is ConveyorBelt) {
+                if(placedObject != null && placedObject is ConveyorBelt) {
                     // Has a Belt in the next position
                     ConveyorBelt nextBelt = placedObject as ConveyorBelt;
                     // Is it part of this path?
-                    if (beltList.Contains(nextBelt)) {
+                    if(beltList.Contains(nextBelt)) {
                         // Yes it's part of this path
                         tmpBeltList.Remove(nextBelt);
                     }
                 }
             }
 
-            if (tmpBeltList.Count <= 0) {
+            if(tmpBeltList.Count <= 0) {
                 Debug.LogError("Something went wrong, there's no more Belts left!");
                 return beltList[0];
             }
@@ -366,13 +342,13 @@ public class BeltManager {
             ConveyorBelt lastBelt = tmpBeltList[0];
             tmpBeltList.RemoveAt(0);
 
-            while (tmpBeltList.Count > 0) {
+            while(tmpBeltList.Count > 0) {
                 PlacedObject placedObject = BuildingSystem.Instance.GetGridObject(lastBelt.GetNextGridPosition()).placedObject;
-                if (placedObject != null && placedObject is ConveyorBelt) {
+                if(placedObject != null && placedObject is ConveyorBelt) {
                     // Has a Belt in the next position
                     ConveyorBelt nextBelt = placedObject as ConveyorBelt;
                     // Is it part of this path?
-                    if (tmpBeltList.Contains(nextBelt)) {
+                    if(tmpBeltList.Contains(nextBelt)) {
                         // It is part of this path, continue
                         tmpBeltList.Remove(nextBelt);
                         lastBelt = nextBelt;
@@ -394,20 +370,20 @@ public class BeltManager {
         }
 
         public void MergeBeltPath(BeltPath beltPathB) {
-            foreach (ConveyorBelt belt in beltPathB.beltList) {
+            foreach(ConveyorBelt belt in beltPathB.beltList) {
                 AddBelt(belt);
             }
         }
 
         public void TakeAction() {
-            for (int i = beltList.Count - 1; i >= 0; i--) {
+            for(int i = beltList.Count - 1; i >= 0; i--) {
                 ConveyorBelt belt = beltList[i];
                 belt.TakeAction();
             }
         }
 
         public void ItemResetHasAlreadyMoved() {
-            for (int i = beltList.Count - 1; i >= 0; i--) {
+            for(int i = beltList.Count - 1; i >= 0; i--) {
                 ConveyorBelt belt = beltList[i];
                 belt.ItemResetHasAlreadyMoved();
             }
@@ -415,12 +391,11 @@ public class BeltManager {
 
         public override string ToString() {
             string debugString = "BeltPath: ";
-            foreach (ConveyorBelt belt in beltList) {
+            foreach(ConveyorBelt belt in beltList) {
                 debugString += belt.GetGridPosition() + "->";
             }
             return debugString;
         }
 
     }
-
 }

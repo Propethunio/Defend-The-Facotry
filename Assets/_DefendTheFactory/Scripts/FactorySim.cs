@@ -5,13 +5,16 @@ using CodeMonkey.Utils;
 
 public class FactorySim : MonoBehaviour {
 
-    int width = 50;
-    int height = 50;
+    [SerializeField] int width;
+    [SerializeField] int height;
+
+    public PlacedObjectTypeSO test;
 
     private void Start() {
         new TimeTickSystem();
         new BeltManager();
         new BuildingSystem(width, height);
+        MouseClickPlane.Instance.Setup(width, height);
         TilemapVisual.Instance.Init(width, height);
 
         for (int i = 0; i < 10; i++) {

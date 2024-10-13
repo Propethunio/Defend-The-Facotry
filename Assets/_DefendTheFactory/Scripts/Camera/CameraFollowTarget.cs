@@ -37,7 +37,7 @@ public class CameraFollowTarget : MonoBehaviour {
         followOffset.z = zoomRotationCurve.Evaluate(zoomAmount);
         transposer.m_FollowOffset = followOffset;
         CalculateScrollBounds();
-        ObserveEvents();
+        SubscribeEvents();
     }
 
     void Update() {
@@ -51,11 +51,11 @@ public class CameraFollowTarget : MonoBehaviour {
         screenTopScroll = Screen.height - edgeScrollSize;
     }
 
-    void ObserveEvents() {
-        inputManager.rightClickPerformed += InputManager_rightClickPerformed;
-        inputManager.rightClickCanceled += InputManager_rightClickCanceled;
-        inputManager.scrollClickPerformed += InputManager_scrollClickPerformed;
-        inputManager.scrollClickCanceled += InputManager_scrollClickCanceled;
+    void SubscribeEvents() {
+        inputManager.rightClickPerformedAction += InputManager_rightClickPerformed;
+        inputManager.rightClickCanceledAction += InputManager_rightClickCanceled;
+        inputManager.scrollClickPerformedAction += InputManager_scrollClickPerformed;
+        inputManager.scrollClickCanceledAction += InputManager_scrollClickCanceled;
     }
 
     void InputManager_rightClickPerformed() {
@@ -86,7 +86,6 @@ public class CameraFollowTarget : MonoBehaviour {
             Vector2 mouseMove = newMousePosMove - lastMousePosMove;
             inputDir.x = Mathf.Clamp(-mouseMove.x, -moveSpeedOnDrag, moveSpeedOnDrag);
             inputDir.y = Mathf.Clamp(-mouseMove.y, -moveSpeedOnDrag, moveSpeedOnDrag);
-
             lastMousePosMove = newMousePosMove;
         } else {
             inputDir = inputManager.moveDir;

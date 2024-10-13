@@ -3,68 +3,76 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MiningMachine : PlacedObject, IItemStorage {
+public class MiningMachine : PlacedMachine, IItemStorage {
 
     public event EventHandler OnItemStorageCountChanged;
 
-    [SerializeField] private Transform pfMiningDrone;
+    [SerializeField] ConveyorBelt belt;
+    [SerializeField] float resourceSearchRange;
+    [SerializeField] Vector2Int ghostBeltPosition;
 
-
-    private ItemSO miningResourceItem;
-
-    private float miningTimer;
-    private int storedItemCount;
-
-    protected override void Setup() {
-        //Debug.Log("MiningMachine.Setup()");
-    }
+    ItemSO miningResourceItem;
+    float miningTimer;
+    int storedItemCount;
 
     public override void GridSetupDone() {
         int resourceNodeSearchWidth = 2;
         int resourceNodeSearchHeight = 2;
 
-        // Find resources within range
-        for (int x = origin.x - resourceNodeSearchWidth; x < origin.x + resourceNodeSearchWidth + placedObjectTypeSO.width; x++) {
-            for (int y = origin.y - resourceNodeSearchHeight; y < origin.y + resourceNodeSearchHeight + placedObjectTypeSO.height; y++) {
+        /* Find resources within range
+        for(int x = origin.x - resourceNodeSearchWidth; x < origin.x + resourceNodeSearchWidth + placedObjectTypeSO.width; x++) {
+            for(int y = origin.y - resourceNodeSearchHeight; y < origin.y + resourceNodeSearchHeight + placedObjectTypeSO.height; y++) {
                 Vector2Int gridPosition = new Vector2Int(x, y);
-                if (BuildingSystem.Instance.IsValidGridPosition(gridPosition)) {
+                if(BuildingSystem.Instance.IsValidGridPosition(gridPosition)) {
                     PlacedObject placedObject = BuildingSystem.Instance.GetGridObject(gridPosition).placedObject;
-                    if (placedObject != null) {
-                        if (placedObject is ResourceNode) {
+                    if(placedObject != null) {
+                        if(placedObject is ResourceNode) {
                             ResourceNode resourceNode = placedObject as ResourceNode;
                             miningResourceItem = resourceNode.GetItemScriptableObject();
                         }
                     }
                 }
             }
-        }
+        } */
 
-        //Debug.Log("MiningMachine: " + miningResourceItem);
+        SetupBelt();
+    }
 
-        //Transform droneTransform = Instantiate(pfMiningDrone, transform.position, Quaternion.identity);
+    void SetupBelt() {
+        Vector2Int beltPos = placedObjectTypeSO.GetMachineBeltPosition(origin, ghostBeltPosition, dir);
+        belt.SetupBuildingBelt(beltPos, dir);
     }
 
     public override string ToString() {
-        if (miningResourceItem == null) {
+        if(miningResourceItem == null) {
             return "NO RESOURCES!";
         }
         return storedItemCount.ToString();
     }
 
     private void Update() {
-        if (miningResourceItem == null) {
+        if(miningResourceItem == null) {
             // No resources in range!
             return;
         }
 
         miningTimer -= Time.deltaTime;
-        if (miningTimer <= 0f) {
+        if(miningTimer <= 0f) {
             miningTimer += miningResourceItem.miningTimer;
 
             storedItemCount += 1;
             OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
             TriggerGridObjectChanged();
         }
+    }
+
+    void MineAction() {
+        storedItemCount += 1;
+        OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    void TryPutItemOnBelt() {
+
     }
 
     public ItemSO GetMiningResourceItem() {
@@ -76,10 +84,10 @@ public class MiningMachine : PlacedObject, IItemStorage {
     }
 
     public bool TryGetStoredItem(ItemSO[] filterItemSO, out ItemSO itemSO) {
-        if (ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO) ||
+        if(ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO) ||
             ItemSO.IsItemSOInFilter(miningResourceItem, filterItemSO)) {
             // If filter matches any or filter matches this itemType
-            if (storedItemCount > 0) {
+            if(storedItemCount > 0) {
                 storedItemCount--;
                 itemSO = miningResourceItem;
                 OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
