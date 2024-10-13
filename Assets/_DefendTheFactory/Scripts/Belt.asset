@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Belt
   m_EditorClassIdentifier: 
   nameString: Belt
-  prefab: {fileID: 3688688184602226198, guid: 6344b793b09d57a459030f992986642f, type: 3}
-  visual: {fileID: 3688688184602226198, guid: 42da657ef51f31d4aa30f4953efd294d, type: 3}
+  prefab: {fileID: 7788273569947618330, guid: 0df8433aa8c7f7440bd4333caa04581c, type: 3}
+  visual: {fileID: 7788273569947618330, guid: 524b7344540fde44e939dc486cc77751, type: 3}
   width: 1
   height: 1
