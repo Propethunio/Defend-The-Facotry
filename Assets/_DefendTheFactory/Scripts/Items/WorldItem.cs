@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,28 +7,26 @@ public class WorldItem : MonoBehaviour {
 
     public static WorldItem Create(Vector2Int gridPosition, ItemSO itemScriptableObject) {
         Transform worldItemTransform = Instantiate(GameAssets.i.pfWorldItem, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity);
-
         WorldItem worldItem = worldItemTransform.GetComponent<WorldItem>();
-        worldItem.SetGridPosition(gridPosition);
         worldItem.itemSO = itemScriptableObject;
 
         return worldItem;
     }
 
-    private Vector2Int gridPosition;
-    private bool hasAlreadyMoved;
-    private ItemSO itemSO;
+    bool hasAlreadyMoved;
+    ItemSO itemSO;
+    Tween moveTween;
 
-    private void Start() {
-        transform.Find("ItemVisual").Find("itemSprite").GetComponent<SpriteRenderer>().sprite = itemSO.sprite;
-    }
+    //void Start() {
+     //   transform.Find("ItemVisual").Find("itemSprite").GetComponent<SpriteRenderer>().sprite = itemSO.sprite;
+    //}
 
-    private void Update() {
-        transform.position = Vector3.Lerp(transform.position, BuildingSystem.Instance.GetWorldPosition(gridPosition), Time.deltaTime * 10f);
-    }
+    public void MoveToGridPosition(Vector2Int gridPosition) {
+        if(moveTween != null && moveTween.IsActive()) {
+            moveTween.Kill();
+        }
 
-    public void SetGridPosition(Vector2Int gridPosition) {
-        this.gridPosition = gridPosition;
+        moveTween = transform.DOMove(new Vector3(gridPosition.x, 0, gridPosition.y), 1f).SetEase(Ease.Linear);
     }
 
     public bool CanMove() {
@@ -49,5 +48,4 @@ public class WorldItem : MonoBehaviour {
     public void DestroySelf() {
         Destroy(gameObject);
     }
-
 }

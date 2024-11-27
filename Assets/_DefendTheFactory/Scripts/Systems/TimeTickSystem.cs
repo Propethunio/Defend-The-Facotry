@@ -1,55 +1,36 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using CodeMonkey;
 
-public class TimeTickSystem {
+public class TimeTickSystem : MonoBehaviour {
 
-    public class OnTickEventArgs : EventArgs {
-        public int tick;
+    public static TimeTickSystem Instance { get; private set; }
+
+    public event Action OnTick;
+
+    const float TICK_TIMER_MAX = 1f;
+    float tickTimer;
+    bool isTicking;
+
+    void Awake() {
+        if(Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
-    
-    public static event EventHandler<OnTickEventArgs> OnTick;
-    public static event EventHandler<OnTickEventArgs> OnTick_5;
 
-    private const float TICK_TIMER_MAX = .33f;
+    void Update() {
+        if(!isTicking) return;
 
-    private static GameObject timeTickSystemGameObject;
-    private static int tick;
-
-    public TimeTickSystem() {
-        if (timeTickSystemGameObject == null) {
-            timeTickSystemGameObject = new GameObject("TimeTickSystem");
-            timeTickSystemGameObject.AddComponent<TimeTickSystemObject>();
+        tickTimer += Time.deltaTime;
+        if(tickTimer >= TICK_TIMER_MAX) {
+            tickTimer -= TICK_TIMER_MAX;
+            OnTick?.Invoke();
         }
     }
 
-    public static int GetTick() {
-        return tick;
+    public void ToggleIsTick() {
+        isTicking = !isTicking;
     }
 
-    private class TimeTickSystemObject : MonoBehaviour {
-        
-        private float tickTimer;
-
-        private void Awake() {
-            tick = 0;
-        }
-
-        private void Update() {
-            tickTimer += Time.deltaTime;
-            if (tickTimer >= TICK_TIMER_MAX) {
-                tickTimer -= TICK_TIMER_MAX;
-                tick++;
-                if (OnTick != null) OnTick(this, new OnTickEventArgs { tick = tick });
-
-                if (tick % 5 == 0) {
-                    if (OnTick_5 != null) OnTick_5(this, new OnTickEventArgs { tick = tick });
-                }
-            }
-        }
-
+    public void SetIsTicking(bool shouldTick) {
+        isTicking = shouldTick;
     }
-
 }

@@ -7,17 +7,18 @@ public class FactorySim : MonoBehaviour {
 
     [SerializeField] int width;
     [SerializeField] int height;
+    [SerializeField] bool showBeltDebug;
 
     public PlacedObjectTypeSO test;
 
-    private void Start() {
-        new TimeTickSystem();
-        new BeltManager();
+    void Start() {
+        new BeltManager(showBeltDebug);
         new BuildingSystem(width, height);
         MouseClickPlane.Instance.Setup(width, height);
         TilemapVisual.Instance.Init(width, height);
+        //TimeTickSystem.Instance.SetIsTicking(true);
 
-        for (int i = 0; i < 10; i++) {
+        for(int i = 0; i < 10; i++) {
             //GridBuildingSystem.Instance.TryPlaceObject(new Vector2Int(5 + i, 5), GameAssets.i.placedObjectTypeSO_Refs.conveyorBelt, PlacedObjectTypeSO.Dir.Right);
             //GridBuildingSystem.Instance.TryPlaceObject(new Vector2Int(5 + i, 7), GameAssets.i.placedObjectTypeSO_Refs.conveyorBelt, PlacedObjectTypeSO.Dir.Left);
         }
@@ -58,12 +59,13 @@ public class FactorySim : MonoBehaviour {
         //*/
     }
 
-    private void Update() {
+    void Update() {
         HandleBuildingSelection();
+        HandleDebugSpawnItem();
     }
 
-    private void HandleBuildingSelection() {
-        if (Input.GetMouseButtonDown(0) && !CodeMonkey.Utils.UtilsClass.IsPointerOverUI() && BuildingSystem.Instance.GetPlacedObjectTypeSO() == null) {
+    void HandleBuildingSelection() {
+        if(Input.GetMouseButtonDown(0) && !CodeMonkey.Utils.UtilsClass.IsPointerOverUI() && BuildingSystem.Instance.GetPlacedObjectTypeSO() == null) {
             // Not building anything
 
             /*
@@ -96,20 +98,18 @@ public class FactorySim : MonoBehaviour {
         }
     }
 
-    private void HandleDebugSpawnItem() {
-        if (Input.GetKeyDown(KeyCode.I)) {
+    void HandleDebugSpawnItem() {
+        if(Input.GetKeyDown(KeyCode.I)) {
             PlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
-            if (placedObject != null && placedObject is IWorldItemSlot) {
+            if(placedObject != null && placedObject is IWorldItemSlot) {
                 IWorldItemSlot worldItemSlot = placedObject as IWorldItemSlot;
 
-                if (worldItemSlot.IsEmpty()) {
+                if(worldItemSlot.IsEmpty()) {
                     WorldItem worldItem = WorldItem.Create(worldItemSlot.GetGridPosition(), GameAssets.i.itemSO_Refs.ironOre);
-
                     worldItemSlot.TrySetWorldItem(worldItem);
-                    worldItem.SetGridPosition(worldItemSlot.GetGridPosition());
+                    TimeTickSystem.Instance.SetIsTicking(true);
                 }
             }
         }
     }
-
 }

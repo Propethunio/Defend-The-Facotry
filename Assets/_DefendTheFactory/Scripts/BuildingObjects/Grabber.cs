@@ -82,7 +82,7 @@ public class Grabber : PlacedObject {
                             // ## DEBUG
 
                             holdingItem = WorldItem.Create(grabPosition, itemScriptableObject);
-                            holdingItem.SetGridPosition(grabPosition);
+                            holdingItem.MoveToGridPosition(grabPosition);
 
                             state = State.MovingToDropItem;
                             float TIME_TO_DROP_ITEM = .5f;
@@ -94,7 +94,7 @@ public class Grabber : PlacedObject {
                     if (grabPlacedObject is IWorldItemSlot) {
                         IWorldItemSlot worldItemSlot = grabPlacedObject as IWorldItemSlot;
                         if (worldItemSlot.TryGetWorldItem(dropFilterItemSO, out holdingItem)) {
-                            holdingItem.SetGridPosition(grabPosition);
+                            holdingItem.MoveToGridPosition(grabPosition);
 
                             state = State.MovingToDropItem;
                             float TIME_TO_DROP_ITEM = .5f;
@@ -119,7 +119,7 @@ public class Grabber : PlacedObject {
                         // Try to Set World Item
                         if (worldItemSlot.TrySetWorldItem(holdingItem)) {
                             // It worked, drop item
-                            holdingItem.SetGridPosition(worldItemSlot.GetGridPosition());
+                            holdingItem.MoveToGridPosition(worldItemSlot.GetGridPosition());
                             holdingItem = null;
 
                             state = State.Cooldown;

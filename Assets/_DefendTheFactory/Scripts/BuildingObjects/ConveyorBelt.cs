@@ -29,31 +29,20 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
     }
 
     public void ItemResetHasAlreadyMoved() {
-        if (!IsEmpty()) {
+        if(!IsEmpty()) {
             GetWorldItem().ResetHasAlreadyMoved();
         }
     }
 
     public void TakeAction() {
-        if (!IsEmpty() && GetWorldItem().CanMove()) {
-            // This conveyour belt is not empty and the item can move
-            // Try push item forward
-            PlacedObject nextPlacedObject = BuildingSystem.Instance.GetGridObject(nextPosition).placedObject;
-            if (nextPlacedObject != null) {
-                // Has object next
-                if (nextPlacedObject is IWorldItemSlot) {
-                    IWorldItemSlot worldItemSlot = nextPlacedObject as IWorldItemSlot;
-                    if (worldItemSlot.TrySetWorldItem(worldItem)) {
-                        // Successfully moved item onto next slot
-                        // Move World Item
-                        worldItem.SetGridPosition(worldItemSlot.GetGridPosition());
-                        worldItem.SetHasAlreadyMoved();
-                        // Remove current world item
-                        RemoveWorldItem();
-                    }
-                }
-            }
-        }
+        if(IsEmpty() || !GetWorldItem().CanMove()) return;
+
+        IWorldItemSlot worldItemSlot = BuildingSystem.Instance.GetGridObject(nextPosition).placedObject as IWorldItemSlot;
+        if(worldItemSlot == null || !worldItemSlot.TrySetWorldItem(worldItem)) return;
+
+        worldItem.MoveToGridPosition(worldItemSlot.GetGridPosition());
+        worldItem.SetHasAlreadyMoved();
+        RemoveWorldItem();
     }
 
     public Vector2Int GetPreviousGridPosition() {
@@ -73,7 +62,7 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
     }
 
     public bool TrySetWorldItem(WorldItem worldItem) {
-        if (IsEmpty()) {
+        if(IsEmpty()) {
             this.worldItem = worldItem;
             return true;
         } else {
@@ -86,7 +75,7 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
     }
 
     public override void DestroySelf() {
-        if (!IsEmpty()) {
+        if(!IsEmpty()) {
             worldItem.DestroySelf();
         }
 
@@ -95,13 +84,13 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
     }
 
     public bool TryGetWorldItem(ItemSO[] filterItemSO, out WorldItem worldItem) {
-        if (IsEmpty()) {
+        if(IsEmpty()) {
             // Nothing to grab
             worldItem = null;
             return false;
         } else {
             // Check if this WorldItem matches the filter OR there's no filter
-            if (ItemSO.IsItemSOInFilter(GetWorldItem().GetItemSO(), filterItemSO) ||
+            if(ItemSO.IsItemSOInFilter(GetWorldItem().GetItemSO(), filterItemSO) ||
                 ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO)) {
                 // Return this World Item and Remove it
                 worldItem = GetWorldItem();
@@ -118,5 +107,4 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
     public ItemSO[] GetItemSOThatCanStore() {
         return new ItemSO[] { GameAssets.i.itemSO_Refs.any };
     }
-
 }

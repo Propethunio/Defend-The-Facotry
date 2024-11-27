@@ -11,5 +11,4 @@ public interface IWorldItemSlot {
     void RemoveWorldItem();
     Vector2Int GetGridPosition();
     ItemSO[] GetItemSOThatCanStore();
-
 }

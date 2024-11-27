@@ -6,23 +6,32 @@ public class BeltManager {
 
     public static BeltManager Instance { get; private set; }
 
-    public event EventHandler OnBeltAdded;
-    public event EventHandler OnBeltRemoved;
+    public event Action OnBeltAdded;
+    public event Action OnBeltRemoved;
 
     List<ConveyorBelt> fullBeltList;
     List<BeltPath> beltPathList;
 
-    public BeltManager() {
+    public Transform debugVisualParent { get; private set; }
+
+    public BeltManager(bool showDebug) {
         if(Instance == null) Instance = this;
         else return;
 
         fullBeltList = new List<ConveyorBelt>();
         beltPathList = new List<BeltPath>();
-        TimeTickSystem.OnTick += TimeTickSystem_OnTick;
-        new DebugVisual();
+        TimeTickSystem.Instance.OnTick += TimeTickSystem_OnTick;
+        if(showDebug) {
+            debugVisualParent = new GameObject("Belt Debug Visual").transform;
+            new DebugVisual();
+        }
     }
 
-    void TimeTickSystem_OnTick(object sender, TimeTickSystem.OnTickEventArgs e) {
+    ~BeltManager() {
+        TimeTickSystem.Instance.OnTick -= TimeTickSystem_OnTick;
+    }
+
+    void TimeTickSystem_OnTick() {
         for(int i = 0; i < beltPathList.Count; i++) {
             beltPathList[i].ItemResetHasAlreadyMoved();
         }
@@ -35,20 +44,19 @@ public class BeltManager {
     public void AddBelt(ConveyorBelt belt) {
         fullBeltList.Add(belt);
         RefreshBeltPathList();
-        OnBeltAdded?.Invoke(this, EventArgs.Empty);
+        OnBeltAdded?.Invoke();
     }
 
     public void RemoveBelt(ConveyorBelt belt) {
         fullBeltList.Remove(belt);
         RefreshBeltPathList();
-        OnBeltRemoved?.Invoke(this, EventArgs.Empty);
+        OnBeltRemoved?.Invoke();
     }
 
     void RefreshBeltPathList() {
         beltPathList.Clear();
         List<ConveyorBelt> beltList = new List<ConveyorBelt>(fullBeltList);
 
-        // First Iteration: Create Belt Paths
         while(beltList.Count > 0) {
             ConveyorBelt belt = beltList[0];
             beltList.RemoveAt(0);
@@ -130,111 +138,8 @@ public class BeltManager {
         return debugString;
     }
 
+    /* --------------- BELT PATH --------------- */
 
-
-
-
-    /*
-     * Generates a Debug Visual for the Belt System
-     * */
-    class DebugVisual {
-
-        List<BeltPathDebugVisual> beltPathDebugVisualList;
-
-        public DebugVisual() {
-            Instance.OnBeltAdded += Instance_OnBeltAdded;
-            Instance.OnBeltRemoved += Instance_OnBeltRemoved;
-            beltPathDebugVisualList = new List<BeltPathDebugVisual>();
-            RefreshVisual();
-        }
-
-        void Instance_OnBeltAdded(object sender, EventArgs e) {
-            RefreshVisual();
-        }
-
-        void Instance_OnBeltRemoved(object sender, EventArgs e) {
-            RefreshVisual();
-        }
-
-        void RefreshVisual() {
-            foreach(BeltPathDebugVisual beltPathDebugVisual in beltPathDebugVisualList) {
-                beltPathDebugVisual.DestroySelf();
-            }
-
-            beltPathDebugVisualList.Clear();
-
-            foreach(BeltPath beltPath in BeltManager.Instance.beltPathList) {
-                beltPathDebugVisualList.Add(new BeltPathDebugVisual(beltPath));
-            }
-        }
-
-
-        class BeltPathDebugVisual {
-
-            List<Transform> transformList;
-
-            public BeltPathDebugVisual(BeltPath beltPath) {
-                transformList = new List<Transform>();
-
-                Vector2Int gridPosition = beltPath.GetFirstBelt().GetGridPosition();
-                Transform beltDebugVisualNodeTransform = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition) + CodeMonkey.Utils.UtilsClass.GetRandomDirXZ() * .1f, Quaternion.identity);
-                transformList.Add(beltDebugVisualNodeTransform);
-
-                beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.green;
-
-                if(beltPath.GetBeltList().Count == 1) {
-                    // Only has a single belt
-                    // Show in purple and break
-                    beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.magenta;
-                    return;
-                }
-
-                gridPosition = beltPath.GetLastBelt().GetGridPosition();
-                beltDebugVisualNodeTransform = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition) + CodeMonkey.Utils.UtilsClass.GetRandomDirXZ() * .1f, Quaternion.identity);
-                transformList.Add(beltDebugVisualNodeTransform);
-                beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.red;
-
-                for(int i = 0; i < beltPath.GetBeltList().Count - 1; i++) {
-                    ConveyorBelt belt = beltPath.GetBeltList()[i];
-                    ConveyorBelt nextBelt = beltPath.GetBeltList()[i + 1];
-                    gridPosition = belt.GetGridPosition();
-                    Vector2Int nextGridPosition = nextBelt.GetGridPosition();
-
-                    beltDebugVisualNodeTransform = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity);
-                    transformList.Add(beltDebugVisualNodeTransform);
-                    beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.white;
-
-                    beltDebugVisualNodeTransform = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, BuildingSystem.Instance.GetWorldPosition(gridPosition) + new Vector3(1, 0, 1) * .5f, Quaternion.identity);
-                    transformList.Add(beltDebugVisualNodeTransform);
-                    beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.white;
-
-                    Vector3 dirToNextBelt = (BuildingSystem.Instance.GetWorldPosition(nextGridPosition) - BuildingSystem.Instance.GetWorldPosition(gridPosition)).normalized;
-                    beltDebugVisualNodeTransform.eulerAngles = new Vector3(0, -CodeMonkey.Utils.UtilsClass.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
-                }
-            }
-
-            public void DestroySelf() {
-                foreach(Transform transform in transformList) {
-                    GameObject.Destroy(transform.gameObject);
-                }
-            }
-
-        }
-
-    }
-
-
-
-
-
-
-
-
-
-
-    /*
-     * Manages a single Belt Path, start to finish with all Conveyour Belts
-     * */
     class BeltPath {
 
         List<ConveyorBelt> beltList;
@@ -397,5 +302,93 @@ public class BeltManager {
             return debugString;
         }
 
+    }
+
+    /* --------------- BELT DEBUG VISUAL --------------- */
+
+    class DebugVisual {
+
+        List<BeltPathDebugVisual> beltPathDebugVisualList;
+
+        public DebugVisual() {
+            Instance.OnBeltAdded += Instance_OnBeltAdded;
+            Instance.OnBeltRemoved += Instance_OnBeltRemoved;
+            beltPathDebugVisualList = new List<BeltPathDebugVisual>();
+        }
+
+        ~DebugVisual() {
+            Instance.OnBeltAdded -= Instance_OnBeltAdded;
+            Instance.OnBeltRemoved -= Instance_OnBeltRemoved;
+        }
+
+        void Instance_OnBeltAdded() {
+            RefreshVisual();
+        }
+
+        void Instance_OnBeltRemoved() {
+            RefreshVisual();
+        }
+
+        void RefreshVisual() {
+            foreach(BeltPathDebugVisual beltPathDebugVisual in beltPathDebugVisualList) {
+                beltPathDebugVisual.DestroySelf();
+            }
+
+            beltPathDebugVisualList.Clear();
+            int pathNumber = 0;
+
+            foreach(BeltPath beltPath in Instance.beltPathList) {
+                pathNumber++;
+                beltPathDebugVisualList.Add(new BeltPathDebugVisual(beltPath, pathNumber));
+            }
+        }
+    }
+
+    class BeltPathDebugVisual {
+
+        Transform pathParent;
+
+        public BeltPathDebugVisual(BeltPath beltPath, int pathNumber) {
+            pathParent = new GameObject($"Path: {pathNumber}").transform;
+            pathParent.parent = Instance.debugVisualParent;
+
+            Vector2Int gridPosition = beltPath.GetFirstBelt().GetGridPosition();
+            Transform beltDebugVisualNodeTransform = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
+            beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.green;
+
+            if(beltPath.GetBeltList().Count == 1) {
+                beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.cyan;
+                pathParent.position += new Vector3(0, .525f, 0);
+                return;
+            }
+
+            gridPosition = beltPath.GetLastBelt().GetGridPosition();
+            beltDebugVisualNodeTransform = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
+            beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.red;
+
+            for(int i = 0; i < beltPath.GetBeltList().Count - 1; i++) {
+                ConveyorBelt belt = beltPath.GetBeltList()[i];
+                ConveyorBelt nextBelt = beltPath.GetBeltList()[i + 1];
+                gridPosition = belt.GetGridPosition();
+                Vector2Int nextGridPosition = nextBelt.GetGridPosition();
+
+                if(i > 0) {
+                    beltDebugVisualNodeTransform = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
+                    beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.blue;
+                }
+
+                beltDebugVisualNodeTransform = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, BuildingSystem.Instance.GetWorldPosition(gridPosition) + new Vector3(1, 0, 1) * .5f, Quaternion.identity, pathParent);
+                beltDebugVisualNodeTransform.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.yellow;
+
+                Vector3 dirToNextBelt = (BuildingSystem.Instance.GetWorldPosition(nextGridPosition) - BuildingSystem.Instance.GetWorldPosition(gridPosition)).normalized;
+                beltDebugVisualNodeTransform.eulerAngles = new Vector3(0, -CodeMonkey.Utils.UtilsClass.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
+            }
+
+            pathParent.position += new Vector3(0, .525f, 0);
+        }
+
+        public void DestroySelf() {
+            GameObject.Destroy(pathParent.gameObject);
+        }
     }
 }
