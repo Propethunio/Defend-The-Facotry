@@ -9,14 +9,12 @@ public class FactorySim : MonoBehaviour {
     [SerializeField] int height;
     [SerializeField] bool showBeltDebug;
 
-    public PlacedObjectTypeSO test;
-
     void Start() {
         new BeltManager(showBeltDebug);
         new BuildingSystem(width, height);
         MouseClickPlane.Instance.Setup(width, height);
         TilemapVisual.Instance.Init(width, height);
-        //TimeTickSystem.Instance.SetIsTicking(true);
+        TimeTickSystem.Instance.SetIsTicking(true);
 
         for(int i = 0; i < 10; i++) {
             //GridBuildingSystem.Instance.TryPlaceObject(new Vector2Int(5 + i, 5), GameAssets.i.placedObjectTypeSO_Refs.conveyorBelt, PlacedObjectTypeSO.Dir.Right);
@@ -107,7 +105,6 @@ public class FactorySim : MonoBehaviour {
                 if(worldItemSlot.IsEmpty()) {
                     WorldItem worldItem = WorldItem.Create(worldItemSlot.GetGridPosition(), GameAssets.i.itemSO_Refs.ironOre);
                     worldItemSlot.TrySetWorldItem(worldItem);
-                    TimeTickSystem.Instance.SetIsTicking(true);
                 }
             }
         }

@@ -34,22 +34,20 @@ public class BuildingSystem {
 
     void EnableBuildingSystem() {
         if(isBuildingSystemActive) return;
-        else {
-            isBuildingSystemActive = true;
-            TilemapVisual.Instance.Show();
-            Subscribe();
-        }
+
+        isBuildingSystemActive = true;
+        TilemapVisual.Instance.Show();
+        Subscribe();
     }
 
     void DisableBuildingSystem() {
         if(!isBuildingSystemActive) return;
-        else {
-            placedObjectTypeSO = null;
-            isBuildingSystemActive = false;
-            isDemolishActive = false;
-            TilemapVisual.Instance.Hide();
-            Unsubscribe();
-        }
+
+        placedObjectTypeSO = null;
+        isBuildingSystemActive = false;
+        isDemolishActive = false;
+        TilemapVisual.Instance.Hide();
+        Unsubscribe();
     }
 
     void Subscribe() {
@@ -64,20 +62,6 @@ public class BuildingSystem {
         inputManager.buildingRotationAction -= HandleDirRotation;
         inputManager.rightClickPerformedAction -= DisableBuildingSystem;
         inputManager.backClickAction -= DisableBuildingSystem;
-    }
-
-    void Update() {
-        if(placedObjectTypeSO == GameAssets.i.placedObjectTypeSO_Refs.conveyorBelt) {
-            // Placing a belt, place in a line
-            HandleBeltPlacement();
-        } else {
-            HandleObjectPlacement();
-        }
-        HandleDemolish();
-
-        if(Input.GetMouseButtonDown(1)) {
-            DeselectObjectType();
-        }
     }
 
     void HandleObjectPlacement() {
@@ -180,7 +164,8 @@ public class BuildingSystem {
         List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
 
         foreach(Vector2Int gridPosition in gridPositionList) {
-            if(grid.gridArray[gridPosition.x, gridPosition.y] == null || grid.gridArray[gridPosition.x, gridPosition.y].placedObject != null) {
+            GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
+            if(cell == null || cell.placedObject != null) {
                 return false;
             }
         }

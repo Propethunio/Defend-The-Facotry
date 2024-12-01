@@ -46,9 +46,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4f946665f1fe44d9dd4c1affba0435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  belt: {fileID: 660790907695542647}
+  outputBelt: {fileID: 660790907695542647}
   resourceSearchRange: 3
   ghostBeltPosition: {x: 1, y: 0}
+  gatheredResource: 0
+  gatheringTime: 1.5
+  maxStoredItems: 10
+  producedItem: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
+  isProducing: 0
 --- !u!1 &8749078926807351610
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,6 +199,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Belt
+      objectReference: {fileID: 0}
+    - target: {fileID: 4330218417257807314, guid: 6344b793b09d57a459030f992986642f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -38,7 +38,7 @@ public class ItemStackList {
         ItemStack itemStack = GetItemStackWithItemType(itemSO);
         if (itemStack != null) {
             // Stack already exists, has space?
-            if (itemStack.amount + amount <= itemSO.maxStackAmount) {
+            if (itemStack.amount + amount <= 200) {
                 // Can add
                 return true;
             } else {

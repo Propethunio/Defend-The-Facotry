@@ -7,8 +7,6 @@ public class ItemSO : ScriptableObject {
 
     public string itemName;
     public Sprite sprite;
-    public int maxStackAmount;
-    public float miningTimer;
 
     public static bool IsItemSOInFilter(ItemSO itemSO, ItemSO[] filterItemSOArray) {
         // Does this Item match this Filter?

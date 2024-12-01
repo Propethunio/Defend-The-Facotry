@@ -1,17 +1,52 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ConveyorBelt : PlacedObject, IWorldItemSlot {
 
-    Vector2Int previousPosition;
-    Vector2Int nextPosition;
+    public Vector2Int previousPosition { get; private set; }
+    public Vector2Int nextPosition { get; private set; }
     WorldItem worldItem;
     bool isPartOfBuilding;
 
     protected override void Setup() {
-        previousPosition = origin + PlacedObjectTypeSO.GetDirForwardVector(dir) * -1;
-        nextPosition = origin + PlacedObjectTypeSO.GetDirForwardVector(dir);
+        Vector2Int forwardVector = PlacedObjectTypeSO.GetDirForwardVector(dir);
+        nextPosition = origin + forwardVector;
+
+        GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
+        Vector2Int backPosition = origin - forwardVector;
+
+        if(ShouldSnap(gridArray, backPosition)) {
+            previousPosition = backPosition;
+            return;
+        }
+
+        Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
+        Vector2Int rightPosition = origin + rightVector;
+        Vector2Int leftPosition = origin - rightVector;
+
+        bool snapRight = ShouldSnap(gridArray, rightPosition);
+        bool snapLeft = ShouldSnap(gridArray, leftPosition);
+
+        if(snapLeft && !snapRight) {
+            previousPosition = leftPosition;
+        } else if(snapRight && !snapLeft) {
+            previousPosition = rightPosition;
+        } else {
+            previousPosition = backPosition;
+        }
+    }
+
+    bool ShouldSnap(GridCell[,] gridArray, Vector2Int position) {
+        if(!IsPositionValid(gridArray, position)) return false;
+
+        ConveyorBelt belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
+        return belt != null && belt.nextPosition == origin;
+    }
+
+    public bool IsPositionValid(GridCell[,] gridArray, Vector2Int position) {
+        return position.x >= 0 && position.x < gridArray.GetLength(0) && position.y >= 0 && position.y < gridArray.GetLength(1);
     }
 
     public override void GridSetupDone() {
@@ -19,7 +54,6 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
     }
 
     public void SetupBuildingBelt(Vector2Int origin, PlacedObjectTypeSO.Dir dir) {
-        Debug.Log(origin);
         isPartOfBuilding = true;
         this.origin = origin;
         this.dir = dir;

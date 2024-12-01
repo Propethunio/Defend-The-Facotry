@@ -3,17 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MiningMachine : PlacedMachine, IItemStorage {
+public class GatheringMachine : PlacedMachine, IItemStorage {
 
     public event EventHandler OnItemStorageCountChanged;
 
-    [SerializeField] ConveyorBelt belt;
+    [SerializeField] ConveyorBelt outputBelt;
     [SerializeField] float resourceSearchRange;
     [SerializeField] Vector2Int ghostBeltPosition;
+    [SerializeField] ResourcesEnum gatheredResource;
+    [SerializeField] float gatheringTime;
+    [SerializeField] int maxStoredItems;
 
-    ItemSO miningResourceItem;
-    float miningTimer;
-    int storedItemCount;
+    public ItemSO producedItem;
+
+    bool resourcesInRange;
+    bool storageFull;
+    int storedItemsCount;
+    float timer;
+
+    void Update() {
+        if(!resourcesInRange || storageFull) return;
+
+        timer += Time.deltaTime;
+        if(timer >= gatheringTime) {
+            timer -= gatheringTime;
+            Gather();
+        }
+    }
+
+    void OnDestroy() {
+        Unsubscribe();
+    }
 
     public override void GridSetupDone() {
         int resourceNodeSearchWidth = 2;
@@ -36,60 +56,62 @@ public class MiningMachine : PlacedMachine, IItemStorage {
         } */
 
         SetupBelt();
+        Subscribe();
+        resourcesInRange = true;
+    }
+
+    void Subscribe() {
+        TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
+    }
+
+    void Unsubscribe() {
+        TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
     }
 
     void SetupBelt() {
         Vector2Int beltPos = placedObjectTypeSO.GetMachineBeltPosition(origin, ghostBeltPosition, dir);
-        belt.SetupBuildingBelt(beltPos, dir);
+        outputBelt.SetupBuildingBelt(beltPos, dir);
     }
 
-    public override string ToString() {
-        if(miningResourceItem == null) {
-            return "NO RESOURCES!";
-        }
-        return storedItemCount.ToString();
-    }
+    void Gather() {
+        storedItemsCount++;
 
-    private void Update() {
-        if(miningResourceItem == null) {
-            // No resources in range!
-            return;
-        }
-
-        miningTimer -= Time.deltaTime;
-        if(miningTimer <= 0f) {
-            miningTimer += miningResourceItem.miningTimer;
-
-            storedItemCount += 1;
-            OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
-            TriggerGridObjectChanged();
+        if(storedItemsCount == maxStoredItems) {
+            storageFull = true;
+            timer = 0f;
         }
     }
 
-    void MineAction() {
-        storedItemCount += 1;
-        OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
+    void OnEarlyTick() {
+        if(storedItemsCount == 0) return;
+
+        TryPutItemOnBelt();
     }
 
     void TryPutItemOnBelt() {
+        if(!outputBelt.IsEmpty()) return;
 
+        WorldItem worldItem = WorldItem.Create(outputBelt.GetGridPosition(), producedItem);
+        outputBelt.TrySetWorldItem(worldItem);
+        storedItemsCount--;
+        storageFull = false;
     }
 
     public ItemSO GetMiningResourceItem() {
-        return miningResourceItem;
+        return new ItemSO();
     }
 
     public int GetItemStoredCount(ItemSO filterItemScriptableObject) {
-        return storedItemCount;
+        return storedItemsCount;
     }
 
     public bool TryGetStoredItem(ItemSO[] filterItemSO, out ItemSO itemSO) {
         if(ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO) ||
-            ItemSO.IsItemSOInFilter(miningResourceItem, filterItemSO)) {
+            ItemSO.IsItemSOInFilter(new ItemSO(), filterItemSO)) {
             // If filter matches any or filter matches this itemType
-            if(storedItemCount > 0) {
-                storedItemCount--;
-                itemSO = miningResourceItem;
+            if(storedItemsCount > 0) {
+                storedItemsCount--;
+                itemSO = new ItemSO();
                 OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
                 TriggerGridObjectChanged();
                 return true;
