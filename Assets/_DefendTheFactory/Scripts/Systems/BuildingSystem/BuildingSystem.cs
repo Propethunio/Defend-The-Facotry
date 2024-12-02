@@ -73,37 +73,6 @@ public class BuildingSystem {
         }
     }
 
-    private void HandleBeltPlacement() {
-        // Placing a belt, place in a line
-        if(Input.GetMouseButton(0) && placedObjectTypeSO == GameAssets.i.placedObjectTypeSO_Refs.conveyorBelt && !MyUtils.IsPointerOverUI()) {
-            if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
-
-            int x = Mathf.FloorToInt(mousePosition.x);
-            int z = Mathf.FloorToInt(mousePosition.z);
-
-            Vector2Int placedObjectOrigin = new Vector2Int(x, z);
-            //TryPlaceObject(placedObjectOrigin, placedObjectTypeSO, dir);
-
-            // ###### TODO: PLACE BELTS IN A LINE
-            /*
-            if (beltPlaceStartGridPosition == null) {
-                // First stage, select start point
-                beltPlaceStartGridPosition = placedObjectOrigin;
-            } else {
-                // Second stage, place all belts
-                Vector2Int beltPlaceEndGridPosition = placedObjectOrigin;
-                for (int beltX = beltPlaceStartGridPosition.Value.x; beltX < beltPlaceEndGridPosition.x; beltX++) {
-                    TryPlaceObject(beltX, beltPlaceStartGridPosition.Value.y, placedObjectTypeSO, PlacedObjectTypeSO.Dir.Right);
-                }
-                for (int beltY = beltPlaceStartGridPosition.Value.y; beltY < beltPlaceEndGridPosition.y; beltY++) {
-                    TryPlaceObject(beltPlaceEndGridPosition.x, beltY, placedObjectTypeSO, PlacedObjectTypeSO.Dir.Up);
-
-                }
-            }
-            */
-        }
-    }
-
     void HandleDirRotation() {
         dir = PlacedObjectTypeSO.GetNextDir(dir);
     }

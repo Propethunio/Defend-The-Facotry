@@ -10,8 +10,8 @@ public class FactorySim : MonoBehaviour {
     [SerializeField] bool showBeltDebug;
 
     void Start() {
-        new BeltManager(showBeltDebug);
         new BuildingSystem(width, height);
+        new BeltManager(showBeltDebug);
         MouseClickPlane.Instance.Setup(width, height);
         TilemapVisual.Instance.Init(width, height);
         TimeTickSystem.Instance.SetIsTicking(true);

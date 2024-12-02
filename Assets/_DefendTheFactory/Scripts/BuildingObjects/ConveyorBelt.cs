@@ -68,15 +68,15 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
         }
     }
 
-    public void TakeAction() {
-        if(IsEmpty() || !GetWorldItem().CanMove()) return;
-
+    public bool TakeAction() {
+        if(worldItem == null || !worldItem.CanMove()) return false;
         IWorldItemSlot worldItemSlot = BuildingSystem.Instance.GetGridObject(nextPosition).placedObject as IWorldItemSlot;
-        if(worldItemSlot == null || !worldItemSlot.TrySetWorldItem(worldItem)) return;
-
+        if(worldItemSlot == null) return false;
+        if(!worldItemSlot.TrySetWorldItem(worldItem)) return true;
         worldItem.MoveToGridPosition(worldItemSlot.GetGridPosition());
         worldItem.SetHasAlreadyMoved();
-        RemoveWorldItem();
+        worldItem = null;
+        return false;
     }
 
     public Vector2Int GetPreviousGridPosition() {
@@ -96,7 +96,7 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
     }
 
     public bool TrySetWorldItem(WorldItem worldItem) {
-        if(IsEmpty()) {
+        if(this.worldItem == null) {
             this.worldItem = worldItem;
             return true;
         } else {
