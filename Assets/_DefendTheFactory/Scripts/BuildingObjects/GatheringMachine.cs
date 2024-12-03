@@ -89,7 +89,7 @@ public class GatheringMachine : PlacedMachine, IItemStorage {
     }
 
     void TryPutItemOnBelt() {
-        if(!outputBelt.IsEmpty()) return;
+        if(outputBelt.worldItem != null) return;
 
         WorldItem worldItem = WorldItem.Create(outputBelt.GetGridPosition(), producedItem);
         outputBelt.TrySetWorldItem(worldItem);

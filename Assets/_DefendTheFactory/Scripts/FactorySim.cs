@@ -99,12 +99,12 @@ public class FactorySim : MonoBehaviour {
     void HandleDebugSpawnItem() {
         if(Input.GetKeyDown(KeyCode.I)) {
             PlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
-            if(placedObject != null && placedObject is IWorldItemSlot) {
-                IWorldItemSlot worldItemSlot = placedObject as IWorldItemSlot;
+            if(placedObject != null && placedObject is ConveyorBelt) {
+                ConveyorBelt belt = placedObject as ConveyorBelt;
 
-                if(worldItemSlot.IsEmpty()) {
-                    WorldItem worldItem = WorldItem.Create(worldItemSlot.GetGridPosition(), GameAssets.i.itemSO_Refs.ironOre);
-                    worldItemSlot.TrySetWorldItem(worldItem);
+                if(belt.worldItem == null) {
+                    WorldItem worldItem = WorldItem.Create(belt.GetGridPosition(), GameAssets.i.itemSO_Refs.ironOre);
+                    belt.TrySetWorldItem(worldItem);
                 }
             }
         }

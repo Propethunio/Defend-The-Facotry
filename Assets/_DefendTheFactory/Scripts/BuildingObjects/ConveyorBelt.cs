@@ -5,10 +5,10 @@ using UnityEngine.UIElements;
 
 public class ConveyorBelt : PlacedObject, IWorldItemSlot {
 
-    public Vector2Int previousPosition { get; private set; }
+    public Vector2Int previousPosition;
     public Vector2Int nextPosition { get; private set; }
-    WorldItem worldItem;
-    bool isPartOfBuilding;
+    public WorldItem worldItem { get; private set; }
+    public bool isPartOfBuilding { get; private set; }
 
     protected override void Setup() {
         Vector2Int forwardVector = PlacedObjectTypeSO.GetDirForwardVector(dir);
@@ -45,7 +45,7 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
         return belt != null && belt.nextPosition == origin;
     }
 
-    public bool IsPositionValid(GridCell[,] gridArray, Vector2Int position) {
+    bool IsPositionValid(GridCell[,] gridArray, Vector2Int position) {
         return position.x >= 0 && position.x < gridArray.GetLength(0) && position.y >= 0 && position.y < gridArray.GetLength(1);
     }
 
@@ -63,8 +63,8 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
     }
 
     public void ItemResetHasAlreadyMoved() {
-        if(!IsEmpty()) {
-            GetWorldItem().ResetHasAlreadyMoved();
+        if(worldItem != null) {
+            worldItem.ResetHasAlreadyMoved();
         }
     }
 
@@ -79,22 +79,6 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
         return false;
     }
 
-    public Vector2Int GetPreviousGridPosition() {
-        return previousPosition;
-    }
-
-    public Vector2Int GetNextGridPosition() {
-        return nextPosition;
-    }
-
-    public WorldItem GetWorldItem() {
-        return worldItem;
-    }
-
-    public bool IsEmpty() {
-        return worldItem == null;
-    }
-
     public bool TrySetWorldItem(WorldItem worldItem) {
         if(this.worldItem == null) {
             this.worldItem = worldItem;
@@ -104,37 +88,23 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
         }
     }
 
-    public void RemoveWorldItem() {
-        worldItem = null;
-    }
-
     public override void DestroySelf() {
-        if(!IsEmpty()) {
+        if(worldItem != null) {
             worldItem.DestroySelf();
         }
 
-        BeltManager.Instance.RemoveBelt(this);
+        //BeltManager.Instance.RemoveBelt(this);
         base.DestroySelf();
     }
 
     public bool TryGetWorldItem(ItemSO[] filterItemSO, out WorldItem worldItem) {
-        if(IsEmpty()) {
-            // Nothing to grab
+        if(this.worldItem != null && (ItemSO.IsItemSOInFilter(this.worldItem.GetItemSO(), filterItemSO) || ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO))) {
+            worldItem = this.worldItem;
+            this.worldItem = null;
+            return true;
+        } else {
             worldItem = null;
             return false;
-        } else {
-            // Check if this WorldItem matches the filter OR there's no filter
-            if(ItemSO.IsItemSOInFilter(GetWorldItem().GetItemSO(), filterItemSO) ||
-                ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO)) {
-                // Return this World Item and Remove it
-                worldItem = GetWorldItem();
-                RemoveWorldItem();
-                return true;
-            } else {
-                // This itemType does not match the filter
-                worldItem = null;
-                return false;
-            }
         }
     }
 

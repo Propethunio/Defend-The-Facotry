@@ -31,69 +31,103 @@ public class BeltManager {
     }
 
     void OnTick() {
-        for(int i = 0; i < beltPathList.Count; i++) {
-            beltPathList[i].ItemResetHasAlreadyMoved();
+        int beltPathsCount = beltPathList.Count;
+
+        for(int i = 0; i < beltPathsCount; i++) {
+            beltPathList[i].RefreshMovedItems();
         }
 
-        for(int i = 0; i < beltPathList.Count; i++) {
+        for(int i = 0; i < beltPathsCount; i++) {
             beltPathList[i].TakeAction();
         }
     }
 
-    public void AddBelt(ConveyorBelt belt) {
-        BeltPath connectedBeltPath = null;
-        ConveyorBelt connectingBelt = IsConnectingToBelt(belt.previousPosition);
+    public void AddBelt(ConveyorBelt newBelt) {
+        BeltPath connectingBeltPath = null;
+        ConveyorBelt connectingBelt = TryGetConnectingBelt(newBelt.previousPosition);
 
-        if(connectingBelt != null && connectingBelt.nextPosition == belt.origin) {
-            connectedBeltPath = beltEndsDict[connectingBelt];
-            connectedBeltPath.beltList.Add(belt);
-            beltEndsDict.Add(belt, connectedBeltPath);
-            if(connectedBeltPath.beltList.Count > 2) {
-                beltEndsDict.Remove(connectingBelt);
-            }
+        if(connectingBelt != null && connectingBelt.nextPosition == newBelt.origin) {
+            ConnectToPreviousBelt(newBelt, connectingBelt, ref connectingBeltPath);
         }
 
-        connectingBelt = IsConnectingToBelt(belt.nextPosition);
+        connectingBelt = TryGetConnectingBelt(newBelt.nextPosition);
 
-        if(connectingBelt != null && connectingBelt.previousPosition == belt.origin) {
-            if(connectedBeltPath != null) {
-                BeltPath path = beltEndsDict[connectingBelt];
-                beltEndsDict.Remove(belt);
-                if(connectedBeltPath == path) {
-                    beltEndsDict.Remove(connectingBelt);
-                } else {
-                    connectedBeltPath.beltList.AddRange(path.beltList);
-                    if(path.beltList.Count > 1) {
-                        beltEndsDict.Remove(connectingBelt);
-                    }
-                    beltEndsDict[path.beltList[^1]] = connectedBeltPath;
-                    beltPathList.Remove(path);
-                }
-            } else {
-                connectedBeltPath = beltEndsDict[connectingBelt];
-                connectedBeltPath.beltList.Insert(0, belt);
-                beltEndsDict.Add(belt, connectedBeltPath);
-                if(connectedBeltPath.beltList.Count > 2) {
-                    beltEndsDict.Remove(connectingBelt);
-                }
-            }
+        if(connectingBelt != null) {
+            ConnectToNextBelt(newBelt, connectingBelt, ref connectingBeltPath);
         }
 
-        if(connectedBeltPath == null) {
-            connectedBeltPath = new BeltPath();
-            connectedBeltPath.beltList.Add(belt);
-            beltPathList.Add(connectedBeltPath);
-            beltEndsDict.Add(belt, connectedBeltPath);
+        if(connectingBeltPath == null) {
+            CreateNewBeltPath(newBelt, ref connectingBeltPath);
         }
 
         OnBeltAdded?.Invoke();
     }
 
-    ConveyorBelt IsConnectingToBelt(Vector2Int connectingPosition) {
+    ConveyorBelt TryGetConnectingBelt(Vector2Int connectingPosition) {
         if(connectingPosition.x >= 0 && connectingPosition.x < gridArray.GetLength(0) && connectingPosition.y >= 0 && connectingPosition.y < gridArray.GetLength(1)) {
             return gridArray[connectingPosition.x, connectingPosition.y].placedObject as ConveyorBelt;
         }
         return null;
+    }
+
+    void ConnectToPreviousBelt(ConveyorBelt newBelt, ConveyorBelt previousBelt, ref BeltPath connectingBeltPath) {
+        connectingBeltPath = beltEndsDict[previousBelt];
+        connectingBeltPath.beltList.Add(newBelt);
+        beltEndsDict.Add(newBelt, connectingBeltPath);
+
+        if(connectingBeltPath.beltList.Count > 2) {
+            beltEndsDict.Remove(previousBelt);
+        }
+    }
+
+    void ConnectToNextBelt(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
+        if(!nextBelt.isPartOfBuilding && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin && !(BuildingSystem.Instance.GetGridObject(nextBelt.previousPosition).placedObject is IWorldItemSlot)) {
+            nextBelt.previousPosition = newBelt.origin;
+        }
+
+        if(nextBelt.previousPosition == newBelt.origin) {
+            if(connectingBeltPath != null) {
+                MergeBeltPaths(newBelt, nextBelt, connectingBeltPath);
+            } else {
+                InsertIntoExistingPath(newBelt, nextBelt, ref connectingBeltPath);
+            }
+        }
+    }
+
+    void MergeBeltPaths(ConveyorBelt newBelt, ConveyorBelt nextBelt, BeltPath connectingBeltPath) {
+        var pathToMerge = beltEndsDict[nextBelt];
+        beltEndsDict.Remove(newBelt);
+
+        if(connectingBeltPath == pathToMerge) {
+            beltEndsDict.Remove(nextBelt);
+            return;
+        }
+
+        connectingBeltPath.beltList.AddRange(pathToMerge.beltList);
+
+        if(pathToMerge.beltList.Count > 1) {
+            beltEndsDict.Remove(nextBelt);
+        }
+
+        beltEndsDict[pathToMerge.beltList[^1]] = connectingBeltPath;
+        beltPathList.Remove(pathToMerge);
+    }
+
+    void InsertIntoExistingPath(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
+        connectingBeltPath = beltEndsDict[nextBelt];
+        connectingBeltPath.beltList.Insert(0, newBelt);
+        beltEndsDict.Add(newBelt, connectingBeltPath);
+
+        if(connectingBeltPath.beltList.Count > 2) {
+            beltEndsDict.Remove(nextBelt);
+        }
+    }
+
+    void CreateNewBeltPath(ConveyorBelt newBelt, ref BeltPath connectingBeltPath) {
+        connectingBeltPath = new BeltPath();
+        connectingBeltPath.beltList.Add(newBelt);
+        beltPathList.Add(connectingBeltPath);
+        beltEndsDict.Add(newBelt, connectingBeltPath);
     }
 
     public void RemoveBelt(ConveyorBelt belt) {
@@ -105,43 +139,42 @@ public class BeltManager {
 
         public List<ConveyorBelt> beltList { get; private set; } = new List<ConveyorBelt>();
 
-        public void TakeAction() {
-            if(beltList[^1].origin == beltList[0].previousPosition) {
-                bool loopRepeat = true;
-                List<ConveyorBelt> beltsToRepeat = new List<ConveyorBelt>();
-
-                for(int i = beltList.Count - 1; i >= 0; i--) {
-                    if(beltList[i].TakeAction() && loopRepeat) {
-                        beltsToRepeat.Add(beltList[i]);
-                    } else {
-                        loopRepeat = false;
-                    }
-                }
-
-                int count = beltsToRepeat.Count;
-
-                for(int i = 0; i < count; i++) {
-                    beltsToRepeat[i].TakeAction();
-                }
-
-                return;
-            }
-
-            /*Vector2Int nextPosition = beltList[^1].nextPosition;
-            PlacedObject nextObject = Instance.gridArray[nextPosition.x, nextPosition.y].placedObject;
-
-            if(nextObject is ConveyorMerger) {
-                beltList[^1].TakeAction();
-            }*/
-
-            for(int i = beltList.Count - 2; i >= 0; i--) {
-                beltList[i].TakeAction();
+        public void RefreshMovedItems() {
+            for(int i = beltList.Count - 1; i >= 0; i--) {
+                beltList[i].ItemResetHasAlreadyMoved();
             }
         }
 
-        public void ItemResetHasAlreadyMoved() {
+        public void TakeAction() {
+            if(beltList[^1].origin == beltList[0].previousPosition) {
+                ExecuteLoopActions();
+            } else {
+                ExecuteStandardActions();
+            }
+        }
+
+        void ExecuteLoopActions() {
+            var beltsToRepeat = new List<ConveyorBelt>();
+            var shouldRepeat = true;
+
             for(int i = beltList.Count - 1; i >= 0; i--) {
-                beltList[i].ItemResetHasAlreadyMoved();
+                if(beltList[i].TakeAction() && shouldRepeat) {
+                    beltsToRepeat.Add(beltList[i]);
+                } else {
+                    shouldRepeat = false;
+                }
+            }
+
+            int repeatCount = beltsToRepeat.Count;
+
+            for(int i = 0; i < repeatCount; i++) {
+                beltsToRepeat[i].TakeAction();
+            }
+        }
+
+        void ExecuteStandardActions() {
+            for(int i = beltList.Count - 2; i >= 0; i--) {
+                beltList[i].TakeAction();
             }
         }
     }
