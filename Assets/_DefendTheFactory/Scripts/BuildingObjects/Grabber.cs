@@ -22,8 +22,8 @@ public class Grabber : PlacedObject {
 
 
     protected override void Setup() {
-        grabPosition = origin + PlacedObjectTypeSO.GetDirForwardVector(dir) * -1;
-        dropPosition = origin + PlacedObjectTypeSO.GetDirForwardVector(dir);
+        grabPosition = origin;
+        dropPosition = origin;
 
         state = State.Cooldown;
 

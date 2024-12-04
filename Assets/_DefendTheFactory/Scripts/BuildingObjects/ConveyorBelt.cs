@@ -1,20 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using UnityEngine;
 
 public class ConveyorBelt : PlacedObject, IWorldItemSlot {
 
-    public Vector2Int previousPosition;
+    [SerializeField] GameObject straightBeltVisual;
+    [SerializeField] GameObject leftTurnVisual;
+    [SerializeField] GameObject rightTurnVisual;
+
+    [HideInInspector] public Vector2Int previousPosition;
     public Vector2Int nextPosition { get; private set; }
     public WorldItem worldItem { get; private set; }
     public bool isPartOfBuilding { get; private set; }
 
+    BuildingSystem buildingSystem;
+
     protected override void Setup() {
-        Vector2Int forwardVector = PlacedObjectTypeSO.GetDirForwardVector(dir);
+        buildingSystem = BuildingSystem.Instance;
+        Vector2Int forwardVector = buildingSystem.GetDirForwardVector(dir);
         nextPosition = origin + forwardVector;
 
-        GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
+        GridCell[,] gridArray = buildingSystem.grid.gridArray;
         Vector2Int backPosition = origin - forwardVector;
 
         if(ShouldSnap(gridArray, backPosition)) {
@@ -51,14 +55,15 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
 
     public override void GridSetupDone() {
         BeltManager.Instance.AddBelt(this);
+        SetUpVisual();
     }
 
-    public void SetupBuildingBelt(Vector2Int origin, PlacedObjectTypeSO.Dir dir) {
+    public void SetupBuildingBelt(Vector2Int origin, Dir dir) {
         isPartOfBuilding = true;
         this.origin = origin;
         this.dir = dir;
         Setup();
-        BuildingSystem.Instance.AddGhostBeltToGrid(origin, this);
+        buildingSystem.AddGhostBeltToGrid(origin, this);
         GridSetupDone();
     }
 
@@ -70,7 +75,7 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
 
     public bool TakeAction() {
         if(worldItem == null || !worldItem.CanMove()) return false;
-        IWorldItemSlot worldItemSlot = BuildingSystem.Instance.GetGridObject(nextPosition).placedObject as IWorldItemSlot;
+        IWorldItemSlot worldItemSlot = buildingSystem.GetGridObject(nextPosition).placedObject as IWorldItemSlot;
         if(worldItemSlot == null) return false;
         if(!worldItemSlot.TrySetWorldItem(worldItem)) return true;
         worldItem.MoveToGridPosition(worldItemSlot.GetGridPosition());
@@ -93,7 +98,6 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
             worldItem.DestroySelf();
         }
 
-        //BeltManager.Instance.RemoveBelt(this);
         base.DestroySelf();
     }
 
@@ -110,5 +114,39 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
 
     public ItemSO[] GetItemSOThatCanStore() {
         return new ItemSO[] { GameAssets.i.itemSO_Refs.any };
+    }
+
+    void SetUpVisual() {
+        Vector2Int forwardVector = buildingSystem.GetDirForwardVector(dir);
+        Vector2Int backPosition = origin - forwardVector;
+
+        if(previousPosition == backPosition) return;
+
+        Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
+        Vector2Int leftPosition = origin - rightVector;
+
+        if(previousPosition == leftPosition) {
+            ShowLeftVisual();
+        } else {
+            ShowRightVisual();
+        }
+    }
+
+    public void ShowStraightVisual() {
+        straightBeltVisual.SetActive(true);
+        leftTurnVisual.SetActive(false);
+        rightTurnVisual.SetActive(false);
+    }
+
+    public void ShowLeftVisual() {
+        straightBeltVisual.SetActive(false);
+        leftTurnVisual.SetActive(true);
+        rightTurnVisual.SetActive(false);
+    }
+
+    public void ShowRightVisual() {
+        straightBeltVisual.SetActive(false);
+        leftTurnVisual.SetActive(false);
+        rightTurnVisual.SetActive(true);
     }
 }

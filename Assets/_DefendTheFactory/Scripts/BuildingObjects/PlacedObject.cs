@@ -5,11 +5,11 @@ using UnityEngine;
 public class PlacedObject : MonoBehaviour {
 
     public Vector2Int origin { get; protected set; }
+    public Dir dir { get; protected set; }
     protected PlacedObjectTypeSO placedObjectTypeSO;
-    protected PlacedObjectTypeSO.Dir dir;
 
-    public static PlacedObject Create(Vector3 worldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir, PlacedObjectTypeSO placedObjectTypeSO) {
-        PlacedObject placedObject = Instantiate(placedObjectTypeSO.prefab, worldPosition, Quaternion.Euler(0, placedObjectTypeSO.GetRotationAngle(dir), 0)).GetComponent<PlacedObject>();
+    public static PlacedObject Create(Vector3 worldPosition, Vector2Int origin, Dir dir, PlacedObjectTypeSO placedObjectTypeSO) {
+        PlacedObject placedObject = Instantiate(placedObjectTypeSO.prefab, worldPosition, Quaternion.Euler(0, BuildingSystem.Instance.GetRotationAngle(dir), 0)).GetComponent<PlacedObject>();
         //ParticleSystem fxBuildingPlaced = Instantiate(GameAssets.i.fxBuildingPlaced, worldPosition, Quaternion.identity).GetComponent<ParticleSystem>();
 
         //ParticleSystem.MainModule mainModule = fxBuildingPlaced.main;

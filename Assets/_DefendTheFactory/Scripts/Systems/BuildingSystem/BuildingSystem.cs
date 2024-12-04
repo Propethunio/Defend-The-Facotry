@@ -7,24 +7,26 @@ public class BuildingSystem {
 
     public static BuildingSystem Instance { get; private set; }
 
-    public event EventHandler OnSelectedChanged;
-    public event EventHandler OnObjectPlaced;
-
-    [SerializeField] PlacedObjectTypeSO ghostBelt;
+    public Action OnSelectedObject;
+    public Action OnBuildCanceled;
+    public Action OnObjectPlaced;
 
     public Grid<GridCell> grid { get; private set; }
+    public PlacedObjectTypeSO placedObjectTypeSO { get; private set; }
+    public Dir dir { get; private set; }
 
-    PlacedObjectTypeSO placedObjectTypeSO;
-    PlacedObjectTypeSO.Dir dir;
     InputManager inputManager;
     bool isBuildingSystemActive;
     bool isDemolishActive;
+    BuildingGhost buildingGhost;
 
     public BuildingSystem(int width, int height) {
         if(Instance == null) Instance = this;
         else return;
         grid = new Grid<GridCell>(width, height, (Grid<GridCell> g, int x, int y) => new GridCell(x, y));
         inputManager = InputManager.Instance;
+        buildingGhost = BuildingGhost.Instance;
+        buildingGhost.Init();
     }
 
     public void Test(PlacedObjectTypeSO test) {
@@ -35,6 +37,7 @@ public class BuildingSystem {
     void EnableBuildingSystem() {
         if(isBuildingSystemActive) return;
 
+        dir = Dir.Down;
         isBuildingSystemActive = true;
         TilemapVisual.Instance.Show();
         Subscribe();
@@ -47,6 +50,7 @@ public class BuildingSystem {
         isBuildingSystemActive = false;
         isDemolishActive = false;
         TilemapVisual.Instance.Hide();
+        OnBuildCanceled?.Invoke();
         Unsubscribe();
     }
 
@@ -74,7 +78,7 @@ public class BuildingSystem {
     }
 
     void HandleDirRotation() {
-        dir = PlacedObjectTypeSO.GetNextDir(dir);
+        dir = GetNextDir(dir);
     }
 
     private void HandleDemolish() {
@@ -125,7 +129,7 @@ public class BuildingSystem {
             TilemapVisual.Instance.Show();
         }
 
-        OnSelectedChanged?.Invoke(this, EventArgs.Empty);
+        OnSelectedObject?.Invoke();
     }
 
     bool TryPlaceObject(Vector2Int placedObjectOrigin) {
@@ -148,7 +152,7 @@ public class BuildingSystem {
         }
 
         placedObject.GridSetupDone();
-        OnObjectPlaced?.Invoke(placedObject, EventArgs.Empty);
+        OnObjectPlaced?.Invoke();
         return true;
     }
 
@@ -178,7 +182,7 @@ public class BuildingSystem {
     }
 
     public Vector3 GetMouseWorldSnappedPosition() {
-        if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return Vector3.zero;
+        if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return Vector3.back;
 
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);
@@ -193,11 +197,9 @@ public class BuildingSystem {
     }
 
     public Quaternion GetPlacedObjectRotation() {
-        if(placedObjectTypeSO != null) {
-            return Quaternion.Euler(0, placedObjectTypeSO.GetRotationAngle(dir), 0);
-        } else {
-            return Quaternion.identity;
-        }
+        if(placedObjectTypeSO == null) return Quaternion.identity;
+
+        return Quaternion.Euler(0, GetRotationAngle(dir), 0);
     }
 
     public PlacedObjectTypeSO GetPlacedObjectTypeSO() {
@@ -222,5 +224,35 @@ public class BuildingSystem {
 
     public void AddGhostBeltToGrid(Vector2Int beltPosition, PlacedObject belt) {
         grid.gridArray[beltPosition.x, beltPosition.y].SetPlacedObject(belt);
+    }
+
+    public Dir GetNextDir(Dir dir) {
+        switch(dir) {
+            default:
+            case Dir.Down: return Dir.Left;
+            case Dir.Left: return Dir.Up;
+            case Dir.Up: return Dir.Right;
+            case Dir.Right: return Dir.Down;
+        }
+    }
+
+    public Vector2Int GetDirForwardVector(Dir dir) {
+        switch(dir) {
+            default:
+            case Dir.Down: return new Vector2Int(0, -1);
+            case Dir.Left: return new Vector2Int(-1, 0);
+            case Dir.Up: return new Vector2Int(0, +1);
+            case Dir.Right: return new Vector2Int(+1, 0);
+        }
+    }
+
+    public int GetRotationAngle(Dir dir) {
+        switch(dir) {
+            default:
+            case Dir.Down: return 0;
+            case Dir.Left: return 90;
+            case Dir.Up: return 180;
+            case Dir.Right: return 270;
+        }
     }
 }

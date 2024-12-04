@@ -9,8 +9,9 @@ public class BeltManager {
     public event Action OnBeltAdded;
     public event Action OnBeltRemoved;
 
+    public Dictionary<ConveyorBelt, BeltPath> beltEndsDict { get; private set; } = new Dictionary<ConveyorBelt, BeltPath>();
+
     GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
-    Dictionary<ConveyorBelt, BeltPath> beltEndsDict = new Dictionary<ConveyorBelt, BeltPath>();
     List<BeltPath> beltPathList = new List<BeltPath>();
 
     public Transform debugVisualParent { get; private set; }
@@ -135,7 +136,7 @@ public class BeltManager {
         OnBeltRemoved?.Invoke();
     }
 
-    class BeltPath {
+    public class BeltPath {
 
         public List<ConveyorBelt> beltList { get; private set; } = new List<ConveyorBelt>();
 

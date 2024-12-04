@@ -1,51 +1,58 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class BuildingGhost : MonoBehaviour {
 
+    public static BuildingGhost Instance { get; private set; }
+
+    public Action positionChanged;
+
+    public Vector3 lastPosition { get; private set; }
+
+    [SerializeField] float snapSpeed;
+
     Transform visual;
-    PlacedObjectTypeSO placedObjectTypeSO;
+    BuildingSystem buildingSystem;
 
-    void Start() {
-        //RefreshVisual();
-
-        //BuildingSystem.Instance.OnSelectedChanged += Instance_OnSelectedChanged;
-    }
-
-    void Instance_OnSelectedChanged(object sender, System.EventArgs e) {
-        RefreshVisual();
+    private void Awake() {
+        if(Instance == null) Instance = this;
+        else return;
     }
 
     void LateUpdate() {
-        Vector3 targetPosition = BuildingSystem.Instance.GetMouseWorldSnappedPosition();
-        targetPosition.y = 0f;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 15f);
+        if(!visual) return;
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, BuildingSystem.Instance.GetPlacedObjectRotation(), Time.deltaTime * 15f);
+        MoveGhostToGridPosition();
+    }
+
+    public void Init() {
+        buildingSystem = BuildingSystem.Instance;
+        buildingSystem.OnSelectedObject += RefreshVisual;
+        buildingSystem.OnBuildCanceled += DestroyVisual;
+    }
+
+    void MoveGhostToGridPosition() {
+        Vector3 targetPosition = buildingSystem.GetMouseWorldSnappedPosition();
+
+        if(targetPosition != Vector3.back && lastPosition != targetPosition) {
+            lastPosition = targetPosition;
+            positionChanged?.Invoke();
+        }
+
+        transform.position = Vector3.Lerp(transform.position, lastPosition, Time.deltaTime * snapSpeed);
+        transform.rotation = Quaternion.Lerp(transform.rotation, buildingSystem.GetPlacedObjectRotation(), Time.deltaTime * snapSpeed);
     }
 
     void RefreshVisual() {
-        if(visual != null) {
-            Destroy(visual.gameObject);
-            visual = null;
-        }
-
-        PlacedObjectTypeSO placedObjectTypeSO = BuildingSystem.Instance.GetPlacedObjectTypeSO();
-
-        if(placedObjectTypeSO != null) {
-            visual = Instantiate(placedObjectTypeSO.visual, Vector3.zero, Quaternion.identity);
-            visual.parent = transform;
-            visual.localPosition = Vector3.zero;
-            visual.localEulerAngles = Vector3.zero;
-            SetLayerRecursive(visual.gameObject, 11);
-        }
+        DestroyVisual();
+        visual = Instantiate(buildingSystem.GetPlacedObjectTypeSO().visual, Vector3.zero, Quaternion.identity, transform);
+        visual.localPosition = Vector3.zero;
+        visual.localEulerAngles = Vector3.zero;
     }
 
-    void SetLayerRecursive(GameObject targetGameObject, int layer) {
-        targetGameObject.layer = layer;
-        foreach(Transform child in targetGameObject.transform) {
-            SetLayerRecursive(child.gameObject, layer);
+    void DestroyVisual() {
+        if(visual != null) {
+            Destroy(visual.gameObject);
         }
     }
 }
