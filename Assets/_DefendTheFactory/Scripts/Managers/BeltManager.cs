@@ -232,7 +232,7 @@ public class BeltManager {
 
             if(beltPath.beltList.Count == 1) {
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.cyan;
-                pathParent.position += new Vector3(0, .525f, 0);
+                pathParent.position += new Vector3(0, .33f, 0);
                 return;
             } else {
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.green;
@@ -267,7 +267,7 @@ public class BeltManager {
                 nodeVisual.eulerAngles = new Vector3(0, -CodeMonkey.Utils.UtilsClass.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
             }
 
-            pathParent.position += new Vector3(0, .525f, 0);
+            pathParent.position += new Vector3(0, .33f, 0);
         }
 
         public void DestroySelf() {
