@@ -11,8 +11,8 @@ public class BeltManager {
 
     public Dictionary<ConveyorBelt, BeltPath> beltEndsDict { get; private set; } = new Dictionary<ConveyorBelt, BeltPath>();
 
-    GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
-    List<BeltPath> beltPathList = new List<BeltPath>();
+    readonly GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
+    readonly List<BeltPath> beltPathList = new ();
 
     public Transform debugVisualParent { get; private set; }
 
@@ -82,7 +82,7 @@ public class BeltManager {
     }
 
     void ConnectToNextBelt(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
-        if(!nextBelt.isPartOfBuilding && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin && !(BuildingSystem.Instance.GetGridObject(nextBelt.previousPosition).placedObject is IWorldItemSlot)) {
+        if(!nextBelt.isPartOfBuilding && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin && BuildingSystem.Instance.GetGridObject(nextBelt.previousPosition).placedObject is not IWorldItemSlot) {
             nextBelt.previousPosition = newBelt.origin;
         }
 
@@ -184,7 +184,7 @@ public class BeltManager {
 
     class DebugVisual {
 
-        List<BeltPathDebugVisual> beltPathDebugVisualList = new List<BeltPathDebugVisual>();
+        readonly List<BeltPathDebugVisual> beltPathDebugVisualList = new ();
 
         public DebugVisual() {
             Instance.OnBeltAdded += Instance_OnBeltAdded;
@@ -221,7 +221,7 @@ public class BeltManager {
 
     class BeltPathDebugVisual {
 
-        Transform pathParent;
+        readonly Transform pathParent;
 
         public BeltPathDebugVisual(BeltPath beltPath, int pathNumber) {
             pathParent = new GameObject($"Path: {pathNumber}").transform;

@@ -6,11 +6,11 @@ namespace UtilsClass {
     public static class MyUtils {
 
         public static bool IsPointerOverUI() {
-            PointerEventData pe = new PointerEventData(EventSystem.current);
-            pe.position = Input.mousePosition;
-            List<RaycastResult> hits = new List<RaycastResult>();
+            PointerEventData pe = new(EventSystem.current) {
+                position = Input.mousePosition
+            };
+            List<RaycastResult> hits = new();
             EventSystem.current.RaycastAll(pe, hits);
-            Debug.Log(hits.Count > 0);
             return hits.Count > 0;
         }
     }

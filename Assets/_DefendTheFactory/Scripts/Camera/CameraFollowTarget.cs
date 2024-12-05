@@ -1,9 +1,9 @@
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class CameraFollowTarget : MonoBehaviour {
 
-    [SerializeField] CinemachineVirtualCamera cinemachineCamera;
+    [SerializeField] CinemachineCamera cinemachineCamera;
     [SerializeField] bool moveOnEdge;
     [SerializeField] int edgeScrollSize;
     [SerializeField] float moveSpeed;
@@ -18,7 +18,7 @@ public class CameraFollowTarget : MonoBehaviour {
 
     Transform target;
     InputManager inputManager;
-    CinemachineTransposer transposer;
+    CinemachineFollow cinemachineFollow;
     Vector3 followOffset;
     Vector2 lastMousePosMove;
     float lastMousePosRotate;
@@ -31,11 +31,11 @@ public class CameraFollowTarget : MonoBehaviour {
     void Start() {
         target = transform;
         inputManager = InputManager.Instance;
-        transposer = cinemachineCamera.GetCinemachineComponent<CinemachineTransposer>();
-        followOffset = transposer.m_FollowOffset;
+        cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
+        followOffset = cinemachineFollow.FollowOffset;
         zoomAmount = followOffset.y;
         followOffset.z = zoomRotationCurve.Evaluate(zoomAmount);
-        transposer.m_FollowOffset = followOffset;
+        cinemachineFollow.FollowOffset = followOffset;
         CalculateScrollBounds();
         SubscribeEvents();
     }
@@ -134,6 +134,6 @@ public class CameraFollowTarget : MonoBehaviour {
         zoomAmount = Mathf.Clamp(zoomAmount, zoomRange.x, zoomRange.y);
         followOffset.y = zoomAmount;
         followOffset.z = zoomRotationCurve.Evaluate(zoomAmount);
-        transposer.m_FollowOffset = Vector3.Lerp(transposer.m_FollowOffset, followOffset, Time.deltaTime * zoomLerpSpeed);
+        cinemachineFollow.FollowOffset = Vector3.Lerp(cinemachineFollow.FollowOffset, followOffset, Time.deltaTime * zoomLerpSpeed);
     }
 }
