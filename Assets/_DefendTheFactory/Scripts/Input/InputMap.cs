@@ -31,7 +31,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""name"": ""New action"",
                     ""type"": ""Button"",
                     ""id"": ""a91786a7-399f-4408-aab7-ae335e26064a"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -408,7 +408,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""id"": ""be987415-da22-4c0d-b4b5-b1b68dce4e0a"",
                     ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""Scale(factor=90)"",
                     ""groups"": """",
                     ""action"": ""CameraZoom"",
                     ""isComposite"": false,

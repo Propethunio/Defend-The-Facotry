@@ -9,10 +9,10 @@ public class BeltManager {
     public event Action OnBeltAdded;
     public event Action OnBeltRemoved;
 
-    public Dictionary<ConveyorBelt, BeltPath> beltEndsDict { get; private set; } = new Dictionary<ConveyorBelt, BeltPath>();
+    public Dictionary<ConveyorBelt, BeltPath> beltEndsDict { get; private set; } = new();
 
     readonly GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
-    readonly List<BeltPath> beltPathList = new ();
+    readonly List<BeltPath> beltPathList = new();
 
     public Transform debugVisualParent { get; private set; }
 
@@ -82,8 +82,12 @@ public class BeltManager {
     }
 
     void ConnectToNextBelt(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
-        if(!nextBelt.isPartOfBuilding && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin && BuildingSystem.Instance.GetGridObject(nextBelt.previousPosition).placedObject is not IWorldItemSlot) {
-            nextBelt.previousPosition = newBelt.origin;
+        if(!nextBelt.isPartOfBuilding && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin) {
+            ConveyorBelt beltConnectedToNextBelt = BuildingSystem.Instance.GetGridObject(nextBelt.previousPosition).placedObject as ConveyorBelt;
+
+            if(beltConnectedToNextBelt == null || beltConnectedToNextBelt.nextPosition != nextBelt.origin) {
+                nextBelt.previousPosition = newBelt.origin;
+            }
         }
 
         if(nextBelt.previousPosition == newBelt.origin) {
@@ -96,7 +100,7 @@ public class BeltManager {
     }
 
     void MergeBeltPaths(ConveyorBelt newBelt, ConveyorBelt nextBelt, BeltPath connectingBeltPath) {
-        var pathToMerge = beltEndsDict[nextBelt];
+        BeltPath pathToMerge = beltEndsDict[nextBelt];
         beltEndsDict.Remove(newBelt);
 
         if(connectingBeltPath == pathToMerge) {
@@ -125,7 +129,7 @@ public class BeltManager {
     }
 
     void CreateNewBeltPath(ConveyorBelt newBelt, ref BeltPath connectingBeltPath) {
-        connectingBeltPath = new BeltPath();
+        connectingBeltPath = new();
         connectingBeltPath.beltList.Add(newBelt);
         beltPathList.Add(connectingBeltPath);
         beltEndsDict.Add(newBelt, connectingBeltPath);
@@ -138,7 +142,7 @@ public class BeltManager {
 
     public class BeltPath {
 
-        public List<ConveyorBelt> beltList { get; private set; } = new List<ConveyorBelt>();
+        public List<ConveyorBelt> beltList { get; private set; } = new();
 
         public void RefreshMovedItems() {
             for(int i = beltList.Count - 1; i >= 0; i--) {
@@ -155,8 +159,8 @@ public class BeltManager {
         }
 
         void ExecuteLoopActions() {
-            var beltsToRepeat = new List<ConveyorBelt>();
-            var shouldRepeat = true;
+            List<ConveyorBelt> beltsToRepeat = new();
+            bool shouldRepeat = true;
 
             for(int i = beltList.Count - 1; i >= 0; i--) {
                 if(beltList[i].TakeAction() && shouldRepeat) {
@@ -184,7 +188,7 @@ public class BeltManager {
 
     class DebugVisual {
 
-        readonly List<BeltPathDebugVisual> beltPathDebugVisualList = new ();
+        readonly List<BeltPathDebugVisual> beltPathDebugVisualList = new();
 
         public DebugVisual() {
             Instance.OnBeltAdded += Instance_OnBeltAdded;

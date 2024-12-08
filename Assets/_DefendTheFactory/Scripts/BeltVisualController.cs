@@ -61,19 +61,27 @@ public class BeltVisualController : MonoBehaviour {
 
         if(!IsPositionValid(nextPosition)) return;
 
-        ConveyorBelt belt = gridArray[nextPosition.x, nextPosition.y].placedObject as ConveyorBelt;
-        if(belt == null || belt.isPartOfBuilding || !beltMenager.beltEndsDict.ContainsKey(belt) || belt.nextPosition == origin || belt.previousPosition == origin || gridArray[belt.previousPosition.x, belt.previousPosition.y].placedObject is IWorldItemSlot) {
+        ConveyorBelt nextBelt = gridArray[nextPosition.x, nextPosition.y].placedObject as ConveyorBelt;
+        if(nextBelt == null || nextBelt.isPartOfBuilding || !beltMenager.beltEndsDict.ContainsKey(nextBelt) || nextBelt.nextPosition == origin || nextBelt.previousPosition == origin) {
             return;
         }
 
-        modifiedBelt = belt;
-        Vector2Int forwardVector = buildingSystem.GetDirForwardVector(belt.dir);
+        if(IsPositionValid(new Vector2Int(nextBelt.previousPosition.x, nextBelt.previousPosition.y))) {
+            ConveyorBelt beltConnectedToNextBelt = gridArray[nextBelt.previousPosition.x, nextBelt.previousPosition.y].placedObject as ConveyorBelt;
+
+            if(beltConnectedToNextBelt != null && beltConnectedToNextBelt.nextPosition == nextBelt.origin) {
+                return;
+            }
+        }
+
+        modifiedBelt = nextBelt;
+        Vector2Int forwardVector = buildingSystem.GetDirForwardVector(nextBelt.dir);
         Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
 
-        if(belt.origin - rightVector == origin) {
-            belt.ShowLeftVisual();
+        if(nextBelt.origin - rightVector == origin) {
+            nextBelt.ShowLeftVisual();
         } else {
-            belt.ShowRightVisual();
+            nextBelt.ShowRightVisual();
         }
     }
 

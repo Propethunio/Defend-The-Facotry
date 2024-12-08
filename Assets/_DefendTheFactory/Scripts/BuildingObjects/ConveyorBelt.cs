@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class ConveyorBelt : PlacedObject, IWorldItemSlot {
+public class ConveyorBelt : PlacedObject {
 
     [SerializeField] GameObject straightBeltVisual;
     [SerializeField] GameObject leftTurnVisual;
@@ -75,10 +75,10 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
 
     public bool TakeAction() {
         if(worldItem == null || !worldItem.CanMove()) return false;
-        IWorldItemSlot worldItemSlot = buildingSystem.GetGridObject(nextPosition).placedObject as IWorldItemSlot;
-        if(worldItemSlot == null) return false;
-        if(!worldItemSlot.TrySetWorldItem(worldItem)) return true;
-        worldItem.MoveToGridPosition(worldItemSlot.GetGridPosition());
+        ConveyorBelt nextBelt = buildingSystem.GetGridObject(nextPosition).placedObject as ConveyorBelt;
+        if(nextBelt == null) return false;
+        if(!nextBelt.TrySetWorldItem(worldItem)) return true;
+        worldItem.MoveToGridPosition(nextBelt.GetGridPosition());
         worldItem.SetHasAlreadyMoved();
         worldItem = null;
         return false;
@@ -99,21 +99,6 @@ public class ConveyorBelt : PlacedObject, IWorldItemSlot {
         }
 
         base.DestroySelf();
-    }
-
-    public bool TryGetWorldItem(ItemSO[] filterItemSO, out WorldItem worldItem) {
-        if(this.worldItem != null && (ItemSO.IsItemSOInFilter(this.worldItem.GetItemSO(), filterItemSO) || ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO))) {
-            worldItem = this.worldItem;
-            this.worldItem = null;
-            return true;
-        } else {
-            worldItem = null;
-            return false;
-        }
-    }
-
-    public ItemSO[] GetItemSOThatCanStore() {
-        return new ItemSO[] { GameAssets.i.itemSO_Refs.any };
     }
 
     void SetUpVisual() {
