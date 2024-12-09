@@ -10,30 +10,30 @@ public class PlacedObjectTypeSO : ScriptableObject {
     public int width;
     public int height;
 
-    public Vector2Int GetRotationOffset(Dir dir) {
+    public Vector2Int GetRotationOffset(BuildingDir dir) {
         switch(dir) {
             default:
-            case Dir.Down: return new Vector2Int(0, 0);
-            case Dir.Left: return new Vector2Int(0, width);
-            case Dir.Up: return new Vector2Int(width, height);
-            case Dir.Right: return new Vector2Int(height, 0);
+            case BuildingDir.Down: return new Vector2Int(0, 0);
+            case BuildingDir.Left: return new Vector2Int(0, width);
+            case BuildingDir.Up: return new Vector2Int(width, height);
+            case BuildingDir.Right: return new Vector2Int(height, 0);
         }
     }
 
-    public List<Vector2Int> GetGridPositionList(Vector2Int offset, Dir dir) {
+    public List<Vector2Int> GetGridPositionList(Vector2Int offset, BuildingDir dir) {
         List<Vector2Int> gridPositionList = new List<Vector2Int>();
         switch(dir) {
             default:
-            case Dir.Down:
-            case Dir.Up:
+            case BuildingDir.Down:
+            case BuildingDir.Up:
                 for(int x = 0; x < width; x++) {
                     for(int y = 0; y < height; y++) {
                         gridPositionList.Add(offset + new Vector2Int(x, y));
                     }
                 }
                 break;
-            case Dir.Left:
-            case Dir.Right:
+            case BuildingDir.Left:
+            case BuildingDir.Right:
                 for(int x = 0; x < height; x++) {
                     for(int y = 0; y < width; y++) {
                         gridPositionList.Add(offset + new Vector2Int(x, y));
@@ -45,26 +45,26 @@ public class PlacedObjectTypeSO : ScriptableObject {
         return gridPositionList;
     }
 
-    public Vector2Int GetMachineBeltPosition(Vector2Int origin, Vector2Int beltPos, Dir dir) {
+    public Vector2Int GetMachineBeltPosition(Vector2Int origin, Vector2Int beltPos, BuildingDir dir) {
         int beltX = beltPos.x;
         int beltY = beltPos.y;
         Vector2Int rotatedBeltPos;
 
         switch(dir) {
             default:
-            case Dir.Down:
+            case BuildingDir.Down:
                 rotatedBeltPos = new Vector2Int(beltX, beltY);
                 break;
 
-            case Dir.Left:
+            case BuildingDir.Left:
                 rotatedBeltPos = new Vector2Int(beltY, width - beltX - 1);
                 break;
 
-            case Dir.Up:
+            case BuildingDir.Up:
                 rotatedBeltPos = new Vector2Int(width - beltX - 1, height - beltY - 1);
                 break;
 
-            case Dir.Right:
+            case BuildingDir.Right:
                 rotatedBeltPos = new Vector2Int(height - beltY - 1, beltX);
                 break;
         }

@@ -58,7 +58,7 @@ public class ConveyorBelt : PlacedObject {
         SetUpVisual();
     }
 
-    public void SetupBuildingBelt(Vector2Int origin, Dir dir) {
+    public void SetupBuildingBelt(Vector2Int origin, BuildingDir dir) {
         isPartOfBuilding = true;
         this.origin = origin;
         this.dir = dir;

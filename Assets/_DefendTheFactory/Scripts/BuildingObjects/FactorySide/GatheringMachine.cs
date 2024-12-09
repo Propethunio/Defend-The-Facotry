@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GatheringMachine : PlacedMachine, IItemStorage {
+public class GatheringMachine : PlacedObject, IItemStorage {
 
     public event EventHandler OnItemStorageCountChanged;
 

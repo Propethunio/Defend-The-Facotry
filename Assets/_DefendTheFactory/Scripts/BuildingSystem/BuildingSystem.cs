@@ -13,7 +13,7 @@ public class BuildingSystem {
 
     public Grid<GridCell> grid { get; private set; }
     public PlacedObjectTypeSO placedObjectTypeSO { get; private set; }
-    public Dir dir { get; private set; }
+    public BuildingDir dir { get; private set; }
 
     InputManager inputManager;
     bool isBuildingSystemActive;
@@ -37,7 +37,7 @@ public class BuildingSystem {
     void EnableBuildingSystem() {
         if(isBuildingSystemActive) return;
 
-        dir = Dir.Down;
+        dir = BuildingDir.Down;
         isBuildingSystemActive = true;
         TilemapVisual.Instance.Show();
         Subscribe();
@@ -226,33 +226,33 @@ public class BuildingSystem {
         grid.gridArray[beltPosition.x, beltPosition.y].SetPlacedObject(belt);
     }
 
-    public Dir GetNextDir(Dir dir) {
+    public BuildingDir GetNextDir(BuildingDir dir) {
         switch(dir) {
             default:
-            case Dir.Down: return Dir.Left;
-            case Dir.Left: return Dir.Up;
-            case Dir.Up: return Dir.Right;
-            case Dir.Right: return Dir.Down;
+            case BuildingDir.Down: return BuildingDir.Left;
+            case BuildingDir.Left: return BuildingDir.Up;
+            case BuildingDir.Up: return BuildingDir.Right;
+            case BuildingDir.Right: return BuildingDir.Down;
         }
     }
 
-    public Vector2Int GetDirForwardVector(Dir dir) {
+    public Vector2Int GetDirForwardVector(BuildingDir dir) {
         switch(dir) {
             default:
-            case Dir.Down: return new Vector2Int(0, -1);
-            case Dir.Left: return new Vector2Int(-1, 0);
-            case Dir.Up: return new Vector2Int(0, +1);
-            case Dir.Right: return new Vector2Int(+1, 0);
+            case BuildingDir.Down: return new Vector2Int(0, -1);
+            case BuildingDir.Left: return new Vector2Int(-1, 0);
+            case BuildingDir.Up: return new Vector2Int(0, +1);
+            case BuildingDir.Right: return new Vector2Int(+1, 0);
         }
     }
 
-    public int GetRotationAngle(Dir dir) {
+    public int GetRotationAngle(BuildingDir dir) {
         switch(dir) {
             default:
-            case Dir.Down: return 0;
-            case Dir.Left: return 90;
-            case Dir.Up: return 180;
-            case Dir.Right: return 270;
+            case BuildingDir.Down: return 0;
+            case BuildingDir.Left: return 90;
+            case BuildingDir.Up: return 180;
+            case BuildingDir.Right: return 270;
         }
     }
 }

@@ -1,4 +1,4 @@
-public enum Dir {
+public enum BuildingDir {
     Down,
     Left,
     Up,
