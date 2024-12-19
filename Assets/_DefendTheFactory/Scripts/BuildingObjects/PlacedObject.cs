@@ -6,7 +6,7 @@ public class PlacedObject : MonoBehaviour {
 
     public Vector2Int origin { get; protected set; }
     public BuildingDir dir { get; protected set; }
-    protected PlacedObjectTypeSO placedObjectTypeSO;
+    public PlacedObjectTypeSO placedObjectTypeSO { get; protected set; }
 
     public static PlacedObject Create(Vector3 worldPosition, Vector2Int origin, BuildingDir dir, PlacedObjectTypeSO placedObjectTypeSO) {
         PlacedObject placedObject = Instantiate(placedObjectTypeSO.prefab, worldPosition, Quaternion.Euler(0, BuildingSystem.Instance.GetRotationAngle(dir), 0)).GetComponent<PlacedObject>();

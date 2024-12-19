@@ -2,13 +2,32 @@ using UnityEngine;
 
 public class LogisticMachine : PlacedObject {
 
-    [SerializeField] int maxStorage;
-    [SerializeField] int currentStorage;
+    public int maxStorage;
+    public int currentStorage;
+    public BuildingSystem buildingSystem;
+    [SerializeField] ConveyorBelt ghostBelt;
 
+    void OnDestroy() {
+        Unsubscribe();
+    }
 
+    public virtual void Subscribe() {
+        TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
+        TimeTickSystem.Instance.OnTick += OnTick;
+        TimeTickSystem.Instance.OnLateTick += OnLateTick;
+    }
 
+    public virtual void Unsubscribe() {
+        TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
+        TimeTickSystem.Instance.OnTick -= OnTick;
+        TimeTickSystem.Instance.OnLateTick -= OnLateTick;
+    }
 
-    LogisticDir GetNextDir(LogisticDir dir) {
+    public virtual void OnEarlyTick() { }
+    public virtual void OnTick() { }
+    public virtual void OnLateTick() { }
+
+    public virtual LogisticDir GetNextDir(LogisticDir dir) {
         switch(dir) {
             default:
             case LogisticDir.Straight: return LogisticDir.Right;

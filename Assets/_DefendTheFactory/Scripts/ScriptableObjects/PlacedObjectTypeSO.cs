@@ -71,4 +71,30 @@ public class PlacedObjectTypeSO : ScriptableObject {
 
         return origin + rotatedBeltPos;
     }
+
+    public Vector2Int GetMachineCenterPosition(Vector2Int origin, int width, int height, BuildingDir dir) {
+        Vector2Int centerOffset = new Vector2Int(width / 2, height / 2);
+        Vector2Int rotatedCenterOffset;
+
+        switch(dir) {
+            default:
+            case BuildingDir.Down:
+                rotatedCenterOffset = centerOffset;
+                break;
+
+            case BuildingDir.Left:
+                rotatedCenterOffset = new Vector2Int(centerOffset.y, width - centerOffset.x - 1);
+                break;
+
+            case BuildingDir.Up:
+                rotatedCenterOffset = new Vector2Int(width - centerOffset.x - 1, height - centerOffset.y - 1);
+                break;
+
+            case BuildingDir.Right:
+                rotatedCenterOffset = new Vector2Int(height - centerOffset.y - 1, centerOffset.x);
+                break;
+        }
+
+        return origin + rotatedCenterOffset;
+    }
 }

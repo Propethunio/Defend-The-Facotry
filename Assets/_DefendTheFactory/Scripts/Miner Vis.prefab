@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 5102847317333570327}
   - component: {fileID: 8267419234351805953}
   - component: {fileID: 8210106910398701022}
+  - component: {fileID: 5331424323362325893}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -91,6 +92,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -116,6 +120,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5331424323362325893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8749078926807351610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2447defee34d0504ba937b30bd0dc9c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 3
+  discColor: {r: 0, g: 1, b: 0, a: 0.14901961}
+  circleColor: {r: 0, g: 1, b: 0, a: 0.69803923}
 --- !u!1001 &7096179508302419956
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -181,7 +200,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4848659835129461284, guid: 42da657ef51f31d4aa30f4953efd294d,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     m_RemovedComponents: []

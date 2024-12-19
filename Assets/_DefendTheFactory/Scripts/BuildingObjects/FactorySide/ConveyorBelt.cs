@@ -84,6 +84,10 @@ public class ConveyorBelt : PlacedObject {
         return false;
     }
 
+    public void ResetWorldItem() {
+        worldItem = null;
+    }
+
     public bool TrySetWorldItem(WorldItem worldItem) {
         if(this.worldItem == null) {
             this.worldItem = worldItem;
