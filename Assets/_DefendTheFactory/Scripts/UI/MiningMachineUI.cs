@@ -10,7 +10,7 @@ public class MiningMachineUI : MonoBehaviour {
     public static MiningMachineUI Instance { get; private set; }
 
 
-    private MiningMachine miningMachine;
+    private GatheringMachine miningMachine;
     private TextMeshProUGUI miningItemText;
 
     private void Awake() {
@@ -34,7 +34,7 @@ public class MiningMachineUI : MonoBehaviour {
     }
 
 
-    public void Show(MiningMachine miningMachine) {
+    public void Show(GatheringMachine miningMachine) {
         gameObject.SetActive(true);
 
         if (this.miningMachine != null) {

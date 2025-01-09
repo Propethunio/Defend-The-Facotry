@@ -4,15 +4,5 @@ using UnityEngine;
 
 public class ResourceNode : PlacedObject {
 
-    [SerializeField] private ItemSO itemScriptableObject;
-
-
-    protected override void Setup() {
-        //Debug.Log("ResourceNode.Setup()");
-    }
-
-    public ItemSO GetItemScriptableObject() {
-        return itemScriptableObject;
-    }
-
+    [field: SerializeField] public ResourcesEnum ResourceType { get; private set; }
 }

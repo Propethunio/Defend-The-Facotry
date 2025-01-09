@@ -148,7 +148,7 @@ public class Assembler : PlacedObject, IItemStorage {
         ItemStack itemStack = GetInputItemStackWithItemType(itemSO);
         if (itemStack != null) {
             // Stack already exists, has space?
-            if (itemStack.amount + amount <= itemSO.maxStackAmount) {
+            if (itemStack.amount + amount <= 200) {
                 // Can add
                 return true;
             } else {

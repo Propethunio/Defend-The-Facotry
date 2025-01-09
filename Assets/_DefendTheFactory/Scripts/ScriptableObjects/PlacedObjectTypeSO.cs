@@ -1,53 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu()]
 public class PlacedObjectTypeSO : ScriptableObject {
-
-    public static Dir GetNextDir(Dir dir) {
-        switch (dir) {
-            default:
-            case Dir.Down:      return Dir.Left;
-            case Dir.Left:      return Dir.Up;
-            case Dir.Up:        return Dir.Right;
-            case Dir.Right:     return Dir.Down;
-        }
-    }
-
-    public static Vector2Int GetDirForwardVector(Dir dir) {
-        switch (dir) {
-            default:
-            case Dir.Down:  return new Vector2Int( 0, -1);
-            case Dir.Left:  return new Vector2Int(-1,  0);
-            case Dir.Up:    return new Vector2Int( 0, +1);
-            case Dir.Right: return new Vector2Int(+1,  0);
-        }
-    }
-
-    public static Dir GetDir(Vector2Int from, Vector2Int to) {
-        if (from.x < to.x) {
-            return Dir.Right;
-        } else {
-            if (from.x > to.x) {
-                return Dir.Left;
-            } else {
-                if (from.y < to.y) {
-                    return Dir.Up;
-                } else {
-                    return Dir.Down;
-                }
-            }
-        }
-    }
-
-
-    public enum Dir {
-        Down,
-        Left,
-        Up,
-        Right,
-    }
 
     public string nameString;
     public Transform prefab;
@@ -55,49 +10,91 @@ public class PlacedObjectTypeSO : ScriptableObject {
     public int width;
     public int height;
 
-
-    public int GetRotationAngle(Dir dir) {
-        switch (dir) {
+    public Vector2Int GetRotationOffset(BuildingDir dir) {
+        switch(dir) {
             default:
-            case Dir.Down:  return 0;
-            case Dir.Left:  return 90;
-            case Dir.Up:    return 180;
-            case Dir.Right: return 270;
+            case BuildingDir.Down: return new Vector2Int(0, 0);
+            case BuildingDir.Left: return new Vector2Int(0, width);
+            case BuildingDir.Up: return new Vector2Int(width, height);
+            case BuildingDir.Right: return new Vector2Int(height, 0);
         }
     }
 
-    public Vector2Int GetRotationOffset(Dir dir) {
-        switch (dir) {
-            default:
-            case Dir.Down:  return new Vector2Int(0, 0);
-            case Dir.Left:  return new Vector2Int(0, width);
-            case Dir.Up:    return new Vector2Int(width, height);
-            case Dir.Right: return new Vector2Int(height, 0);
-        }
-    }
-
-    public List<Vector2Int> GetGridPositionList(Vector2Int offset, Dir dir) {
+    public List<Vector2Int> GetGridPositionList(Vector2Int offset, BuildingDir dir) {
         List<Vector2Int> gridPositionList = new List<Vector2Int>();
-        switch (dir) {
+        switch(dir) {
             default:
-            case Dir.Down:
-            case Dir.Up:
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
+            case BuildingDir.Down:
+            case BuildingDir.Up:
+                for(int x = 0; x < width; x++) {
+                    for(int y = 0; y < height; y++) {
                         gridPositionList.Add(offset + new Vector2Int(x, y));
                     }
                 }
                 break;
-            case Dir.Left:
-            case Dir.Right:
-                for (int x = 0; x < height; x++) {
-                    for (int y = 0; y < width; y++) {
+            case BuildingDir.Left:
+            case BuildingDir.Right:
+                for(int x = 0; x < height; x++) {
+                    for(int y = 0; y < width; y++) {
                         gridPositionList.Add(offset + new Vector2Int(x, y));
                     }
                 }
                 break;
         }
+
         return gridPositionList;
     }
 
+    public Vector2Int GetMachineBeltPosition(Vector2Int origin, Vector2Int beltPos, BuildingDir dir) {
+        int beltX = beltPos.x;
+        int beltY = beltPos.y;
+        Vector2Int rotatedBeltPos;
+
+        switch(dir) {
+            default:
+            case BuildingDir.Down:
+                rotatedBeltPos = new Vector2Int(beltX, beltY);
+                break;
+
+            case BuildingDir.Left:
+                rotatedBeltPos = new Vector2Int(beltY, width - beltX - 1);
+                break;
+
+            case BuildingDir.Up:
+                rotatedBeltPos = new Vector2Int(width - beltX - 1, height - beltY - 1);
+                break;
+
+            case BuildingDir.Right:
+                rotatedBeltPos = new Vector2Int(height - beltY - 1, beltX);
+                break;
+        }
+
+        return origin + rotatedBeltPos;
+    }
+
+    public Vector2Int GetMachineCenterPosition(Vector2Int origin, int width, int height, BuildingDir dir) {
+        Vector2Int centerOffset = new Vector2Int(width / 2, height / 2);
+        Vector2Int rotatedCenterOffset;
+
+        switch(dir) {
+            default:
+            case BuildingDir.Down:
+                rotatedCenterOffset = centerOffset;
+                break;
+
+            case BuildingDir.Left:
+                rotatedCenterOffset = new Vector2Int(centerOffset.y, width - centerOffset.x - 1);
+                break;
+
+            case BuildingDir.Up:
+                rotatedCenterOffset = new Vector2Int(width - centerOffset.x - 1, height - centerOffset.y - 1);
+                break;
+
+            case BuildingDir.Right:
+                rotatedCenterOffset = new Vector2Int(height - centerOffset.y - 1, centerOffset.x);
+                break;
+        }
+
+        return origin + rotatedCenterOffset;
+    }
 }

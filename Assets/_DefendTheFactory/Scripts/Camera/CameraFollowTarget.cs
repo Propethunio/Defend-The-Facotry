@@ -1,9 +1,9 @@
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class CameraFollowTarget : MonoBehaviour {
 
-    [SerializeField] CinemachineVirtualCamera cinemachineCamera;
+    [SerializeField] CinemachineCamera cinemachineCamera;
     [SerializeField] bool moveOnEdge;
     [SerializeField] int edgeScrollSize;
     [SerializeField] float moveSpeed;
@@ -18,7 +18,7 @@ public class CameraFollowTarget : MonoBehaviour {
 
     Transform target;
     InputManager inputManager;
-    CinemachineTransposer transposer;
+    CinemachineFollow cinemachineFollow;
     Vector3 followOffset;
     Vector2 lastMousePosMove;
     float lastMousePosRotate;
@@ -31,13 +31,13 @@ public class CameraFollowTarget : MonoBehaviour {
     void Start() {
         target = transform;
         inputManager = InputManager.Instance;
-        transposer = cinemachineCamera.GetCinemachineComponent<CinemachineTransposer>();
-        followOffset = transposer.m_FollowOffset;
+        cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
+        followOffset = cinemachineFollow.FollowOffset;
         zoomAmount = followOffset.y;
         followOffset.z = zoomRotationCurve.Evaluate(zoomAmount);
-        transposer.m_FollowOffset = followOffset;
+        cinemachineFollow.FollowOffset = followOffset;
         CalculateScrollBounds();
-        ObserveEvents();
+        SubscribeEvents();
     }
 
     void Update() {
@@ -51,11 +51,11 @@ public class CameraFollowTarget : MonoBehaviour {
         screenTopScroll = Screen.height - edgeScrollSize;
     }
 
-    void ObserveEvents() {
-        inputManager.rightClickPerformed += InputManager_rightClickPerformed;
-        inputManager.rightClickCanceled += InputManager_rightClickCanceled;
-        inputManager.scrollClickPerformed += InputManager_scrollClickPerformed;
-        inputManager.scrollClickCanceled += InputManager_scrollClickCanceled;
+    void SubscribeEvents() {
+        inputManager.rightClickPerformedAction += InputManager_rightClickPerformed;
+        inputManager.rightClickCanceledAction += InputManager_rightClickCanceled;
+        inputManager.scrollClickPerformedAction += InputManager_scrollClickPerformed;
+        inputManager.scrollClickCanceledAction += InputManager_scrollClickCanceled;
     }
 
     void InputManager_rightClickPerformed() {
@@ -86,7 +86,6 @@ public class CameraFollowTarget : MonoBehaviour {
             Vector2 mouseMove = newMousePosMove - lastMousePosMove;
             inputDir.x = Mathf.Clamp(-mouseMove.x, -moveSpeedOnDrag, moveSpeedOnDrag);
             inputDir.y = Mathf.Clamp(-mouseMove.y, -moveSpeedOnDrag, moveSpeedOnDrag);
-
             lastMousePosMove = newMousePosMove;
         } else {
             inputDir = inputManager.moveDir;
@@ -135,6 +134,6 @@ public class CameraFollowTarget : MonoBehaviour {
         zoomAmount = Mathf.Clamp(zoomAmount, zoomRange.x, zoomRange.y);
         followOffset.y = zoomAmount;
         followOffset.z = zoomRotationCurve.Evaluate(zoomAmount);
-        transposer.m_FollowOffset = Vector3.Lerp(transposer.m_FollowOffset, followOffset, Time.deltaTime * zoomLerpSpeed);
+        cinemachineFollow.FollowOffset = Vector3.Lerp(cinemachineFollow.FollowOffset, followOffset, Time.deltaTime * zoomLerpSpeed);
     }
 }

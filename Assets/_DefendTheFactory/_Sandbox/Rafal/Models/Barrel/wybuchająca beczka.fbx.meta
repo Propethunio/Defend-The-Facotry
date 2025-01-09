@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/_DefendTheFactory/_Sandbox/Rafal/Models/Barrel/wybuchająca beczka.fbx.meta
 guid: 4328593d056891f438bfc390e9c4d2e5
+=======
+guid: b8b67598b331c4040916c138eb2f8b80
+>>>>>>> origin/BuildingSystem:Assets/_DefendTheFactory/_Sandbox/Rafal/Models/sawmill/tartakLPlv1.fbx.meta
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []

@@ -53,7 +53,7 @@ public class SelectTypeUI : MonoBehaviour {
     }
 
     private void Start() {
-        BuildingSystem.Instance.OnSelectedChanged += Instance_OnSelectedChanged;
+        BuildingSystem.Instance.OnSelectedObject += Instance_OnSelectedChanged;
 
         UpdateSelectedPlacedObject();
 
@@ -67,7 +67,7 @@ public class SelectTypeUI : MonoBehaviour {
         AddTooltipToButton(transform.Find("DemolishBtn").GetComponent<Button_UI>(), "Demolish");
     }
 
-    private void Instance_OnSelectedChanged(object sender, System.EventArgs e) {
+    private void Instance_OnSelectedChanged() {
         UpdateSelectedPlacedObject();
     }
 
