@@ -96,7 +96,7 @@ public class GatheringMachine : PlacedObject, IItemStorage {
 
     void SetupBelt() {
         Vector2Int beltPos = placedObjectTypeSO.GetMachineBeltPosition(origin, ghostBeltPosition, dir);
-        outputBelt.SetupBuildingBelt(beltPos, dir);
+        outputBelt.SetupBuildingBelt(beltPos, dir, this);
     }
 
     void Gather() {

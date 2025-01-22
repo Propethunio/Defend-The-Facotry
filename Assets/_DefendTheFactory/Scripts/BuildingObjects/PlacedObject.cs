@@ -60,9 +60,4 @@ public class PlacedObject : MonoBehaviour {
     public virtual void DestroySelf() {
         Destroy(gameObject);
     }
-
-    public override string ToString() {
-        return placedObjectTypeSO.nameString;
-    }
-
 }

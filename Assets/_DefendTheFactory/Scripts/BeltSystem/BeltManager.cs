@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BeltManager {
@@ -82,7 +83,7 @@ public class BeltManager {
     }
 
     void ConnectToNextBelt(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
-        if(!nextBelt.isPartOfBuilding && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin) {
+        if(nextBelt.parentBuilding == null && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin) {
             ConveyorBelt beltConnectedToNextBelt = BuildingSystem.Instance.GetGridObject(nextBelt.previousPosition).placedObject as ConveyorBelt;
 
             if(beltConnectedToNextBelt == null || beltConnectedToNextBelt.nextPosition != nextBelt.origin) {
@@ -136,7 +137,64 @@ public class BeltManager {
     }
 
     public void RemoveBelt(ConveyorBelt belt) {
-        //TODO
+        BeltPath beltPath = null;
+
+        if(!beltEndsDict.TryGetValue(belt, out beltPath)) {
+            beltPath = beltEndsDict.Values.FirstOrDefault(path => path.beltList.Contains(belt));
+        }
+
+        int beltIndex = beltPath.beltList.IndexOf(belt);
+
+        // Removing from the start of the path
+        if(beltIndex == 0) {
+            beltPath.beltList.RemoveAt(0);
+            beltEndsDict.Remove(belt);
+
+            if(beltPath.beltList.Count > 0) {
+                ConveyorBelt newFirstBelt = beltPath.beltList[0];
+                beltEndsDict[newFirstBelt] = beltPath;
+                //TODO: CHECK LEFT/RIGHT FOR CONNECTIONS
+            } else {
+                beltPathList.Remove(beltPath);
+            }
+        }
+
+        // Removing from the end of the path
+        else if(beltIndex == beltPath.beltList.Count - 1) {
+            beltPath.beltList.RemoveAt(beltIndex);
+            beltEndsDict.Remove(belt);
+
+            if(beltPath.beltList.Count >= 2) {
+                ConveyorBelt newLastBelt = beltPath.beltList[^1];
+                beltEndsDict[newLastBelt] = beltPath;
+            }
+        }
+
+        // Removing from the middle of the path
+        else {
+            List<ConveyorBelt> firstPart = beltPath.beltList.GetRange(0, beltIndex);
+            List<ConveyorBelt> secondPart = beltPath.beltList.GetRange(beltIndex + 1, beltPath.beltList.Count - beltIndex - 1);
+            beltPathList.Remove(beltPath);
+
+            BeltPath newFirstPath = new();
+            newFirstPath.beltList.AddRange(firstPart);
+            beltPathList.Add(newFirstPath);
+            beltEndsDict[firstPart[0]] = newFirstPath;
+
+            if(firstPart.Count >= 2) {
+                beltEndsDict[firstPart[^1]] = newFirstPath;
+            }
+
+            BeltPath newSecondPath = new();
+            newSecondPath.beltList.AddRange(secondPart);
+            beltPathList.Add(newSecondPath);
+            beltEndsDict[secondPart[0]] = newSecondPath;
+
+            if(secondPart.Count >= 2) {
+                beltEndsDict[secondPart[^1]] = newSecondPath;
+            }
+        }
+
         OnBeltRemoved?.Invoke();
     }
 

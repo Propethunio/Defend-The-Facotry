@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UtilsClass;
 
 public class GameManager : MonoBehaviour {
 
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         HandleDebugSpawnItem();
+        HandleDebugDeleteBuilding();
     }
 
     void HandleDebugSpawnItem() {
@@ -29,6 +31,12 @@ public class GameManager : MonoBehaviour {
                     belt.TrySetWorldItem(worldItem);
                 }
             }
+        }
+    }
+
+    void HandleDebugDeleteBuilding() {
+        if(Input.GetMouseButtonDown(1) && !MyUtils.IsPointerOverUI()) {
+            BuildingSystem.Instance.HandleDemolish();
         }
     }
 }

@@ -62,7 +62,7 @@ public class BeltVisualController : MonoBehaviour {
         if(!IsPositionValid(nextPosition)) return;
 
         ConveyorBelt nextBelt = gridArray[nextPosition.x, nextPosition.y].placedObject as ConveyorBelt;
-        if(nextBelt == null || nextBelt.isPartOfBuilding || !beltMenager.beltEndsDict.ContainsKey(nextBelt) || nextBelt.nextPosition == origin || nextBelt.previousPosition == origin) {
+        if(nextBelt == null || nextBelt.parentBuilding != null || !beltMenager.beltEndsDict.ContainsKey(nextBelt) || nextBelt.nextPosition == origin || nextBelt.previousPosition == origin) {
             return;
         }
 

@@ -9,7 +9,7 @@ public class ConveyorBelt : PlacedObject {
     [HideInInspector] public Vector2Int previousPosition;
     public Vector2Int nextPosition { get; private set; }
     public WorldItem worldItem { get; private set; }
-    public bool isPartOfBuilding { get; private set; }
+    public PlacedObject parentBuilding { get; private set; }
 
     BuildingSystem buildingSystem;
 
@@ -58,10 +58,10 @@ public class ConveyorBelt : PlacedObject {
         SetUpVisual();
     }
 
-    public void SetupBuildingBelt(Vector2Int origin, BuildingDir dir) {
-        isPartOfBuilding = true;
+    public void SetupBuildingBelt(Vector2Int origin, BuildingDir dir, PlacedObject parentBuilding) {
         this.origin = origin;
         this.dir = dir;
+        this.parentBuilding = parentBuilding;
         Setup();
         buildingSystem.AddGhostBeltToGrid(origin, this);
         GridSetupDone();
@@ -102,6 +102,7 @@ public class ConveyorBelt : PlacedObject {
             worldItem.DestroySelf();
         }
 
+        BeltManager.Instance.RemoveBelt(this);
         base.DestroySelf();
     }
 

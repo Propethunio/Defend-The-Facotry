@@ -81,24 +81,25 @@ public class BuildingSystem {
         dir = GetNextDir(dir);
     }
 
-    private void HandleDemolish() {
-        if(isDemolishActive && Input.GetMouseButtonDown(0) && !MyUtils.IsPointerOverUI()) {
-            if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
+    public void HandleDemolish() {
+        if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
 
-            int x = Mathf.FloorToInt(mousePosition.x);
-            int z = Mathf.FloorToInt(mousePosition.z);
+        int x = Mathf.FloorToInt(mousePosition.x);
+        int z = Mathf.FloorToInt(mousePosition.z);
 
-            PlacedObject placedObject = grid.gridArray[x, z].placedObject;
-            if(placedObject != null) {
-                // Demolish
-                placedObject.DestroySelf();
+        PlacedObject placedObject = grid.gridArray[x, z].placedObject;
+        if(placedObject == null) return;
 
-                List<Vector2Int> gridPositionList = placedObject.GetGridPositionList();
-                foreach(Vector2Int gridPosition in gridPositionList) {
-                    grid.gridArray[gridPosition.x, gridPosition.y].ClearPlacedObject();
-                }
-            }
+        if(placedObject is ConveyorBelt conveyorBelt && conveyorBelt.parentBuilding != null) {
+            placedObject = conveyorBelt.parentBuilding;
         }
+
+        List<Vector2Int> gridPositionList = placedObject.GetGridPositionList();
+        foreach(Vector2Int gridPosition in gridPositionList) {
+            grid.gridArray[gridPosition.x, gridPosition.y].ClearPlacedObject();
+        }
+
+        placedObject.DestroySelf();
     }
 
     private void UpdateCanBuildTilemap() {
