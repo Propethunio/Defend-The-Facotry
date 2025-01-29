@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GatheringMachine : PlacedObject, IItemStorage {
@@ -11,18 +12,15 @@ public class GatheringMachine : PlacedObject, IItemStorage {
     [SerializeField] ResourcesEnum gatheredResource;
     [SerializeField] float gatheringTime;
     [SerializeField] int maxStoredItems;
+    [SerializeField] ItemSO producedItem;
 
-    public GameObject prefab;
-
-    public ItemSO producedItem;
-
-    bool resourcesInRange;
-    bool storageFull;
+    List<ResourceNode> nodesInRange = new();
+    ResourceNode currentNode;
     int storedItemsCount;
     float timer;
 
     void Update() {
-        if(!resourcesInRange || storageFull) return;
+        if(currentNode == null || storedItemsCount == maxStoredItems) return;
 
         timer += Time.deltaTime;
         if(timer >= gatheringTime) {
@@ -38,39 +36,55 @@ public class GatheringMachine : PlacedObject, IItemStorage {
     public override void GridSetupDone() {
         SetupBelt();
         Subscribe();
+        SearchForResources();
 
-        Vector2Int centerPosition = placedObjectTypeSO.GetMachineCenterPosition(origin, placedObjectTypeSO.width, placedObjectTypeSO.height, dir);
+        if(nodesInRange.Count > 0) {
+            PickClosestNode();
+        }
+    }
 
+    void SearchForResources() {
+        Vector2 centerPosition = placedObjectTypeSO.GetCenterPosition(origin, dir);
         GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
 
-        int top = (int)Mathf.Ceil(centerPosition.y - resourceSearchRange);
-        int bottom = (int)Mathf.Floor(centerPosition.y + resourceSearchRange - 1);
-        int left = (int)Mathf.Ceil(centerPosition.x - resourceSearchRange);
-        int right = (int)Mathf.Floor(centerPosition.x + resourceSearchRange - 1);
+        int bottom = (int)Mathf.Floor(centerPosition.y - resourceSearchRange);
+        int top = (int)Mathf.Ceil(centerPosition.y + resourceSearchRange - 1);
+        int left = (int)Mathf.Floor(centerPosition.x - resourceSearchRange);
+        int right = (int)Mathf.Ceil(centerPosition.x + resourceSearchRange - 1);
 
-
-        for(int y = top; y <= bottom; y++) {
+        for(int y = bottom; y <= top; y++) {
             for(int x = left; x <= right; x++) {
-                if(IsPositionValid(gridArray, new Vector2Int(x, y)) && inside_circle(centerPosition, new Vector2Int(x, y))) {
-                    //Instantiate(prefab, new Vector3(x, 0, y), Quaternion.identity);
+
+                if(IsPositionValid(gridArray, new Vector2Int(x, y)) && IsInsideCircle(centerPosition, new Vector2Int(x, y))) {
                     ResourceNode node = gridArray[x, y].placedObject as ResourceNode;
-                    if(node != null && node.ResourceType == gatheredResource) {
-                        resourcesInRange = true;
-                        Debug.Log($"FOUND RESOURCE ON CELL: {x}, {y}! I CAN GATHER :D");
+                    if(node != null && node.resourceType == gatheredResource) {
+                        nodesInRange.Add(node);
+                        node.NodeGatheredCompletly += HandleNodeDestroyed;
                     }
                 }
             }
         }
-
-        if(!resourcesInRange) {
-            Debug.Log($"NO RESOURCES CLOSE TO ME :( I WILL NOT WORK");
-        }
     }
 
-    bool inside_circle(Vector2Int center, Vector2Int point) {
-        int dx = center.x - point.x;
-        int dy = center.y - point.y;
-        return dx * dx + dy * dy <= resourceSearchRange * resourceSearchRange;
+    bool IsInsideCircle(Vector2 center, Vector2Int point) {
+        float dx = center.x - (point.x + 0.5f);
+        float dy = center.y - (point.y + 0.5f);
+        return dx * dx + dy * dy <= resourceSearchRange * resourceSearchRange + 0.5f;
+    }
+
+    void PickClosestNode() {
+        Vector2 machineCenterPosition = placedObjectTypeSO.GetCenterPosition(origin, dir);
+        float currentDistance = Mathf.Infinity;
+
+        foreach(ResourceNode node in nodesInRange) {
+            Vector2 nodeCenterPosition = node.placedObjectTypeSO.GetCenterPosition(node.origin, node.dir);
+            float distanceToNode = Vector2.Distance(machineCenterPosition, nodeCenterPosition);
+
+            if(currentNode == null || distanceToNode < currentDistance) {
+                currentNode = node;
+                currentDistance = distanceToNode;
+            }
+        }
     }
 
     bool ShouldSnapBack(GridCell[,] gridArray, Vector2Int position, out ConveyorBelt belt) {
@@ -92,6 +106,9 @@ public class GatheringMachine : PlacedObject, IItemStorage {
 
     void Unsubscribe() {
         TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
+        foreach(ResourceNode node in nodesInRange) {
+            node.NodeGatheredCompletly -= HandleNodeDestroyed;
+        }
     }
 
     void SetupBelt() {
@@ -100,11 +117,17 @@ public class GatheringMachine : PlacedObject, IItemStorage {
     }
 
     void Gather() {
+        currentNode.MineRsource();
         storedItemsCount++;
+    }
 
-        if(storedItemsCount == maxStoredItems) {
-            storageFull = true;
-            timer = 0f;
+    void HandleNodeDestroyed(ResourceNode node) {
+        node.NodeGatheredCompletly -= HandleNodeDestroyed;
+        nodesInRange.Remove(node);
+
+        if(node == currentNode) {
+            currentNode = null;
+            PickClosestNode();
         }
     }
 
@@ -120,7 +143,6 @@ public class GatheringMachine : PlacedObject, IItemStorage {
         WorldItem worldItem = WorldItem.Create(outputBelt.GetGridPosition(), producedItem);
         outputBelt.TrySetWorldItem(worldItem);
         storedItemsCount--;
-        storageFull = false;
     }
 
     public ItemSO GetMiningResourceItem() {

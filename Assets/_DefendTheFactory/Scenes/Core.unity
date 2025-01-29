@@ -1368,7 +1368,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cinemachineCamera: {fileID: 1723491683}
-  moveOnEdge: 1
+  moveOnEdge: 0
   edgeScrollSize: 7
   moveSpeed: 25
   moveSpeedOnDrag: 0.8

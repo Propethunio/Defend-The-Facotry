@@ -133,15 +133,29 @@ public class BuildingSystem {
         OnSelectedObject?.Invoke();
     }
 
-    bool TryPlaceObject(Vector2Int placedObjectOrigin) {
-
+    void TryPlaceObject(Vector2Int placedObjectOrigin) {
         List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
+        List<ConveyorBelt> beltsToRemove = new();
 
         foreach(Vector2Int gridPosition in gridPositionList) {
             GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
-            if(cell == null || cell.placedObject != null) {
-                return false;
+            if(cell == null || (cell.placedObject != null && cell.placedObject is not ConveyorBelt)) {
+                return;
             }
+
+            if(cell.placedObject != null) {
+                ConveyorBelt belt = cell.placedObject as ConveyorBelt;
+
+                if(belt.parentBuilding != null) {
+                    return;
+                }
+
+                beltsToRemove.Add(belt);
+            }
+        }
+
+        foreach(ConveyorBelt belt in beltsToRemove) {
+            belt.DestroySelf();
         }
 
         Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
@@ -154,7 +168,6 @@ public class BuildingSystem {
 
         placedObject.GridSetupDone();
         OnObjectPlaced?.Invoke();
-        return true;
     }
 
     public Vector2Int GetGridPosition(Vector3 worldPosition) {

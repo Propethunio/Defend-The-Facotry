@@ -15,5 +15,5 @@ MonoBehaviour:
   nameString: Miner
   prefab: {fileID: 312247860716316089, guid: 1fcdf92e04a602e46a54b7158e256d2b, type: 3}
   visual: {fileID: 312247860716316089, guid: 538f204dccece1740bea45c9fe29c202, type: 3}
-  width: 2
+  width: 1
   height: 2

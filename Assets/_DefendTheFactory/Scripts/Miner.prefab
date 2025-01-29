@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outputBelt: {fileID: 109109171724800698}
   resourceSearchRange: 3
-  ghostBeltPosition: {x: 1, y: 0}
+  ghostBeltPosition: {x: 0, y: 0}
   gatheredResource: 0
   gatheringTime: 1
   maxStoredItems: 10
@@ -97,8 +97,8 @@ Transform:
   m_GameObject: {fileID: 8749078926807351610}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0.1, z: 1}
-  m_LocalScale: {x: 2, y: 0.2, z: 2}
+  m_LocalPosition: {x: 0.5, y: 0.1, z: 1}
+  m_LocalScale: {x: 1, y: 0.2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 312247860716316089}
