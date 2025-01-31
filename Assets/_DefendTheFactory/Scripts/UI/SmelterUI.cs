@@ -14,7 +14,7 @@ public class SmelterUI : MonoBehaviour {
     [SerializeField] private List<ItemRecipeSO> itemRecipeScriptableObjectList;
 
     private Dictionary<ItemRecipeSO, Transform> recipeButtonDic;
-    private Smelter smelter;
+    private Constructor smelter;
     private Image craftingProgressBar;
 
     private void Awake() {
@@ -82,7 +82,7 @@ public class SmelterUI : MonoBehaviour {
 
     private void UpdateSelectedRecipe() {
         foreach (ItemRecipeSO itemRecipeScriptableObject in recipeButtonDic.Keys) {
-            if (smelter != null && smelter.GetItemRecipeSO() == itemRecipeScriptableObject) {
+            if (smelter != null && smelter.itemRecipeSO == itemRecipeScriptableObject) {
                 // This one is selected
                 recipeButtonDic[itemRecipeScriptableObject].Find("Selected").gameObject.SetActive(true);
             } else {
@@ -107,8 +107,8 @@ public class SmelterUI : MonoBehaviour {
             }
         }
 
-        if (smelter != null && smelter.HasItemRecipe()) {
-            ItemRecipeSO itemRecipeScriptableObject = smelter.GetItemRecipeSO();
+        if (smelter != null) {
+            ItemRecipeSO itemRecipeScriptableObject = smelter.itemRecipeSO;
 
             foreach (ItemRecipeSO.RecipeItem recipeItem in itemRecipeScriptableObject.inputItemList) {
                 Transform inputTransform = Instantiate(inputsTemplate, inputsContainer);
@@ -132,8 +132,8 @@ public class SmelterUI : MonoBehaviour {
             }
         }
 
-        if (smelter != null && smelter.HasItemRecipe()) {
-            ItemRecipeSO itemRecipeScriptableObject = smelter.GetItemRecipeSO();
+        if (smelter != null) {
+            ItemRecipeSO itemRecipeScriptableObject = smelter.itemRecipeSO;
 
             foreach (ItemRecipeSO.RecipeItem recipeItem in itemRecipeScriptableObject.outputItemList) {
                 Transform outputTransform = Instantiate(outputsTemplate, outputsContainer);
@@ -150,7 +150,7 @@ public class SmelterUI : MonoBehaviour {
         UpdateOutputs();
     }
 
-    public void Show(Smelter smelter) {
+    public void Show(Constructor smelter) {
         gameObject.SetActive(true);
 
         if (this.smelter != null) {

@@ -97,6 +97,10 @@ public class ConveyorBelt : PlacedObject {
         }
     }
 
+    public void SetWorldItem(WorldItem worldItem) {
+        this.worldItem = worldItem;
+    }
+
     public override void DestroySelf() {
         if(worldItem != null) {
             worldItem.DestroySelf();

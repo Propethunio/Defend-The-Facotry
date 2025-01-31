@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3688688184602226198}
   m_Layer: 0
-  m_Name: Belt Vis
+  m_Name: Belt_Vis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

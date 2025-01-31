@@ -4,17 +4,15 @@ using UnityEngine;
 public class Spliter : LogisticMachine {
 
     int suckedItems;
-    List<WorldItem> items = new();
     [SerializeField] ItemSO itemToCreate;
     LogisticDir logisticDir = LogisticDir.Straight;
 
-    public override void GridSetupDone() {
-        buildingSystem = BuildingSystem.Instance;
-        Subscribe();
-    }
-
     public override void OnEarlyTick() {
         if(suckedItems > 0) {
+            foreach(WorldItem item in items) {
+                item.DestroySelf();
+            }
+
             currentStorage += suckedItems;
             suckedItems = 0;
             items.Clear();
@@ -35,10 +33,6 @@ public class Spliter : LogisticMachine {
                 suckedItems++;
             }
         }
-    }
-
-    public override void OnTick() {
-
     }
 
     public override void OnLateTick() {
@@ -74,7 +68,7 @@ public class Spliter : LogisticMachine {
                 if(belt.worldItem == null) {
                     WorldItem worldItem = WorldItem.Create(origin, itemToCreate);
                     worldItem.MoveToGridPosition(operationDir);
-                    belt.TrySetWorldItem(worldItem);
+                    belt.SetWorldItem(worldItem);
                     currentStorage--;
                 }
             }

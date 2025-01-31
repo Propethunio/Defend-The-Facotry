@@ -4,16 +4,14 @@ using UnityEngine;
 public class Merger : LogisticMachine {
 
     int suckedItems;
-    List<WorldItem> items = new();
     [SerializeField] ItemSO itemToCreate;
-
-    public override void GridSetupDone() {
-        buildingSystem = BuildingSystem.Instance;
-        Subscribe();
-    }
 
     public override void OnEarlyTick() { 
         if(suckedItems > 0) {
+            foreach(WorldItem item in items) {
+                item.DestroySelf();
+            }
+
             currentStorage += suckedItems;
             suckedItems = 0;
             items.Clear();
@@ -58,10 +56,6 @@ public class Merger : LogisticMachine {
         }
     }
 
-    public override void OnTick() {
-
-    }
-
     public override void OnLateTick() {
         if(currentStorage == 0) return;
 
@@ -74,7 +68,7 @@ public class Merger : LogisticMachine {
             if(belt.worldItem == null) {
                 WorldItem worldItem = WorldItem.Create(origin, itemToCreate);
                 worldItem.MoveToGridPosition(nextPosition);
-                belt.TrySetWorldItem(worldItem);
+                belt.SetWorldItem(worldItem);
                 currentStorage--;
             }
         }

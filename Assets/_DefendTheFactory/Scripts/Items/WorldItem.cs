@@ -14,12 +14,12 @@ public class WorldItem : MonoBehaviour {
     }
 
     bool hasAlreadyMoved;
-    ItemSO itemSO;
+    public ItemSO itemSO { get; private set; }
     Tween moveTween;
 
-    //void Start() {
-     //   transform.Find("ItemVisual").Find("itemSprite").GetComponent<SpriteRenderer>().sprite = itemSO.sprite;
-    //}
+    void Start() {
+        transform.Find("ItemVisual").Find("itemSprite").GetComponent<SpriteRenderer>().sprite = itemSO.sprite;
+    }
 
     public void MoveToGridPosition(Vector2Int gridPosition) {
         if(moveTween != null && moveTween.IsActive()) {
@@ -39,10 +39,6 @@ public class WorldItem : MonoBehaviour {
 
     public void ResetHasAlreadyMoved() {
         hasAlreadyMoved = false;
-    }
-
-    public ItemSO GetItemSO() {
-        return itemSO;
     }
 
     public void DestroySelf() {

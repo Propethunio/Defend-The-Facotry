@@ -43,6 +43,11 @@ public class GatheringMachine : PlacedObject, IItemStorage {
         }
     }
 
+    public override void DestroySelf() {
+        outputBelt.DestroySelf();
+        base.DestroySelf();
+    }
+
     void SearchForResources() {
         Vector2 centerPosition = placedObjectTypeSO.GetCenterPosition(origin, dir);
         GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
@@ -141,7 +146,7 @@ public class GatheringMachine : PlacedObject, IItemStorage {
         if(outputBelt.worldItem != null) return;
 
         WorldItem worldItem = WorldItem.Create(outputBelt.GetGridPosition(), producedItem);
-        outputBelt.TrySetWorldItem(worldItem);
+        outputBelt.SetWorldItem(worldItem);
         storedItemsCount--;
     }
 
