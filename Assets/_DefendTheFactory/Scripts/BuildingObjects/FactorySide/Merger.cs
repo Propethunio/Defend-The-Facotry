@@ -1,98 +1,111 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Merger : LogisticMachine {
 
-    int suckedItems;
-    [SerializeField] ItemSO itemToCreate;
+    ConveyorBelt outputBelt;
+    List<WorldItem> newItems = new();
+    Dictionary<LogisticDir, ConveyorBelt> inputBelts = new();
+    Dictionary<LogisticDir, Vector2Int> inputPositions = new();
 
-    public override void OnEarlyTick() { 
-        if(suckedItems > 0) {
-            foreach(WorldItem item in items) {
-                item.DestroySelf();
-            }
-
-            currentStorage += suckedItems;
-            suckedItems = 0;
-            items.Clear();
-        }
-
-        if(currentStorage > maxStorage) return;
-
-        Vector2Int forwardVector = buildingSystem.GetDirForwardVector(dir);
-
-        GridCell[,] gridArray = buildingSystem.grid.gridArray;
+    public override void GridSetupDone() {
+        base.GridSetupDone();
+        Vector2Int forwardVector = BuildingSystem.Instance.GetDirForwardVector(dir);
+        Vector2Int nextPosition = origin + forwardVector;
         Vector2Int backPosition = origin - forwardVector;
-
         Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
         Vector2Int rightPosition = origin + rightVector;
         Vector2Int leftPosition = origin - rightVector;
 
-        if(ShouldSnap(gridArray, backPosition, out ConveyorBelt belt)){
-            if(belt.worldItem != null) {
-                belt.worldItem.MoveToGridPosition(origin);
-                items.Add(belt.worldItem);
-                belt.ResetWorldItem();
-                suckedItems++;
-            }
-        }
+        SetupInputBelt(backPosition, LogisticDir.Straight);
+        SetupInputBelt(leftPosition, LogisticDir.Left);
+        SetupInputBelt(rightPosition, LogisticDir.Right);
+        SetupOutputBelt(nextPosition);
+    }
 
-        if(ShouldSnap(gridArray, leftPosition, out belt)) {
-            if(belt.worldItem != null) {
-                belt.worldItem.MoveToGridPosition(origin);
-                items.Add(belt.worldItem);
-                belt.ResetWorldItem();
-                suckedItems++;
-            }
-        }
+    void SetupInputBelt(Vector2Int position, LogisticDir logisticDir) {
+        inputBelts[logisticDir] = null;
 
-        if(ShouldSnap(gridArray, rightPosition, out belt)) {
-            if(belt.worldItem != null) {
-                belt.worldItem.MoveToGridPosition(origin);
-                items.Add(belt.worldItem);
-                belt.ResetWorldItem();
-                suckedItems++;
-            }
+        if(!IsPositionValid(position)) return;
+
+        inputPositions[logisticDir] = position;
+        Action action = () => HandleGridObjectChange(logisticDir);
+        gridArray[position.x, position.y].ObjectChanged += action;
+        objectChangedEvents.Add(action, position);
+
+        if(ShouldSnap(position, out ConveyorBelt belt)) {
+            inputBelts[logisticDir] = belt;
         }
     }
 
-    public override void OnLateTick() {
-        if(currentStorage == 0) return;
+    void HandleGridObjectChange(LogisticDir dir) {
+        Vector2Int position = inputPositions[dir];
 
-        Vector2Int forwardVector = buildingSystem.GetDirForwardVector(dir);
-        Vector2Int nextPosition = origin + forwardVector;
-
-        GridCell[,] gridArray = buildingSystem.grid.gridArray;
-
-        if(ShouldSnapBack(gridArray, nextPosition, out ConveyorBelt belt)) {
-            if(belt.worldItem == null) {
-                WorldItem worldItem = WorldItem.Create(origin, itemToCreate);
-                worldItem.MoveToGridPosition(nextPosition);
-                belt.SetWorldItem(worldItem);
-                currentStorage--;
-            }
+        if(ShouldSnap(position, out ConveyorBelt belt)) {
+            inputBelts[dir] = belt;
+        } else {
+            inputBelts[dir] = null;
         }
     }
 
-    bool ShouldSnap(GridCell[,] gridArray, Vector2Int position, out ConveyorBelt belt) {
-        belt = null;
+    void SetupOutputBelt(Vector2Int position) {
+        if(!IsPositionValid(position)) return;
 
-        if(!IsPositionValid(gridArray, position)) return false;
+        Action action = () => HandleGridObjectChange(position);
+        gridArray[position.x, position.y].ObjectChanged += action;
+        objectChangedEvents.Add(action, position);
 
-        belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
-        return belt != null && belt.nextPosition == origin;
+        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
+            outputBelt = belt;
+        }
     }
 
-    bool ShouldSnapBack(GridCell[,] gridArray, Vector2Int position, out ConveyorBelt belt) {
-        belt = null;
-
-        if(!IsPositionValid(gridArray, position)) return false;
-
-        belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
-        return belt != null && belt.previousPosition == origin;
+    void HandleGridObjectChange(Vector2Int position) {
+        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
+            outputBelt = belt;
+        } else {
+            outputBelt = null;
+        }
     }
 
-    bool IsPositionValid(GridCell[,] gridArray, Vector2Int position) {
-        return position.x >= 0 && position.x < gridArray.GetLength(0) && position.y >= 0 && position.y < gridArray.GetLength(1);
+    public override void DestroySelf() {
+        foreach(WorldItem item in newItems) {
+            item.DestroySelf();
+        }
+        base.DestroySelf();
+    }
+
+    protected override void OnEarlyTick() {
+        if(newItems.Count > 0) {
+            items.AddRange(newItems);
+            newItems.Clear();
+        }
+
+        if(items.Count == maxStorage) return;
+
+        for(int i = 3; i > 0; i--) {
+
+            if(inputBelts[logisticDir] == null || inputBelts[logisticDir].worldItem == null) {
+                logisticDir = GetNextDir(logisticDir);
+                continue;
+            }
+
+            inputBelts[logisticDir].worldItem.MoveToGridPosition(origin);
+            newItems.Add(inputBelts[logisticDir].worldItem);
+            inputBelts[logisticDir].ResetWorldItem();
+            logisticDir = GetNextDir(logisticDir);
+
+            if(items.Count + newItems.Count == maxStorage) return;
+        }
+    }
+
+    protected override void OnLateTick() {
+        if(items.Count == 0 || outputBelt == null || outputBelt.worldItem != null) return;
+
+        WorldItem worldItem = items[0];
+        worldItem.MoveToGridPosition(outputBelt.origin);
+        outputBelt.SetWorldItem(worldItem);
+        items.RemoveAt(0);
     }
 }

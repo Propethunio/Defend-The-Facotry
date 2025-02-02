@@ -1,4 +1,8 @@
+using System;
+
 public class GridCell {
+
+    public Action ObjectChanged;
 
     public PlacedObject placedObject { get; private set; }
     int x;
@@ -11,11 +15,13 @@ public class GridCell {
 
     public void SetPlacedObject(PlacedObject placedObject) {
         this.placedObject = placedObject;
+        ObjectChanged?.Invoke();
         BuildingSystem.Instance.grid.TriggerGridObjectChanged(x, y);
     }
 
     public void ClearPlacedObject() {
         placedObject = null;
+        ObjectChanged?.Invoke();
         BuildingSystem.Instance.grid.TriggerGridObjectChanged(x, y);
     }
 }
