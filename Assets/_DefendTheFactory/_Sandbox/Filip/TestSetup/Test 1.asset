@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Test 1
   m_EditorClassIdentifier: 
   nameString: Baza
-  prefab: {fileID: -8679921383154817045, guid: 8a48c14a0100b894b9d1411550a5bf8b, type: 3}
-  visual: {fileID: -8679921383154817045, guid: 8a48c14a0100b894b9d1411550a5bf8b, type: 3}
-  width: 3
-  height: 3
+  prefab: {fileID: 5253865458100245654, guid: 0a76da0bf21b9f84788e217724d6b7fd, type: 3}
+  visual: {fileID: 5253865458100245654, guid: 0a76da0bf21b9f84788e217724d6b7fd, type: 3}
+  width: 1
+  height: 1
