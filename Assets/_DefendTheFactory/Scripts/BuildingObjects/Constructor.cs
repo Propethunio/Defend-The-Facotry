@@ -25,8 +25,8 @@ public class Constructor : PlacedObject {
 
         craftingProgress += Time.deltaTime;
 
-        if(craftingProgress >= itemRecipeSO.craftingEffort) {
-            craftingProgress -= itemRecipeSO.craftingEffort;
+        if(craftingProgress >= itemRecipeSO.craftingTime) {
+            craftingProgress -= itemRecipeSO.craftingTime;
             storedOutputItems += itemRecipeSO.outputItemList[0].amount;
             storedInputItems -= itemRecipeSO.inputItemList[0].amount;
 
@@ -86,7 +86,7 @@ public class Constructor : PlacedObject {
     }
 
     public float GetCraftingProgressNormalized() {
-        return craftingProgress / itemRecipeSO.craftingEffort;
+        return craftingProgress / itemRecipeSO.craftingTime;
     }
 
     public int GetItemStoredCount(ItemSO filterItemSO) {

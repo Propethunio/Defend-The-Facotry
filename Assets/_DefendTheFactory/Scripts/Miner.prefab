@@ -50,7 +50,7 @@ MonoBehaviour:
   resourceSearchRange: 3
   ghostBeltPosition: {x: 0, y: 0}
   gatheredResource: 0
-  gatheringTime: 2
+  gatheringTime: 1
   maxStoredItems: 2
   producedItem: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
 --- !u!114 &109109171724800698

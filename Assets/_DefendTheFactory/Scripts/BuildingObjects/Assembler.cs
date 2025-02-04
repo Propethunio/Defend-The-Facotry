@@ -38,7 +38,7 @@ public class Assembler : PlacedObject, IItemStorage {
         if (HasEnoughItemsToCraft()) {
             craftingProgress += Time.deltaTime;
 
-            if (craftingProgress >= itemRecipeSO.craftingEffort) {
+            if (craftingProgress >= itemRecipeSO.craftingTime) {
                 // Item crafting complete
                 craftingProgress = 0f;
 
@@ -61,7 +61,7 @@ public class Assembler : PlacedObject, IItemStorage {
 
     public float GetCraftingProgressNormalized() {
         if (HasItemRecipe()) {
-            return craftingProgress / itemRecipeSO.craftingEffort;
+            return craftingProgress / itemRecipeSO.craftingTime;
         } else {
             return 0f;
         }

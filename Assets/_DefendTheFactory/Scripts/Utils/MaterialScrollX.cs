@@ -1,0 +1,25 @@
+using UnityEngine;
+
+public class MaterialScrollX : MonoBehaviour {
+
+    [SerializeField] float scrollSpeed;
+    [SerializeField] Material targetMaterial;
+
+    float currentOffset;
+    Vector2 textureOffset;
+
+    void Start() {
+        textureOffset = targetMaterial.mainTextureOffset;
+    }
+
+    void Update() {
+        currentOffset += scrollSpeed * Time.deltaTime;
+
+        if(currentOffset > 1f) {
+            currentOffset -= 1f;
+        }
+
+        textureOffset.x = currentOffset;
+        targetMaterial.mainTextureOffset = textureOffset;
+    }
+}

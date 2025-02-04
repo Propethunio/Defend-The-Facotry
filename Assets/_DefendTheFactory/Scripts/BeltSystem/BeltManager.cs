@@ -12,8 +12,8 @@ public class BeltManager {
 
     public Dictionary<ConveyorBelt, BeltPath> beltEndsDict { get; private set; } = new();
 
-    readonly GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
-    readonly List<BeltPath> beltPathList = new();
+    GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
+    List<BeltPath> beltPathList = new();
 
     public Transform debugVisualParent { get; private set; }
 
@@ -140,13 +140,35 @@ public class BeltManager {
         BeltPath beltPath = null;
 
         if(!beltEndsDict.TryGetValue(belt, out beltPath)) {
-            beltPath = beltEndsDict.Values.FirstOrDefault(path => path.beltList.Contains(belt));
+            beltPath = beltPathList.FirstOrDefault(path => path.beltList.Contains(belt));
         }
 
         int beltIndex = beltPath.beltList.IndexOf(belt);
 
+        // Removing from the loop
+        if(beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition) {
+
+            if(beltIndex == 0) {
+                beltPath.beltList.RemoveAt(0);
+                beltEndsDict.Add(beltPath.beltList[0], beltPath);
+                beltEndsDict.Add(beltPath.beltList[^1], beltPath);
+            } else if(beltIndex == beltPath.beltList.Count - 1) {
+                beltPath.beltList.RemoveAt(beltIndex);
+                beltEndsDict.Add(beltPath.beltList[0], beltPath);
+                beltEndsDict.Add(beltPath.beltList[^1], beltPath);
+            } else {
+                List<ConveyorBelt> firstPart = beltPath.beltList.GetRange(0, beltIndex);
+                List<ConveyorBelt> secondPart = beltPath.beltList.GetRange(beltIndex + 1, beltPath.beltList.Count - beltIndex - 1);
+                beltPath.beltList.Clear();
+                beltPath.beltList.AddRange(secondPart);
+                beltPath.beltList.AddRange(firstPart);
+                beltEndsDict.Add(beltPath.beltList[0], beltPath);
+                beltEndsDict.Add(beltPath.beltList[^1], beltPath);
+            }
+        }
+
         // Removing from the start of the path
-        if(beltIndex == 0) {
+        else if(beltIndex == 0) {
             beltPath.beltList.RemoveAt(0);
             beltEndsDict.Remove(belt);
 
