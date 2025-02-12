@@ -33,12 +33,12 @@ public class GameAssets : MonoBehaviour {
     [System.Serializable]
     public class PlacedObjectTypeSO_Refs {
 
-        public PlacedObjectTypeSO conveyorBelt;
-        public PlacedObjectTypeSO miningMachine;
-        public PlacedObjectTypeSO smelter;
-        public PlacedObjectTypeSO grabber;
-        public PlacedObjectTypeSO assembler;
-        public PlacedObjectTypeSO storage;
+        public BaseBuildableObjectSO conveyorBelt;
+        public BaseBuildableObjectSO miningMachine;
+        public BaseBuildableObjectSO smelter;
+        public BaseBuildableObjectSO grabber;
+        public BaseBuildableObjectSO assembler;
+        public BaseBuildableObjectSO storage;
 
     }
 

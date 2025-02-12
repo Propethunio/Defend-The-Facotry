@@ -4,14 +4,7 @@ using UnityEngine;
 [CreateAssetMenu()]
 public class ItemRecipeSO : ScriptableObject {
 
-    public List<RecipeItem> outputItemList;
-    public List<RecipeItem> inputItemList;
+    public List<ItemIntPair> outputItemList;
+    public List<ItemIntPair> inputItemList;
     public float craftingTime;
-
-    [System.Serializable]
-    public struct RecipeItem {
-
-        public ItemSO item;
-        public int amount;
-    }
 }

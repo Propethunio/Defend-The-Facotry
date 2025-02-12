@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CodeMonkey.Utils;
@@ -8,8 +7,6 @@ using TMPro;
 public class AssemblerUI : MonoBehaviour {
 
     public static AssemblerUI Instance { get; private set; }
-
-
 
     [SerializeField] private List<ItemRecipeSO> itemRecipeScriptableObjectList;
 
@@ -37,7 +34,7 @@ public class AssemblerUI : MonoBehaviour {
     }
 
     private void UpdateCraftingProgress() {
-        if (assembler != null) {
+        if(assembler != null) {
             craftingProgressBar.fillAmount = assembler.GetCraftingProgressNormalized();
         } else {
             craftingProgressBar.fillAmount = 0f;
@@ -50,8 +47,8 @@ public class AssemblerUI : MonoBehaviour {
         recipeTemplate.gameObject.SetActive(false);
 
         // Destory old transforms
-        foreach (Transform transform in recipeContainer) {
-            if (transform != recipeTemplate) {
+        foreach(Transform transform in recipeContainer) {
+            if(transform != recipeTemplate) {
                 Destroy(transform.gameObject);
             }
         }
@@ -59,7 +56,7 @@ public class AssemblerUI : MonoBehaviour {
         recipeButtonDic = new Dictionary<ItemRecipeSO, Transform>();
 
         // Build transforms
-        for (int i = 0; i < itemRecipeScriptableObjectList.Count; i++) {
+        for(int i = 0; i < itemRecipeScriptableObjectList.Count; i++) {
             ItemRecipeSO itemRecipeScriptableObject = itemRecipeScriptableObjectList[i];
             Transform recipeTransform = Instantiate(recipeTemplate, recipeContainer);
             recipeTransform.gameObject.SetActive(true);
@@ -70,7 +67,7 @@ public class AssemblerUI : MonoBehaviour {
             //recipeTransform.Find("Text").GetComponent<TextMeshProUGUI>().text = itemRecipeScriptableObject.name;
 
             recipeTransform.GetComponent<Button_UI>().ClickFunc = () => {
-                if (assembler != null) {
+                if(assembler != null) {
                     assembler.SetItemRecipeScriptableObject(itemRecipeScriptableObject);
                     UpdateSelectedRecipe();
                 }
@@ -81,8 +78,8 @@ public class AssemblerUI : MonoBehaviour {
     }
 
     private void UpdateSelectedRecipe() {
-        foreach (ItemRecipeSO itemRecipeScriptableObject in recipeButtonDic.Keys) {
-            if (assembler != null && assembler.GetItemRecipeSO() == itemRecipeScriptableObject) {
+        foreach(ItemRecipeSO itemRecipeScriptableObject in recipeButtonDic.Keys) {
+            if(assembler != null && assembler.GetItemRecipeSO() == itemRecipeScriptableObject) {
                 // This one is selected
                 recipeButtonDic[itemRecipeScriptableObject].Find("Selected").gameObject.SetActive(true);
             } else {
@@ -101,16 +98,16 @@ public class AssemblerUI : MonoBehaviour {
         inputsTemplate.gameObject.SetActive(false);
 
         // Destory old transforms
-        foreach (Transform transform in inputsContainer) {
-            if (transform != inputsTemplate) {
+        foreach(Transform transform in inputsContainer) {
+            if(transform != inputsTemplate) {
                 Destroy(transform.gameObject);
             }
         }
 
-        if (assembler != null && assembler.HasItemRecipe()) {
+        if(assembler != null && assembler.HasItemRecipe()) {
             ItemRecipeSO itemRecipeScriptableObject = assembler.GetItemRecipeSO();
 
-            foreach (ItemRecipeSO.RecipeItem recipeItem in itemRecipeScriptableObject.inputItemList) {
+            foreach(ItemIntPair recipeItem in itemRecipeScriptableObject.inputItemList) {
                 Transform inputTransform = Instantiate(inputsTemplate, inputsContainer);
                 inputTransform.gameObject.SetActive(true);
 
@@ -126,16 +123,16 @@ public class AssemblerUI : MonoBehaviour {
         outputsTemplate.gameObject.SetActive(false);
 
         // Destory old transforms
-        foreach (Transform transform in outputsContainer) {
-            if (transform != outputsTemplate) {
+        foreach(Transform transform in outputsContainer) {
+            if(transform != outputsTemplate) {
                 Destroy(transform.gameObject);
             }
         }
 
-        if (assembler != null && assembler.HasItemRecipe()) {
+        if(assembler != null && assembler.HasItemRecipe()) {
             ItemRecipeSO itemRecipeScriptableObject = assembler.GetItemRecipeSO();
 
-            foreach (ItemRecipeSO.RecipeItem recipeItem in itemRecipeScriptableObject.outputItemList) {
+            foreach(ItemIntPair recipeItem in itemRecipeScriptableObject.outputItemList) {
                 Transform outputTransform = Instantiate(outputsTemplate, outputsContainer);
                 outputTransform.gameObject.SetActive(true);
 
@@ -153,14 +150,14 @@ public class AssemblerUI : MonoBehaviour {
     public void Show(Assembler assembler) {
         gameObject.SetActive(true);
 
-        if (this.assembler != null) {
+        if(this.assembler != null) {
             // Unsub from previous Assembler
             this.assembler.OnItemStorageCountChanged -= Assembler_OnItemStorageCountChanged;
         }
 
         this.assembler = assembler;
 
-        if (assembler != null) {
+        if(assembler != null) {
             // Sub for item changes
             assembler.OnItemStorageCountChanged += Assembler_OnItemStorageCountChanged;
         }
@@ -171,5 +168,4 @@ public class AssemblerUI : MonoBehaviour {
     public void Hide() {
         gameObject.SetActive(false);
     }
-
 }

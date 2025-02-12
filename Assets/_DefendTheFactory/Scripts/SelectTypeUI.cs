@@ -72,7 +72,7 @@ public class SelectTypeUI : MonoBehaviour {
     }
 
     private void UpdateSelectedPlacedObject() {
-        PlacedObjectTypeSO placedObjectTypeSO = BuildingSystem.Instance.GetPlacedObjectTypeSO();
+        BaseBuildableObjectSO placedObjectTypeSO = BuildingSystem.Instance.GetPlacedObjectTypeSO();
 
         container.Find("NoneBtn").Find("Selected").gameObject.SetActive(placedObjectTypeSO == null && !BuildingSystem.Instance.IsDemolishActive());
         container.Find("MiningMachineBtn").Find("Selected").gameObject.SetActive(placedObjectTypeSO == GameAssets.i.placedObjectTypeSO_Refs.miningMachine);

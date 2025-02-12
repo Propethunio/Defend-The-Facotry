@@ -12,7 +12,7 @@ public class BuildingSystem {
     public Action OnObjectPlaced;
 
     public Grid<GridCell> grid { get; private set; }
-    public PlacedObjectTypeSO placedObjectTypeSO { get; private set; }
+    public BaseBuildableObjectSO placedObjectTypeSO { get; private set; }
     public BuildingDir dir { get; private set; }
 
     InputManager inputManager;
@@ -29,7 +29,7 @@ public class BuildingSystem {
         buildingGhost.Init();
     }
 
-    public void Test(PlacedObjectTypeSO test) {
+    public void Test(BaseBuildableObjectSO test) {
         EnableBuildingSystem();
         SetSelectedPlacedObject(test);
     }
@@ -216,11 +216,11 @@ public class BuildingSystem {
         return Quaternion.Euler(0, GetRotationAngle(dir), 0);
     }
 
-    public PlacedObjectTypeSO GetPlacedObjectTypeSO() {
+    public BaseBuildableObjectSO GetPlacedObjectTypeSO() {
         return placedObjectTypeSO;
     }
 
-    public void SetSelectedPlacedObject(PlacedObjectTypeSO placedObjectTypeSO) {
+    public void SetSelectedPlacedObject(BaseBuildableObjectSO placedObjectTypeSO) {
         this.placedObjectTypeSO = placedObjectTypeSO;
         isDemolishActive = false;
         RefreshSelectedObjectType();

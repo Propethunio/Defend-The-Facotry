@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CodeMonkey.Utils;
@@ -8,8 +7,6 @@ using TMPro;
 public class SmelterUI : MonoBehaviour {
 
     public static SmelterUI Instance { get; private set; }
-
-
 
     [SerializeField] private List<ItemRecipeSO> itemRecipeScriptableObjectList;
 
@@ -37,7 +34,7 @@ public class SmelterUI : MonoBehaviour {
     }
 
     private void UpdateCraftingProgress() {
-        if (smelter != null) {
+        if(smelter != null) {
             craftingProgressBar.fillAmount = smelter.GetCraftingProgressNormalized();
         } else {
             craftingProgressBar.fillAmount = 0f;
@@ -50,8 +47,8 @@ public class SmelterUI : MonoBehaviour {
         recipeTemplate.gameObject.SetActive(false);
 
         // Destory old transforms
-        foreach (Transform transform in recipeContainer) {
-            if (transform != recipeTemplate) {
+        foreach(Transform transform in recipeContainer) {
+            if(transform != recipeTemplate) {
                 Destroy(transform.gameObject);
             }
         }
@@ -59,7 +56,7 @@ public class SmelterUI : MonoBehaviour {
         recipeButtonDic = new Dictionary<ItemRecipeSO, Transform>();
 
         // Build transforms
-        for (int i = 0; i < itemRecipeScriptableObjectList.Count; i++) {
+        for(int i = 0; i < itemRecipeScriptableObjectList.Count; i++) {
             ItemRecipeSO itemRecipeScriptableObject = itemRecipeScriptableObjectList[i];
             Transform recipeTransform = Instantiate(recipeTemplate, recipeContainer);
             recipeTransform.gameObject.SetActive(true);
@@ -70,7 +67,7 @@ public class SmelterUI : MonoBehaviour {
             //recipeTransform.Find("Text").GetComponent<TextMeshProUGUI>().text = itemRecipeScriptableObject.name;
 
             recipeTransform.GetComponent<Button_UI>().ClickFunc = () => {
-                if (smelter != null) {
+                if(smelter != null) {
                     smelter.SetItemRecipeScriptableObject(itemRecipeScriptableObject);
                     UpdateSelectedRecipe();
                 }
@@ -81,8 +78,8 @@ public class SmelterUI : MonoBehaviour {
     }
 
     private void UpdateSelectedRecipe() {
-        foreach (ItemRecipeSO itemRecipeScriptableObject in recipeButtonDic.Keys) {
-            if (smelter != null && smelter.itemRecipeSO == itemRecipeScriptableObject) {
+        foreach(ItemRecipeSO itemRecipeScriptableObject in recipeButtonDic.Keys) {
+            if(smelter != null && smelter.itemRecipeSO == itemRecipeScriptableObject) {
                 // This one is selected
                 recipeButtonDic[itemRecipeScriptableObject].Find("Selected").gameObject.SetActive(true);
             } else {
@@ -101,16 +98,16 @@ public class SmelterUI : MonoBehaviour {
         inputsTemplate.gameObject.SetActive(false);
 
         // Destory old transforms
-        foreach (Transform transform in inputsContainer) {
-            if (transform != inputsTemplate) {
+        foreach(Transform transform in inputsContainer) {
+            if(transform != inputsTemplate) {
                 Destroy(transform.gameObject);
             }
         }
 
-        if (smelter != null) {
+        if(smelter != null) {
             ItemRecipeSO itemRecipeScriptableObject = smelter.itemRecipeSO;
 
-            foreach (ItemRecipeSO.RecipeItem recipeItem in itemRecipeScriptableObject.inputItemList) {
+            foreach(ItemIntPair recipeItem in itemRecipeScriptableObject.inputItemList) {
                 Transform inputTransform = Instantiate(inputsTemplate, inputsContainer);
                 inputTransform.gameObject.SetActive(true);
 
@@ -126,16 +123,16 @@ public class SmelterUI : MonoBehaviour {
         outputsTemplate.gameObject.SetActive(false);
 
         // Destory old transforms
-        foreach (Transform transform in outputsContainer) {
-            if (transform != outputsTemplate) {
+        foreach(Transform transform in outputsContainer) {
+            if(transform != outputsTemplate) {
                 Destroy(transform.gameObject);
             }
         }
 
-        if (smelter != null) {
+        if(smelter != null) {
             ItemRecipeSO itemRecipeScriptableObject = smelter.itemRecipeSO;
 
-            foreach (ItemRecipeSO.RecipeItem recipeItem in itemRecipeScriptableObject.outputItemList) {
+            foreach(ItemIntPair recipeItem in itemRecipeScriptableObject.outputItemList) {
                 Transform outputTransform = Instantiate(outputsTemplate, outputsContainer);
                 outputTransform.gameObject.SetActive(true);
 
@@ -150,26 +147,7 @@ public class SmelterUI : MonoBehaviour {
         UpdateOutputs();
     }
 
-    public void Show(Constructor smelter) {
-        gameObject.SetActive(true);
-
-        if (this.smelter != null) {
-            // Unsub from previous Smelter
-            this.smelter.OnItemStorageCountChanged -= Smelter_OnItemStorageCountChanged;
-        }
-
-        this.smelter = smelter;
-
-        if (smelter != null) {
-            // Sub for item changes
-            smelter.OnItemStorageCountChanged += Smelter_OnItemStorageCountChanged;
-        }
-
-        UpdateSelectedRecipe();
-    }
-
     public void Hide() {
         gameObject.SetActive(false);
     }
-
 }

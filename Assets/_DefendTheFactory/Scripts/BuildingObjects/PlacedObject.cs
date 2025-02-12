@@ -1,14 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlacedObject : MonoBehaviour {
 
     public Vector2Int origin { get; protected set; }
     public BuildingDir dir { get; protected set; }
-    public PlacedObjectTypeSO placedObjectTypeSO { get; protected set; }
+    public BaseBuildableObjectSO placedObjectTypeSO { get; protected set; }
 
-    public static PlacedObject Create(Vector3 worldPosition, Vector2Int origin, BuildingDir dir, PlacedObjectTypeSO placedObjectTypeSO) {
+    public static PlacedObject Create(Vector3 worldPosition, Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectTypeSO) {
         PlacedObject placedObject = Instantiate(placedObjectTypeSO.prefab, worldPosition, Quaternion.Euler(0, BuildingSystem.Instance.GetRotationAngle(dir), 0)).GetComponent<PlacedObject>();
         //ParticleSystem fxBuildingPlaced = Instantiate(GameAssets.i.fxBuildingPlaced, worldPosition, Quaternion.identity).GetComponent<ParticleSystem>();
 
