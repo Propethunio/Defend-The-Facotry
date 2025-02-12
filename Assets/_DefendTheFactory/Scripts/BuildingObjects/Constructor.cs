@@ -51,9 +51,9 @@ public class Constructor : PlacedObject {
     }
 
     void SetupBelts() {
-        Vector2Int beltPos = placedObjectTypeSO.GetMachineBeltPosition(origin, inputGhostBeltPosition, dir);
+        Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, inputGhostBeltPosition, dir);
         inputBelt.SetupBuildingBelt(beltPos, dir, this);
-        beltPos = placedObjectTypeSO.GetMachineBeltPosition(origin, outputGhostBeltPosition, dir);
+        beltPos = buildableDataSO.GetMachineBeltPosition(origin, outputGhostBeltPosition, dir);
         outputBelt.SetupBuildingBelt(beltPos, dir, this);
     }
 
@@ -80,7 +80,7 @@ public class Constructor : PlacedObject {
     void TryPutItemOnOutputBelt() {
         if(outputBelt.worldItem != null || storedOutputItems == 0) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.GetGridPosition(), itemRecipeSO.outputItemList[0].item);
+        WorldItem worldItem = WorldItem.Create(outputBelt.origin, itemRecipeSO.outputItemList[0].item);
         outputBelt.SetWorldItem(worldItem);
         storedOutputItems--;
     }

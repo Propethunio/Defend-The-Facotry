@@ -78,7 +78,7 @@ public class ConveyorBelt : PlacedObject {
         ConveyorBelt nextBelt = buildingSystem.GetGridObject(nextPosition).placedObject as ConveyorBelt;
         if(nextBelt == null) return false;
         if(!nextBelt.TrySetWorldItem(worldItem)) return true;
-        worldItem.MoveToGridPosition(nextBelt.GetGridPosition());
+        worldItem.MoveToGridPosition(nextBelt.origin);
         worldItem.SetHasAlreadyMoved();
         worldItem = null;
         return false;

@@ -311,7 +311,7 @@ public class BeltManager {
             pathParent = new GameObject($"Path: {pathNumber}").transform;
             pathParent.parent = Instance.debugVisualParent;
 
-            Vector2Int gridPosition = beltPath.beltList[0].GetGridPosition();
+            Vector2Int gridPosition = beltPath.beltList[0].origin;
             Transform nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
 
             if(beltPath.beltList.Count == 1) {
@@ -322,15 +322,15 @@ public class BeltManager {
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.green;
             }
 
-            gridPosition = beltPath.beltList[^1].GetGridPosition();
+            gridPosition = beltPath.beltList[^1].origin;
             nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
             nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.red;
 
             for(int i = 0; i < beltPath.beltList.Count - 1; i++) {
                 ConveyorBelt belt = beltPath.beltList[i];
                 ConveyorBelt nextBelt = beltPath.beltList[i + 1];
-                gridPosition = belt.GetGridPosition();
-                Vector2Int nextGridPosition = nextBelt.GetGridPosition();
+                gridPosition = belt.origin;
+                Vector2Int nextGridPosition = nextBelt.origin;
 
                 if(i > 0) {
                     nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
@@ -344,10 +344,10 @@ public class BeltManager {
             }
 
             if(beltPath.beltList[^1].nextPosition == beltPath.beltList[0].origin && beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition) {
-                gridPosition = beltPath.beltList[^1].GetGridPosition();
+                gridPosition = beltPath.beltList[^1].origin;
                 nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, BuildingSystem.Instance.GetWorldPosition(gridPosition) + new Vector3(.5f, 0, .5f), Quaternion.identity, pathParent);
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.yellow;
-                Vector3 dirToNextBelt = (BuildingSystem.Instance.GetWorldPosition(beltPath.beltList[0].GetGridPosition()) - BuildingSystem.Instance.GetWorldPosition(gridPosition)).normalized;
+                Vector3 dirToNextBelt = (BuildingSystem.Instance.GetWorldPosition(beltPath.beltList[0].origin) - BuildingSystem.Instance.GetWorldPosition(gridPosition)).normalized;
                 nodeVisual.eulerAngles = new Vector3(0, -CodeMonkey.Utils.UtilsClass.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
             }
 

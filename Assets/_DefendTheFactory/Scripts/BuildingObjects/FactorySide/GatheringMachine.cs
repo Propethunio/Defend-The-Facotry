@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GatheringMachine : PlacedObject, IItemStorage {
+public class GatheringMachine : PlacedObject {
 
     public event EventHandler OnItemStorageCountChanged;
 
@@ -49,7 +49,7 @@ public class GatheringMachine : PlacedObject, IItemStorage {
     }
 
     void SearchForResources() {
-        Vector2 centerPosition = placedObjectTypeSO.GetCenterPosition(origin, dir);
+        Vector2 centerPosition = buildableDataSO.GetCenterPosition(origin, dir);
         GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
 
         int bottom = (int)Mathf.Floor(centerPosition.y - resourceSearchRange);
@@ -78,11 +78,11 @@ public class GatheringMachine : PlacedObject, IItemStorage {
     }
 
     void PickClosestNode() {
-        Vector2 machineCenterPosition = placedObjectTypeSO.GetCenterPosition(origin, dir);
+        Vector2 machineCenterPosition = buildableDataSO.GetCenterPosition(origin, dir);
         float currentDistance = Mathf.Infinity;
 
         foreach(ResourceNode node in nodesInRange) {
-            Vector2 nodeCenterPosition = node.placedObjectTypeSO.GetCenterPosition(node.origin, node.dir);
+            Vector2 nodeCenterPosition = node.buildableDataSO.GetCenterPosition(node.origin, node.dir);
             float distanceToNode = Vector2.Distance(machineCenterPosition, nodeCenterPosition);
 
             if(currentNode == null || distanceToNode < currentDistance) {
@@ -117,7 +117,7 @@ public class GatheringMachine : PlacedObject, IItemStorage {
     }
 
     void SetupBelt() {
-        Vector2Int beltPos = placedObjectTypeSO.GetMachineBeltPosition(origin, ghostBeltPosition, dir);
+        Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, ghostBeltPosition, dir);
         outputBelt.SetupBuildingBelt(beltPos, dir, this);
     }
 
@@ -145,7 +145,7 @@ public class GatheringMachine : PlacedObject, IItemStorage {
     void TryPutItemOnBelt() {
         if(outputBelt.worldItem != null) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.GetGridPosition(), producedItem);
+        WorldItem worldItem = WorldItem.Create(outputBelt.origin, producedItem);
         outputBelt.SetWorldItem(worldItem);
         storedItemsCount--;
     }
@@ -157,33 +157,4 @@ public class GatheringMachine : PlacedObject, IItemStorage {
     public int GetItemStoredCount(ItemSO filterItemScriptableObject) {
         return storedItemsCount;
     }
-
-    public bool TryGetStoredItem(ItemSO[] filterItemSO, out ItemSO itemSO) {
-        if(ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO) ||
-            ItemSO.IsItemSOInFilter(new ItemSO(), filterItemSO)) {
-            // If filter matches any or filter matches this itemType
-            if(storedItemsCount > 0) {
-                storedItemsCount--;
-                itemSO = new ItemSO();
-                OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
-                TriggerGridObjectChanged();
-                return true;
-            } else {
-                itemSO = null;
-                return false;
-            }
-        } else {
-            itemSO = null;
-            return false;
-        }
-    }
-
-    public ItemSO[] GetItemSOThatCanStore() {
-        return new ItemSO[] { GameAssets.i.itemSO_Refs.none };
-    }
-
-    public bool TryStoreItem(ItemSO itemScriptableObject) {
-        return false;
-    }
-
 }

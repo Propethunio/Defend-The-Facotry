@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
                 ConveyorBelt belt = placedObject as ConveyorBelt;
 
                 if(belt.worldItem == null) {
-                    WorldItem worldItem = WorldItem.Create(belt.GetGridPosition(), GameAssets.i.itemSO_Refs.ironOre);
+                    WorldItem worldItem = WorldItem.Create(belt.origin, GameAssets.i.itemSO_Refs.ironOre);
                     belt.TrySetWorldItem(worldItem);
                 }
             }
