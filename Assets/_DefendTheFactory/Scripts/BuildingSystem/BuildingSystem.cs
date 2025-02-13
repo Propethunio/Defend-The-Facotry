@@ -23,7 +23,7 @@ public class BuildingSystem {
     public BuildingSystem(int width, int height) {
         if(Instance == null) Instance = this;
         else return;
-        grid = new Grid<GridCell>(width, height, (Grid<GridCell> g, int x, int y) => new GridCell(x, y));
+        grid = new Grid<GridCell>(width, height, (Grid<GridCell> g, int x, int y) => new GridCell());
         inputManager = InputManager.Instance;
         buildingGhost = BuildingGhost.Instance;
         buildingGhost.Init();
@@ -87,7 +87,7 @@ public class BuildingSystem {
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);
 
-        PlacedObject placedObject = grid.gridArray[x, z].placedObject;
+        BasePlacedObject placedObject = grid.gridArray[x, z].placedObject;
         if(placedObject == null) return;
 
         if(placedObject is ConveyorBelt conveyorBelt && conveyorBelt.parentBuilding != null) {
@@ -160,7 +160,8 @@ public class BuildingSystem {
 
         Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
         Vector3 placedObjectWorldPosition = new Vector3(placedObjectOrigin.x, 0, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
-        PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, placedObjectOrigin, dir, placedObjectTypeSO);
+        BasePlacedObject placedObject = BaseDataPlacedObject<BaseBuildableObjectSO>.Create(placedObjectWorldPosition, dir, placedObjectTypeSO);
+        placedObject.SetData(placedObjectOrigin, dir, placedObjectTypeSO);
 
         foreach(Vector2Int gridPosition in gridPositionList) {
             grid.gridArray[gridPosition.x, gridPosition.y].SetPlacedObject(placedObject);
@@ -236,7 +237,7 @@ public class BuildingSystem {
         return isDemolishActive;
     }
 
-    public void AddGhostBeltToGrid(Vector2Int beltPosition, PlacedObject belt) {
+    public void AddGhostBeltToGrid(Vector2Int beltPosition, BaseDataPlacedObject<BaseBuildableObjectSO> belt) {
         grid.gridArray[beltPosition.x, beltPosition.y].SetPlacedObject(belt);
     }
 

@@ -30,7 +30,7 @@ public class MiningMachineUI : MonoBehaviour {
     }
 
     private void UpdateText() {
-        miningItemText.text = miningMachine.GetItemStoredCount(GameAssets.i.itemSO_Refs.any).ToString();
+        //miningItemText.text = miningMachine.GetItemStoredCount(GameAssets.i.itemSO_Refs.any).ToString();
     }
 
 
@@ -38,15 +38,15 @@ public class MiningMachineUI : MonoBehaviour {
         gameObject.SetActive(true);
 
         if (this.miningMachine != null) {
-            this.miningMachine.OnItemStorageCountChanged -= MiningMachine_OnItemStorageCountChanged;
+            //this.miningMachine.OnItemStorageCountChanged -= MiningMachine_OnItemStorageCountChanged;
         }
 
         this.miningMachine = miningMachine;
 
         if (miningMachine != null) {
-            transform.Find("MiningItem").Find("Icon").GetComponent<Image>().sprite = miningMachine.GetMiningResourceItem()?.sprite;
+            //transform.Find("MiningItem").Find("Icon").GetComponent<Image>().sprite = miningMachine.GetMiningResourceItem()?.sprite;
 
-            miningMachine.OnItemStorageCountChanged += MiningMachine_OnItemStorageCountChanged;
+            //miningMachine.OnItemStorageCountChanged += MiningMachine_OnItemStorageCountChanged;
         }
 
         UpdateText();
@@ -56,7 +56,7 @@ public class MiningMachineUI : MonoBehaviour {
         gameObject.SetActive(false);
 
         if (this.miningMachine != null) {
-            this.miningMachine.OnItemStorageCountChanged -= MiningMachine_OnItemStorageCountChanged;
+            //this.miningMachine.OnItemStorageCountChanged -= MiningMachine_OnItemStorageCountChanged;
         }
 
         miningMachine = null;

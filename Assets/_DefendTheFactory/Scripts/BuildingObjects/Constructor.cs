@@ -1,37 +1,29 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Constructor : PlacedObject {
-
-    public event EventHandler OnItemStorageCountChanged;
+public class Constructor : BaseDataPlacedObject<ConstructorSO> {
 
     [SerializeField] ConveyorBelt inputBelt;
     [SerializeField] ConveyorBelt outputBelt;
-    [SerializeField] Vector2Int inputGhostBeltPosition;
-    [SerializeField] Vector2Int outputGhostBeltPosition;
-    [SerializeField] int maxStoredInputItems;
-    [SerializeField] int maxStoredOutputItems;
 
-    int storedInputItems;
-    int storedOutputItems;
-
-    [field: SerializeField] public ItemRecipeSO itemRecipeSO { get; private set; }
     ItemStackList inputItemStackList = new();
     ItemStackList outputItemStackList = new();
+    int storedInputItems;
+    int storedOutputItems;
     float craftingProgress;
 
+    public override void Initialize(Vector2Int origin, BuildingDir dir, ConstructorSO buildableDataSO) {
+        BaseDataSet(origin, dir, buildableDataSO);
+    }
+
     void Update() {
-        if(storedInputItems < itemRecipeSO.inputItemList[0].amount || storedOutputItems >= maxStoredOutputItems) return;
+        if(storedInputItems < buildableDataSO.itemRecipeList[0].inputItemList[0].amount || storedOutputItems >= buildableDataSO.maxStoredOutputItems) return;
 
         craftingProgress += Time.deltaTime;
 
-        if(craftingProgress >= itemRecipeSO.craftingTime) {
-            craftingProgress -= itemRecipeSO.craftingTime;
-            storedOutputItems += itemRecipeSO.outputItemList[0].amount;
-            storedInputItems -= itemRecipeSO.inputItemList[0].amount;
-
-            OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
-            TriggerGridObjectChanged();
+        if(craftingProgress >= buildableDataSO.itemRecipeList[0].craftingTime) {
+            craftingProgress -= buildableDataSO.itemRecipeList[0].craftingTime;
+            storedOutputItems += buildableDataSO.itemRecipeList[0].outputItemList[0].amount;
+            storedInputItems -= buildableDataSO.itemRecipeList[0].inputItemList[0].amount;
         }
     }
 
@@ -51,9 +43,9 @@ public class Constructor : PlacedObject {
     }
 
     void SetupBelts() {
-        Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, inputGhostBeltPosition, dir);
+        Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.inputBeltPosition, dir);
         inputBelt.SetupBuildingBelt(beltPos, dir, this);
-        beltPos = buildableDataSO.GetMachineBeltPosition(origin, outputGhostBeltPosition, dir);
+        beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.outputBeltPosition, dir);
         outputBelt.SetupBuildingBelt(beltPos, dir, this);
     }
 
@@ -71,7 +63,7 @@ public class Constructor : PlacedObject {
     }
 
     void TryGetItemFromInputBelt() {
-        if(inputBelt.worldItem == null || storedInputItems == maxStoredInputItems || inputBelt.worldItem.itemSO != itemRecipeSO.inputItemList[0].item) return;
+        if(inputBelt.worldItem == null || storedInputItems == buildableDataSO.maxStoredInputItems || inputBelt.worldItem.itemSO != buildableDataSO.itemRecipeList[0].inputItemList[0].item) return;
 
         inputBelt.worldItem.DestroySelf();
         storedInputItems++;
@@ -80,13 +72,13 @@ public class Constructor : PlacedObject {
     void TryPutItemOnOutputBelt() {
         if(outputBelt.worldItem != null || storedOutputItems == 0) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.origin, itemRecipeSO.outputItemList[0].item);
+        WorldItem worldItem = WorldItem.Create(outputBelt.origin, buildableDataSO.itemRecipeList[0].outputItemList[0].item);
         outputBelt.SetWorldItem(worldItem);
         storedOutputItems--;
     }
 
     public float GetCraftingProgressNormalized() {
-        return craftingProgress / itemRecipeSO.craftingTime;
+        return craftingProgress / buildableDataSO.itemRecipeList[0].craftingTime;
     }
 
     public int GetItemStoredCount(ItemSO filterItemSO) {
@@ -99,6 +91,6 @@ public class Constructor : PlacedObject {
     }
 
     public void SetItemRecipeScriptableObject(ItemRecipeSO itemRecipeSO) {
-        this.itemRecipeSO = itemRecipeSO;
+        //this.itemRecipeSO = itemRecipeSO;
     }
 }

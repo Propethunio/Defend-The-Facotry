@@ -1,0 +1,14 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class BasePlacedObject : MonoBehaviour {
+
+    public Vector2Int origin { get; protected set; }
+    public BuildingDir dir { get; protected set; }
+
+    public abstract List<Vector2Int> GetGridPositionList();
+    public abstract void SetData(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO);
+    protected virtual void Setup() { }
+    public virtual void GridSetupDone() { }
+    public virtual void DestroySelf() => Destroy(gameObject);
+}

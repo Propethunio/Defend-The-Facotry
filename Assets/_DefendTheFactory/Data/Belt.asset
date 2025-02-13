@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e067cb39f592b2e4c9715625936463b4, type: 3}
-  m_Name: Spliter
+  m_Name: Belt
   m_EditorClassIdentifier: 
-  nameString: Merger
-  prefab: {fileID: 6328227677590226635, guid: 89eceb0362eb7934583bd741bc137349, type: 3}
-  visual: {fileID: 6328227677590226635, guid: 61c9f827699a66d4b82a40724ebd24a8, type: 3}
-  width: 1
-  height: 1
+  <nameString>k__BackingField: Conveyor Belt
+  <prefab>k__BackingField: {fileID: 7788273569947618330, guid: d7a93aabf0fd4954681931fb8e54feee,
+    type: 3}
+  <visual>k__BackingField: {fileID: 7788273569947618330, guid: 59b18ac08f34144498c33c2dcb9b8acf,
+    type: 3}
+  <width>k__BackingField: 1
+  <height>k__BackingField: 1

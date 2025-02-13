@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e8f78ed09a743449a48d3e7cf0e868c, type: 3}
+  m_Name: Lumberjack
+  m_EditorClassIdentifier: 
+  <nameString>k__BackingField: Lumberjack
+  <prefab>k__BackingField: {fileID: 312247860716316089, guid: 1fcdf92e04a602e46a54b7158e256d2b,
+    type: 3}
+  <visual>k__BackingField: {fileID: 312247860716316089, guid: 538f204dccece1740bea45c9fe29c202,
+    type: 3}
+  <width>k__BackingField: 1
+  <height>k__BackingField: 2
+  <outputBeltPosition>k__BackingField: {x: 0, y: 0}
+  <maxStoredOutputItems>k__BackingField: 2
+  <gatheredResource>k__BackingField: 0
+  <resourceSearchRange>k__BackingField: 3
+  <gatheringTime>k__BackingField: 1
+  <producedItem>k__BackingField: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc,
+    type: 2}

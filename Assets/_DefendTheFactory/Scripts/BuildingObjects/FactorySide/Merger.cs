@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Merger : LogisticMachine {
+public class Merger : LogisticMachine<BaseBuildableObjectSO> {
 
     ConveyorBelt outputBelt;
     List<WorldItem> newItems = new();
     Dictionary<LogisticDir, ConveyorBelt> inputBelts = new();
     Dictionary<LogisticDir, Vector2Int> inputPositions = new();
+
+    public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
+        BaseDataSet(origin, dir, buildableDataSO);
+    }
 
     public override void GridSetupDone() {
         base.GridSetupDone();

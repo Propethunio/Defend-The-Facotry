@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour {
 
     void HandleDebugSpawnItem() {
         if(Input.GetKeyDown(KeyCode.I)) {
-            PlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
+            BasePlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
             if(placedObject != null && placedObject is ConveyorBelt) {
                 ConveyorBelt belt = placedObject as ConveyorBelt;
 

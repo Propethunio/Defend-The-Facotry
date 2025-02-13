@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class ConveyorBelt : PlacedObject {
+public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
 
     [SerializeField] GameObject straightBeltVisual;
     [SerializeField] GameObject leftTurnVisual;
@@ -9,9 +9,13 @@ public class ConveyorBelt : PlacedObject {
     [HideInInspector] public Vector2Int previousPosition;
     public Vector2Int nextPosition { get; private set; }
     public WorldItem worldItem { get; private set; }
-    public PlacedObject parentBuilding { get; private set; }
+    public BasePlacedObject parentBuilding { get; private set; }
 
     BuildingSystem buildingSystem;
+
+    public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
+        BaseDataSet(origin, dir, placedObjectDataSO);
+    }
 
     protected override void Setup() {
         buildingSystem = BuildingSystem.Instance;
@@ -58,7 +62,7 @@ public class ConveyorBelt : PlacedObject {
         SetUpVisual();
     }
 
-    public void SetupBuildingBelt(Vector2Int origin, BuildingDir dir, PlacedObject parentBuilding) {
+    public void SetupBuildingBelt(Vector2Int origin, BuildingDir dir, BasePlacedObject parentBuilding) {
         this.origin = origin;
         this.dir = dir;
         this.parentBuilding = parentBuilding;

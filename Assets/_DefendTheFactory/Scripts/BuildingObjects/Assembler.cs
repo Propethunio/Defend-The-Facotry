@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Assembler : PlacedObject {
+public class Assembler : BaseDataPlacedObject<BaseMachineSO> {
 
     public event EventHandler OnItemStorageCountChanged;
 
@@ -10,6 +10,10 @@ public class Assembler : PlacedObject {
     private List<ItemStack> inputItemStackList;
     private List<ItemStack> outputItemStackList;
     private float craftingProgress;
+
+    public override void Initialize(Vector2Int origin, BuildingDir dir, BaseMachineSO buildableDataSO) {
+        BaseDataSet(origin, dir, buildableDataSO);
+    }
 
     protected override void Setup() {
         inputItemStackList = new List<ItemStack>();

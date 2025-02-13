@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class GatheringMachine : PlacedObject {
-
-    public event EventHandler OnItemStorageCountChanged;
+public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
 
     [SerializeField] ConveyorBelt outputBelt;
-    [SerializeField] float resourceSearchRange;
-    [SerializeField] Vector2Int ghostBeltPosition;
-    [SerializeField] ResourcesEnum gatheredResource;
-    [SerializeField] float gatheringTime;
-    [SerializeField] int maxStoredItems;
-    [SerializeField] ItemSO producedItem;
 
     List<ResourceNode> nodesInRange = new();
     ResourceNode currentNode;
     int storedItemsCount;
     float timer;
 
+    public override void Initialize(Vector2Int origin, BuildingDir dir, GatheringMachineSO buildableDataSO) {
+        BaseDataSet(origin, dir, buildableDataSO);
+    }
+
     void Update() {
-        if(currentNode == null || storedItemsCount == maxStoredItems) return;
+        if(currentNode == null || storedItemsCount == buildableDataSO.maxStoredOutputItems) return;
 
         timer += Time.deltaTime;
-        if(timer >= gatheringTime) {
-            timer -= gatheringTime;
+        if(timer >= buildableDataSO.gatheringTime) {
+            timer -= buildableDataSO.gatheringTime;
             Gather();
         }
     }
@@ -52,17 +47,18 @@ public class GatheringMachine : PlacedObject {
         Vector2 centerPosition = buildableDataSO.GetCenterPosition(origin, dir);
         GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
 
-        int bottom = (int)Mathf.Floor(centerPosition.y - resourceSearchRange);
-        int top = (int)Mathf.Ceil(centerPosition.y + resourceSearchRange - 1);
-        int left = (int)Mathf.Floor(centerPosition.x - resourceSearchRange);
-        int right = (int)Mathf.Ceil(centerPosition.x + resourceSearchRange - 1);
+        float searchRange = buildableDataSO.resourceSearchRange;
+        int bottom = (int)Mathf.Floor(centerPosition.y - searchRange);
+        int top = (int)Mathf.Ceil(centerPosition.y + searchRange - 1);
+        int left = (int)Mathf.Floor(centerPosition.x - searchRange);
+        int right = (int)Mathf.Ceil(centerPosition.x + searchRange - 1);
 
         for(int y = bottom; y <= top; y++) {
             for(int x = left; x <= right; x++) {
 
                 if(IsPositionValid(gridArray, new Vector2Int(x, y)) && IsInsideCircle(centerPosition, new Vector2Int(x, y))) {
                     ResourceNode node = gridArray[x, y].placedObject as ResourceNode;
-                    if(node != null && node.resourceType == gatheredResource) {
+                    if(node != null && node.buildableDataSO.resourceType == buildableDataSO.gatheredResource) {
                         nodesInRange.Add(node);
                         node.NodeGatheredCompletly += HandleNodeDestroyed;
                     }
@@ -74,7 +70,7 @@ public class GatheringMachine : PlacedObject {
     bool IsInsideCircle(Vector2 center, Vector2Int point) {
         float dx = center.x - (point.x + 0.5f);
         float dy = center.y - (point.y + 0.5f);
-        return dx * dx + dy * dy <= resourceSearchRange * resourceSearchRange + 0.5f;
+        return dx * dx + dy * dy <= buildableDataSO.resourceSearchRange * buildableDataSO.resourceSearchRange + 0.5f;
     }
 
     void PickClosestNode() {
@@ -83,7 +79,7 @@ public class GatheringMachine : PlacedObject {
 
         foreach(ResourceNode node in nodesInRange) {
             Vector2 nodeCenterPosition = node.buildableDataSO.GetCenterPosition(node.origin, node.dir);
-            float distanceToNode = Vector2.Distance(machineCenterPosition, nodeCenterPosition);
+            float distanceToNode = (machineCenterPosition - nodeCenterPosition).sqrMagnitude;
 
             if(currentNode == null || distanceToNode < currentDistance) {
                 currentNode = node;
@@ -117,7 +113,7 @@ public class GatheringMachine : PlacedObject {
     }
 
     void SetupBelt() {
-        Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, ghostBeltPosition, dir);
+        Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.outputBeltPosition, dir);
         outputBelt.SetupBuildingBelt(beltPos, dir, this);
     }
 
@@ -145,7 +141,7 @@ public class GatheringMachine : PlacedObject {
     void TryPutItemOnBelt() {
         if(outputBelt.worldItem != null) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.origin, producedItem);
+        WorldItem worldItem = WorldItem.Create(outputBelt.origin, buildableDataSO.producedItem);
         outputBelt.SetWorldItem(worldItem);
         storedItemsCount--;
     }

@@ -2,12 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spliter : LogisticMachine {
+public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
 
     ConveyorBelt inputBelt;
     WorldItem newItem;
     Dictionary<LogisticDir, ConveyorBelt> outputBelts = new();
     Dictionary<LogisticDir, Vector2Int> outputPositions = new();
+
+    public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
+        BaseDataSet(origin, dir, buildableDataSO);
+    }
 
     public override void GridSetupDone() {
         base.GridSetupDone();

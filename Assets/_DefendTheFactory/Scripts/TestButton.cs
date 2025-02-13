@@ -1,16 +1,13 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TestButton : MonoBehaviour {
 
     [SerializeField] BaseBuildableObjectSO obj;
 
     void Start() {
-        TMP_Text text = GetComponentInChildren<TMP_Text>();
-        text.text = obj.nameString;
-    }
-
-    public void SetItem(BaseBuildableObjectSO test) {
-        BuildingSystem.Instance.Test(test);
+        GetComponentInChildren<TMP_Text>().text = obj.nameString;
+        GetComponent<Button>().onClick.AddListener(() => BuildingSystem.Instance.Test(obj));
     }
 }

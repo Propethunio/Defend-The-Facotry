@@ -672,6 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d17495d021dd7da458c35ddf3d8b2bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obj: {fileID: 11400000, guid: cc54598f4b1667e4b9e07e5e1e667267, type: 2}
 --- !u!114 &98312995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -715,20 +716,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 98312996}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 98312994}
-        m_TargetAssemblyTypeName: TestButton, Assembly-CSharp
-        m_MethodName: SetItem
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 8d06305c499bab343b355934429f76e3,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: PlacedObjectTypeSO, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &98312996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4699,6 +4687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d17495d021dd7da458c35ddf3d8b2bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obj: {fileID: 11400000, guid: 8809047efe3d2d944b4e66ccb2185303, type: 2}
 --- !u!114 &668828545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4742,20 +4731,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 668828546}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 668828544}
-        m_TargetAssemblyTypeName: TestButton, Assembly-CSharp
-        m_MethodName: SetItem
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 1fd4ab371ed3c0943bbbfee577de26e9,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: PlacedObjectTypeSO, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &668828546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7067,6 +7043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d17495d021dd7da458c35ddf3d8b2bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obj: {fileID: 11400000, guid: 9becd9a6d8334774ca7b0b355f08b11c, type: 2}
 --- !u!114 &1158906324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7110,20 +7087,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1158906325}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1158906323}
-        m_TargetAssemblyTypeName: TestButton, Assembly-CSharp
-        m_MethodName: SetItem
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: a987b873ab4271743bd6814971a5525d,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: PlacedObjectTypeSO, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1158906325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7548,6 +7512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d17495d021dd7da458c35ddf3d8b2bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obj: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
 --- !u!114 &1241002935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7591,20 +7556,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1241002936}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1241002934}
-        m_TargetAssemblyTypeName: TestButton, Assembly-CSharp
-        m_MethodName: SetItem
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: cff6d730d5a3dd345bfbe69102a7fcc1,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: PlacedObjectTypeSO, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1241002936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11305,6 +11257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d17495d021dd7da458c35ddf3d8b2bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obj: {fileID: 11400000, guid: 0e7d8342e26c7754ab10f55d2e0506f9, type: 2}
 --- !u!114 &1709108676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11348,20 +11301,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1709108677}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1709108675}
-        m_TargetAssemblyTypeName: TestButton, Assembly-CSharp
-        m_MethodName: SetItem
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 1eef5f88bf7af3e41aaf19e1868baaeb,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: PlacedObjectTypeSO, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1709108677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12454,6 +12394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d17495d021dd7da458c35ddf3d8b2bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obj: {fileID: 11400000, guid: 4a586f58758f89145bd61c678aeaad28, type: 2}
 --- !u!114 &1831982010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12497,20 +12438,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1831982011}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1831982009}
-        m_TargetAssemblyTypeName: TestButton, Assembly-CSharp
-        m_MethodName: SetItem
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: cbf55f4bf7e959a4095d6275348848c5,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: PlacedObjectTypeSO, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1831982011
 MonoBehaviour:
   m_ObjectHideFlags: 0

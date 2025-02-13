@@ -1,41 +1,29 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class PlacedObject : MonoBehaviour {
+public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseBuildableObjectSO {
 
-    public Vector2Int origin { get; protected set; }
-    public BuildingDir dir { get; protected set; }
-    public BaseBuildableObjectSO buildableDataSO { get; protected set; }
+    public T buildableDataSO { get; protected set; }
 
-    public static PlacedObject Create(Vector3 worldPosition, Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectTypeSO) {
-        PlacedObject placedObject = Instantiate(placedObjectTypeSO.prefab, worldPosition, Quaternion.Euler(0, BuildingSystem.Instance.GetRotationAngle(dir), 0)).GetComponent<PlacedObject>();
-        /*ParticleSystem fxBuildingPlaced = Instantiate(GameAssets.i.fxBuildingPlaced, worldPosition, Quaternion.identity).GetComponent<ParticleSystem>();
+    public static BasePlacedObject Create(Vector3 worldPosition, BuildingDir dir, T placedObjectDataSO) {
+        return Instantiate(placedObjectDataSO.prefab, worldPosition, Quaternion.Euler(0, BuildingSystem.Instance.GetRotationAngle(dir), 0)).GetComponent<BasePlacedObject>();
+    }
 
-        ParticleSystem.MainModule mainModule = fxBuildingPlaced.main;
-        ParticleSystem.MinMaxCurve startSize = mainModule.startSize;
-        startSize.constant += .2f * Mathf.Max(placedObjectTypeSO.width, placedObjectTypeSO.height);
-        mainModule.startSize = startSize;
+    public abstract void Initialize(Vector2Int origin, BuildingDir dir, T placedObjectDataSO);
 
-        ParticleSystem.ShapeModule shapeModule = fxBuildingPlaced.shape;
-        Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
-        shapeModule.position = new Vector3(-rotationOffset.x, 0f, -rotationOffset.y) + new Vector3(placedObjectTypeSO.width, .4f, placedObjectTypeSO.height) * .5f;
-        shapeModule.scale = new Vector3(placedObjectTypeSO.width, placedObjectTypeSO.height, 1);
+    public override void SetData(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
+        if(placedObjectDataSO is T castedDataSO) {
+            Initialize(origin, dir, castedDataSO);
+        } else {
+            Debug.LogError($"Invalid type passed to Initialize. Expected {typeof(T)} but got {placedObjectDataSO.GetType()}");
+        }
+    }
 
-        Transform soundTransform = Instantiate(GameAssets.i.sndBuilding, worldPosition, Quaternion.identity);
-        Destroy(soundTransform.gameObject, 2f);
-        AudioSource audioSource = soundTransform.GetComponent<AudioSource>();
-        audioSource.pitch = Random.Range(.85f, 1.15f);
-
-        if (placedObjectTypeSO == GameAssets.i.placedObjectTypeSO_Refs.conveyorBelt) {
-            audioSource.volume *= .5f;
-        }*/
-
-        placedObject.buildableDataSO = placedObjectTypeSO;
-        placedObject.origin = origin;
-        placedObject.dir = dir;
-        placedObject.Setup();
-
-        return placedObject;
+    protected void BaseDataSet(Vector2Int origin, BuildingDir dir, T placedObjectDataSO) {
+        this.origin = origin;
+        this.dir = dir;
+        buildableDataSO = placedObjectDataSO;
+        Setup();
     }
 
     protected virtual void TriggerGridObjectChanged() {
@@ -44,15 +32,7 @@ public class PlacedObject : MonoBehaviour {
         }
     }
 
-    protected virtual void Setup() { }
-
-    public virtual void GridSetupDone() { }
-
-    public virtual void DestroySelf() {
-        Destroy(gameObject);
-    }
-
-    public List<Vector2Int> GetGridPositionList() {
+    public override List<Vector2Int> GetGridPositionList() {
         return buildableDataSO.GetGridPositionList(origin, dir);
     }
 }

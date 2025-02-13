@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class LogisticMachine : PlacedObject {
+public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : BaseBuildableObjectSO {
 
     [SerializeField] protected int maxStorage;
 
@@ -10,6 +10,8 @@ public abstract class LogisticMachine : PlacedObject {
     protected List<WorldItem> items = new();
     protected LogisticDir logisticDir = LogisticDir.Straight;
     protected Dictionary<Action, Vector2Int> objectChangedEvents = new();
+
+    public override void Initialize(Vector2Int origin, BuildingDir dir, T buildableDataSO) { }
 
     void OnDestroy() {
         Unsubscribe();

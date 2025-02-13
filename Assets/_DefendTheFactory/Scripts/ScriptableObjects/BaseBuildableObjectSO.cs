@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu()]
+[CreateAssetMenu(menuName = "Scriptable Objects/Buildable Objects/Base Buildable Object")]
 public class BaseBuildableObjectSO : ScriptableObject {
 
     [field: SerializeField] public string nameString { get; private set; }
@@ -33,16 +33,6 @@ public class BaseBuildableObjectSO : ScriptableObject {
         }
 
         return gridPositionList;
-    }
-
-    public Vector2Int GetMachineBeltPosition(Vector2Int origin, Vector2Int beltPos, BuildingDir dir) {
-        switch(dir) {
-            default:
-            case BuildingDir.Down: return origin + beltPos;
-            case BuildingDir.Left: return origin + new Vector2Int(beltPos.y, width - beltPos.x - 1);
-            case BuildingDir.Up: return origin + new Vector2Int(width - beltPos.x - 1, height - beltPos.y - 1);
-            case BuildingDir.Right: return origin + new Vector2Int(height - beltPos.y - 1, beltPos.x);
-        }
     }
 
     public Vector2 GetCenterPosition(Vector2Int origin, BuildingDir dir) {

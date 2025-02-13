@@ -2,26 +2,17 @@ using System;
 
 public class GridCell {
 
-    public Action ObjectChanged;
+    public event Action ObjectChanged;
 
-    public PlacedObject placedObject { get; private set; }
-    int x;
-    int y;
+    public BasePlacedObject placedObject { get; private set; }
 
-    public GridCell(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void SetPlacedObject(PlacedObject placedObject) {
+    public void SetPlacedObject(BasePlacedObject placedObject) {
         this.placedObject = placedObject;
         ObjectChanged?.Invoke();
-        BuildingSystem.Instance.grid.TriggerGridObjectChanged(x, y);
     }
 
     public void ClearPlacedObject() {
         placedObject = null;
         ObjectChanged?.Invoke();
-        BuildingSystem.Instance.grid.TriggerGridObjectChanged(x, y);
     }
 }

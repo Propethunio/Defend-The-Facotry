@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e067cb39f592b2e4c9715625936463b4, type: 3}
-  m_Name: Miner
+  m_Name: Merger
   m_EditorClassIdentifier: 
-  nameString: Miner
-  prefab: {fileID: 312247860716316089, guid: 1fcdf92e04a602e46a54b7158e256d2b, type: 3}
-  visual: {fileID: 312247860716316089, guid: 538f204dccece1740bea45c9fe29c202, type: 3}
-  width: 1
-  height: 2
+  <nameString>k__BackingField: Merger
+  <prefab>k__BackingField: {fileID: 6328227677590226635, guid: 63e83d06868227c4ab8102d01b7fbac9,
+    type: 3}
+  <visual>k__BackingField: {fileID: 6328227677590226635, guid: 84eb4a2472dc27b4f871bb16233d0a7f,
+    type: 3}
+  <width>k__BackingField: 1
+  <height>k__BackingField: 1
