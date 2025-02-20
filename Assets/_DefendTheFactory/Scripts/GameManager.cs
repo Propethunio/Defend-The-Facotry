@@ -23,8 +23,8 @@ public class GameManager : MonoBehaviour {
     void HandleDebugSpawnItem() {
         if(Input.GetKeyDown(KeyCode.I)) {
             BasePlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
-            if(placedObject != null && placedObject is ConveyorBelts) {
-                ConveyorBelts belt = placedObject as ConveyorBelts;
+            if(placedObject != null && placedObject is ConveyorBelt) {
+                ConveyorBelt belt = placedObject as ConveyorBelt;
 
                 if(belt.worldItem == null) {
                     WorldItem worldItem = WorldItem.Create(belt.origin, GameAssets.i.itemSO_Refs.ironOre);

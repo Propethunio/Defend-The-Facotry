@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
 
-    ConveyorBelts outputBelt;
+    ConveyorBelt outputBelt;
     List<ResourceNode> nodesInRange = new();
     ResourceNode currentNode;
     int storedItemsCount;
@@ -87,12 +87,12 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         }
     }
 
-    bool ShouldSnapBack(GridCell[,] gridArray, Vector2Int position, out ConveyorBelts belt) {
+    bool ShouldSnapBack(GridCell[,] gridArray, Vector2Int position, out ConveyorBelt belt) {
         belt = null;
 
         if(!IsPositionValid(gridArray, position)) return false;
 
-        belt = gridArray[position.x, position.y].placedObject as ConveyorBelts;
+        belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
         return belt != null && belt.previousPosition == origin;
     }
 
@@ -112,7 +112,7 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     }
 
     void SetupBelt() {
-        outputBelt = gameObject.AddComponent<ConveyorBelts>();
+        outputBelt = gameObject.AddComponent<ConveyorBelt>();
         Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.outputBeltPosition, dir);
         outputBelt.SetupBuildingBelt(beltPos, dir, this);
     }

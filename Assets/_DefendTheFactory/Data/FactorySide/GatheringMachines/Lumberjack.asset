@@ -21,7 +21,7 @@ MonoBehaviour:
   <width>k__BackingField: 1
   <height>k__BackingField: 2
   <outputBeltPosition>k__BackingField: {x: 0, y: 0}
-  <maxStoredOutputItems>k__BackingField: 2
+  <maxStoredOutputItems>k__BackingField: 1
   <gatheredResource>k__BackingField: 0
   <resourceSearchRange>k__BackingField: 3
   <gatheringTime>k__BackingField: 1

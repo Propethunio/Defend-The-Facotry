@@ -90,7 +90,7 @@ public class BuildingSystem {
         BasePlacedObject placedObject = grid.gridArray[x, z].placedObject;
         if(placedObject == null) return;
 
-        if(placedObject is ConveyorBelts conveyorBelt && conveyorBelt.parentBuilding != null) {
+        if(placedObject is ConveyorBelt conveyorBelt && conveyorBelt.parentBuilding != null) {
             placedObject = conveyorBelt.parentBuilding;
         }
 
@@ -135,16 +135,16 @@ public class BuildingSystem {
 
     void TryPlaceObject(Vector2Int placedObjectOrigin) {
         List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
-        List<ConveyorBelts> beltsToRemove = new();
+        List<ConveyorBelt> beltsToRemove = new();
 
         foreach(Vector2Int gridPosition in gridPositionList) {
             GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
-            if(cell == null || (cell.placedObject != null && cell.placedObject is not ConveyorBelts)) {
+            if(cell == null || (cell.placedObject != null && cell.placedObject is not ConveyorBelt)) {
                 return;
             }
 
             if(cell.placedObject != null) {
-                ConveyorBelts belt = cell.placedObject as ConveyorBelts;
+                ConveyorBelt belt = cell.placedObject as ConveyorBelt;
 
                 if(belt.parentBuilding != null) {
                     return;
@@ -154,7 +154,7 @@ public class BuildingSystem {
             }
         }
 
-        foreach(ConveyorBelts belt in beltsToRemove) {
+        foreach(ConveyorBelt belt in beltsToRemove) {
             belt.DestroySelf();
         }
 

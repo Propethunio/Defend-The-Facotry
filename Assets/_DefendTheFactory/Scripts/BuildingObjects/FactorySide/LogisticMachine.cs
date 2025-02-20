@@ -44,7 +44,6 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
     }
 
     protected abstract void OnEarlyTick();
-
     protected abstract void OnLateTick();
 
     protected LogisticDir GetNextDir(LogisticDir dir) {
@@ -56,21 +55,21 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
         }
     }
 
-    protected bool ShouldSnap(Vector2Int position, out ConveyorBelts belt) {
+    protected bool ShouldSnap(Vector2Int position, out ConveyorBelt belt) {
         belt = null;
 
         if(!IsPositionValid(position)) return false;
 
-        belt = gridArray[position.x, position.y].placedObject as ConveyorBelts;
+        belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
         return belt != null && belt.nextPosition == origin;
     }
 
-    protected bool ShouldSnapBack(Vector2Int position, out ConveyorBelts belt) {
+    protected bool ShouldSnapBack(Vector2Int position, out ConveyorBelt belt) {
         belt = null;
 
         if(!IsPositionValid(position)) return false;
 
-        belt = gridArray[position.x, position.y].placedObject as ConveyorBelts;
+        belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
         return belt != null && belt.previousPosition == origin;
     }
 

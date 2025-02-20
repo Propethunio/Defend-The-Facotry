@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Merger : LogisticMachine<BaseBuildableObjectSO> {
 
-    ConveyorBelts outputBelt;
+    ConveyorBelt outputBelt;
     List<WorldItem> newItems = new();
-    Dictionary<LogisticDir, ConveyorBelts> inputBelts = new();
+    Dictionary<LogisticDir, ConveyorBelt> inputBelts = new();
     Dictionary<LogisticDir, Vector2Int> inputPositions = new();
 
     public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
@@ -38,7 +38,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if(ShouldSnap(position, out ConveyorBelts belt)) {
+        if(ShouldSnap(position, out ConveyorBelt belt)) {
             inputBelts[logisticDir] = belt;
         }
     }
@@ -46,7 +46,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
     void HandleGridObjectChange(LogisticDir dir) {
         Vector2Int position = inputPositions[dir];
 
-        if(ShouldSnap(position, out ConveyorBelts belt)) {
+        if(ShouldSnap(position, out ConveyorBelt belt)) {
             inputBelts[dir] = belt;
         } else {
             inputBelts[dir] = null;
@@ -60,13 +60,13 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if(ShouldSnapBack(position, out ConveyorBelts belt)) {
+        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
             outputBelt = belt;
         }
     }
 
     void HandleGridObjectChange(Vector2Int position) {
-        if(ShouldSnapBack(position, out ConveyorBelts belt)) {
+        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
             outputBelt = belt;
         } else {
             outputBelt = null;
