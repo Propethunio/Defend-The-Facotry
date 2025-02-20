@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
 
-    ConveyorBelt inputBelt;
+    ConveyorBelts inputBelt;
     WorldItem newItem;
-    Dictionary<LogisticDir, ConveyorBelt> outputBelts = new();
+    Dictionary<LogisticDir, ConveyorBelts> outputBelts = new();
     Dictionary<LogisticDir, Vector2Int> outputPositions = new();
 
     public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
@@ -35,13 +35,13 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if(ShouldSnap(position, out ConveyorBelt belt)) {
+        if(ShouldSnap(position, out ConveyorBelts belt)) {
             inputBelt = belt;
         }
     }
 
     void HandleGridObjectChange(Vector2Int position) {
-        if(ShouldSnap(position, out ConveyorBelt belt)) {
+        if(ShouldSnap(position, out ConveyorBelts belt)) {
             inputBelt = belt;
         } else {
             inputBelt = null;
@@ -58,7 +58,7 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
+        if(ShouldSnapBack(position, out ConveyorBelts belt)) {
             outputBelts[logisticDir] = belt;
         }
     }
@@ -66,7 +66,7 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
     void HandleGridObjectChange(LogisticDir dir) {
         Vector2Int position = outputPositions[dir];
 
-        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
+        if(ShouldSnapBack(position, out ConveyorBelts belt)) {
             outputBelts[dir] = belt;
         } else {
             outputBelts[dir] = null;

@@ -2,9 +2,8 @@
 
 public class Constructor : BaseDataPlacedObject<ConstructorSO> {
 
-    [SerializeField] ConveyorBelt inputBelt;
-    [SerializeField] ConveyorBelt outputBelt;
-
+    ConveyorBelts inputBelt;
+    ConveyorBelts outputBelt;
     ItemStackList inputItemStackList = new();
     ItemStackList outputItemStackList = new();
     int storedInputItems;
@@ -43,6 +42,8 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     }
 
     void SetupBelts() {
+        inputBelt = gameObject.AddComponent<ConveyorBelts>();
+        outputBelt = gameObject.AddComponent<ConveyorBelts>();
         Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.inputBeltPosition, dir);
         inputBelt.SetupBuildingBelt(beltPos, dir, this);
         beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.outputBeltPosition, dir);

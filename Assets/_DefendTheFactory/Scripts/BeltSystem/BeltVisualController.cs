@@ -11,7 +11,7 @@ public class BeltVisualController : MonoBehaviour {
     BuildingGhost buildingGhost;
     BuildingSystem buildingSystem;
     GridCell[,] gridArray;
-    ConveyorBelt modifiedBelt;
+    ConveyorBelts modifiedBelt;
 
     void Start() {
         beltMenager = BeltManager.Instance;
@@ -61,13 +61,13 @@ public class BeltVisualController : MonoBehaviour {
 
         if(!IsPositionValid(nextPosition)) return;
 
-        ConveyorBelt nextBelt = gridArray[nextPosition.x, nextPosition.y].placedObject as ConveyorBelt;
+        ConveyorBelts nextBelt = gridArray[nextPosition.x, nextPosition.y].placedObject as ConveyorBelts;
         if(nextBelt == null || nextBelt.parentBuilding != null || !beltMenager.beltEndsDict.ContainsKey(nextBelt) || nextBelt.nextPosition == origin || nextBelt.previousPosition == origin) {
             return;
         }
 
         if(IsPositionValid(new Vector2Int(nextBelt.previousPosition.x, nextBelt.previousPosition.y))) {
-            ConveyorBelt beltConnectedToNextBelt = gridArray[nextBelt.previousPosition.x, nextBelt.previousPosition.y].placedObject as ConveyorBelt;
+            ConveyorBelts beltConnectedToNextBelt = gridArray[nextBelt.previousPosition.x, nextBelt.previousPosition.y].placedObject as ConveyorBelts;
 
             if(beltConnectedToNextBelt != null && beltConnectedToNextBelt.nextPosition == nextBelt.origin) {
                 return;
@@ -86,7 +86,7 @@ public class BeltVisualController : MonoBehaviour {
     }
 
     bool ShouldSnap(Vector2Int position) {
-        return IsPositionValid(position) && gridArray[position.x, position.y].placedObject is ConveyorBelt belt && belt.nextPosition == origin;
+        return IsPositionValid(position) && gridArray[position.x, position.y].placedObject is ConveyorBelts belt && belt.nextPosition == origin;
     }
 
     bool IsPositionValid(Vector2Int position) {

@@ -118,8 +118,6 @@ GameObject:
   m_Component:
   - component: {fileID: 312247860716316089}
   - component: {fileID: -2494306926247236580}
-  - component: {fileID: 1073141554515311993}
-  - component: {fileID: 5485363714851339839}
   m_Layer: 0
   m_Name: Constructor
   m_TagString: Untagged
@@ -156,46 +154,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a87421648f5d73542a851b32e1dfbedb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputBelt: {fileID: 1073141554515311993}
-  outputBelt: {fileID: 5485363714851339839}
-  inputGhostBeltPosition: {x: 1, y: 0}
-  outputGhostBeltPosition: {x: 1, y: 1}
-  maxStoredInputItems: 8
-  maxStoredOutputItems: 4
-  <itemRecipeSO>k__BackingField: {fileID: 11400000, guid: 7ef64690dbfa0f847bfe97a47d243896,
-    type: 2}
---- !u!114 &1073141554515311993
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5879861430182639634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49a50aba6707dcf40a44409f9960823d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  straightBeltVisual: {fileID: 0}
-  leftTurnVisual: {fileID: 0}
-  rightTurnVisual: {fileID: 0}
-  previousPosition: {x: 0, y: 0}
---- !u!114 &5485363714851339839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5879861430182639634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49a50aba6707dcf40a44409f9960823d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  straightBeltVisual: {fileID: 0}
-  leftTurnVisual: {fileID: 0}
-  rightTurnVisual: {fileID: 0}
-  previousPosition: {x: 0, y: 0}
 --- !u!1001 &4514247249208562772
 PrefabInstance:
   m_ObjectHideFlags: 0

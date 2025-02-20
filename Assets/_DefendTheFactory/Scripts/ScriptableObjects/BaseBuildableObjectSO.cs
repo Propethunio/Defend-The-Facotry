@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Scriptable Objects/Buildable Objects/Base Buildable Object")]
 public class BaseBuildableObjectSO : ScriptableObject {
 
+    [field: SerializeField] public Sprite icon { get; private set; }
     [field: SerializeField] public string nameString { get; private set; }
     [field: SerializeField] public Transform prefab { get; private set; }
     [field: SerializeField] public Transform visual { get; private set; }
