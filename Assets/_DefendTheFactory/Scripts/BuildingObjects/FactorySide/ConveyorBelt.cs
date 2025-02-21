@@ -1,10 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
-
-    [SerializeField] GameObject straightBeltVisual;
-    [SerializeField] GameObject leftTurnVisual;
-    [SerializeField] GameObject rightTurnVisual;
 
     [HideInInspector] public Vector2Int previousPosition;
     public Vector2Int nextPosition { get; private set; }
@@ -12,6 +9,8 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     public BasePlacedObject parentBuilding { get; private set; }
 
     BuildingSystem buildingSystem;
+
+    public event Action<Vector2Int, Vector2Int> OnVisualUpdate;
 
     public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
         BaseDataSet(origin, dir, placedObjectDataSO);
@@ -59,7 +58,10 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
 
     public override void GridSetupDone() {
         BeltManager.Instance.AddBelt(this);
-        SetUpVisual();
+
+        if(parentBuilding == null) {
+            OnVisualUpdate?.Invoke(origin, previousPosition);
+        }
     }
 
     public void SetupBuildingBelt(Vector2Int origin, BuildingDir dir, BasePlacedObject parentBuilding) {
@@ -112,39 +114,5 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
 
         BeltManager.Instance.RemoveBelt(this);
         base.DestroySelf();
-    }
-
-    void SetUpVisual() {
-        Vector2Int forwardVector = buildingSystem.GetDirForwardVector(dir);
-        Vector2Int backPosition = origin - forwardVector;
-
-        if(previousPosition == backPosition) return;
-
-        Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
-        Vector2Int leftPosition = origin - rightVector;
-
-        if(previousPosition == leftPosition) {
-            ShowLeftVisual();
-        } else {
-            ShowRightVisual();
-        }
-    }
-
-    public void ShowStraightVisual() {
-        straightBeltVisual.SetActive(true);
-        leftTurnVisual.SetActive(false);
-        rightTurnVisual.SetActive(false);
-    }
-
-    public void ShowLeftVisual() {
-        straightBeltVisual.SetActive(false);
-        leftTurnVisual.SetActive(true);
-        rightTurnVisual.SetActive(false);
-    }
-
-    public void ShowRightVisual() {
-        straightBeltVisual.SetActive(false);
-        leftTurnVisual.SetActive(false);
-        rightTurnVisual.SetActive(true);
     }
 }

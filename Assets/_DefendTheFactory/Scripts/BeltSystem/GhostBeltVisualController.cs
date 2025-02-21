@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BeltVisualController : MonoBehaviour {
+public class GhostBeltVisualController : MonoBehaviour {
 
     [SerializeField] GameObject straightBeltVisual;
     [SerializeField] GameObject leftTurnVisual;
@@ -11,7 +11,7 @@ public class BeltVisualController : MonoBehaviour {
     BuildingGhost buildingGhost;
     BuildingSystem buildingSystem;
     GridCell[,] gridArray;
-    ConveyorBelt modifiedBelt;
+    ConveyorBeltVisualController modifiedBeltVisual;
 
     void Start() {
         beltMenager = BeltManager.Instance;
@@ -54,9 +54,9 @@ public class BeltVisualController : MonoBehaviour {
     }
 
     void TryModifyNextBelt(Vector2Int nextPosition) {
-        if(modifiedBelt != null) {
-            modifiedBelt.ShowStraightVisual();
-            modifiedBelt = null;
+        if(modifiedBeltVisual != null) {
+            modifiedBeltVisual.ShowStraightVisual();
+            modifiedBeltVisual = null;
         }
 
         if(!IsPositionValid(nextPosition)) return;
@@ -74,14 +74,14 @@ public class BeltVisualController : MonoBehaviour {
             }
         }
 
-        modifiedBelt = nextBelt;
+        modifiedBeltVisual = nextBelt.gameObject.GetComponent<ConveyorBeltVisualController>();
         Vector2Int forwardVector = buildingSystem.GetDirForwardVector(nextBelt.dir);
         Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
 
         if(nextBelt.origin - rightVector == origin) {
-            nextBelt.ShowLeftVisual();
+            modifiedBeltVisual.ShowLeftVisual();
         } else {
-            nextBelt.ShowRightVisual();
+            modifiedBeltVisual.ShowRightVisual();
         }
     }
 
@@ -112,6 +112,6 @@ public class BeltVisualController : MonoBehaviour {
     }
 
     void ResetModifiedBelt() {
-        modifiedBelt = null;
+        modifiedBeltVisual = null;
     }
 }
