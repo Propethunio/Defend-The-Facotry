@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &981099526800771937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6627392024616308317}
+  m_Layer: 0
+  m_Name: CenterPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6627392024616308317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981099526800771937}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 312247860716316089}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2223110982035773412
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,6 +127,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 312247860716316089}
+  - component: {fileID: 7004525309900853952}
   m_Layer: 0
   m_Name: Miner_Vis
   m_TagString: Untagged
@@ -118,8 +150,25 @@ Transform:
   m_Children:
   - {fileID: 5102847317333570327}
   - {fileID: 6312189428126314708}
+  - {fileID: 6627392024616308317}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7004525309900853952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5879861430182639634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2447defee34d0504ba937b30bd0dc9c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  centerPosition: {fileID: 6627392024616308317}
+  _data: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
+  _discColor: {r: 0, g: 1, b: 0.34432507, a: 0.14901961}
+  _circleColor: {r: 0.9622642, g: 0.09531862, b: 0.09531862, a: 0.6}
 --- !u!1 &8749078926807351610
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +180,6 @@ GameObject:
   - component: {fileID: 5102847317333570327}
   - component: {fileID: 8267419234351805953}
   - component: {fileID: 8210106910398701022}
-  - component: {fileID: 5331424323362325893}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -207,18 +255,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5331424323362325893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8749078926807351610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2447defee34d0504ba937b30bd0dc9c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  range: 3
-  discColor: {r: 0, g: 1, b: 0, a: 0.14901961}
-  circleColor: {r: 0, g: 1, b: 0, a: 0.69803923}
