@@ -6570,6 +6570,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1066030350}
   - component: {fileID: 1066030351}
+  - component: {fileID: 1066030353}
+  - component: {fileID: 1066030352}
   m_Layer: 0
   m_Name: Material Scroll
   m_TagString: Untagged
@@ -6606,6 +6608,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: -0.5
   targetMaterial: {fileID: 2100000, guid: cf1866362a54fd34ea002b919591e5ee, type: 2}
+--- !u!114 &1066030352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066030349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4121cf6b59c5fc438903b3a32bce434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollSpeed: -0.5
+  targetMaterial: {fileID: 2100000, guid: dbf984b64a309a44ea9ee703103e7107, type: 2}
+--- !u!114 &1066030353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066030349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4121cf6b59c5fc438903b3a32bce434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollSpeed: 0.5
+  targetMaterial: {fileID: 2100000, guid: 6c7dd45707baf0f41b8e4af49fc4af3d, type: 2}
 --- !u!1 &1067434312
 GameObject:
   m_ObjectHideFlags: 0

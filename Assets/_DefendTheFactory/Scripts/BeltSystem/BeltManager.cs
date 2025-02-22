@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Splines;
 
 public class BeltManager {
 
@@ -84,7 +85,7 @@ public class BeltManager {
 
     void ConnectToNextBelt(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
         if(nextBelt.parentBuilding == null && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin) {
-            ConveyorBelt beltConnectedToNextBelt = BuildingSystem.Instance.GetGridObject(nextBelt.previousPosition).placedObject as ConveyorBelt;
+            ConveyorBelt beltConnectedToNextBelt = TryGetConnectingBelt(nextBelt.previousPosition);
 
             if(beltConnectedToNextBelt == null || beltConnectedToNextBelt.nextPosition != nextBelt.origin) {
                 nextBelt.previousPosition = newBelt.origin;
@@ -100,22 +101,27 @@ public class BeltManager {
         }
     }
 
-    void MergeBeltPaths(ConveyorBelt newBelt, ConveyorBelt nextBelt, BeltPath connectingBeltPath) {
-        BeltPath pathToMerge = beltEndsDict[nextBelt];
-        beltEndsDict.Remove(newBelt);
+    void MergeBeltPaths(ConveyorBelt endBeltFromMainPath, ConveyorBelt startBeltFromDeletedPath) {
+        BeltPath mainBeltPath = beltEndsDict[endBeltFromMainPath];
+        MergeBeltPaths(endBeltFromMainPath, startBeltFromDeletedPath, mainBeltPath);
+    }
 
-        if(connectingBeltPath == pathToMerge) {
-            beltEndsDict.Remove(nextBelt);
+    void MergeBeltPaths(ConveyorBelt endBeltFromMainPath, ConveyorBelt startBeltFromDeletedPath, BeltPath mainBeltPath) {
+        BeltPath pathToMerge = beltEndsDict[startBeltFromDeletedPath];
+        beltEndsDict.Remove(endBeltFromMainPath);
+
+        if(mainBeltPath == pathToMerge) {
+            beltEndsDict.Remove(startBeltFromDeletedPath);
             return;
         }
 
-        connectingBeltPath.beltList.AddRange(pathToMerge.beltList);
+        mainBeltPath.beltList.AddRange(pathToMerge.beltList);
 
         if(pathToMerge.beltList.Count > 1) {
-            beltEndsDict.Remove(nextBelt);
+            beltEndsDict.Remove(startBeltFromDeletedPath);
         }
 
-        beltEndsDict[pathToMerge.beltList[^1]] = connectingBeltPath;
+        beltEndsDict[pathToMerge.beltList[^1]] = mainBeltPath;
         beltPathList.Remove(pathToMerge);
     }
 
@@ -137,9 +143,10 @@ public class BeltManager {
     }
 
     public void RemoveBelt(ConveyorBelt belt) {
-        BeltPath beltPath = null;
+        ConveyorBelt newStartBelt = null;
+        ConveyorBelt newEndBelt = null;
 
-        if(!beltEndsDict.TryGetValue(belt, out beltPath)) {
+        if(!beltEndsDict.TryGetValue(belt, out BeltPath beltPath)) {
             beltPath = beltPathList.FirstOrDefault(path => path.beltList.Contains(belt));
         }
 
@@ -150,21 +157,20 @@ public class BeltManager {
 
             if(beltIndex == 0) {
                 beltPath.beltList.RemoveAt(0);
-                beltEndsDict.Add(beltPath.beltList[0], beltPath);
-                beltEndsDict.Add(beltPath.beltList[^1], beltPath);
             } else if(beltIndex == beltPath.beltList.Count - 1) {
                 beltPath.beltList.RemoveAt(beltIndex);
-                beltEndsDict.Add(beltPath.beltList[0], beltPath);
-                beltEndsDict.Add(beltPath.beltList[^1], beltPath);
             } else {
                 List<ConveyorBelt> firstPart = beltPath.beltList.GetRange(0, beltIndex);
                 List<ConveyorBelt> secondPart = beltPath.beltList.GetRange(beltIndex + 1, beltPath.beltList.Count - beltIndex - 1);
                 beltPath.beltList.Clear();
                 beltPath.beltList.AddRange(secondPart);
                 beltPath.beltList.AddRange(firstPart);
-                beltEndsDict.Add(beltPath.beltList[0], beltPath);
-                beltEndsDict.Add(beltPath.beltList[^1], beltPath);
             }
+
+            beltEndsDict.Add(beltPath.beltList[0], beltPath);
+            beltEndsDict.Add(beltPath.beltList[^1], beltPath);
+            newStartBelt = beltPath.beltList[0];
+            newEndBelt = beltPath.beltList[^1];
         }
 
         // Removing from the start of the path
@@ -173,9 +179,8 @@ public class BeltManager {
             beltEndsDict.Remove(belt);
 
             if(beltPath.beltList.Count > 0) {
-                ConveyorBelt newFirstBelt = beltPath.beltList[0];
-                beltEndsDict[newFirstBelt] = beltPath;
-                //TODO: CHECK LEFT/RIGHT FOR CONNECTIONS
+                newStartBelt = beltPath.beltList[0];
+                beltEndsDict[newStartBelt] = beltPath;
             } else {
                 beltPathList.Remove(beltPath);
             }
@@ -187,8 +192,8 @@ public class BeltManager {
             beltEndsDict.Remove(belt);
 
             if(beltPath.beltList.Count >= 2) {
-                ConveyorBelt newLastBelt = beltPath.beltList[^1];
-                beltEndsDict[newLastBelt] = beltPath;
+                newEndBelt = beltPath.beltList[^1];
+                beltEndsDict[newEndBelt] = beltPath;
             }
         }
 
@@ -204,21 +209,98 @@ public class BeltManager {
             beltEndsDict[firstPart[0]] = newFirstPath;
 
             if(firstPart.Count >= 2) {
-                beltEndsDict[firstPart[^1]] = newFirstPath;
+                newEndBelt = firstPart[^1];
+                beltEndsDict[newEndBelt] = newFirstPath;
             }
 
             BeltPath newSecondPath = new();
             newSecondPath.beltList.AddRange(secondPart);
             beltPathList.Add(newSecondPath);
-            beltEndsDict[secondPart[0]] = newSecondPath;
+            newStartBelt = secondPart[0];
+            beltEndsDict[newStartBelt] = newSecondPath;
 
             if(secondPart.Count >= 2) {
                 beltEndsDict[secondPart[^1]] = newSecondPath;
             }
         }
 
+        if(newStartBelt != null) {
+            Vector2Int forwardDirection = newStartBelt.nextPosition - newStartBelt.origin;
+            Vector2Int newPreviousPosition = newStartBelt.origin - forwardDirection;
+
+            if(newPreviousPosition != newStartBelt.previousPosition) {
+                ConveyorBelt connectedStraightBelt = TryGetConnectingBelt(newPreviousPosition);
+
+                if(connectedStraightBelt != null && connectedStraightBelt.nextPosition == newStartBelt.origin) {
+                    newStartBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowStraightVisual();
+                    newStartBelt.previousPosition = newPreviousPosition;
+                    MergeBeltPaths(connectedStraightBelt, newStartBelt);
+                } else {
+                    Vector2Int leftPosition = newStartBelt.origin + new Vector2Int(-forwardDirection.y, forwardDirection.x);
+                    Vector2Int rightPosition = newStartBelt.origin + new Vector2Int(forwardDirection.y, -forwardDirection.x);
+                    ConveyorBelt connectedLeftBelt = TryGetConnectingBelt(leftPosition);
+                    ConveyorBelt connectedRightBelt = TryGetConnectingBelt(rightPosition);
+
+                    if(connectedLeftBelt != null && connectedLeftBelt.nextPosition == newStartBelt.origin && (connectedRightBelt == null || connectedRightBelt.nextPosition != newStartBelt.origin)) {
+                        newStartBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowLeftVisual();
+                        newStartBelt.previousPosition = leftPosition;
+                        MergeBeltPaths(connectedLeftBelt, newStartBelt);
+                    } else if(connectedRightBelt != null && connectedRightBelt.nextPosition == newStartBelt.origin && (connectedLeftBelt == null || connectedLeftBelt.nextPosition != newStartBelt.origin)) {
+                        newStartBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowRightVisual();
+                        newStartBelt.previousPosition = rightPosition;
+                        MergeBeltPaths(connectedRightBelt, newStartBelt);
+                    } else {
+                        newStartBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowStraightVisual();
+                        newStartBelt.previousPosition = newPreviousPosition;
+                    }
+                }
+            } else {
+                Vector2Int leftPosition = newStartBelt.origin + new Vector2Int(-forwardDirection.y, forwardDirection.x);
+                Vector2Int rightPosition = newStartBelt.origin + new Vector2Int(forwardDirection.y, -forwardDirection.x);
+                ConveyorBelt connectedLeftBelt = TryGetConnectingBelt(leftPosition);
+                ConveyorBelt connectedRightBelt = TryGetConnectingBelt(rightPosition);
+
+                if(connectedLeftBelt != null && connectedLeftBelt.nextPosition == newStartBelt.origin && (connectedRightBelt == null || connectedRightBelt.nextPosition != newStartBelt.origin)) {
+                    newStartBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowLeftVisual();
+                    newStartBelt.previousPosition = leftPosition;
+                    MergeBeltPaths(connectedLeftBelt, newStartBelt);
+                } else if(connectedRightBelt != null && connectedRightBelt.nextPosition == newStartBelt.origin && (connectedLeftBelt == null || connectedLeftBelt.nextPosition != newStartBelt.origin)) {
+                    newStartBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowRightVisual();
+                    newStartBelt.previousPosition = rightPosition;
+                    MergeBeltPaths(connectedRightBelt, newStartBelt);
+                }
+            }
+        }
+
+        if(newEndBelt != null) {
+            Vector2Int newNextPosition = newEndBelt.origin + (newEndBelt.origin - newEndBelt.previousPosition);
+
+            if(newNextPosition == newEndBelt.nextPosition) {
+
+            } else {
+
+            }
+        }
+
         OnBeltRemoved?.Invoke();
     }
+
+    /*
+    void CheckAndConnectAdjacentBelts(ConveyorBelt belt) {
+        Vector2Int leftPosition = belt.origin + new Vector2Int(-1, 0);
+        Vector2Int rightPosition = belt.origin + new Vector2Int(1, 0);
+
+        ConveyorBelt leftBelt = TryGetConnectingBelt(leftPosition);
+        ConveyorBelt rightBelt = TryGetConnectingBelt(rightPosition);
+
+        if(leftBelt != null && leftBelt.nextPosition == belt.origin) {
+            ConnectToPreviousBelt(belt, leftBelt, ref beltEndsDict[belt]);
+        }
+
+        if(rightBelt != null && belt.nextPosition == rightBelt.origin) {
+            ConnectToNextBelt(belt, rightBelt, ref beltEndsDict[belt]);
+        }
+    }*/
 
     public class BeltPath {
 
