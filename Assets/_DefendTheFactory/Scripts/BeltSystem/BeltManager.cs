@@ -285,23 +285,6 @@ public class BeltManager {
         OnBeltRemoved?.Invoke();
     }
 
-    /*
-    void CheckAndConnectAdjacentBelts(ConveyorBelt belt) {
-        Vector2Int leftPosition = belt.origin + new Vector2Int(-1, 0);
-        Vector2Int rightPosition = belt.origin + new Vector2Int(1, 0);
-
-        ConveyorBelt leftBelt = TryGetConnectingBelt(leftPosition);
-        ConveyorBelt rightBelt = TryGetConnectingBelt(rightPosition);
-
-        if(leftBelt != null && leftBelt.nextPosition == belt.origin) {
-            ConnectToPreviousBelt(belt, leftBelt, ref beltEndsDict[belt]);
-        }
-
-        if(rightBelt != null && belt.nextPosition == rightBelt.origin) {
-            ConnectToNextBelt(belt, rightBelt, ref beltEndsDict[belt]);
-        }
-    }*/
-
     public class BeltPath {
 
         public List<ConveyorBelt> beltList { get; private set; } = new();
