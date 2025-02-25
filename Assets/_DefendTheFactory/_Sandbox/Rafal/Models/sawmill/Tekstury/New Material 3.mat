@@ -43,11 +43,7 @@ Material:
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 55a6bd03ad9657c47a7b98fbc8a081ae, type: 3}
         m_Scale: {x: 1, y: 1}
-<<<<<<< HEAD
-        m_Offset: {x: 0, y: 0.61133814}
-=======
         m_Offset: {x: 0, y: 1.9127806}
->>>>>>> Rafał
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 140f2a4c930d375468086fb02a579114, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -71,11 +67,7 @@ Material:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 55a6bd03ad9657c47a7b98fbc8a081ae, type: 3}
         m_Scale: {x: 1, y: 1}
-<<<<<<< HEAD
-        m_Offset: {x: 0, y: 0.61133814}
-=======
         m_Offset: {x: 0, y: 1.9127806}
->>>>>>> Rafał
     - _MetallicGlossMap:
         m_Texture: {fileID: 2800000, guid: 3b80e195454bb8d4e9e0a45607029f42, type: 3}
         m_Scale: {x: 1, y: 1}

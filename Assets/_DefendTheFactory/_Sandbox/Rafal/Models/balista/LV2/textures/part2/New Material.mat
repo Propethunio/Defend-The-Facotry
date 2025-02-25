@@ -43,11 +43,7 @@ Material:
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 54ead4c67df8c7a48a9f6f6a15b5e1c3, type: 3}
         m_Scale: {x: 1, y: 1}
-<<<<<<< HEAD:Assets/_DefendTheFactory/_Sandbox/Rafal/Models/miningS/TeksturyKamieniolom/tekstury/New Material4.mat
-        m_Offset: {x: 0, y: 0.6113387}
-=======
         m_Offset: {x: 0, y: 0}
->>>>>>> Rafał:Assets/_DefendTheFactory/_Sandbox/Rafal/Models/balista/LV2/textures/part2/New Material.mat
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: e1f09248c3c820a49a3951bc6608d3e3, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -71,11 +67,7 @@ Material:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 54ead4c67df8c7a48a9f6f6a15b5e1c3, type: 3}
         m_Scale: {x: 1, y: 1}
-<<<<<<< HEAD:Assets/_DefendTheFactory/_Sandbox/Rafal/Models/miningS/TeksturyKamieniolom/tekstury/New Material4.mat
-        m_Offset: {x: 0, y: 19.640663}
-=======
         m_Offset: {x: 0, y: 0}
->>>>>>> Rafał:Assets/_DefendTheFactory/_Sandbox/Rafal/Models/balista/LV2/textures/part2/New Material.mat
     - _MetallicGlossMap:
         m_Texture: {fileID: 2800000, guid: b4a35c84d9accfd44bfab3f909940b37, type: 3}
         m_Scale: {x: 1, y: 1}

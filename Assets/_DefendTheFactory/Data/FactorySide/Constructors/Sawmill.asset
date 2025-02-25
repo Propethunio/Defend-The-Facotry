@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b5c0e13240f92240a4bbbea3ac239f5, type: 3}
   m_Name: Sawmill
   m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 0}
   <nameString>k__BackingField: Sawmill
   <prefab>k__BackingField: {fileID: 312247860716316089, guid: aa68dfbfd3ee86e469b4578b592aaf65,
     type: 3}
@@ -19,9 +20,9 @@ MonoBehaviour:
     type: 3}
   <width>k__BackingField: 2
   <height>k__BackingField: 2
-  <outputBeltPosition>k__BackingField: {x: 1, y: 0}
+  <outputBeltPosition>k__BackingField: {x: 0, y: 0}
   <maxStoredOutputItems>k__BackingField: 2
-  <inputBeltPosition>k__BackingField: {x: 1, y: 1}
-  <maxStoredInputItems>k__BackingField: 6
+  <inputBeltPosition>k__BackingField: {x: 0, y: 1}
+  <maxStoredInputItems>k__BackingField: 10
   <itemRecipeList>k__BackingField:
   - {fileID: 11400000, guid: 7ef64690dbfa0f847bfe97a47d243896, type: 2}
