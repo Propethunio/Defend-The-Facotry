@@ -25,6 +25,10 @@ public class GhostBeltVisualController : MonoBehaviour {
     void OnDestroy() {
         buildingSystem.OnObjectPlaced -= ResetModifiedBelt;
         buildingGhost.positionChanged -= SetVisual;
+
+        if(modifiedBeltVisual != null) {
+            modifiedBeltVisual.ShowStraightVisual();
+        }
     }
 
     void SetVisual() {

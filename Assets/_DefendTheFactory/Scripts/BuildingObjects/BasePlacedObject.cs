@@ -3,8 +3,8 @@ using UnityEngine;
 
 public abstract class BasePlacedObject : MonoBehaviour {
 
+    [HideInInspector] public BuildingDir dir;
     public Vector2Int origin { get; protected set; }
-    public BuildingDir dir { get; protected set; }
 
     public abstract List<Vector2Int> GetGridPositionList();
     public abstract void SetData(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO);

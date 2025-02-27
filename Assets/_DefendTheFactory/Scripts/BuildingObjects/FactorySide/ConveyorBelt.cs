@@ -4,7 +4,7 @@ using UnityEngine;
 public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
 
     [HideInInspector] public Vector2Int previousPosition;
-    public Vector2Int nextPosition { get; private set; }
+    [HideInInspector] public Vector2Int nextPosition;
     public WorldItem worldItem { get; private set; }
     public BasePlacedObject parentBuilding { get; private set; }
 
