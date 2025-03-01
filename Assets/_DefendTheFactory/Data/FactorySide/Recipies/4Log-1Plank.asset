@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbb41197560568c4ea4b2fb32e44d390, type: 3}
-  m_Name: "4Iron-1Z\u0142oto"
+  m_Name: 4Log-1Plank
   m_EditorClassIdentifier: 
   outputItemList:
   - item: {fileID: 11400000, guid: 18cd4d4cff9723c4681468654ae6d1d6, type: 2}

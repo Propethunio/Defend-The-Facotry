@@ -10,7 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1abca38e197a3845be27e2eabab9723, type: 3}
-  m_Name: Iron
+  m_Name: Plank
   m_EditorClassIdentifier: 
-  itemName: Iron Ingot
-  sprite: {fileID: 21300000, guid: 33603243fa5622c44b4a890a91c7b98c, type: 3}
+  <itemName>k__BackingField: Plank
+  <prefab>k__BackingField: {fileID: 633336528504489614, guid: 2d75e60c0c97dff40b4b24583abe6e99,
+    type: 3}
+  <icon>k__BackingField: {fileID: 0}

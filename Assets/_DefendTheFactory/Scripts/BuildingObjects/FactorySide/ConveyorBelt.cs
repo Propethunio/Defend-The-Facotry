@@ -73,21 +73,52 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
         GridSetupDone();
     }
 
-    public void ItemResetHasAlreadyMoved() {
-        if(worldItem != null) {
-            worldItem.ResetHasAlreadyMoved();
-        }
+    public bool TakeActionOnFirstLoopedBelt(out bool didMovedItem) {
+        bool hasItem = worldItem != null;
+        bool feedback = TakeActionOnEndItemWithFeedback();
+        didMovedItem = hasItem != (worldItem != null);
+        TakeActionOnStartItem();
+        return feedback;
     }
 
-    public bool TakeAction() {
-        if(worldItem == null || !worldItem.CanMove()) return false;
+    public void TakeActionOnLastLoopedBelt(bool recivedItemInThisTick) {
+        if(recivedItemInThisTick) return;
+
+        TakeAction();
+    }
+
+    public bool TakeActionWithShouldRepeatFeedback() {
+        bool feedback = TakeActionOnEndItemWithFeedback();
+        TakeActionOnStartItem();
+        return feedback;
+    }
+
+    bool TakeActionOnEndItemWithFeedback() {
+        if(worldItem == null) return false;
         ConveyorBelt nextBelt = buildingSystem.GetGridObject(nextPosition).placedObject as ConveyorBelt;
         if(nextBelt == null) return false;
         if(!nextBelt.TrySetWorldItem(worldItem)) return true;
         worldItem.MoveToGridPosition(nextBelt.origin);
-        worldItem.SetHasAlreadyMoved();
         worldItem = null;
         return false;
+    }
+
+    public void TakeAction() {
+        TakeActionOnEndItem();
+        TakeActionOnStartItem();
+    }
+
+    void TakeActionOnEndItem() {
+        if(worldItem == null) return;
+        ConveyorBelt nextBelt = buildingSystem.GetGridObject(nextPosition).placedObject as ConveyorBelt;
+        if(nextBelt == null) return;
+        if(!nextBelt.TrySetWorldItem(worldItem)) return;
+        worldItem.MoveToGridPosition(nextBelt.origin);
+        worldItem = null;
+    }
+
+    void TakeActionOnStartItem() {
+
     }
 
     public void ResetWorldItem() {

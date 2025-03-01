@@ -7,20 +7,10 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     List<ResourceNode> nodesInRange = new();
     ResourceNode currentNode;
     int storedItemsCount;
-    float timer;
+    int productionTicks;
 
     public override void Initialize(Vector2Int origin, BuildingDir dir, GatheringMachineSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
-    }
-
-    void Update() {
-        if(currentNode == null || storedItemsCount == buildableDataSO.maxStoredOutputItems) return;
-
-        timer += Time.deltaTime;
-        if(timer >= buildableDataSO.gatheringTime) {
-            timer -= buildableDataSO.gatheringTime;
-            Gather();
-        }
     }
 
     void OnDestroy() {
@@ -75,12 +65,13 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     void PickClosestNode() {
         Vector2 machineCenterPosition = buildableDataSO.GetCenterPosition(origin, dir);
         float currentDistance = Mathf.Infinity;
+        currentNode = null;
 
         foreach(ResourceNode node in nodesInRange) {
             Vector2 nodeCenterPosition = node.buildableDataSO.GetCenterPosition(node.origin, node.dir);
             float distanceToNode = (machineCenterPosition - nodeCenterPosition).sqrMagnitude;
 
-            if(currentNode == null || distanceToNode < currentDistance) {
+            if(distanceToNode < currentDistance) {
                 currentNode = node;
                 currentDistance = distanceToNode;
             }
@@ -101,13 +92,17 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     }
 
     void Subscribe() {
+        TimeTickSystem.Instance.OnProductionTick += OnProductionTick;
         TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
     }
 
     void Unsubscribe() {
+        TimeTickSystem.Instance.OnProductionTick -= OnProductionTick;
         TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
-        foreach(ResourceNode node in nodesInRange) {
-            node.NodeGatheredCompletly -= HandleNodeDestroyed;
+        int nodesAmount = nodesInRange.Count;
+
+        for(int i = 0; i < nodesAmount; i++) {
+            nodesInRange[i].NodeGatheredCompletly -= HandleNodeDestroyed;
         }
     }
 
@@ -115,6 +110,17 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         outputBelt = gameObject.AddComponent<ConveyorBelt>();
         Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.outputBeltPosition, dir);
         outputBelt.SetupBuildingBelt(beltPos, dir, this);
+    }
+
+    void OnProductionTick() {
+        if(currentNode == null || storedItemsCount == buildableDataSO.maxStoredOutputItems) return;
+
+        productionTicks++;
+
+        if(productionTicks == buildableDataSO.ticksForGather) {
+            productionTicks = 0;
+            Gather();
+        }
     }
 
     void Gather() {
@@ -127,7 +133,6 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         nodesInRange.Remove(node);
 
         if(node == currentNode) {
-            currentNode = null;
             PickClosestNode();
         }
     }

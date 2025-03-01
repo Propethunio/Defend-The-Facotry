@@ -63,9 +63,6 @@ public class AssemblerUI : MonoBehaviour {
 
             recipeButtonDic[itemRecipeScriptableObject] = recipeTransform;
 
-            recipeTransform.Find("Icon").GetComponent<Image>().sprite = itemRecipeScriptableObject.outputItemList[0].item.sprite;
-            //recipeTransform.Find("Text").GetComponent<TextMeshProUGUI>().text = itemRecipeScriptableObject.name;
-
             recipeTransform.GetComponent<Button_UI>().ClickFunc = () => {
                 if(assembler != null) {
                     assembler.SetItemRecipeScriptableObject(itemRecipeScriptableObject);
@@ -111,7 +108,6 @@ public class AssemblerUI : MonoBehaviour {
                 Transform inputTransform = Instantiate(inputsTemplate, inputsContainer);
                 inputTransform.gameObject.SetActive(true);
 
-                inputTransform.Find("Icon").GetComponent<Image>().sprite = recipeItem.item.sprite;
                 inputTransform.Find("Text").GetComponent<TextMeshProUGUI>().text = assembler.GetItemStoredCount(recipeItem.item).ToString();
             }
         }
@@ -136,7 +132,6 @@ public class AssemblerUI : MonoBehaviour {
                 Transform outputTransform = Instantiate(outputsTemplate, outputsContainer);
                 outputTransform.gameObject.SetActive(true);
 
-                outputTransform.Find("Icon").GetComponent<Image>().sprite = recipeItem.item.sprite;
                 outputTransform.Find("Text").GetComponent<TextMeshProUGUI>().text = assembler.GetItemStoredCount(recipeItem.item).ToString();
             }
         }

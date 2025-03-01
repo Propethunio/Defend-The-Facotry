@@ -40,7 +40,6 @@ public class StorageUI : MonoBehaviour {
             Transform itemTransform = Instantiate(itemTemplate, itemContainer);
             itemTransform.gameObject.SetActive(true);
 
-            itemTransform.Find("Icon").GetComponent<Image>().sprite = itemStack.itemSO.sprite;
             itemTransform.Find("Text").GetComponent<TextMeshProUGUI>().text = itemStack.amount.ToString();
         }
     }

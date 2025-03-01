@@ -70,37 +70,6 @@ public class Assembler : BaseDataPlacedObject<BaseMachineSO> {
         return amount;
     }
 
-    public bool TryGetStoredItem(ItemSO[] filterItemSO, out ItemSO itemSO) {
-        if(!HasItemRecipe()) {
-            itemSO = null;
-            return false;
-        }
-
-        if(ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO) ||
-            ItemSO.IsItemSOInFilter(itemRecipeSO.outputItemList[0].item, filterItemSO)) {
-            // If filter matches any or filter matches this itemType
-            ItemStack itemStack = GetOutputItemStackWithItemType(itemRecipeSO.outputItemList[0].item);
-            if(itemStack != null) {
-                if(itemStack.amount > 0) {
-                    itemStack.amount -= 1;
-                    itemSO = itemStack.itemSO;
-                    OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
-                    TriggerGridObjectChanged();
-                    return true;
-                } else {
-                    itemSO = null;
-                    return false;
-                }
-            } else {
-                itemSO = null;
-                return false;
-            }
-        } else {
-            itemSO = null;
-            return false;
-        }
-    }
-
     private ItemStack GetInputItemStackWithItemType(ItemSO itemSO) {
         foreach(ItemStack itemStack in inputItemStackList) {
             if(itemStack.itemSO == itemSO) {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Splines;
 
 public class BeltManager {
 
@@ -35,10 +34,6 @@ public class BeltManager {
 
     void OnTick() {
         int beltPathsCount = beltPathList.Count;
-
-        for(int i = 0; i < beltPathsCount; i++) {
-            beltPathList[i].RefreshMovedItems();
-        }
 
         for(int i = 0; i < beltPathsCount; i++) {
             beltPathList[i].TakeAction();
@@ -425,12 +420,6 @@ public class BeltManager {
 
         public List<ConveyorBelt> beltList { get; private set; } = new();
 
-        public void RefreshMovedItems() {
-            for(int i = beltList.Count - 1; i >= 0; i--) {
-                beltList[i].ItemResetHasAlreadyMoved();
-            }
-        }
-
         public void TakeAction() {
             if(beltList[^1].origin == beltList[0].previousPosition) {
                 ExecuteLoopActions();
@@ -441,16 +430,26 @@ public class BeltManager {
 
         void ExecuteLoopActions() {
             List<ConveyorBelt> beltsToRepeat = new();
-            bool shouldRepeat = true;
+            int beltStopIndex = beltList.Count - 2;
 
-            for(int i = beltList.Count - 1; i >= 0; i--) {
-                if(beltList[i].TakeAction() && shouldRepeat) {
-                    beltsToRepeat.Add(beltList[i]);
-                } else {
-                    shouldRepeat = false;
+            if(beltList[^1].TakeActionOnFirstLoopedBelt(out bool didMovedItem)) {
+                beltsToRepeat.Add(beltList[^1]);
+
+                for(int i = beltStopIndex; i >= 0; i--) {
+                    if(beltList[i].TakeActionWithShouldRepeatFeedback()) {
+                        beltsToRepeat.Add(beltList[i]);
+                    } else {
+                        beltStopIndex = i - 1;
+                        break;
+                    }
                 }
             }
 
+            for(int i = beltStopIndex; i > 0; i--) {
+                beltList[i].TakeAction();
+            }
+
+            beltList[0].TakeActionOnLastLoopedBelt(didMovedItem);
             int repeatCount = beltsToRepeat.Count;
 
             for(int i = 0; i < repeatCount; i++) {
