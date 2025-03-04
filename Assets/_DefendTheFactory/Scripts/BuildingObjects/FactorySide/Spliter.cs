@@ -86,9 +86,9 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
             newItem = null;
         }
 
-        if(items.Count == maxStorage || inputBelt == null || inputBelt.worldItem == null) return;
+        if(items.Count == maxStorage || inputBelt == null || inputBelt.secondItem == null) return;
 
-        newItem = inputBelt.worldItem;
+        newItem = inputBelt.secondItem;
         inputBelt.ResetWorldItem();
         newItem.MoveToGridPosition(origin);
     }
@@ -97,7 +97,7 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
         for(int i = 3; i > 0; i--) {
             if(items.Count == 0) return;
 
-            if(outputBelts[logisticDir] == null || outputBelts[logisticDir].worldItem != null) {
+            if(outputBelts[logisticDir] == null || outputBelts[logisticDir].firstItem != null) {
                 logisticDir = GetNextDir(logisticDir);
                 continue;
             }

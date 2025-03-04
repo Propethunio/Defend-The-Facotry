@@ -90,13 +90,13 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
 
         for(int i = 3; i > 0; i--) {
 
-            if(inputBelts[logisticDir] == null || inputBelts[logisticDir].worldItem == null) {
+            if(inputBelts[logisticDir] == null || inputBelts[logisticDir].secondItem == null) {
                 logisticDir = GetNextDir(logisticDir);
                 continue;
             }
 
-            inputBelts[logisticDir].worldItem.MoveToGridPosition(origin);
-            newItems.Add(inputBelts[logisticDir].worldItem);
+            inputBelts[logisticDir].secondItem.MoveToGridPosition(origin);
+            newItems.Add(inputBelts[logisticDir].secondItem);
             inputBelts[logisticDir].ResetWorldItem();
             logisticDir = GetNextDir(logisticDir);
 
@@ -105,7 +105,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
     }
 
     protected override void OnLateTick() {
-        if(items.Count == 0 || outputBelt == null || outputBelt.worldItem != null) return;
+        if(items.Count == 0 || outputBelt == null || outputBelt.firstItem != null) return;
 
         WorldItem worldItem = items[0];
         worldItem.MoveToGridPosition(outputBelt.origin);

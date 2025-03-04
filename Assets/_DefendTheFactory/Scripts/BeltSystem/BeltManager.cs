@@ -432,11 +432,11 @@ public class BeltManager {
             List<ConveyorBelt> beltsToRepeat = new();
             int beltStopIndex = beltList.Count - 2;
 
-            if(beltList[^1].TakeActionOnFirstLoopedBelt(out bool didMovedItem)) {
+            if(beltList[^1].TakeActionOnFirstLoopedBelt(out bool didMovedItem, beltList[0])) {
                 beltsToRepeat.Add(beltList[^1]);
 
                 for(int i = beltStopIndex; i >= 0; i--) {
-                    if(beltList[i].TakeActionWithShouldRepeatFeedback()) {
+                    if(beltList[i].TakeActionWithShouldRepeatFeedback(beltList[i + 1])) {
                         beltsToRepeat.Add(beltList[i]);
                     } else {
                         beltStopIndex = i - 1;
@@ -445,21 +445,31 @@ public class BeltManager {
                 }
             }
 
-            for(int i = beltStopIndex; i > 0; i--) {
-                beltList[i].TakeAction();
+            bool movedToNext = beltList[beltStopIndex].TakeActionOnFirstBeltAfterStop(beltList[beltStopIndex + 1]);
+
+            for(int i = beltStopIndex - 1; i > 0; i--) {
+                beltList[i].TakeAction(beltList[i + 1]);
             }
 
-            beltList[0].TakeActionOnLastLoopedBelt(didMovedItem);
-            int repeatCount = beltsToRepeat.Count;
+            beltList[0].TakeActionOnLastLoopedBelt(didMovedItem, beltList[1]);
+            int repeatCount = beltsToRepeat.Count - 1;
 
             for(int i = 0; i < repeatCount; i++) {
-                beltsToRepeat[i].TakeAction();
+                beltsToRepeat[i].TakeAction(beltsToRepeat[i - 1]);
+            }
+
+            if(movedToNext) {
+                beltsToRepeat[^1].TakeActionOnLastRepeatBelt(beltsToRepeat[^2]);
+            } else {
+                beltsToRepeat[^1].TakeAction(beltsToRepeat[^2]? beltsToRepeat[^2] : null);
             }
         }
 
         void ExecuteStandardActions() {
+            beltList[^1].TakeLastBeltStandardAction();
+
             for(int i = beltList.Count - 2; i >= 0; i--) {
-                beltList[i].TakeAction();
+                beltList[i].TakeAction(beltList[i+1]);
             }
         }
     }
