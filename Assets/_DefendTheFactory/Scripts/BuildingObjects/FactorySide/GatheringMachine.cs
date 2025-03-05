@@ -45,13 +45,13 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         for(int y = bottom; y <= top; y++) {
             for(int x = left; x <= right; x++) {
 
-                if(IsPositionValid(gridArray, new Vector2Int(x, y)) && IsInsideCircle(centerPosition, new Vector2Int(x, y))) {
-                    ResourceNode node = gridArray[x, y].placedObject as ResourceNode;
-                    if(node != null && node.buildableDataSO.resourceType == buildableDataSO.gatheredResource) {
-                        nodesInRange.Add(node);
-                        node.NodeGatheredCompletly += HandleNodeDestroyed;
-                    }
-                }
+                if(!IsPositionValid(gridArray, new Vector2Int(x, y)) || !IsInsideCircle(centerPosition, new Vector2Int(x, y))) continue;
+
+                ResourceNode node = gridArray[x, y].placedObject as ResourceNode;
+                if(node == null || node.buildableDataSO.resourceType != buildableDataSO.gatheredResource || nodesInRange.Contains(node)) continue;
+
+                nodesInRange.Add(node);
+                node.NodeGatheredCompletly += HandleNodeDestroyed;
             }
         }
     }

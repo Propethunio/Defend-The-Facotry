@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UtilsClass;
 
 public class BeltManager {
 
@@ -562,7 +563,7 @@ public class BeltManager {
                 nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, BuildingSystem.Instance.GetWorldPosition(gridPosition) + new Vector3(.5f, 0, .5f), Quaternion.identity, pathParent);
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.yellow;
                 Vector3 dirToNextBelt = (BuildingSystem.Instance.GetWorldPosition(nextGridPosition) - BuildingSystem.Instance.GetWorldPosition(gridPosition)).normalized;
-                nodeVisual.eulerAngles = new Vector3(0, -CodeMonkey.Utils.UtilsClass.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
+                nodeVisual.eulerAngles = new Vector3(0, -MyUtils.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
             }
 
             if(beltPath.beltList[^1].nextPosition == beltPath.beltList[0].origin && beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition) {
@@ -570,7 +571,7 @@ public class BeltManager {
                 nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, BuildingSystem.Instance.GetWorldPosition(gridPosition) + new Vector3(.5f, 0, .5f), Quaternion.identity, pathParent);
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.yellow;
                 Vector3 dirToNextBelt = (BuildingSystem.Instance.GetWorldPosition(beltPath.beltList[0].origin) - BuildingSystem.Instance.GetWorldPosition(gridPosition)).normalized;
-                nodeVisual.eulerAngles = new Vector3(0, -CodeMonkey.Utils.UtilsClass.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
+                nodeVisual.eulerAngles = new Vector3(0, -MyUtils.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
             }
 
             pathParent.position += new Vector3(0, .33f, 0);

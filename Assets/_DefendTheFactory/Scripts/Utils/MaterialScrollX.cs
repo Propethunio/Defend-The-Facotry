@@ -17,6 +17,8 @@ public class MaterialScrollX : MonoBehaviour {
 
         if(currentOffset > 1f) {
             currentOffset -= 1f;
+        } else if(currentOffset < 1f) {
+            currentOffset += 1f;
         }
 
         textureOffset.x = currentOffset;
