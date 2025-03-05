@@ -66,6 +66,10 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     }
 
     public override void DestroySelf() {
+        if(startItem != null) {
+            startItem.DestroySelf();
+        }
+
         if(endItem != null) {
             endItem.DestroySelf();
         }

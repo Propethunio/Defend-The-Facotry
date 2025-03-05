@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1abca38e197a3845be27e2eabab9723, type: 3}
   m_Name: Plank
   m_EditorClassIdentifier: 
-  <itemName>k__BackingField: Plank
-  <prefab>k__BackingField: {fileID: 633336528504489614, guid: 2d75e60c0c97dff40b4b24583abe6e99,
-    type: 3}
   <icon>k__BackingField: {fileID: 0}
+  <itemName>k__BackingField: Plank
+  <prefab>k__BackingField: {fileID: 268084208557166883, guid: 3d3f588418fe9b44290b5059f8eeee3e,
+    type: 3}

@@ -6,5 +6,5 @@ public class ItemRecipeSO : ScriptableObject {
 
     public List<ItemIntPair> outputItemList;
     public List<ItemIntPair> inputItemList;
-    public float craftingTime;
+    public int craftingTicks;
 }

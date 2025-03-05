@@ -26,7 +26,7 @@ public class Assembler : BaseDataPlacedObject<BaseMachineSO> {
         if(HasEnoughItemsToCraft()) {
             craftingProgress += Time.deltaTime;
 
-            if(craftingProgress >= itemRecipeSO.craftingTime) {
+            if(craftingProgress >= itemRecipeSO.craftingTicks) {
                 // Item crafting complete
                 craftingProgress = 0f;
 
@@ -49,7 +49,7 @@ public class Assembler : BaseDataPlacedObject<BaseMachineSO> {
 
     public float GetCraftingProgressNormalized() {
         if(HasItemRecipe()) {
-            return craftingProgress / itemRecipeSO.craftingTime;
+            return craftingProgress / itemRecipeSO.craftingTicks;
         } else {
             return 0f;
         }

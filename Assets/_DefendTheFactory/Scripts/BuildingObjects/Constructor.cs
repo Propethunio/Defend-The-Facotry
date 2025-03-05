@@ -19,8 +19,8 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
 
         craftingProgress += Time.deltaTime;
 
-        if(craftingProgress >= buildableDataSO.itemRecipeList[0].craftingTime) {
-            craftingProgress -= buildableDataSO.itemRecipeList[0].craftingTime;
+        if(craftingProgress >= buildableDataSO.itemRecipeList[0].craftingTicks) {
+            craftingProgress -= buildableDataSO.itemRecipeList[0].craftingTicks;
             storedOutputItems += buildableDataSO.itemRecipeList[0].outputItemList[0].amount;
             storedInputItems -= buildableDataSO.itemRecipeList[0].inputItemList[0].amount;
         }
@@ -79,7 +79,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     }
 
     public float GetCraftingProgressNormalized() {
-        return craftingProgress / buildableDataSO.itemRecipeList[0].craftingTime;
+        return craftingProgress / buildableDataSO.itemRecipeList[0].craftingTicks;
     }
 
     public int GetItemStoredCount(ItemSO filterItemSO) {
