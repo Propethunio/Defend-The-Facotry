@@ -144,9 +144,9 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     }
 
     void TryPutItemOnBelt() {
-        if(outputBelt.firstItem != null) return;
+        if(outputBelt.startItem != null) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.origin, buildableDataSO.producedItem);
+        WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, buildableDataSO.producedItem);
         outputBelt.SetWorldItem(worldItem);
         storedItemsCount--;
     }

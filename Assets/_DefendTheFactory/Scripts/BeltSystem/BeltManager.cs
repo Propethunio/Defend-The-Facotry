@@ -22,6 +22,8 @@ public class BeltManager {
         else return;
 
         TimeTickSystem.Instance.OnTick += OnTick;
+        TimeTickSystem.Instance.OnSubTick += OnTick;
+
         if(showDebug) {
             debugVisualParent = new GameObject("Belt Debug Visual").transform;
             new DebugVisual();
@@ -30,6 +32,7 @@ public class BeltManager {
 
     ~BeltManager() {
         TimeTickSystem.Instance.OnTick -= OnTick;
+        TimeTickSystem.Instance.OnSubTick -= OnTick;
     }
 
     void OnTick() {
@@ -445,23 +448,32 @@ public class BeltManager {
                 }
             }
 
-            bool movedToNext = beltList[beltStopIndex].TakeActionOnFirstBeltAfterStop(beltList[beltStopIndex + 1]);
+            // ✅ Ensure beltStopIndex is within valid range before using
+            if(beltStopIndex < 0) beltStopIndex = beltList.Count - 1; // Loops back if necessary
+            int nextIndex = (beltStopIndex + 1) % beltList.Count; // ✅ Safe looping index
+
+            bool movedToNext = beltList[beltStopIndex].TakeActionOnFirstBeltAfterStop(beltList[nextIndex]);
 
             for(int i = beltStopIndex - 1; i > 0; i--) {
                 beltList[i].TakeAction(beltList[i + 1]);
             }
 
             beltList[0].TakeActionOnLastLoopedBelt(didMovedItem, beltList[1]);
-            int repeatCount = beltsToRepeat.Count - 1;
 
-            for(int i = 0; i < repeatCount; i++) {
+            // ✅ Fixes Off-by-One Error
+            for(int i = 1; i < beltsToRepeat.Count; i++) {
                 beltsToRepeat[i].TakeAction(beltsToRepeat[i - 1]);
             }
 
-            if(movedToNext) {
-                beltsToRepeat[^1].TakeActionOnLastRepeatBelt(beltsToRepeat[^2]);
-            } else {
-                beltsToRepeat[^1].TakeAction(beltsToRepeat[^2]? beltsToRepeat[^2] : null);
+            // ✅ Prevents Out-of-Bounds Access
+            if(beltsToRepeat.Count >= 2) {
+                if(movedToNext) {
+                    beltsToRepeat[^1].TakeActionOnLastRepeatBelt(beltsToRepeat[^2]);
+                } else {
+                    beltsToRepeat[^1].TakeAction(beltsToRepeat[^2]);
+                }
+            } else if(beltsToRepeat.Count == 1) {
+                beltsToRepeat[0].TakeAction(null);
             }
         }
 
@@ -469,7 +481,7 @@ public class BeltManager {
             beltList[^1].TakeLastBeltStandardAction();
 
             for(int i = beltList.Count - 2; i >= 0; i--) {
-                beltList[i].TakeAction(beltList[i+1]);
+                beltList[i].TakeAction(beltList[i + 1]);
             }
         }
     }

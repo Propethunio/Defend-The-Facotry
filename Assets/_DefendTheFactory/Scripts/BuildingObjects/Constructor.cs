@@ -64,16 +64,16 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     }
 
     void TryGetItemFromInputBelt() {
-        if(inputBelt.secondItem == null || storedInputItems == buildableDataSO.maxStoredInputItems || inputBelt.secondItem.itemSO != buildableDataSO.itemRecipeList[0].inputItemList[0].item) return;
+        if(inputBelt.endItem == null || storedInputItems == buildableDataSO.maxStoredInputItems || inputBelt.endItem.itemSO != buildableDataSO.itemRecipeList[0].inputItemList[0].item) return;
 
-        inputBelt.secondItem.DestroySelf();
+        inputBelt.endItem.DestroySelf();
         storedInputItems++;
     }
 
     void TryPutItemOnOutputBelt() {
-        if(outputBelt.firstItem != null || storedOutputItems == 0) return;
+        if(outputBelt.startItem != null || storedOutputItems == 0) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.origin, buildableDataSO.itemRecipeList[0].outputItemList[0].item);
+        WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, buildableDataSO.itemRecipeList[0].outputItemList[0].item);
         outputBelt.SetWorldItem(worldItem);
         storedOutputItems--;
     }

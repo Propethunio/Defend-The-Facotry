@@ -5,8 +5,8 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
 
     [HideInInspector] public Vector2Int previousPosition;
     [HideInInspector] public Vector2Int nextPosition;
-    public WorldItem firstItem { get; private set; }
-    public WorldItem secondItem { get; private set; }
+    public WorldItem startItem { get; private set; }
+    public WorldItem endItem { get; private set; }
     public BasePlacedObject parentBuilding { get; private set; }
 
     BuildingSystem buildingSystem;
@@ -65,6 +65,15 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
         }
     }
 
+    public override void DestroySelf() {
+        if(endItem != null) {
+            endItem.DestroySelf();
+        }
+
+        BeltManager.Instance.RemoveBelt(this);
+        base.DestroySelf();
+    }
+
     public void SetupBuildingBelt(Vector2Int origin, BuildingDir dir, BasePlacedObject parentBuilding) {
         this.origin = origin;
         this.dir = dir;
@@ -74,10 +83,26 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
         GridSetupDone();
     }
 
+    public void ResetWorldItem() {
+        endItem = null;
+    }
+
+    public bool TrySetWorldItem(WorldItem worldItem) {
+        if(startItem == null) {
+            startItem = worldItem;
+            return true;
+        }
+        return false;
+    }
+
+    public void SetWorldItem(WorldItem worldItem) {
+        startItem = worldItem;
+    }
+
     public bool TakeActionOnFirstLoopedBelt(out bool didMovedItem, ConveyorBelt nextBelt) {
-        bool hasItem = secondItem != null;
+        bool hasItem = endItem != null;
         bool feedback = TakeActionOnEndItemWithFeedback(nextBelt);
-        didMovedItem = hasItem != (secondItem != null);
+        didMovedItem = hasItem != (endItem != null);
         TakeActionOnStartItem();
         return feedback;
     }
@@ -94,14 +119,14 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     }
 
     bool TakeActionOnEndItemWithFeedback(ConveyorBelt nextBelt) {
-        if(secondItem == null) return false;
+        if(endItem == null) return false;
         if(nextBelt == null) {
             nextBelt = buildingSystem.GetGridObject(nextPosition).placedObject as ConveyorBelt;
             if(nextBelt == null) return false;
         }
-        if(!nextBelt.TrySetWorldItem(secondItem)) return true;
-        secondItem.MoveToGridPosition(nextBelt.origin);
-        secondItem = null;
+        if(!nextBelt.TrySetWorldItem(endItem)) return true;
+        MoveEndItem(nextBelt);
+        endItem = null;
         return false;
     }
 
@@ -115,27 +140,27 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     }
 
     void TakeActionOnEndItem(ConveyorBelt nextBelt) {
-        if(secondItem == null) return;
+        if(endItem == null) return;
         if(nextBelt == null) {
             nextBelt = buildingSystem.GetGridObject(nextPosition).placedObject as ConveyorBelt;
             if(nextBelt == null) return;
         }
-        if(!nextBelt.TrySetWorldItem(secondItem)) return;
-        secondItem.MoveToGridPosition(nextBelt.origin);
-        secondItem = null;
+        if(!nextBelt.TrySetWorldItem(endItem)) return;
+        MoveEndItem(nextBelt);
+        endItem = null;
     }
 
     void TakeActionOnStartItem() {
-        if(firstItem == null || secondItem != null) return;
-        firstItem.MoveToGridPosition(nextPosition);
-        secondItem = firstItem;
-        firstItem = null;
+        if(startItem == null || endItem != null) return;
+        MoveStartItem();
+        endItem = startItem;
+        startItem = null;
     }
 
     public bool TakeActionOnFirstBeltAfterStop(ConveyorBelt nextBelt) {
-        bool hasItem = secondItem != null;
+        bool hasItem = endItem != null;
         TakeActionOnEndItem(nextBelt);
-        bool movedItem = hasItem && secondItem == null;
+        bool movedItem = hasItem && endItem == null;
         TakeActionOnStartItem();
         return movedItem;
     }
@@ -144,28 +169,50 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
         TakeActionOnEndItem(nextBelt);
     }
 
-    public void ResetWorldItem() {
-        secondItem = null;
-    }
+    void MoveStartItem() {
+        Vector2 nextPosition = CalculateNextPositionForStartItem();
+        bool isCurved = false;
 
-    public bool TrySetWorldItem(WorldItem worldItem) {
-        if(firstItem == null) {
-            firstItem = worldItem;
-            return true;
-        }
-        return false;
-    }
+        switch(dir) {
+            case BuildingDir.Down:
+            case BuildingDir.Up:
+                isCurved = startItem.transform.position.x != nextPosition.x;
+                break;
 
-    public void SetWorldItem(WorldItem worldItem) {
-        firstItem = worldItem;
-    }
-
-    public override void DestroySelf() {
-        if(secondItem != null) {
-            secondItem.DestroySelf();
+            case BuildingDir.Left:
+            case BuildingDir.Right:
+                isCurved = startItem.transform.position.z != nextPosition.y;
+                break;
         }
 
-        BeltManager.Instance.RemoveBelt(this);
-        base.DestroySelf();
+        if(isCurved) {
+            startItem.MoveToPositionCurved(nextPosition);
+        } else {
+            startItem.MoveToPosition(nextPosition);
+        }
+    }
+
+    void MoveEndItem(ConveyorBelt nextBelt) {
+        endItem.MoveToPosition(CalculateNextPositionForEndItem(nextBelt));
+    }
+
+    Vector2 CalculateNextPositionForStartItem() {
+        switch(dir) {
+            default:
+            case BuildingDir.Down: return origin + new Vector2(0.5f, 0.25f);
+            case BuildingDir.Left: return origin + new Vector2(0.25f, 0.5f);
+            case BuildingDir.Up: return origin + new Vector2(0.5f, 0.75f);
+            case BuildingDir.Right: return origin + new Vector2(0.75f, 0.5f);
+        }
+    }
+
+    Vector2 CalculateNextPositionForEndItem(ConveyorBelt nextBelt) {
+        switch(dir) {
+            default:
+            case BuildingDir.Down: return nextBelt.origin + new Vector2(0.5f, 0.75f);
+            case BuildingDir.Left: return nextBelt.origin + new Vector2(0.75f, 0.5f);
+            case BuildingDir.Up: return nextBelt.origin + new Vector2(0.5f, 0.25f);
+            case BuildingDir.Right: return nextBelt.origin + new Vector2(0.25f, 0.5f);
+        }
     }
 }

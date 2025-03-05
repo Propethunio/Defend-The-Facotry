@@ -6,6 +6,7 @@ public class TimeTickSystem : MonoBehaviour {
     public static TimeTickSystem Instance { get; private set; }
 
     public event Action OnProductionTick;
+    public event Action OnSubTick;
     public event Action OnEarlyTick;
     public event Action OnTick;
     public event Action OnLateTick;
@@ -16,10 +17,13 @@ public class TimeTickSystem : MonoBehaviour {
     bool isTicking;
     float tickTimer;
     int ticksAmount;
+    int amountForSubTick;
 
     void Awake() {
         if(Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        amountForSubTick = PRODUCTION_TICKS_MAX / 2;
     }
 
     void Update() {
@@ -32,7 +36,11 @@ public class TimeTickSystem : MonoBehaviour {
             ticksAmount++;
             OnProductionTick?.Invoke();
 
-            if(ticksAmount ==  PRODUCTION_TICKS_MAX) {
+            if(ticksAmount == amountForSubTick) {
+                OnSubTick?.Invoke();
+            }
+
+            if(ticksAmount == PRODUCTION_TICKS_MAX) {
                 ticksAmount = 0;
                 OnEarlyTick?.Invoke();
                 OnTick?.Invoke();

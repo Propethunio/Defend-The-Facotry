@@ -86,24 +86,24 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
             newItem = null;
         }
 
-        if(items.Count == maxStorage || inputBelt == null || inputBelt.secondItem == null) return;
+        if(items.Count == maxStorage || inputBelt == null || inputBelt.endItem == null) return;
 
-        newItem = inputBelt.secondItem;
+        newItem = inputBelt.endItem;
         inputBelt.ResetWorldItem();
-        newItem.MoveToGridPosition(origin);
+        newItem.MoveToPosition(origin);
     }
 
     protected override void OnLateTick() {
         for(int i = 3; i > 0; i--) {
             if(items.Count == 0) return;
 
-            if(outputBelts[logisticDir] == null || outputBelts[logisticDir].firstItem != null) {
+            if(outputBelts[logisticDir] == null || outputBelts[logisticDir].startItem != null) {
                 logisticDir = GetNextDir(logisticDir);
                 continue;
             }
 
             WorldItem worldItem = items[0];
-            worldItem.MoveToGridPosition(outputBelts[logisticDir].origin);
+            worldItem.MoveToPosition(outputBelts[logisticDir].origin);
             outputBelts[logisticDir].SetWorldItem(worldItem);
             items.RemoveAt(0);
             logisticDir = GetNextDir(logisticDir);
