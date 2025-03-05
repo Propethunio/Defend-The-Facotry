@@ -910,14 +910,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverBehaviourType: 1
-  hoverBehaviour_Color_Enter: {r: 1, g: 1, b: 1, a: 1}
-  hoverBehaviour_Color_Exit: {r: 0.74509805, g: 0.74509805, b: 0.74509805, a: 1}
+  hoverBehaviour_Color_Enter:
+    r: 1
+    g: 1
+    b: 1
+    a: 1
+  hoverBehaviour_Color_Exit:
+    r: 0.74509805
+    g: 0.74509805
+    b: 0.74509805
+    a: 1
   hoverBehaviour_Image: {fileID: 1360121503}
   hoverBehaviour_Sprite_Exit: {fileID: 0}
   hoverBehaviour_Sprite_Enter: {fileID: 0}
   hoverBehaviour_Move: 0
   hoverBehaviour_Move_Amount: {x: 0, y: 0}
+  posExit: {x: 0, y: 0}
+  posEnter: {x: 0, y: 0}
   triggerMouseOutFuncOnClick: 0
+  mouseOver: 0
+  mouseOverPerSecFuncTimer: 0
 --- !u!1 &561328565
 GameObject:
   m_ObjectHideFlags: 0
@@ -1070,14 +1082,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverBehaviourType: 1
-  hoverBehaviour_Color_Enter: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 1}
-  hoverBehaviour_Color_Exit: {r: 0, g: 0, b: 0, a: 1}
+  hoverBehaviour_Color_Enter:
+    r: 0.32156864
+    g: 0.32156864
+    b: 0.32156864
+    a: 1
+  hoverBehaviour_Color_Exit:
+    r: 0
+    g: 0
+    b: 0
+    a: 1
   hoverBehaviour_Image: {fileID: 659462439}
   hoverBehaviour_Sprite_Exit: {fileID: 0}
   hoverBehaviour_Sprite_Enter: {fileID: 0}
   hoverBehaviour_Move: 0
   hoverBehaviour_Move_Amount: {x: 0, y: 0}
+  posExit: {x: 0, y: 0}
+  posEnter: {x: 0, y: 0}
   triggerMouseOutFuncOnClick: 0
+  mouseOver: 0
+  mouseOverPerSecFuncTimer: 0
 --- !u!224 &659462447
 RectTransform:
   m_ObjectHideFlags: 0

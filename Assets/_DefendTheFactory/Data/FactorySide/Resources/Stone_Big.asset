@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48e32fc5d2fbaa54aaaa3fbd920d9719, type: 3}
-  m_Name: Tree
+  m_Name: Stone_Big
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 0}
-  <nameString>k__BackingField: Tree
-  <prefab>k__BackingField: {fileID: 1828710586141721203, guid: 4d43c35c71edc9c4eb802b5987e97218,
+  <nameString>k__BackingField: Stone
+  <prefab>k__BackingField: {fileID: 2867785288195981674, guid: ab88da40ded7b5f40b01349720df0f08,
     type: 3}
-  <visual>k__BackingField: {fileID: 1828710586141721203, guid: d6ee3c018c7d2a248a16fc58ca2e89ba,
+  <visual>k__BackingField: {fileID: 2867785288195981674, guid: 7b91c3868ff25954593abb8ffdc315e4,
     type: 3}
-  <width>k__BackingField: 1
-  <height>k__BackingField: 1
-  <resourceType>k__BackingField: 0
-  <amount>k__BackingField: 15
+  <width>k__BackingField: 2
+  <height>k__BackingField: 2
+  <resourceType>k__BackingField: 1
+  <amount>k__BackingField: 30

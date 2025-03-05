@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48e32fc5d2fbaa54aaaa3fbd920d9719, type: 3}
-  m_Name: Stone
+  m_Name: Stone_Small
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 0}
   <nameString>k__BackingField: Stone
-  <prefab>k__BackingField: {fileID: 18362460770601760, guid: c0c27b0a2a9f30e448c8904000e4ba87,
+  <prefab>k__BackingField: {fileID: 2867785288195981674, guid: bb645200dd7c2d34b9679ada2029ffbf,
     type: 3}
-  <visual>k__BackingField: {fileID: 18362460770601760, guid: 9f99b34813f604540bfd3f740b2995d7,
+  <visual>k__BackingField: {fileID: 2867785288195981674, guid: 3a5b849bdf32a344da32799b9f5aa44d,
     type: 3}
-  <width>k__BackingField: 2
-  <height>k__BackingField: 2
+  <width>k__BackingField: 1
+  <height>k__BackingField: 1
   <resourceType>k__BackingField: 1
   <amount>k__BackingField: 15
