@@ -4,8 +4,6 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
 
     ConveyorBelt inputBelt;
     ConveyorBelt outputBelt;
-    ItemStackList inputItemStackList = new();
-    ItemStackList outputItemStackList = new();
     int storedInputItems;
     int storedOutputItems;
     float craftingProgress;
@@ -76,22 +74,5 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
         WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, buildableDataSO.itemRecipeList[0].outputItemList[0].item);
         outputBelt.SetWorldItem(worldItem);
         storedOutputItems--;
-    }
-
-    public float GetCraftingProgressNormalized() {
-        return craftingProgress / buildableDataSO.itemRecipeList[0].craftingTicks;
-    }
-
-    public int GetItemStoredCount(ItemSO filterItemSO) {
-        int amount = 0;
-
-        amount += outputItemStackList.GetItemStoredCount(filterItemSO);
-        amount += inputItemStackList.GetItemStoredCount(filterItemSO);
-
-        return amount;
-    }
-
-    public void SetItemRecipeScriptableObject(ItemRecipeSO itemRecipeSO) {
-        //this.itemRecipeSO = itemRecipeSO;
     }
 }

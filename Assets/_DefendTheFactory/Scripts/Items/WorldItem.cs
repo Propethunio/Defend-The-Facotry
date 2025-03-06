@@ -4,6 +4,7 @@ using UnityEngine;
 public class WorldItem : MonoBehaviour {
 
     public ItemSO itemSO { get; private set; }
+
     Tween moveTween;
 
     public static WorldItem Create(Vector2Int gridPosition, BuildingDir dir, ItemSO itemScriptableObject) {
@@ -59,6 +60,10 @@ public class WorldItem : MonoBehaviour {
     }
 
     public void DestroySelf() {
+        if(moveTween != null && moveTween.IsActive()) {
+            moveTween.Kill();
+        }
+
         Destroy(gameObject);
     }
 }

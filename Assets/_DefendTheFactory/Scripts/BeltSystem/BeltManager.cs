@@ -23,7 +23,6 @@ public class BeltManager {
         else return;
 
         TimeTickSystem.Instance.OnTick += OnTick;
-        TimeTickSystem.Instance.OnSubTick += OnTick;
 
         if(showDebug) {
             debugVisualParent = new GameObject("Belt Debug Visual").transform;
@@ -33,7 +32,6 @@ public class BeltManager {
 
     ~BeltManager() {
         TimeTickSystem.Instance.OnTick -= OnTick;
-        TimeTickSystem.Instance.OnSubTick -= OnTick;
     }
 
     void OnTick() {

@@ -7,6 +7,10 @@ public class GameManager : MonoBehaviour {
     [SerializeField] int height;
     [SerializeField] bool showBeltDebug;
 
+    void Awake() {
+        new ItemsManager();
+    }
+
     void Start() {
         new BuildingSystem(width, height);
         new BeltManager(showBeltDebug);
