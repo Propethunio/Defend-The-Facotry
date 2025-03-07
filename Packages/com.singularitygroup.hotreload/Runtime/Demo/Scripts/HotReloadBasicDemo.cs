@@ -7,15 +7,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace SingularityGroup.HotReload.Demo {
-    class HotReloadBasicDemo : MonoBehaviour {
+internal class HotReloadBasicDemo : MonoBehaviour {
         
         public GameObject cube;
         public Text informationText;
         public Button openWindowButton;
         public Button openScriptButton;
         public TextAsset thisScript;
-        
-        void Start() {
+
+        private void Start() {
             if(Application.isEditor) {
                 openWindowButton.onClick.AddListener(Demo.I.OpenHotReloadWindow);
                 openScriptButton.onClick.AddListener(() => Demo.I.OpenScriptFile(thisScript, 31, 13));
@@ -27,7 +27,7 @@ namespace SingularityGroup.HotReload.Demo {
         }
         
         // Update is called once per frame
-        void Update() {
+        private void Update() {
             if (Demo.I.IsServerRunning()) {
                 informationText.text = "Hot Reload is running";
             } else {
@@ -52,7 +52,7 @@ namespace SingularityGroup.HotReload.Demo {
         }
         
         // 2. Editing lambda methods
-        static Func<int, int> addFunction = x => {
+        private static Func<int, int> addFunction = x => {
             var result = x + 10;
             Debug.Log("Add: " + result);
             // // uncomment to change the operator to multiply and log the result
@@ -62,7 +62,7 @@ namespace SingularityGroup.HotReload.Demo {
         };
         
         // 3. Editing async/await methods
-        async Task AsyncMethod() {
+        private async Task AsyncMethod() {
             // await Task.Delay(500);
             // Debug.Log("AsyncMethod");
             
@@ -80,7 +80,7 @@ namespace SingularityGroup.HotReload.Demo {
         }
         
         // 5. Editing indexers (square bracket access such as dictionaries)
-        class CustomDictionary : Dictionary<string, int> {
+        private class CustomDictionary : Dictionary<string, int> {
             public new int this[string key] {
                 get {
                     // // uncomment to change the indexer and log a different entry based on case
@@ -92,7 +92,8 @@ namespace SingularityGroup.HotReload.Demo {
                 }
             }
         }
-        CustomDictionary randomDict = new CustomDictionary {
+
+        private CustomDictionary randomDict = new CustomDictionary {
             { "a", 4 },
             { "A", 5 },
             { "b", 9 },
@@ -125,8 +126,8 @@ namespace SingularityGroup.HotReload.Demo {
             public static explicit operator Email(string value)
                 => new Email(value);
         }
-        
-        void LateUpdate() {
+
+        private void LateUpdate() {
             // // 2. Editing lambda methods
             // addFunction(10);
             
@@ -165,7 +166,7 @@ namespace SingularityGroup.HotReload.Demo {
         
         // This function gets invoked every time it's patched
         [InvokeOnHotReloadLocal]
-        static void OnHotReloadMe() {
+        private static void OnHotReloadMe() {
             // change the string to see the method getting invoked
             Debug.Log("Hello there");
         }

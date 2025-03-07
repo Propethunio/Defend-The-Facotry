@@ -21,7 +21,7 @@ using UnityEngine.Networking;
 [assembly: InternalsVisibleTo("SingularityGroup.HotReload.EditorTests")]
 
 namespace SingularityGroup.HotReload {
-    class HttpResponse {
+internal class HttpResponse {
         public readonly HttpStatusCode statusCode;
         public readonly Exception exception;
         public readonly string responseText;
@@ -42,30 +42,30 @@ namespace SingularityGroup.HotReload {
         public string generalInfo;
     }
 
-    static class RequestHelper {
+    internal static class RequestHelper {
         internal const ushort defaultPort = 33242;
         internal const string defaultServerHost = "127.0.0.1";
-        const string ChangelogURL = "https://d2tc55zjhw51ly.cloudfront.net/releases/latest/changelog.json";
-        static readonly string defaultOrigin = Path.GetDirectoryName(UnityHelper.DataPath);
+        private const string ChangelogURL = "https://d2tc55zjhw51ly.cloudfront.net/releases/latest/changelog.json";
+        private static readonly string defaultOrigin = Path.GetDirectoryName(UnityHelper.DataPath);
         public static string origin { get; private set; } = defaultOrigin;
-        
-        static PatchServerInfo serverInfo = new PatchServerInfo(defaultServerHost, null, null);
+
+        private static PatchServerInfo serverInfo = new PatchServerInfo(defaultServerHost, null, null);
         public static PatchServerInfo ServerInfo => serverInfo;
-        
-        static string cachedUrl;
-        static string url => cachedUrl ?? (cachedUrl = CreateUrl(serverInfo));
+
+        private static string cachedUrl;
+        private static string url => cachedUrl ?? (cachedUrl = CreateUrl(serverInfo));
         
         public static int port => serverInfo?.port ?? defaultPort;
 
-        static readonly HttpClient client = CreateHttpClientWithOrigin();
+        private static readonly HttpClient client = CreateHttpClientWithOrigin();
         // separate client for each long polling request
-        static readonly HttpClient clientPollPatches = CreateHttpClientWithOrigin();
-        static readonly HttpClient clientPollAssets = CreateHttpClientWithOrigin();
-        static readonly HttpClient clientPollStatus = CreateHttpClientWithOrigin();
-        
-        static readonly HttpClient[] allClients = new[] { client, clientPollPatches, clientPollAssets, clientPollStatus };
-        
-        static HttpClient CreateHttpClientWithOrigin() {
+        private static readonly HttpClient clientPollPatches = CreateHttpClientWithOrigin();
+        private static readonly HttpClient clientPollAssets = CreateHttpClientWithOrigin();
+        private static readonly HttpClient clientPollStatus = CreateHttpClientWithOrigin();
+
+        private static readonly HttpClient[] allClients = new[] { client, clientPollPatches, clientPollAssets, clientPollStatus };
+
+        private static HttpClient CreateHttpClientWithOrigin() {
             var httpClient = HttpClientUtils.CreateHttpClient();
             httpClient.DefaultRequestHeaders.Add("origin", Path.GetDirectoryName(UnityHelper.DataPath));
 
@@ -96,7 +96,7 @@ namespace SingularityGroup.HotReload {
         }
 
         // This function is not thread safe but is currently called before the first request is sent so no issue.
-        static void SetOrigin(string newOrigin) {
+        private static void SetOrigin(string newOrigin) {
             if (newOrigin == origin) {
                 return;
             }
@@ -108,7 +108,7 @@ namespace SingularityGroup.HotReload {
             }
         }
 
-        static string[] assemblySearchPaths;
+        private static string[] assemblySearchPaths;
         public static void ChangeAssemblySearchPaths(string[] paths) {
             assemblySearchPaths = paths;
         }
@@ -134,7 +134,7 @@ namespace SingularityGroup.HotReload {
             return tcs.Task;
         }
 
-        static bool pollPending;
+        private static bool pollPending;
         internal static async void PollMethodPatches(string lastPatchId, Action<MethodPatchResponse> onResponseReceived) {
             if (pollPending) {
                 return;
@@ -167,8 +167,8 @@ namespace SingularityGroup.HotReload {
                 pollPending = false;
             }
         }
-        
-        static bool pollPatchStatusPending;
+
+        private static bool pollPatchStatusPending;
         internal static async void PollPatchStatus(Action<PatchStatusResponse> onResponseReceived, PatchStatus latestStatus) {
             if (pollPatchStatusPending) return;
 
@@ -195,8 +195,8 @@ namespace SingularityGroup.HotReload {
                 pollPatchStatusPending = false;
             }
         }
-        
-        static bool assetPollPending;
+
+        private static bool assetPollPending;
         internal static async void PollAssetChanges(Action<string> onResponseReceived) {
             if (assetPollPending) return;
         
@@ -394,12 +394,12 @@ namespace SingularityGroup.HotReload {
                 return new MobileHandshakeResponse(null, resp.responseText);
             }
         }
-        
-        static string SerializeRequestBody<T>(T request) {
+
+        private static string SerializeRequestBody<T>(T request) {
             return JsonConvert.SerializeObject(request);
         }
-        
-        static async Task<HttpResponse> PostJson(string uri, string json, int timeoutSeconds, CancellationToken token = default(CancellationToken), HttpClient overrideClient = null) {
+
+        private static async Task<HttpResponse> PostJson(string uri, string json, int timeoutSeconds, CancellationToken token = default(CancellationToken), HttpClient overrideClient = null) {
             var httpClient = overrideClient ?? client;
             await ThreadUtility.SwitchToThreadPool();
             

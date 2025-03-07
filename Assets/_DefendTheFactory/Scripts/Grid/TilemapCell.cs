@@ -1,8 +1,8 @@
 public class TilemapCell {
 
     public TilemapSprite tilemapSprite { get; private set; }
-    int x;
-    int y;
+    private int x;
+    private int y;
 
     public TilemapCell(int x, int y) {
         this.x = x;

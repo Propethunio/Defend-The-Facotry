@@ -8,7 +8,7 @@ using SingularityGroup.HotReload.RuntimeDependencies;
 
 namespace SingularityGroup.HotReload {
     internal class SymbolResolver {
-        readonly Dictionary<string, List<Assembly>> assembliesByName;
+        private readonly Dictionary<string, List<Assembly>> assembliesByName;
 
         public SymbolResolver(Dictionary<string, List<Assembly>> assembliesByName) {
             this.assembliesByName = assembliesByName;
@@ -72,7 +72,7 @@ namespace SingularityGroup.HotReload {
             return result;
         }
 
-        Type[] ResolveTypes(SType[] sTypes) {
+        private Type[] ResolveTypes(SType[] sTypes) {
             if(sTypes == null) {
                 return null;
             }

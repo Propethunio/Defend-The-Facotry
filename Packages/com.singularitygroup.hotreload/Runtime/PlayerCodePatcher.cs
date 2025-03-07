@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using SingularityGroup.HotReload.DTO;
 
 namespace SingularityGroup.HotReload {
-    
-    static class PlayerCodePatcher {
-        static Timer timer;
+internal static class PlayerCodePatcher {
+    private static Timer timer;
 
         static PlayerCodePatcher() {
             if (PlayerEntrypoint.IsPlayerWithHotReload()) {
@@ -53,15 +52,16 @@ namespace SingularityGroup.HotReload {
 
         public static Task Disconnect() => UpdateHost(null);
 
-        static void OnIntervalThreaded(object o) {
+        private static void OnIntervalThreaded(object o) {
             ServerHandshake.I.CheckHandshake();
             ServerHealthCheck.I.CheckHealthAsync().Forget();
 
             ThreadUtility.RunOnMainThread((Action)o);
         }
-        
-        static string lastPatchId = string.Empty;
-        static void OnIntervalMainThread() {
+
+        private static string lastPatchId = string.Empty;
+
+        private static void OnIntervalMainThread() {
             PatchServerInfo verifiedServer;
             if(ServerHandshake.I.TryGetVerifiedServer(out verifiedServer)) {
                 // now that handshake verified, we are connected.
@@ -96,8 +96,8 @@ namespace SingularityGroup.HotReload {
                 }
             }
         }
-        
-        static void HandleResponseReceived(MethodPatchResponse response) {
+
+        private static void HandleResponseReceived(MethodPatchResponse response) {
             Log.Debug("PollMethodPatches handling MethodPatchResponse id:{0} response.patches.Length:{1} response.failures.Length:{2}",
                 response.id, response.patches.Length, response.failures.Length);
             // TODO handle new response data (removed methods etc.)

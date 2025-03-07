@@ -10,8 +10,8 @@ namespace SingularityGroup.HotReload {
         [Header("Information")]
         public Text textSummary;
         public Text textSuggestion;
-        
-        void Start() {
+
+        private void Start() {
             buttonHide.onClick.AddListener(Hide);
         }
 
@@ -22,7 +22,7 @@ namespace SingularityGroup.HotReload {
             SyncPatchCounts();
         }
 
-        bool SyncPatchCounts() {
+        private bool SyncPatchCounts() {
             var changed = false;
             if (pendingPatches != CodePatcher.I.PendingPatches.Count) {
                 pendingPatches = CodePatcher.I.PendingPatches.Count;
@@ -46,7 +46,7 @@ namespace SingularityGroup.HotReload {
         private bool isConnected = false;
 
         // assumes that auto-pair already tried for several seconds
-        void Update() {
+        private void Update() {
             textSuggestion.enabled = isConnected;
             if (SyncPatchCounts()) {
                 textSuggestion.text = $"Patches: {pendingPatches} pending, {patchesApplied} applied";
@@ -54,7 +54,7 @@ namespace SingularityGroup.HotReload {
         }
 
         /// hide this dialog
-        void Hide() {
+        private void Hide() {
             gameObject.SetActive(false); // this should disable the Update loop?
         }
     }

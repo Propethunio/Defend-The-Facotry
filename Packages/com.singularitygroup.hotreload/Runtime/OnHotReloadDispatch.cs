@@ -13,8 +13,7 @@ using UnityEditor;
 #endif
 
 namespace SingularityGroup.HotReload {
-
-    static class Dispatch {
+internal static class Dispatch {
         // DispatchOnHotReload is called every time a patch is applied (1x per batch of filechanges)
         public static async Task OnHotReload(List<MethodPatch> patchedMethods) {
             var methods = await Task.Run(() => GetOrFillMethodsCacheThreaded());

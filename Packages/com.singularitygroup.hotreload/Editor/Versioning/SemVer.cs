@@ -16,13 +16,13 @@ namespace SingularityGroup.HotReload.Editor.Semver
     sealed class SemVersion : IComparable<SemVersion>, IComparable
 #else
     [Serializable]
-    sealed class SemVersion : IComparable<SemVersion>, IComparable, ISerializable
+    internal sealed class SemVersion : IComparable<SemVersion>, IComparable, ISerializable
 #endif
     {
         public static SemVersion None = new SemVersion(0, 0, 0);
         public static string NoneString = new SemVersion(0, 0, 0).ToString();
 
-        static Regex parseEx =
+        private static Regex parseEx =
             new Regex(@"^(?<major>\d+)" +
                 @"(\.(?<minor>\d+))?" +
                 @"(\.(?<patch>\d+))?" +
@@ -365,7 +365,7 @@ namespace SingularityGroup.HotReload.Editor.Semver
             return r;
         }
 
-        static int CompareComponent(string a, string b, bool lower = false)
+        private static int CompareComponent(string a, string b, bool lower = false)
         {
             var aEmpty = String.IsNullOrEmpty(a);
             var bEmpty = String.IsNullOrEmpty(b);

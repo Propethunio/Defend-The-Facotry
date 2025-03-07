@@ -5,7 +5,7 @@ using System.Text;
 using SingularityGroup.HotReload.Editor.Util;
 
 namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
-  class FileIOProvider : IFileIO
+internal class FileIOProvider : IFileIO
   {
     public bool Exists(string fileName)
     {

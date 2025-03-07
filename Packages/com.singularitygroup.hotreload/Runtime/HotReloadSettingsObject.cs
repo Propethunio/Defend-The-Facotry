@@ -18,7 +18,7 @@ namespace SingularityGroup.HotReload {
     /// See also Editor/PrebuildIncludeResources.cs
     /// </remarks>
     [Serializable]
-    class HotReloadSettingsObject : ScriptableObject {
+    internal class HotReloadSettingsObject : ScriptableObject {
         #region singleton
         private static HotReloadSettingsObject _I;
         public static HotReloadSettingsObject I {
@@ -89,7 +89,7 @@ namespace SingularityGroup.HotReload {
         /// <summary>
         /// Path to the prefab asset file.
         /// </summary>
-        const string prefabAssetPath = "Packages/com.singularitygroup.hotreload/Runtime/HotReloadPrompts.prefab";
+        private const string prefabAssetPath = "Packages/com.singularitygroup.hotreload/Runtime/HotReloadPrompts.prefab";
         
         // Call this during build, just to be sure the field is correct. (I had some issues with it while editing the prefab)
         public void EnsurePrefabSetCorrectly() {

@@ -16,30 +16,31 @@ using UnityEngine;
 [assembly: InternalsVisibleTo("SingularityGroup.HotReload.EditorSamples")]
 
 namespace SingularityGroup.HotReload.Editor {
-    class HotReloadWindow : EditorWindow {
+internal class HotReloadWindow : EditorWindow {
         public static HotReloadWindow Current { get; private set; }
 
-        List<HotReloadTabBase> tabs;
-        List<HotReloadTabBase> Tabs => tabs ?? (tabs = new List<HotReloadTabBase> {
+        private List<HotReloadTabBase> tabs;
+
+        private List<HotReloadTabBase> Tabs => tabs ?? (tabs = new List<HotReloadTabBase> {
             RunTab,
             SettingsTab,
             AboutTab,
         });
-        int selectedTab;
+
+        private int selectedTab;
 
         internal static Vector2 scrollPos;
-        
-        static Timer timer; 
 
+        private static Timer timer;
 
-        HotReloadRunTab runTab;
+        private HotReloadRunTab runTab;
         internal HotReloadRunTab RunTab => runTab ?? (runTab = new HotReloadRunTab(this));
-        HotReloadSettingsTab settingsTab;
+        private HotReloadSettingsTab settingsTab;
         internal HotReloadSettingsTab SettingsTab => settingsTab ?? (settingsTab = new HotReloadSettingsTab(this));
-        HotReloadAboutTab aboutTab;
+        private HotReloadAboutTab aboutTab;
         internal HotReloadAboutTab AboutTab => aboutTab ?? (aboutTab = new HotReloadAboutTab(this));
 
-        static ShowOnStartupEnum _showOnStartupOption;
+        private static ShowOnStartupEnum _showOnStartupOption;
 
         /// <summary>
         /// This token is cancelled when the EditorWindow is disabled.
@@ -49,9 +50,10 @@ namespace SingularityGroup.HotReload.Editor {
         /// When token is cancelled, scripts are about to be recompiled and this will cause tasks to fail for weird reasons.
         /// </remarks>
         public CancellationToken cancelToken;
-        CancellationTokenSource cancelTokenSource;
 
-        static readonly PackageUpdateChecker packageUpdateChecker = new PackageUpdateChecker();
+        private CancellationTokenSource cancelTokenSource;
+
+        private static readonly PackageUpdateChecker packageUpdateChecker = new PackageUpdateChecker();
 
         [MenuItem("Window/Hot Reload/Open &#H")]
         internal static void Open() {
@@ -71,11 +73,11 @@ namespace SingularityGroup.HotReload.Editor {
             HotReloadRunTab.Recompile();
         }
 
-        void OnInterval(object o) {
+        private void OnInterval(object o) {
             HotReloadRunTab.RepaintInstant();
         }
 
-        void OnEnable() {
+        private void OnEnable() {
             if (timer == null) {
                 timer = new Timer(OnInterval, null, 20 * 1000, 20 * 1000);
             }
@@ -97,13 +99,13 @@ namespace SingularityGroup.HotReload.Editor {
             packageUpdateChecker.StartCheckingForNewVersion();
         }
 
-        void Update() {
+        private void Update() {
             foreach (var tab in Tabs) {
                 tab.Update();
             }
         }
 
-        void OnDisable() {
+        private void OnDisable() {
             if (cancelTokenSource != null) {
                 cancelTokenSource.Cancel();
                 cancelTokenSource = null;
@@ -121,7 +123,8 @@ namespace SingularityGroup.HotReload.Editor {
         }
         
         public HotReloadRunTabState RunTabState { get; private set; }
-        void OnGUI() {
+
+        private void OnGUI() {
             // TabState ensures rendering is consistent between Layout and Repaint calls
             // Without it errors like this happen:
             // ArgumentException: Getting control 2's position in a group with only 2 controls when doing repaint
@@ -139,7 +142,7 @@ namespace SingularityGroup.HotReload.Editor {
                 RenderBottomBar();
         }
 
-        void RenderDebug() {
+        private void RenderDebug() {
             if (GUILayout.Button("RESET WINDOW")) {
                 OnDisable();
 
@@ -198,8 +201,9 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        int? collapsedTab;
-        void RenderTabs() {
+        private int? collapsedTab;
+
+        private void RenderTabs() {
             using(new EditorGUILayout.VerticalScope(HotReloadWindowStyles.BoxStyle)) {
                 if (HotReloadWindowStyles.windowScreenHeight > 210 && HotReloadWindowStyles.windowScreenWidth > 375) {
                     selectedTab = GUILayout.Toolbar(
@@ -229,7 +233,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        void RenderBottomBar() {
+        private void RenderBottomBar() {
             SemVersion newVersion;
             var updateAvailable = packageUpdateChecker.TryGetNewVersion(out newVersion);
 
@@ -248,12 +252,13 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        static GUIStyle _renderAppBoxStyle;
-        static GUIStyle renderAppBoxStyle => _renderAppBoxStyle ?? (_renderAppBoxStyle = new GUIStyle(GUI.skin.box) {
+        private static GUIStyle _renderAppBoxStyle;
+
+        private static GUIStyle renderAppBoxStyle => _renderAppBoxStyle ?? (_renderAppBoxStyle = new GUIStyle(GUI.skin.box) {
             padding = new RectOffset(10, 10, 0, 0)
         });
-        
-        static GUILayoutOption[] _nonExpandable;
+
+        private static GUILayoutOption[] _nonExpandable;
         public static GUILayoutOption[] NonExpandableLayout => _nonExpandable ?? (_nonExpandable = new [] {GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true)});
         
         internal static void RenderRateApp() {
@@ -303,7 +308,7 @@ namespace SingularityGroup.HotReload.Editor {
             return true;
         }
 
-        void RenderUpdateButton(SemVersion newVersion) {
+        private void RenderUpdateButton(SemVersion newVersion) {
             if (GUILayout.Button($"Update To v{newVersion}", HotReloadWindowStyles.UpgradeButtonStyle)) {
                 packageUpdateChecker.UpdatePackageAsync(newVersion).Forget(CancellationToken.None);
             }
@@ -337,7 +342,8 @@ namespace SingularityGroup.HotReload.Editor {
         }
         
         internal static readonly OpenURLButton autoRefreshTroubleshootingBtn = new OpenURLButton("Troubleshooting", Constants.TroubleshootingURL);
-        void RenderBottomBarCore() {
+
+        private void RenderBottomBarCore() {
             bool troubleshootingShown = EditorCodePatcher.Started && HotReloadWindowStyles.windowScreenWidth >= 400;
             bool alertsShown = EditorCodePatcher.Started && HotReloadWindowStyles.windowScreenWidth > Constants.EventFiltersShownHideWidth;
             using (new EditorGUILayout.VerticalScope()) {

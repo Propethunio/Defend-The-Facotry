@@ -5,7 +5,7 @@ public class WorldItem : MonoBehaviour {
 
     public ItemSO itemSO { get; private set; }
 
-    Tween moveTween;
+    private Tween moveTween;
 
     public static WorldItem Create(Vector2Int gridPosition, BuildingDir dir, ItemSO itemScriptableObject) {
         Vector3 worldPosition = new Vector3(gridPosition.x, 0.31f, gridPosition.y);

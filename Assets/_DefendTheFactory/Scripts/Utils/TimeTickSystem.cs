@@ -10,19 +10,19 @@ public class TimeTickSystem : MonoBehaviour {
     public event Action OnTick;
     public event Action OnLateTick;
 
-    const float PRODUCTION_TICK_TIMER_MAX = 0.1f;
-    const int PRODUCTION_TICKS_FOR_FULL_TICK = 5;
+    private const float PRODUCTION_TICK_TIMER_MAX = 0.1f;
+    private const int PRODUCTION_TICKS_FOR_FULL_TICK = 5;
 
-    bool isTicking;
-    float tickTimer;
-    int productionTicksAmount;
+    private bool isTicking;
+    private float tickTimer;
+    private int productionTicksAmount;
 
-    void Awake() {
+    private void Awake() {
         if(Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    void Update() {
+    private void Update() {
         if(!isTicking) return;
 
         tickTimer += Time.deltaTime;

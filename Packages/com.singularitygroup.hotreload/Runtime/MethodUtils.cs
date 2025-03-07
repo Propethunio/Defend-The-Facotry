@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 
 namespace SingularityGroup.HotReload {
-    static class MethodUtils {
+internal static class MethodUtils {
 #if ENABLE_MONO
         public static unsafe void DisableVisibilityChecks(MethodBase method) {
             if(IntPtr.Size == sizeof(long)) {

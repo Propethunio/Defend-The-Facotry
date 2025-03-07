@@ -35,7 +35,7 @@ namespace SingularityGroup.HotReload {
 
         public bool autoConnect { get; set; }
 
-        void Start() {
+        private void Start() {
             buttonHide.onClick.AddListener(() => {
                 Hide();   
             });
@@ -65,11 +65,11 @@ namespace SingularityGroup.HotReload {
             UpdateUI();
         }
 
-        void Update() {
+        private void Update() {
             UpdateUI();
         }
-            
-        void UpdateUI() {
+
+        private void UpdateUI() {
             // assumes that auto-pair already tried for several seconds
             // suggestions to help the user when auto-pair is failing
             var networkText = Application.isMobilePlatform ? "WiFi" : "LAN/WiFi";
@@ -96,7 +96,7 @@ namespace SingularityGroup.HotReload {
         }
 
         /// hide this dialog
-        void Hide() {
+        private void Hide() {
             gameObject.SetActive(false); // this should disable the Update loop?
         }
     }

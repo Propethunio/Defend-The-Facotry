@@ -9,8 +9,8 @@ namespace SingularityGroup.HotReload.Editor {
         
         public static IServerHealthCheck I => instance;
         public static TimeSpan HeartBeatTimeout => heartBeatTimeout;
-        
-        ServerHealthCheck() { }
+
+        private ServerHealthCheck() { }
         
         /// <summary>
         /// Whether or not the server is running and responsive

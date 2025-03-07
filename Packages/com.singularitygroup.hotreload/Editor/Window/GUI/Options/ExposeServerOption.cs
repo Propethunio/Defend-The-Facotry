@@ -51,7 +51,7 @@ namespace SingularityGroup.HotReload.Editor {
             });
         }
 
-        void RunTask(Action action) {
+        private void RunTask(Action action) {
             var token = HotReloadWindow.Current.cancelToken;
             Task.Run(() => {
                 if (token.IsCancellationRequested) return;
@@ -63,7 +63,7 @@ namespace SingularityGroup.HotReload.Editor {
             }, token);
         }
 
-        void RunOnMainThreadSync(Action action) {
+        private void RunOnMainThreadSync(Action action) {
             ThreadUtility.RunOnMainThread(action, HotReloadWindow.Current.cancelToken);
         }
     }

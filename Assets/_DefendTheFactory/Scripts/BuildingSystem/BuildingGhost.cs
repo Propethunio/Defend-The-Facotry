@@ -9,17 +9,17 @@ public class BuildingGhost : MonoBehaviour {
 
     public Vector3 lastPosition { get; private set; }
 
-    [SerializeField] float snapSpeed;
+    [SerializeField] private float snapSpeed;
 
-    Transform visual;
-    BuildingSystem buildingSystem;
+    private Transform visual;
+    private BuildingSystem buildingSystem;
 
     private void Awake() {
         if(Instance == null) Instance = this;
         else return;
     }
 
-    void LateUpdate() {
+    private void LateUpdate() {
         if(!visual) return;
 
         MoveGhostToGridPosition();
@@ -31,7 +31,7 @@ public class BuildingGhost : MonoBehaviour {
         buildingSystem.OnBuildCanceled += DestroyVisual;
     }
 
-    void MoveGhostToGridPosition() {
+    private void MoveGhostToGridPosition() {
         Vector3 targetPosition = buildingSystem.GetMouseWorldSnappedPosition();
 
         if(targetPosition != Vector3.back && lastPosition != targetPosition) {
@@ -43,14 +43,14 @@ public class BuildingGhost : MonoBehaviour {
         transform.rotation = Quaternion.Lerp(transform.rotation, buildingSystem.GetPlacedObjectRotation(), Time.deltaTime * snapSpeed);
     }
 
-    void RefreshVisual() {
+    private void RefreshVisual() {
         DestroyVisual();
         visual = Instantiate(buildingSystem.GetPlacedObjectTypeSO().visual, Vector3.zero, Quaternion.identity, transform);
         visual.localPosition = Vector3.zero;
         visual.localEulerAngles = Vector3.zero;
     }
 
-    void DestroyVisual() {
+    private void DestroyVisual() {
         if(visual != null) {
             Destroy(visual.gameObject);
         }

@@ -12,10 +12,11 @@ namespace SingularityGroup.HotReload.Demo {
         public Button openWindowButton;
         public Button openScriptButton;
         public TextAsset thisScript;
-        
-        TransformAccessArray cubeTransforms;
-        CubeJob job;
-        void Awake() {
+
+        private TransformAccessArray cubeTransforms;
+        private CubeJob job;
+
+        private void Awake() {
             cubeTransforms = new TransformAccessArray(cubes);
             if(Application.isEditor) {
                 openWindowButton.onClick.AddListener(Demo.I.OpenHotReloadWindow);
@@ -27,7 +28,7 @@ namespace SingularityGroup.HotReload.Demo {
             informationText.gameObject.SetActive(true);
         }
 
-        void Update() {
+        private void Update() {
             job.deltaTime = Time.deltaTime;
             job.time = Time.time;
             var handle = job.Schedule(cubeTransforms);
@@ -39,8 +40,8 @@ namespace SingularityGroup.HotReload.Demo {
                 informationText.text = "Hot Reload is not running";
             }
         }
-        
-        struct CubeJob : IJobParallelForTransform {
+
+        private struct CubeJob : IJobParallelForTransform {
             public float deltaTime;
             public float time;
             public void Execute(int index, TransformAccess transform) {
@@ -54,8 +55,8 @@ namespace SingularityGroup.HotReload.Demo {
                 // transform.position += (transform.localScale.x < 0.5 ? Vector3.left : Vector3.right) * deltaTime;
             }
         }
-        
-        void OnDestroy() {
+
+        private void OnDestroy() {
             cubeTransforms.Dispose();
         }
     }

@@ -11,7 +11,7 @@ using Debug = UnityEngine.Debug;
 #endif
 
 namespace SingularityGroup.HotReload.Editor {
-    static class UpdateUtility {
+internal static class UpdateUtility {
         public static async Task<string> Update(string version, IProgress<float> progress, CancellationToken cancellationToken) {
             await ThreadUtility.SwitchToThreadPool();
 
@@ -59,8 +59,8 @@ namespace SingularityGroup.HotReload.Editor {
             progress?.Report(1);
             return null;
         }
-        
-        static string BackupPackage(string packageDir, string version) {
+
+        private static string BackupPackage(string packageDir, string version) {
             var backupPath = PackageConst.LibraryCachePath + $"/PackageBackup-{version}";
             if(Directory.Exists(backupPath)) {
                 Directory.Delete(backupPath, true);
@@ -68,8 +68,8 @@ namespace SingularityGroup.HotReload.Editor {
             DirectoryCopy(packageDir, backupPath);
             return backupPath;
         }
-        
-        static void DirectoryCopy(string sourceDirPath, string destDirPath) {
+
+        private static void DirectoryCopy(string sourceDirPath, string destDirPath) {
             var rootSource = new DirectoryInfo(sourceDirPath);
 
             var sourceDirs = rootSource.GetDirectories();

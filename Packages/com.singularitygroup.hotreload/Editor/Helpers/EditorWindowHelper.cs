@@ -41,8 +41,8 @@ namespace SingularityGroup.HotReload.Editor {
             { NotificationStatus.Patching, new GUIContent("[Hot Reload] Applying patches...")},
             { NotificationStatus.NeedsRecompile, new GUIContent("[Hot Reload] Unsupported Changes detected! Recompiling...")},
         };
-        
-        static Type gameViewT;
+
+        private static Type gameViewT;
         private static EditorWindow[] gameViewWindows {
             get {
                 gameViewT = gameViewT ?? typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView");
@@ -62,7 +62,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        static NotificationStatus lastNotificationStatus;
+        private static NotificationStatus lastNotificationStatus;
         private static DateTime? latestNotificationStartedAt;
         private static bool notificationShownRecently => latestNotificationStartedAt != null && DateTime.UtcNow - latestNotificationStartedAt < TimeSpan.FromSeconds(1);
         internal static void ShowNotification(NotificationStatus notificationType, float maxDuration = 3) {

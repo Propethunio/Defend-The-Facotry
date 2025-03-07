@@ -118,7 +118,7 @@ namespace SingularityGroup.HotReload.Editor {
         }
         
         public static string showOnStartupPath { get; }= Path.Combine(CliUtils.GetAppDataPath(), "showOnStartup.txt");
-        static ShowOnStartupEnum? showOnStartup;
+        private static ShowOnStartupEnum? showOnStartup;
         public static ShowOnStartupEnum ShowOnStartup {
             get {
                 if (showOnStartup != null) {
@@ -208,9 +208,9 @@ namespace SingularityGroup.HotReload.Editor {
             get { return EditorPrefs.GetBool(RateAppShownKey, false); }
             set { EditorPrefs.SetBool(RateAppShownKey, value); }
         }
-        
-        static string rateAppPath = Path.Combine(CliUtils.GetAppDataPath(), "ratedApp.txt");
-        static bool? rateAppShown;
+
+        private static string rateAppPath = Path.Combine(CliUtils.GetAppDataPath(), "ratedApp.txt");
+        private static bool? rateAppShown;
         public static bool RateAppShown {
             get {
                 if (rateAppShown != null) {

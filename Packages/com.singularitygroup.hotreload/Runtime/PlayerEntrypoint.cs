@@ -28,7 +28,7 @@ namespace SingularityGroup.HotReload {
         /// In Player code you can assume this is set.<br/>
         /// When in Editor this is usually null.
         /// </remarks>
-        static BuildInfo buildInfo { get; set; }
+        private static BuildInfo buildInfo { get; set; }
 
         /// In Player code you can assume this is set (not null)
         public static BuildInfo PlayerBuildInfo => buildInfo;
@@ -50,7 +50,7 @@ namespace SingularityGroup.HotReload {
             TryAutoConnect().Forget();
         }
 
-        static async Task TryAutoConnect() {
+        private static async Task TryAutoConnect() {
             try {
                 buildInfo = await GetBuildInfo();
             } catch (Exception e) {

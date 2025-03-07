@@ -225,14 +225,16 @@ namespace SingularityGroup.HotReload.Editor {
                 iconType: AlertType.UnsupportedChange
             )},
         };
-        
-        static ListRequest listRequest;
-        static string[] unsupportedPackages = new[] {
+
+        private static ListRequest listRequest;
+
+        private static string[] unsupportedPackages = new[] {
             "com.unity.entities",
             "com.firstgeargames.fishnet",
         };
-        static List<string> unsupportedPackagesList;
-        static DateTime lastPlaymodeChange;
+
+        private static List<string> unsupportedPackagesList;
+        private static DateTime lastPlaymodeChange;
         
         public static void Init() {
             listRequest = Client.List(offlineMode: false, includeIndirectDependencies: true);
@@ -296,7 +298,7 @@ namespace SingularityGroup.HotReload.Editor {
             CheckEditorsWithoutHRAsync().Forget();
         }
 
-        static bool checkingEditorsWihtoutHR;
+        private static bool checkingEditorsWihtoutHR;
         private static async Task CheckEditorsWithoutHRAsync() {
             try {
                 checkingEditorsWihtoutHR = true;

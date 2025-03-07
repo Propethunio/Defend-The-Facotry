@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class GhostBeltVisualController : MonoBehaviour {
 
-    [SerializeField] GameObject straightBeltVisual;
-    [SerializeField] GameObject leftTurnVisual;
-    [SerializeField] GameObject rightTurnVisual;
+    [SerializeField] private GameObject straightBeltVisual;
+    [SerializeField] private GameObject leftTurnVisual;
+    [SerializeField] private GameObject rightTurnVisual;
 
-    Vector2Int origin;
-    BeltManager beltMenager;
-    BuildingGhost buildingGhost;
-    BuildingSystem buildingSystem;
-    GridCell[,] gridArray;
-    ConveyorBeltVisualController modifiedBeltVisual;
+    private Vector2Int origin;
+    private BeltManager beltMenager;
+    private BuildingGhost buildingGhost;
+    private BuildingSystem buildingSystem;
+    private GridCell[,] gridArray;
+    private ConveyorBeltVisualController modifiedBeltVisual;
 
-    void Start() {
+    private void Start() {
         beltMenager = BeltManager.Instance;
         buildingSystem = BuildingSystem.Instance;
         gridArray = buildingSystem.grid.gridArray;
@@ -22,7 +22,7 @@ public class GhostBeltVisualController : MonoBehaviour {
         buildingGhost.positionChanged += SetVisual;
     }
 
-    void OnDestroy() {
+    private void OnDestroy() {
         buildingSystem.OnObjectPlaced -= ResetModifiedBelt;
         buildingGhost.positionChanged -= SetVisual;
 
@@ -31,7 +31,7 @@ public class GhostBeltVisualController : MonoBehaviour {
         }
     }
 
-    void SetVisual() {
+    private void SetVisual() {
         Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition);
         origin = new Vector2Int((int)mousePosition.x, (int)mousePosition.z);
         Vector2Int forwardVector = buildingSystem.GetDirForwardVector(buildingSystem.dir);
@@ -57,7 +57,7 @@ public class GhostBeltVisualController : MonoBehaviour {
         }
     }
 
-    void TryModifyNextBelt(Vector2Int nextPosition) {
+    private void TryModifyNextBelt(Vector2Int nextPosition) {
         if(modifiedBeltVisual != null) {
             modifiedBeltVisual.ShowStraightVisual();
             modifiedBeltVisual = null;
@@ -89,33 +89,33 @@ public class GhostBeltVisualController : MonoBehaviour {
         }
     }
 
-    bool ShouldSnap(Vector2Int position) {
+    private bool ShouldSnap(Vector2Int position) {
         return IsPositionValid(position) && gridArray[position.x, position.y].placedObject is ConveyorBelt belt && belt.nextPosition == origin;
     }
 
-    bool IsPositionValid(Vector2Int position) {
+    private bool IsPositionValid(Vector2Int position) {
         return position.x >= 0 && position.x < gridArray.GetLength(0) && position.y >= 0 && position.y < gridArray.GetLength(1);
     }
 
-    void ShowStraightVisual() {
+    private void ShowStraightVisual() {
         straightBeltVisual.SetActive(true);
         leftTurnVisual.SetActive(false);
         rightTurnVisual.SetActive(false);
     }
 
-    void ShowLeftVisual() {
+    private void ShowLeftVisual() {
         straightBeltVisual.SetActive(false);
         leftTurnVisual.SetActive(true);
         rightTurnVisual.SetActive(false);
     }
 
-    void ShowRightVisual() {
+    private void ShowRightVisual() {
         straightBeltVisual.SetActive(false);
         leftTurnVisual.SetActive(false);
         rightTurnVisual.SetActive(true);
     }
 
-    void ResetModifiedBelt() {
+    private void ResetModifiedBelt() {
         modifiedBeltVisual = null;
     }
 }

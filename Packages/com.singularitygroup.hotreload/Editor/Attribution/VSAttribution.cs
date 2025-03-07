@@ -5,14 +5,14 @@ namespace UnityEditor.VSAttribution.HotReload
 {
 	internal static class VSAttribution
 	{
-		const int k_VersionId = 4;
-		const int k_MaxEventsPerHour = 10;
-		const int k_MaxNumberOfElements = 1000;
+		private const int k_VersionId = 4;
+		private const int k_MaxEventsPerHour = 10;
+		private const int k_MaxNumberOfElements = 1000;
 
-		const string k_VendorKey = "unity.vsp-attribution";
-		const string k_EventName = "vspAttribution";
+		private const string k_VendorKey = "unity.vsp-attribution";
+		private const string k_EventName = "vspAttribution";
 
-		static bool RegisterEvent()
+		private static bool RegisterEvent()
 		{
 			AnalyticsResult result = EditorAnalytics.RegisterEventWithLimit(k_EventName, k_MaxEventsPerHour,
 				k_MaxNumberOfElements, k_VendorKey, k_VersionId);
@@ -22,7 +22,7 @@ namespace UnityEditor.VSAttribution.HotReload
 		}
 
 		[Serializable]
-		struct VSAttributionData
+		private struct VSAttributionData
 		{
 			public string actionName;
 			public string partnerName;

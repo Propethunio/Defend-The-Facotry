@@ -13,8 +13,8 @@ public class BeltManager {
 
     public Dictionary<ConveyorBelt, BeltPath> beltEndsDict { get; private set; } = new();
 
-    GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
-    List<BeltPath> beltPathList = new();
+    private GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
+    private List<BeltPath> beltPathList = new();
 
     public Transform debugVisualParent { get; private set; }
 
@@ -34,7 +34,7 @@ public class BeltManager {
         TimeTickSystem.Instance.OnTick -= OnTick;
     }
 
-    void OnTick() {
+    private void OnTick() {
         int beltPathsCount = beltPathList.Count;
 
         for(int i = 0; i < beltPathsCount; i++) {
@@ -63,14 +63,14 @@ public class BeltManager {
         OnBeltAdded?.Invoke();
     }
 
-    ConveyorBelt TryGetConnectingBelt(Vector2Int connectingPosition) {
+    private ConveyorBelt TryGetConnectingBelt(Vector2Int connectingPosition) {
         if(connectingPosition.x >= 0 && connectingPosition.x < gridArray.GetLength(0) && connectingPosition.y >= 0 && connectingPosition.y < gridArray.GetLength(1)) {
             return gridArray[connectingPosition.x, connectingPosition.y].placedObject as ConveyorBelt;
         }
         return null;
     }
 
-    void ConnectToPreviousBelt(ConveyorBelt newBelt, ConveyorBelt previousBelt, ref BeltPath connectingBeltPath) {
+    private void ConnectToPreviousBelt(ConveyorBelt newBelt, ConveyorBelt previousBelt, ref BeltPath connectingBeltPath) {
         connectingBeltPath = beltEndsDict[previousBelt];
         connectingBeltPath.beltList.Add(newBelt);
         beltEndsDict.Add(newBelt, connectingBeltPath);
@@ -80,7 +80,7 @@ public class BeltManager {
         }
     }
 
-    void ConnectToNextBelt(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
+    private void ConnectToNextBelt(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
         if(nextBelt.parentBuilding == null && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin) {
             ConveyorBelt beltConnectedToNextBelt = TryGetConnectingBelt(nextBelt.previousPosition);
 
@@ -98,7 +98,7 @@ public class BeltManager {
         }
     }
 
-    void MergeBeltPaths(ConveyorBelt beltEndFromMainPath, ConveyorBelt beltStartFromDeletedPath) {
+    private void MergeBeltPaths(ConveyorBelt beltEndFromMainPath, ConveyorBelt beltStartFromDeletedPath) {
         BeltPath mainBeltPath = beltEndsDict[beltEndFromMainPath];
         bool mergedSingleBelt = mainBeltPath.beltList.Count == 1;
         MergeBeltPaths(beltEndFromMainPath, beltStartFromDeletedPath, mainBeltPath);
@@ -108,7 +108,7 @@ public class BeltManager {
         }
     }
 
-    void MergeBeltPaths(ConveyorBelt endBeltFromMainPath, ConveyorBelt startBeltFromDeletedPath, BeltPath mainBeltPath) {
+    private void MergeBeltPaths(ConveyorBelt endBeltFromMainPath, ConveyorBelt startBeltFromDeletedPath, BeltPath mainBeltPath) {
         BeltPath pathToMerge = beltEndsDict[startBeltFromDeletedPath];
         beltEndsDict.Remove(endBeltFromMainPath);
 
@@ -127,7 +127,7 @@ public class BeltManager {
         beltPathList.Remove(pathToMerge);
     }
 
-    void InsertIntoExistingPath(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
+    private void InsertIntoExistingPath(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
         connectingBeltPath = beltEndsDict[nextBelt];
         connectingBeltPath.beltList.Insert(0, newBelt);
         beltEndsDict.Add(newBelt, connectingBeltPath);
@@ -137,7 +137,7 @@ public class BeltManager {
         }
     }
 
-    void CreateNewBeltPath(ConveyorBelt newBelt, ref BeltPath connectingBeltPath) {
+    private void CreateNewBeltPath(ConveyorBelt newBelt, ref BeltPath connectingBeltPath) {
         connectingBeltPath = new();
         connectingBeltPath.beltList.Add(newBelt);
         beltPathList.Add(connectingBeltPath);
@@ -175,7 +175,7 @@ public class BeltManager {
         OnBeltRemoved?.Invoke();
     }
 
-    void RemoveFromLoop(int beltIndex, BeltPath beltPath, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
+    private void RemoveFromLoop(int beltIndex, BeltPath beltPath, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
         if(beltIndex == 0) {
             beltPath.beltList.RemoveAt(0);
         } else if(beltIndex == beltPath.beltList.Count - 1) {
@@ -194,7 +194,7 @@ public class BeltManager {
         beltEndsDict.Add(newEndBelt, beltPath);
     }
 
-    void RemoveFromPathStart(BeltPath beltPath, ConveyorBelt belt, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
+    private void RemoveFromPathStart(BeltPath beltPath, ConveyorBelt belt, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
         beltPath.beltList.RemoveAt(0);
         beltEndsDict.Remove(belt);
 
@@ -206,7 +206,7 @@ public class BeltManager {
         }
     }
 
-    void RemoveFromPathEnd(int beltIndex, BeltPath beltPath, ConveyorBelt belt, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
+    private void RemoveFromPathEnd(int beltIndex, BeltPath beltPath, ConveyorBelt belt, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
         beltPath.beltList.RemoveAt(beltIndex);
         beltEndsDict.Remove(belt);
 
@@ -216,7 +216,7 @@ public class BeltManager {
         }
     }
 
-    void RemoveFromPathMiddle(int beltIndex, BeltPath beltPath, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
+    private void RemoveFromPathMiddle(int beltIndex, BeltPath beltPath, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
         List<ConveyorBelt> firstPart = beltPath.beltList.GetRange(0, beltIndex);
         List<ConveyorBelt> secondPart = beltPath.beltList.GetRange(beltIndex + 1, beltPath.beltList.Count - beltIndex - 1);
         beltPath.beltList.Clear();
@@ -239,7 +239,7 @@ public class BeltManager {
         }
     }
 
-    void CheckForNewStartBeltConnections(ConveyorBelt newStartBelt) {
+    private void CheckForNewStartBeltConnections(ConveyorBelt newStartBelt) {
         Vector2Int forwardDirection = newStartBelt.nextPosition - newStartBelt.origin;
         Vector2Int newPreviousPosition = newStartBelt.origin - forwardDirection;
 
@@ -260,7 +260,7 @@ public class BeltManager {
         TryToConnectStartBeltSides(newStartBelt, forwardDirection);
     }
 
-    bool TryToConnectStartBeltStraight(ConveyorBelt newStartBelt, Vector2Int newPreviousPosition) {
+    private bool TryToConnectStartBeltStraight(ConveyorBelt newStartBelt, Vector2Int newPreviousPosition) {
         ConveyorBelt connectedStraightBelt = TryGetConnectingBelt(newPreviousPosition);
 
         if(connectedStraightBelt != null && connectedStraightBelt.nextPosition == newStartBelt.origin) {
@@ -271,17 +271,17 @@ public class BeltManager {
         return false;
     }
 
-    void ConnectNewStartBeltStraight(ConveyorBelt newStartBelt, ConveyorBelt connectedStraightBelt, Vector2Int newPreviousPosition) {
+    private void ConnectNewStartBeltStraight(ConveyorBelt newStartBelt, ConveyorBelt connectedStraightBelt, Vector2Int newPreviousPosition) {
         SetStartBeltStraightWithoutMerge(newStartBelt, newPreviousPosition);
         MergeBeltPaths(connectedStraightBelt, newStartBelt);
     }
 
-    void SetStartBeltStraightWithoutMerge(ConveyorBelt newStartBelt, Vector2Int newPreviousPosition) {
+    private void SetStartBeltStraightWithoutMerge(ConveyorBelt newStartBelt, Vector2Int newPreviousPosition) {
         newStartBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowStraightVisual();
         newStartBelt.previousPosition = newPreviousPosition;
     }
 
-    bool TryToConnectStartBeltSides(ConveyorBelt newStartBelt, Vector2Int forwardDirection) {
+    private bool TryToConnectStartBeltSides(ConveyorBelt newStartBelt, Vector2Int forwardDirection) {
         Vector2Int leftPosition = newStartBelt.origin + new Vector2Int(-forwardDirection.y, forwardDirection.x);
         Vector2Int rightPosition = newStartBelt.origin + new Vector2Int(forwardDirection.y, -forwardDirection.x);
         ConveyorBelt connectedLeftBelt = TryGetConnectingBelt(leftPosition);
@@ -300,19 +300,19 @@ public class BeltManager {
         return false;
     }
 
-    void ConnectNewStartBeltLeft(ConveyorBelt newStartBelt, ConveyorBelt connectedLeftBelt, Vector2Int leftPosition) {
+    private void ConnectNewStartBeltLeft(ConveyorBelt newStartBelt, ConveyorBelt connectedLeftBelt, Vector2Int leftPosition) {
         newStartBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowLeftVisual();
         newStartBelt.previousPosition = leftPosition;
         MergeBeltPaths(connectedLeftBelt, newStartBelt);
     }
 
-    void ConnectNewStartBeltRight(ConveyorBelt newStartBelt, ConveyorBelt connectedRightBelt, Vector2Int rightPosition) {
+    private void ConnectNewStartBeltRight(ConveyorBelt newStartBelt, ConveyorBelt connectedRightBelt, Vector2Int rightPosition) {
         newStartBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowRightVisual();
         newStartBelt.previousPosition = rightPosition;
         MergeBeltPaths(connectedRightBelt, newStartBelt);
     }
 
-    void CheckForNewEndBeltConnections(ConveyorBelt newEndBelt) {
+    private void CheckForNewEndBeltConnections(ConveyorBelt newEndBelt) {
         Vector2Int backDirection = newEndBelt.origin - newEndBelt.previousPosition;
         Vector2Int newNextPosition = newEndBelt.origin + backDirection;
 
@@ -334,7 +334,7 @@ public class BeltManager {
         TryToConnectEndBeltSides(newEndBelt, backDirection);
     }
 
-    bool TryToConnectEndBeltStraight(ConveyorBelt newEndBelt, Vector2Int newNextPosition) {
+    private bool TryToConnectEndBeltStraight(ConveyorBelt newEndBelt, Vector2Int newNextPosition) {
         ConveyorBelt connectedStraightBelt = TryGetConnectingBelt(newNextPosition);
 
         if(connectedStraightBelt != null && connectedStraightBelt.previousPosition == newEndBelt.origin) {
@@ -345,12 +345,12 @@ public class BeltManager {
         return false;
     }
 
-    void ConnectNewEndBeltStraight(ConveyorBelt newEndBelt, ConveyorBelt connectedStraightBelt, Vector2Int newNextPosition) {
+    private void ConnectNewEndBeltStraight(ConveyorBelt newEndBelt, ConveyorBelt connectedStraightBelt, Vector2Int newNextPosition) {
         SetEndBeltStraightWithoutMerge(newEndBelt, newNextPosition, connectedStraightBelt.dir);
         MergeBeltPaths(newEndBelt, connectedStraightBelt);
     }
 
-    void SetEndBeltStraightWithoutMerge(ConveyorBelt newEndBelt, Vector2Int newNextPosition, BuildingDir dir) {
+    private void SetEndBeltStraightWithoutMerge(ConveyorBelt newEndBelt, Vector2Int newNextPosition, BuildingDir dir) {
         newEndBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowStraightVisual();
         newEndBelt.transform.rotation = GetRotation(dir);
         Vector2Int rotationOffset = GetRotationOffset(dir);
@@ -359,7 +359,7 @@ public class BeltManager {
         newEndBelt.dir = dir;
     }
 
-    Quaternion GetRotation(BuildingDir dir) {
+    private Quaternion GetRotation(BuildingDir dir) {
         switch(dir) {
             default:
             case BuildingDir.Down: return Quaternion.Euler(0, 0, 0);
@@ -369,7 +369,7 @@ public class BeltManager {
         }
     }
 
-    Vector2Int GetRotationOffset(BuildingDir dir) {
+    private Vector2Int GetRotationOffset(BuildingDir dir) {
         switch(dir) {
             default:
             case BuildingDir.Down: return Vector2Int.zero;
@@ -379,7 +379,7 @@ public class BeltManager {
         }
     }
 
-    bool TryToConnectEndBeltSides(ConveyorBelt newEndBelt, Vector2Int backDirection) {
+    private bool TryToConnectEndBeltSides(ConveyorBelt newEndBelt, Vector2Int backDirection) {
         Vector2Int leftPosition = newEndBelt.origin + new Vector2Int(-backDirection.y, backDirection.x);
         Vector2Int rightPosition = newEndBelt.origin + new Vector2Int(backDirection.y, -backDirection.x);
         ConveyorBelt connectedLeftBelt = TryGetConnectingBelt(leftPosition);
@@ -398,7 +398,7 @@ public class BeltManager {
         return false;
     }
 
-    void ConnectNewEndBeltLeft(ConveyorBelt newEndBelt, ConveyorBelt connectedLeftBelt, Vector2Int leftPosition) {
+    private void ConnectNewEndBeltLeft(ConveyorBelt newEndBelt, ConveyorBelt connectedLeftBelt, Vector2Int leftPosition) {
         newEndBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowLeftVisual();
         newEndBelt.transform.rotation = GetRotation(connectedLeftBelt.dir);
         Vector2Int rotationOffset = GetRotationOffset(connectedLeftBelt.dir);
@@ -408,7 +408,7 @@ public class BeltManager {
         MergeBeltPaths(newEndBelt, connectedLeftBelt);
     }
 
-    void ConnectNewEndBeltRight(ConveyorBelt newEndBelt, ConveyorBelt connectedRightBelt, Vector2Int rightPosition) {
+    private void ConnectNewEndBeltRight(ConveyorBelt newEndBelt, ConveyorBelt connectedRightBelt, Vector2Int rightPosition) {
         newEndBelt.gameObject.GetComponent<ConveyorBeltVisualController>().ShowRightVisual();
         newEndBelt.transform.rotation = GetRotation(connectedRightBelt.dir);
         Vector2Int rotationOffset = GetRotationOffset(connectedRightBelt.dir);
@@ -430,7 +430,7 @@ public class BeltManager {
             }
         }
 
-        void ExecuteLoopActions() {
+        private void ExecuteLoopActions() {
             List<ConveyorBelt> beltsToRepeat = new();
             int beltStopIndex = beltList.Count - 2;
 
@@ -476,7 +476,7 @@ public class BeltManager {
             }
         }
 
-        void ExecuteStandardActions() {
+        private void ExecuteStandardActions() {
             beltList[^1].TakeLastBeltStandardAction();
 
             for(int i = beltList.Count - 2; i >= 0; i--) {
@@ -487,9 +487,8 @@ public class BeltManager {
 
     /* --------------- BELT DEBUG VISUAL --------------- */
 
-    class DebugVisual {
-
-        readonly List<BeltPathDebugVisual> beltPathDebugVisualList = new();
+    private class DebugVisual {
+        private readonly List<BeltPathDebugVisual> beltPathDebugVisualList = new();
 
         public DebugVisual() {
             Instance.OnBeltAdded += Instance_OnBeltAdded;
@@ -501,15 +500,15 @@ public class BeltManager {
             Instance.OnBeltRemoved -= Instance_OnBeltRemoved;
         }
 
-        void Instance_OnBeltAdded() {
+        private void Instance_OnBeltAdded() {
             RefreshVisual();
         }
 
-        void Instance_OnBeltRemoved() {
+        private void Instance_OnBeltRemoved() {
             RefreshVisual();
         }
 
-        void RefreshVisual() {
+        private void RefreshVisual() {
             foreach(BeltPathDebugVisual beltPathDebugVisual in beltPathDebugVisualList) {
                 beltPathDebugVisual.DestroySelf();
             }
@@ -524,9 +523,8 @@ public class BeltManager {
         }
     }
 
-    class BeltPathDebugVisual {
-
-        readonly Transform pathParent;
+    private class BeltPathDebugVisual {
+        private readonly Transform pathParent;
 
         public BeltPathDebugVisual(BeltPath beltPath, int pathNumber) {
             pathParent = new GameObject($"Path: {pathNumber}").transform;

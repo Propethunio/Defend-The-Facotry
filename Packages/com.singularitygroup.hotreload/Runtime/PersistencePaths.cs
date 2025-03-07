@@ -2,7 +2,7 @@
 using System.IO;
 
 namespace SingularityGroup.HotReload {
-    static class PersistencePaths {
+internal static class PersistencePaths {
         public static string GetPatchesFilePath(string basePath) {
             return Path.Combine(basePath, "CodePatcher", "patches.bin");
         }

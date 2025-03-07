@@ -90,7 +90,7 @@ namespace SingularityGroup.HotReload.Editor {
         
         public HotReloadAboutTab(HotReloadWindow window) : base(window, "Help", "_Help", "Info and support for Hot Reload for Unity.") { }
 
-        string GetRelativeDate(DateTime givenDate) {
+        private string GetRelativeDate(DateTime givenDate) {
             const int second = 1;
             const int minute = 60 * second;
             const int hour = 60 * minute;
@@ -117,7 +117,7 @@ namespace SingularityGroup.HotReload.Editor {
             return years <= 1 ? "one year ago" : years + " years ago";
         }
 
-        void RenderVersion(ChangelogVersion version) {
+        private void RenderVersion(ChangelogVersion version) {
             var tempTextString = "";
             
             //version number
@@ -166,7 +166,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        void RenderChangelog() {
+        private void RenderChangelog() {
             FetchChangelog().Forget();
             using (new EditorGUILayout.HorizontalScope(HotReloadWindowStyles.SectionInnerBoxWide)) {
                 using (new EditorGUILayout.VerticalScope()) {
@@ -198,8 +198,8 @@ namespace SingularityGroup.HotReload.Editor {
         }
         
         private Vector2 _aboutTabScrollPos;
-        
-        HotReloadAboutTabState currentState;
+
+        private HotReloadAboutTabState currentState;
         public override void OnGUI() {
             // HotReloadAboutTabState ensures rendering is consistent between Layout and Repaint calls
             // Without it errors like this happen:
@@ -241,7 +241,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        void RenderHelpButtons() {
+        private void RenderHelpButtons() {
             var labelRect = GUILayoutUtility.GetLastRect();
             using (new EditorGUILayout.HorizontalScope()) {
                 using (new EditorGUILayout.VerticalScope()) {
@@ -271,7 +271,7 @@ namespace SingularityGroup.HotReload.Editor {
             GUILayout.Space(80);
         }
 
-        void RenderLogButtons() {
+        private void RenderLogButtons() {
             if (currentState.logsFodlerExists) {
                 EditorGUILayout.Space();
                 EditorGUILayout.BeginHorizontal();

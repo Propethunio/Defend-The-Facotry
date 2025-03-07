@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Merger : LogisticMachine<BaseBuildableObjectSO> {
-
-    ConveyorBelt outputBelt;
-    List<WorldItem> newItems = new();
-    Dictionary<LogisticDir, ConveyorBelt> inputBelts = new();
-    Dictionary<LogisticDir, Vector2Int> inputPositions = new();
+    private ConveyorBelt outputBelt;
+    private List<WorldItem> newItems = new();
+    private Dictionary<LogisticDir, ConveyorBelt> inputBelts = new();
+    private Dictionary<LogisticDir, Vector2Int> inputPositions = new();
 
     public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
@@ -28,7 +27,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         SetupOutputBelt(nextPosition);
     }
 
-    void SetupInputBelt(Vector2Int position, LogisticDir logisticDir) {
+    private void SetupInputBelt(Vector2Int position, LogisticDir logisticDir) {
         inputBelts[logisticDir] = null;
 
         if(!IsPositionValid(position)) return;
@@ -43,7 +42,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         }
     }
 
-    void HandleGridObjectChange(LogisticDir dir) {
+    private void HandleGridObjectChange(LogisticDir dir) {
         Vector2Int position = inputPositions[dir];
 
         if(ShouldSnap(position, out ConveyorBelt belt)) {
@@ -53,7 +52,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         }
     }
 
-    void SetupOutputBelt(Vector2Int position) {
+    private void SetupOutputBelt(Vector2Int position) {
         if(!IsPositionValid(position)) return;
 
         Action action = () => HandleGridObjectChange(position);
@@ -65,7 +64,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         }
     }
 
-    void HandleGridObjectChange(Vector2Int position) {
+    private void HandleGridObjectChange(Vector2Int position) {
         if(ShouldSnapBack(position, out ConveyorBelt belt)) {
             outputBelt = belt;
         } else {

@@ -440,8 +440,8 @@ namespace SingularityGroup.HotReload.JsonConverters {
             }
             writer.WriteEndArray();
         }
-        
-        void WriteSMethod(JsonWriter writer, SMethod method) {
+
+        private void WriteSMethod(JsonWriter writer, SMethod method) {
             writer.WriteStartObject();
             
             writer.WritePropertyName(nameof(method.assemblyName));
@@ -475,7 +475,7 @@ namespace SingularityGroup.HotReload.JsonConverters {
             writer.WriteEndObject();
         }
 
-        void WriteSType(JsonWriter writer, SType type) {
+        private void WriteSType(JsonWriter writer, SType type) {
             writer.WriteStartObject();
             
             writer.WritePropertyName(nameof(type.assemblyName));

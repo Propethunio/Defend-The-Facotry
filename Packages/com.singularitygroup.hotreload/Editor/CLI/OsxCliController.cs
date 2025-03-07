@@ -6,8 +6,8 @@ using SingularityGroup.HotReload.Editor.Semver;
 using Debug = UnityEngine.Debug;
 
 namespace SingularityGroup.HotReload.Editor.Cli {
-    class OsxCliController : ICliController {
-        Process process;
+internal class OsxCliController : ICliController {
+    private Process process;
 
         public string BinaryFileName => "HotReload.app.zip";
         public string PlatformName => "osx-x64";
@@ -138,7 +138,7 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             CliUtils.KillLastKnownHotReloadProcess();
         }
 
-        static void UnzipMacOsPackage(string zipPath, string unzippedFolderPath) {
+        private static void UnzipMacOsPackage(string zipPath, string unzippedFolderPath) {
             //Log.Info("UnzipMacOsPackage called with {0}\n workingDirectory = {1}", zipPath, unzippedFolderPath);
             if (!zipPath.EndsWith(".zip")) {
                 throw new ArgumentException($"Expected to end with .zip, but it was: {zipPath}", nameof(zipPath));

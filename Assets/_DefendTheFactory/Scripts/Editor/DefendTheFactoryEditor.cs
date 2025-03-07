@@ -20,7 +20,7 @@ public class DefendTheFactoryEditor : OdinMenuEditorWindow {
     private BaseBuildableObjectSO selectedObject;
 
     [MenuItem("Tools/DTF Editor")]
-    static void OpenEditor() => GetWindow<DefendTheFactoryEditor>().Show();
+    private static void OpenEditor() => GetWindow<DefendTheFactoryEditor>().Show();
 
     protected override void OnImGUI() {
         selectedMainTab = GUILayout.Toolbar(selectedMainTab, mainTabs, GUILayout.Height(34));
@@ -91,7 +91,7 @@ public class DefendTheFactoryEditor : OdinMenuEditorWindow {
         }
     }
 
-    void DeleteCurrentObject() {
+    private void DeleteCurrentObject() {
         string path = AssetDatabase.GetAssetPath(selectedObject);
         AssetDatabase.DeleteAsset(path);
         AssetDatabase.SaveAssets();

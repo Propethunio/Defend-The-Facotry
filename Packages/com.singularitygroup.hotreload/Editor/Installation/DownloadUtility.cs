@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using SingularityGroup.HotReload.Editor.Cli;
 
 namespace SingularityGroup.HotReload.Editor {
-    static class DownloadUtility {
-        const string baseUrl = "https://cdn.hotreload.net";
+internal static class DownloadUtility {
+    private const string baseUrl = "https://cdn.hotreload.net";
         
         public static async Task<DownloadResult> DownloadFile(string url, string targetFilePath, IProgress<float> progress, CancellationToken cancellationToken) {
             var tmpDir = Path.GetDirectoryName(targetFilePath);
@@ -61,8 +61,8 @@ namespace SingularityGroup.HotReload.Editor {
                 }
             }
         }
-        
-        static async Task CopyToAsync(this Stream source, Stream destination, int bufferSize, IProgress<long> progress, CancellationToken cancellationToken) {
+
+        private static async Task CopyToAsync(this Stream source, Stream destination, int bufferSize, IProgress<long> progress, CancellationToken cancellationToken) {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (!source.CanRead)

@@ -2,16 +2,15 @@
 using UtilsClass;
 
 public class GameManager : MonoBehaviour {
+    [SerializeField] private int width;
+    [SerializeField] private int height;
+    [SerializeField] private bool showBeltDebug;
 
-    [SerializeField] int width;
-    [SerializeField] int height;
-    [SerializeField] bool showBeltDebug;
-
-    void Awake() {
+    private void Awake() {
         new ItemsManager();
     }
 
-    void Start() {
+    private void Start() {
         new BuildingSystem(width, height);
         new BeltManager(showBeltDebug);
         MouseClickPlane.Instance.Setup(width, height);
@@ -19,27 +18,23 @@ public class GameManager : MonoBehaviour {
         TimeTickSystem.Instance.SetIsTicking(true);
     }
 
-    void Update() {
+    private void Update() {
         HandleDebugSpawnItem();
         HandleDebugDeleteBuilding();
     }
 
-    void HandleDebugSpawnItem() {
-        if(Input.GetKeyDown(KeyCode.I)) {
-            BasePlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
-            if(placedObject != null && placedObject is ConveyorBelt) {
-                ConveyorBelt belt = placedObject as ConveyorBelt;
+    private void HandleDebugSpawnItem() {
+        if (!Input.GetKeyDown(KeyCode.I)) return;
 
-                if(belt.startItem == null) {
-                    WorldItem worldItem = WorldItem.Create(belt.origin, belt.dir, GameAssets.i.itemSO_Refs.ironOre);
-                    belt.TrySetWorldItem(worldItem);
-                }
-            }
-        }
+        BasePlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
+        if (!placedObject || placedObject is not ConveyorBelt belt || belt.startItem) return;
+
+        WorldItem worldItem = WorldItem.Create(belt.origin, belt.dir, GameAssets.i.itemSO_Refs.ironOre);
+        belt.TrySetWorldItem(worldItem);
     }
 
-    void HandleDebugDeleteBuilding() {
-        if(Input.GetMouseButtonDown(1) && !MyUtils.IsPointerOverUI()) {
+    private void HandleDebugDeleteBuilding() {
+        if (Input.GetMouseButtonDown(1) && !MyUtils.IsPointerOverUI()) {
             BuildingSystem.Instance.HandleDemolish();
         }
     }

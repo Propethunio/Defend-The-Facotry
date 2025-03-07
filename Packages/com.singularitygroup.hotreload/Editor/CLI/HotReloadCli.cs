@@ -58,14 +58,14 @@ namespace SingularityGroup.HotReload.Editor.Cli {
         public static Task StopAsync() {
             return controller.Stop();
         }
-        
-        class Config {
+
+        private class Config {
 #pragma warning disable CS0649
             public bool useBuiltInProjectGeneration;
 #pragma warning restore CS0649
         }
-        
-        static bool TryGetStartArgs(string dataPath, bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, LoginData loginData, int port, out StartArgs args) {
+
+        private static bool TryGetStartArgs(string dataPath, bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, LoginData loginData, int port, out StartArgs args) {
             string serverDir;
             if(!CliUtils.TryFindServerDir(out serverDir)) {
                 Log.Warning($"Failed to start the Hot Reload Server. " +
@@ -176,9 +176,8 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             }
 #endif
         }
-        
-        
-        static async Task<int> Prepare() {
+
+        private static async Task<int> Prepare() {
             await ThreadUtility.SwitchToMainThread();
             
             var dataPath = UnityHelper.DataPath;
@@ -192,7 +191,7 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             return port;
         }
 
-        static bool didLogWarning;
+        private static bool didLogWarning;
         internal static async Task PrepareBuildInfoAsync() {
             await ThreadUtility.SwitchToMainThread();
             var buildInfoInput = await BuildInfoHelper.GetGenerateBuildInfoInput();
@@ -220,8 +219,8 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             Directory.CreateDirectory(cliTempDir);
             File.WriteAllText(Path.Combine(cliTempDir, "playerdata.json"), json);
         }
-        
-        static void PrepareSystemPathsFile() {
+
+        private static void PrepareSystemPathsFile() {
 #pragma warning disable CS0618 // obsolete since 2023
             var lvl = PlayerSettings.GetApiCompatibilityLevel(EditorUserBuildSettings.selectedBuildTargetGroup);
 #pragma warning restore CS0618

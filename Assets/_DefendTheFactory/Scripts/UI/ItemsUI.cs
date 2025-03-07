@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class ItemsUI : MonoBehaviour {
 
-    [SerializeField] SingleItemUI itemPrefab;
+    [SerializeField] private SingleItemUI itemPrefab;
 
-    void Start() {
+    private void Start() {
         ItemsManager.Instance.ItemCreated += OnItemCreated;
     }
 
-    void OnDestroy() {
+    private void OnDestroy() {
         ItemsManager.Instance.ItemCreated -= OnItemCreated;
     }
 
-    void OnItemCreated(ItemSO item) {
+    private void OnItemCreated(ItemSO item) {
         Instantiate(itemPrefab, transform).Init(item);
     }
 }

@@ -21,14 +21,14 @@ using System.Reflection;
 #endif
 
 namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
-    class ProjectGeneration {
+internal class ProjectGeneration {
         private enum ScriptingLanguage {
             None,
             CSharp
         }
 
         [Serializable]
-        class Config {
+        private class Config {
             public string projectExclusionRegex;
             public HashSet<string> projectBlacklist;
             public HashSet<string> polyfillSourceFiles;
@@ -215,7 +215,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
             return k_BuiltinSupportedExtensions.ContainsKey(extension) || m_ProjectSupportedExtensions.Contains(extension);
         }
 
-        async Task GenerateAndWriteSolutionAndProjects(Config config) {
+        private async Task GenerateAndWriteSolutionAndProjects(Config config) {
             await ThreadUtility.SwitchToThreadPool();
             
             var projectExclusionRegex = config.projectExclusionRegex != null ? new Regex(config.projectExclusionRegex, RegexOptions.Compiled | RegexOptions.Singleline) : null;
@@ -430,7 +430,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
             }
         }
 
-        string[] RetrieveRoslynAnalyzers(ProjectPart assembly, ILookup<string, string> otherResponseFilesData) {
+        private string[] RetrieveRoslynAnalyzers(ProjectPart assembly, ILookup<string, string> otherResponseFilesData) {
             var otherAnalyzers = otherResponseFilesData["a"] ?? Array.Empty<string>();
         #if UNITY_2020_2_OR_NEWER
               return otherResponseFilesData["analyzer"].Concat(otherAnalyzers)
@@ -811,7 +811,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
             return null;
         }
 
-        async Task BuildPackageInfoCache() {
+        private async Task BuildPackageInfoCache() {
 #if UNITY_2019_4_OR_NEWER
             m_PackageInfoCache.Clear();
             var parentAssetPaths = new HashSet<string>();
@@ -839,7 +839,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
 #endif
         }
 
-        async Task BuildPostProcessors() {
+        private async Task BuildPostProcessors() {
 #if UNITY_2019_1_OR_NEWER
             var types = TypeCache.GetTypesDerivedFrom<IHotReloadProjectGenerationPostProcessor>();
             m_PostProcessors = await Task.Run(() => {

@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SingularityGroup.HotReload.Editor.Demo {
-    class EditorDemo : IDemo {
+internal class EditorDemo : IDemo {
         public bool IsServerRunning() {
             return ServerHealthCheck.I.IsServerHealthy;
         }

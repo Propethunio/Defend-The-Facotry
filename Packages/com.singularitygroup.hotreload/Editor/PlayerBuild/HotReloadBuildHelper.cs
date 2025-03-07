@@ -54,7 +54,7 @@ namespace SingularityGroup.HotReload.Editor {
         
         /// Are all the settings supported?
         /// main thread only
-        static bool IsAllBuildSettingsSupported() {
+        private static bool IsAllBuildSettingsSupported() {
             if (!IsBuildTargetSupported()) {
                 return false;
             }

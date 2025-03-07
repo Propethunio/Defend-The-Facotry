@@ -3,10 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class TestButton : MonoBehaviour {
+    [SerializeField] private BaseBuildableObjectSO obj;
 
-    [SerializeField] BaseBuildableObjectSO obj;
-
-    void Start() {
+    private void Start() {
         GetComponentInChildren<TMP_Text>().text = obj.nameString;
         GetComponent<Button>().onClick.AddListener(() => BuildingSystem.Instance.Test(obj));
     }

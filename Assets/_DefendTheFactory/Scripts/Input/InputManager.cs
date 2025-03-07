@@ -15,9 +15,9 @@ public class InputManager : MonoBehaviour {
     public event Action backClickAction, buildingMenuAction, buildingRotationAction;
     public event Action<int> timeChangeAction;
 
-    InputMap input;
+    private InputMap input;
 
-    void Awake() {
+    private void Awake() {
         if(Instance == null) Instance = this;
         else Destroy(gameObject);
 
@@ -36,7 +36,7 @@ public class InputManager : MonoBehaviour {
         input.GameInput.Enable();
     }
 
-    void SubscribeEvents() {
+    private void SubscribeEvents() {
         input.GameInput.CameraMovement.performed += CameraMovement_performed;
         input.GameInput.CameraMovement.canceled += CameraMovement_canceled;
         input.GameInput.CameraRotation.performed += CameraRotation_performed;
@@ -58,79 +58,79 @@ public class InputManager : MonoBehaviour {
         input.GameInput.BuildingRotation.performed += BuildingRotation_performed;
     }
 
-    void CameraMovement_performed(InputAction.CallbackContext obj) {
+    private void CameraMovement_performed(InputAction.CallbackContext obj) {
         moveDir = obj.ReadValue<Vector2>();
     }
 
-    void CameraMovement_canceled(InputAction.CallbackContext obj) {
+    private void CameraMovement_canceled(InputAction.CallbackContext obj) {
         moveDir = Vector2.zero;
     }
 
-    void CameraRotation_performed(InputAction.CallbackContext obj) {
+    private void CameraRotation_performed(InputAction.CallbackContext obj) {
         rotationDir = obj.ReadValue<float>();
     }
 
-    void CameraRotation_canceled(InputAction.CallbackContext obj) {
+    private void CameraRotation_canceled(InputAction.CallbackContext obj) {
         rotationDir = 0f;
     }
 
-    void CameraZoom_performed(InputAction.CallbackContext obj) {
+    private void CameraZoom_performed(InputAction.CallbackContext obj) {
         zoomDir = obj.ReadValue<float>();
     }
 
-    void CameraZoom_canceled(InputAction.CallbackContext obj) {
+    private void CameraZoom_canceled(InputAction.CallbackContext obj) {
         zoomDir = 0f;
     }
 
-    void PointerPosition_performed(InputAction.CallbackContext obj) {
+    private void PointerPosition_performed(InputAction.CallbackContext obj) {
         mousePos = obj.ReadValue<Vector2>();
     }
 
-    void LeftClick_performed(InputAction.CallbackContext obj) {
+    private void LeftClick_performed(InputAction.CallbackContext obj) {
         leftClickAction?.Invoke();
     }
 
-    void RightClick_performed(InputAction.CallbackContext obj) {
+    private void RightClick_performed(InputAction.CallbackContext obj) {
         rightClickPerformedAction?.Invoke();
     }
 
-    void RightClick_canceled(InputAction.CallbackContext obj) {
+    private void RightClick_canceled(InputAction.CallbackContext obj) {
         rightClickCanceledAction?.Invoke();
     }
 
-    void ScrollClick_performed(InputAction.CallbackContext obj) {
+    private void ScrollClick_performed(InputAction.CallbackContext obj) {
         scrollClickPerformedAction?.Invoke();
     }
 
-    void ScrollClick_canceled(InputAction.CallbackContext obj) {
+    private void ScrollClick_canceled(InputAction.CallbackContext obj) {
         scrollClickCanceledAction?.Invoke();
     }
 
-    void Pouse_performed(InputAction.CallbackContext obj) {
+    private void Pouse_performed(InputAction.CallbackContext obj) {
         timeChangeAction?.Invoke(0);
     }
 
-    void TimeNormal_performed(InputAction.CallbackContext obj) {
+    private void TimeNormal_performed(InputAction.CallbackContext obj) {
         timeChangeAction?.Invoke(1);
     }
 
-    void TimeFast_performed(InputAction.CallbackContext obj) {
+    private void TimeFast_performed(InputAction.CallbackContext obj) {
         timeChangeAction?.Invoke(2);
     }
 
-    void TimeExtraFast_performed(InputAction.CallbackContext obj) {
+    private void TimeExtraFast_performed(InputAction.CallbackContext obj) {
         timeChangeAction?.Invoke(3);
     }
 
-    void Back_performed(InputAction.CallbackContext obj) {
+    private void Back_performed(InputAction.CallbackContext obj) {
         backClickAction?.Invoke();
     }
 
-    void BuildingMenu_performed(InputAction.CallbackContext obj) {
+    private void BuildingMenu_performed(InputAction.CallbackContext obj) {
         buildingMenuAction?.Invoke();
     }
 
-    void BuildingRotation_performed(InputAction.CallbackContext obj) {
+    private void BuildingRotation_performed(InputAction.CallbackContext obj) {
         buildingRotationAction?.Invoke();
     }
 }

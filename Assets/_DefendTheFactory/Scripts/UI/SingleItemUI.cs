@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 public class SingleItemUI : MonoBehaviour {
 
-    [SerializeField] Image icon;
-    [SerializeField] TMP_Text amountText;
+    [SerializeField] private Image icon;
+    [SerializeField] private TMP_Text amountText;
 
-    ItemSO item;
+    private ItemSO item;
 
-    void OnDestroy() {
+    private void OnDestroy() {
         ItemsManager.Instance.ItemChanged -= OnItemChanged;
     }
 
@@ -19,7 +19,7 @@ public class SingleItemUI : MonoBehaviour {
         this.item = item;
     }
 
-    void OnItemChanged(ItemSO item, int amount) {
+    private void OnItemChanged(ItemSO item, int amount) {
         if(this.item != item) return;
 
         amountText.text = amount.ToString();

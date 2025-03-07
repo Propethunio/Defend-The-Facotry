@@ -17,7 +17,7 @@ namespace SingularityGroup.HotReload.Editor.ProjectGeneration
       return "FAE04EC0-301F-11D3-BF4B-00C04F79EFBC";
     }
 
-    static string ComputeGuidHashFor(string input)
+    private static string ComputeGuidHashFor(string input)
     {
       using (var md5 = MD5.Create())
       {

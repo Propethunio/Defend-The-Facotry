@@ -19,12 +19,12 @@ namespace SingularityGroup.HotReload.Editor {
     // On newer Unity versions, Visual Studio is also checking the kAutoRefresh setting (but it should only check kAutoRefreshMode).
     // This is making hot reload unusable and so this setting needs to also get disabled.
     internal static class AutoRefreshSettingChecker {
-        const string autoRefreshKey = "kAutoRefresh";
+        private const string autoRefreshKey = "kAutoRefresh";
         #if UNITY_2021_3_OR_NEWER
-        const string autoRefreshModeKey = "kAutoRefreshMode";
+        private const string autoRefreshModeKey = "kAutoRefreshMode";
         #endif
-        
-        const int desiredValue = 0;
+
+        private const int desiredValue = 0;
 
         public static void Apply() {
             if (HotReloadPrefs.AppliedAutoRefresh) {
@@ -86,10 +86,11 @@ namespace SingularityGroup.HotReload.Editor {
     }
     
     internal static class ScriptCompilationSettingChecker {
-        const string scriptCompilationKey = "ScriptCompilationDuringPlay";
-        
-        const int recompileAndContinuePlaying = 0;
-        static int? recompileAfterFinishedPlaying = (int?)typeof(EditorWindow).Assembly.GetType("UnityEditor.ScriptChangesDuringPlayOptions")?
+        private const string scriptCompilationKey = "ScriptCompilationDuringPlay";
+
+        private const int recompileAndContinuePlaying = 0;
+
+        private static int? recompileAfterFinishedPlaying = (int?)typeof(EditorWindow).Assembly.GetType("UnityEditor.ScriptChangesDuringPlayOptions")?
             .GetField("RecompileAfterFinishedPlaying", BindingFlags.Static | BindingFlags.Public)?
             .GetValue(null);
 
@@ -127,8 +128,8 @@ namespace SingularityGroup.HotReload.Editor {
             
             HotReloadPrefs.AppliedScriptCompilation = false;
         }
-        
-        static int GetRecommendedAutoScriptCompilationKey() {
+
+        private static int GetRecommendedAutoScriptCompilationKey() {
             // In some projects due to an unknown reason both "RecompileAndContinuePlaying" and "StopPlayingAndRecompile" cause issues
             // We were unable to identify the cause and therefore we always try to default to "RecompileAfterFinishedPlaying"
             // The exact issue users are experiencing is that domain reload happens shortly after entering play mode causing nullrefs
@@ -201,8 +202,8 @@ namespace SingularityGroup.HotReload.Editor {
     }
     
     internal static class CompileMethodDetourer {
-        static bool detouredMethod;
-        static List<IDisposable> reverters = new List<IDisposable>();
+        private static bool detouredMethod;
+        private static List<IDisposable> reverters = new List<IDisposable>();
 
         public static void Apply() {
             if (detouredMethod) {
@@ -226,7 +227,7 @@ namespace SingularityGroup.HotReload.Editor {
             DetourMethod(originCompilation, targetCompilation);
         }
 
-        static void DetourMethod(MethodBase original, MethodBase replacement) {
+        private static void DetourMethod(MethodBase original, MethodBase replacement) {
             DetourResult result;
             DetourApi.DetourMethod(original, replacement, out result);
 

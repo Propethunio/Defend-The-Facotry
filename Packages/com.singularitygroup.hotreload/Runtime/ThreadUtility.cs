@@ -8,7 +8,7 @@ namespace SingularityGroup.HotReload {
 #if UNITY_EDITOR
     [UnityEditor.InitializeOnLoad]
 #endif
-    static class ThreadUtility {
+    internal static class ThreadUtility {
         /// <summary>
         /// Run code on Unity's main thread
         /// </summary>
@@ -16,7 +16,7 @@ namespace SingularityGroup.HotReload {
         /// This field is set early in [InitializeOnLoadMethod] in the editor and [RuntimeInitializeOnLoad] in playmode / for player builds, so your code assume it is already set.
         /// </remarks>
 #if UNITY_EDITOR
-        static SynchronizationContext _cachedMainContext;
+        private static SynchronizationContext _cachedMainContext;
         public static SynchronizationContext MainContext
         {
             get {
@@ -29,10 +29,10 @@ namespace SingularityGroup.HotReload {
                 _cachedMainContext = value;
             }
         }
-        
-        class EditorFallbackContext : SynchronizationContext {
+
+        private class EditorFallbackContext : SynchronizationContext {
             public static readonly EditorFallbackContext I = new EditorFallbackContext();
-            EditorFallbackContext() { }
+            private EditorFallbackContext() { }
             
             public override void Send(SendOrPostCallback d, object state) {
                 UnityEditor.EditorApplication.delayCall += () => d(state);
@@ -107,12 +107,12 @@ namespace SingularityGroup.HotReload {
             return new CancellableSwitchToThreadPoolAwaitable(token);
         }
     }
-    
-    struct SwitchToMainThreadAwaitable {
+
+    internal struct SwitchToMainThreadAwaitable {
         public Awaiter GetAwaiter() => new Awaiter();
 
         public struct Awaiter : ICriticalNotifyCompletion {
-            static readonly SendOrPostCallback switchToCallback = Callback;
+            private static readonly SendOrPostCallback switchToCallback = Callback;
             
             public bool IsCompleted => Thread.CurrentThread.ManagedThreadId == ThreadUtility.mainThreadId;
 
@@ -125,17 +125,16 @@ namespace SingularityGroup.HotReload {
             public void UnsafeOnCompleted(Action continuation) {
                 ThreadUtility.MainContext.Post(switchToCallback, continuation);
             }
-            
-            static void Callback(object state) {
+
+            private static void Callback(object state) {
                 var continuation = (Action)state;
                 continuation();
             }
         }
     }
 
-
-    struct CancellableSwitchToMainThreadAwaitable {
-        readonly CancellationToken token;
+    internal struct CancellableSwitchToMainThreadAwaitable {
+        private readonly CancellationToken token;
         public CancellableSwitchToMainThreadAwaitable(CancellationToken token) {
             this.token = token;
         }
@@ -143,7 +142,7 @@ namespace SingularityGroup.HotReload {
         public Awaiter GetAwaiter() => new Awaiter(token);
 
         public struct Awaiter : ICriticalNotifyCompletion {
-            readonly CancellationToken token;
+            private readonly CancellationToken token;
             public Awaiter(CancellationToken token) {
                 this.token = token;
             }
@@ -166,9 +165,9 @@ namespace SingularityGroup.HotReload {
             }
         }
     }
-    
-    struct CancellableSwitchToThreadPoolAwaitable {
-        readonly CancellationToken token;
+
+    internal struct CancellableSwitchToThreadPoolAwaitable {
+        private readonly CancellationToken token;
         public CancellableSwitchToThreadPoolAwaitable(CancellationToken token) {
             this.token = token;
         }
@@ -176,7 +175,7 @@ namespace SingularityGroup.HotReload {
         public Awaiter GetAwaiter() => new Awaiter(token);
 
         public struct Awaiter : ICriticalNotifyCompletion {
-            readonly CancellationToken token;
+            private readonly CancellationToken token;
             public Awaiter(CancellationToken token) {
                 this.token = token;
             }
@@ -191,19 +190,19 @@ namespace SingularityGroup.HotReload {
                 ThreadPool.UnsafeQueueUserWorkItem(Callback, continuation);
             }
 
-            void Callback(object state) {
+            private void Callback(object state) {
                 token.ThrowIfCancellationRequested();
                 var continuation = (Action)state;
                 continuation();
             }
         }
     }
-     
-    struct SwitchToThreadPoolAwaitable {
+
+    internal struct SwitchToThreadPoolAwaitable {
         public Awaiter GetAwaiter() => new Awaiter();
 
         public struct Awaiter : ICriticalNotifyCompletion {
-            static readonly WaitCallback switchToCallback = Callback;
+            private static readonly WaitCallback switchToCallback = Callback;
 
             public bool IsCompleted => false;
             public void GetResult() { }
@@ -216,7 +215,7 @@ namespace SingularityGroup.HotReload {
                 ThreadPool.UnsafeQueueUserWorkItem(switchToCallback, continuation);
             }
 
-            static void Callback(object state) {
+            private static void Callback(object state) {
                 var continuation = (Action)state;
                 continuation();
             }

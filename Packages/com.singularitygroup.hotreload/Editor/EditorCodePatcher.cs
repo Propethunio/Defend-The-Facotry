@@ -33,17 +33,17 @@ namespace SingularityGroup.HotReload.Editor {
     
     [InitializeOnLoad]
     internal static class EditorCodePatcher {
-        const string sessionFilePath = PackageConst.LibraryCachePath + "/sessionId.txt";
-        const string patchesFilePath = PackageConst.LibraryCachePath + "/patches.json";
+        private const string sessionFilePath = PackageConst.LibraryCachePath + "/sessionId.txt";
+        private const string patchesFilePath = PackageConst.LibraryCachePath + "/patches.json";
         
         internal static readonly ServerDownloader serverDownloader;
         internal static bool _compileError;
         internal static bool _applyingFailed;
         internal static bool _appliedPartially;
         internal static bool _appliedUndetected;
-        
-        static Timer timer; 
-        static bool init;
+
+        private static Timer timer;
+        private static bool init;
 
         internal static UnityLicenseType licenseType { get; private set; }
         internal static bool LoginNotRequired => PackageConst.IsAssetStoreBuild && licenseType != UnityLicenseType.UnityPro;
@@ -57,7 +57,7 @@ namespace SingularityGroup.HotReload.Editor {
         internal static Config config;
 
         internal static ICompileChecker compileChecker;
-        static bool quitting;
+        private static bool quitting;
         static EditorCodePatcher() {
             if(init) {
                 //Avoid infinite recursion in case the static constructor gets accessed via `InitPatchesBlocked` below
@@ -158,7 +158,8 @@ namespace SingularityGroup.HotReload.Editor {
         }
 
         public static bool autoRecompileUnsupportedChangesSupported;
-        static void AddEditorFocusChangedHandler(Action<bool> handler) {
+
+        private static void AddEditorFocusChangedHandler(Action<bool> handler) {
             var eventInfo = typeof(EditorApplication).GetEvent("focusChanged", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
             var addMethod = eventInfo?.GetAddMethod(true) ?? eventInfo?.GetAddMethod(false);
             if (addMethod != null) {
@@ -294,7 +295,7 @@ namespace SingularityGroup.HotReload.Editor {
             RequestHelper.SetServerInfo(new PatchServerInfo(RequestHelper.defaultServerHost, HotReloadState.ServerPort, null, Path.GetFullPath(".")));
         }
 
-        static void OnIntervalThreaded(object o) {
+        private static void OnIntervalThreaded(object o) {
             ServerHealthCheck.instance.CheckHealth();
             ThreadUtility.RunOnMainThread((Action)o);
             if (serverDownloader.Progress >= 1f) {
@@ -321,8 +322,8 @@ namespace SingularityGroup.HotReload.Editor {
             await FlushErrors();
             _lastErrorFlush = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         }
-        
-        static async Task FlushErrors() {
+
+        private static async Task FlushErrors() {
             var response = await RequestHelper.RequestFlushErrors();
             if (response == null) {
                 return;
@@ -345,7 +346,8 @@ namespace SingularityGroup.HotReload.Editor {
         }
         
         internal static bool firstPatchAttempted;
-        static void OnIntervalMainThread() {
+
+        private static void OnIntervalMainThread() {
             HotReloadSuggestionsHelper.Check();
             
             // Moved from RequestServerInfo to avoid GC allocations when HR is not active
@@ -402,7 +404,7 @@ namespace SingularityGroup.HotReload.Editor {
             CheckEditorSettings();
         }
 
-        static void CheckEditorSettings() {
+        private static void CheckEditorSettings() {
             if (quitting) {
                 return;
             }
@@ -412,7 +414,7 @@ namespace SingularityGroup.HotReload.Editor {
             CheckAssetDatabaseRefresh();
         }
 
-        static void CheckAutoRefresh() {
+        private static void CheckAutoRefresh() {
             if (HotReloadPrefs.AllowDisableUnityAutoRefresh && ServerHealthCheck.I.IsServerHealthy) {
                 AutoRefreshSettingChecker.Apply();
                 AutoRefreshSettingChecker.Check();
@@ -420,8 +422,8 @@ namespace SingularityGroup.HotReload.Editor {
                 AutoRefreshSettingChecker.Reset();
             }
         }
-        
-        static void CheckScriptCompilation() {
+
+        private static void CheckScriptCompilation() {
             if (HotReloadPrefs.AllowDisableUnityAutoRefresh && ServerHealthCheck.I.IsServerHealthy) {
                 ScriptCompilationSettingChecker.Apply();
                 ScriptCompilationSettingChecker.Check();
@@ -429,8 +431,8 @@ namespace SingularityGroup.HotReload.Editor {
                 ScriptCompilationSettingChecker.Reset();
             }
         }
-        
-        static string[] assetExtensionBlacklist = new[] {
+
+        private static string[] assetExtensionBlacklist = new[] {
             ".cs",
             // TODO add setting to allow scenes to get hot reloaded for users who collaborate (their scenes change externally)
             ".unity",
@@ -462,8 +464,8 @@ namespace SingularityGroup.HotReload.Editor {
             ".a",
             ".java"
         };
-        
-        static void HandleAssetChange(string assetPath) {
+
+        private static void HandleAssetChange(string assetPath) {
             // ignore directories
             if (Directory.Exists(assetPath)) {
                 return;
@@ -532,8 +534,8 @@ namespace SingularityGroup.HotReload.Editor {
             Uri folderUri = new Uri(folder);
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
         }
-        
-        static void CheckPlaymodeTint() {
+
+        private static void CheckPlaymodeTint() {
             if (config.changePlaymodeTint && ServerHealthCheck.I.IsServerHealthy && Application.isPlaying) {
                 PlaymodeTintSettingChecker.Apply();
                 PlaymodeTintSettingChecker.Check();
@@ -541,8 +543,8 @@ namespace SingularityGroup.HotReload.Editor {
                 PlaymodeTintSettingChecker.Reset();
             }
         }
-        
-        static void CheckAssetDatabaseRefresh() {
+
+        private static void CheckAssetDatabaseRefresh() {
             if (config.disableCompilingFromEditorScripts && ServerHealthCheck.I.IsServerHealthy) {
                 CompileMethodDetourer.Apply();
             } else {
@@ -550,7 +552,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        static void HandleResponseReceived(MethodPatchResponse response) {
+        private static void HandleResponseReceived(MethodPatchResponse response) {
             HandleRemovedUnityMethods(response.removedMethod);
             
             RegisterPatchesResult patchResult = null;
@@ -636,8 +638,8 @@ namespace SingularityGroup.HotReload.Editor {
             HotReloadState.LastPatchId = response.id;
             OnPatchHandled?.Invoke();
         }
-        
-        static string GetExtendedMethodName(SMethod method) {
+
+        private static string GetExtendedMethodName(SMethod method) {
             var colonIndex = method.displayName.IndexOf("::", StringComparison.Ordinal);
             if (colonIndex > 0) {
                 var beforeColon = method.displayName.Substring(0, colonIndex);
@@ -650,7 +652,7 @@ namespace SingularityGroup.HotReload.Editor {
             return method.simpleName;
         }
 
-        static string GetMethodName(SMethod method) {
+        private static string GetMethodName(SMethod method) {
             var spaceIndex = method.displayName.IndexOf(" ", StringComparison.Ordinal);
             if (spaceIndex > 0) {
                 return method.displayName.Substring(spaceIndex);
@@ -658,8 +660,7 @@ namespace SingularityGroup.HotReload.Editor {
             return method.displayName;
         }
 
-
-        static void HandleRemovedUnityMethods(SMethod[] removedMethods) {
+        private static void HandleRemovedUnityMethods(SMethod[] removedMethods) {
             if (removedMethods == null) {
                 return;
             }
@@ -677,7 +678,7 @@ namespace SingularityGroup.HotReload.Editor {
         }
         
         [Conditional("UNITY_2022_2_OR_NEWER")]
-        static void LogBurstHint(MethodPatchResponse response) {
+        private static void LogBurstHint(MethodPatchResponse response) {
             if(HotReloadPrefs.LoggedBurstHint) {
                 return;
             }
@@ -693,7 +694,8 @@ namespace SingularityGroup.HotReload.Editor {
         }
 
         private static DateTime? startWaitingForCompile;
-        static void OnCompilationFinished() {
+
+        private static void OnCompilationFinished() {
             ServerHealthCheck.instance.CheckHealth();
             if(ServerHealthCheck.I.IsServerHealthy) {
                 startWaitingForCompile = DateTime.UtcNow;
@@ -704,8 +706,9 @@ namespace SingularityGroup.HotReload.Editor {
             HotReloadTimelineHelper.ClearPersistance();
         }
 
-        static bool requestingCompile;
-        static async Task RequestCompile() {
+        private static bool requestingCompile;
+
+        private static async Task RequestCompile() {
             requestingCompile = true;
             try {
                 await RequestHelper.RequestClearPatches();

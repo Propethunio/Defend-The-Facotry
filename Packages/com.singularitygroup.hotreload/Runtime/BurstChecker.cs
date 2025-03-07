@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Reflection;
 
 namespace SingularityGroup.HotReload {
-    static class BurstChecker {
+internal static class BurstChecker {
         //Use names instead of the types directly for compat with older unity versions
-        const string whitelistAttrName = "BurstCompileAttribute";
-        const string blacklistAttrName = "BurstDiscardAttribute";
+        private const string whitelistAttrName = "BurstCompileAttribute";
+        private const string blacklistAttrName = "BurstDiscardAttribute";
         
         public static bool IsBurstCompiled(MethodBase method) {
             //blacklist has precedence over whitelist
@@ -27,8 +27,8 @@ namespace SingularityGroup.HotReload {
             //No matching attributes
             return false;
         }
-        
-        static bool HasAttr(IEnumerable<Attribute> attributes, string name) {
+
+        private static bool HasAttr(IEnumerable<Attribute> attributes, string name) {
             foreach (var attr in attributes) {
                 if(attr.GetType().Name == name) {
                     return true;

@@ -23,7 +23,7 @@ namespace SingularityGroup.HotReload {
     /// </para>
     /// </remarks>
     [Serializable]
-    class BuildInfo {
+    internal class BuildInfo {
         /// <summary>
         /// Uniquely identifies the Unity project.
         /// </summary>

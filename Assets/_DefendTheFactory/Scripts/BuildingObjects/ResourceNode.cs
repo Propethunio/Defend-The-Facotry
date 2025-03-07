@@ -5,7 +5,7 @@ public class ResourceNode : BaseDataPlacedObject<ResourceNodeSO> {
 
     public event Action<ResourceNode> NodeGatheredCompletly;
 
-    int amountLeft;
+    private int amountLeft;
 
     public override void Initialize(Vector2Int origin, BuildingDir dir, ResourceNodeSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);

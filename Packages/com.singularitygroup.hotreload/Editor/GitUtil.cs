@@ -71,7 +71,7 @@ namespace SingularityGroup.HotReload.Editor {
             return null;
         }
 
-        static Process StartGitCommand(string command, string arguments, Action<ProcessStartInfo> modifySettings = null) {
+        private static Process StartGitCommand(string command, string arguments, Action<ProcessStartInfo> modifySettings = null) {
             var startInfo = new ProcessStartInfo("git", command + " " + arguments) {
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,

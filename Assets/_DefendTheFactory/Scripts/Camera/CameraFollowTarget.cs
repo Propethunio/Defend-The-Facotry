@@ -3,32 +3,32 @@ using UnityEngine;
 
 public class CameraFollowTarget : MonoBehaviour {
 
-    [SerializeField] CinemachineCamera cinemachineCamera;
-    [SerializeField] bool moveOnEdge;
-    [SerializeField] int edgeScrollSize;
-    [SerializeField] float moveSpeed;
-    [SerializeField] float moveSpeedOnDrag;
-    [SerializeField] float rotateSpeed;
-    [SerializeField] float rotateSpeedOnDrag;
-    [SerializeField] float zoomSpeed;
-    [SerializeField] float zoomScrollWheelClamp;
-    [SerializeField] float zoomLerpSpeed;
-    [SerializeField] Vector2 zoomRange;
-    [SerializeField] AnimationCurve zoomRotationCurve;
+    [SerializeField] private CinemachineCamera cinemachineCamera;
+    [SerializeField] private bool moveOnEdge;
+    [SerializeField] private int edgeScrollSize;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float moveSpeedOnDrag;
+    [SerializeField] private float rotateSpeed;
+    [SerializeField] private float rotateSpeedOnDrag;
+    [SerializeField] private float zoomSpeed;
+    [SerializeField] private float zoomScrollWheelClamp;
+    [SerializeField] private float zoomLerpSpeed;
+    [SerializeField] private Vector2 zoomRange;
+    [SerializeField] private AnimationCurve zoomRotationCurve;
 
-    Transform target;
-    InputManager inputManager;
-    CinemachineFollow cinemachineFollow;
-    Vector3 followOffset;
-    Vector2 lastMousePosMove;
-    float lastMousePosRotate;
-    float screenRightScroll;
-    float screenTopScroll;
-    float zoomAmount;
-    bool moveOnHoldActive;
-    bool rotateOnHoldActive;
+    private Transform target;
+    private InputManager inputManager;
+    private CinemachineFollow cinemachineFollow;
+    private Vector3 followOffset;
+    private Vector2 lastMousePosMove;
+    private float lastMousePosRotate;
+    private float screenRightScroll;
+    private float screenTopScroll;
+    private float zoomAmount;
+    private bool moveOnHoldActive;
+    private bool rotateOnHoldActive;
 
-    void Start() {
+    private void Start() {
         target = transform;
         inputManager = InputManager.Instance;
         cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
@@ -40,45 +40,45 @@ public class CameraFollowTarget : MonoBehaviour {
         SubscribeEvents();
     }
 
-    void Update() {
+    private void Update() {
         MoveCamera();
         RotateCamera();
         ZoomCamera();
     }
 
-    void CalculateScrollBounds() {
+    private void CalculateScrollBounds() {
         screenRightScroll = Screen.width - edgeScrollSize;
         screenTopScroll = Screen.height - edgeScrollSize;
     }
 
-    void SubscribeEvents() {
+    private void SubscribeEvents() {
         inputManager.rightClickPerformedAction += InputManager_rightClickPerformed;
         inputManager.rightClickCanceledAction += InputManager_rightClickCanceled;
         inputManager.scrollClickPerformedAction += InputManager_scrollClickPerformed;
         inputManager.scrollClickCanceledAction += InputManager_scrollClickCanceled;
     }
 
-    void InputManager_rightClickPerformed() {
+    private void InputManager_rightClickPerformed() {
         if(rotateOnHoldActive) return;
         moveOnHoldActive = true;
         lastMousePosMove = inputManager.mousePos;
     }
 
-    void InputManager_rightClickCanceled() {
+    private void InputManager_rightClickCanceled() {
         moveOnHoldActive = false;
     }
 
-    void InputManager_scrollClickPerformed() {
+    private void InputManager_scrollClickPerformed() {
         if(moveOnHoldActive) return;
         rotateOnHoldActive = true;
         lastMousePosRotate = inputManager.mousePos.x;
     }
 
-    void InputManager_scrollClickCanceled() {
+    private void InputManager_scrollClickCanceled() {
         rotateOnHoldActive = false;
     }
 
-    void MoveCamera() {
+    private void MoveCamera() {
         Vector2 inputDir = Vector2.zero;
 
         if(moveOnHoldActive) {
@@ -112,7 +112,7 @@ public class CameraFollowTarget : MonoBehaviour {
         }
     }
 
-    void RotateCamera() {
+    private void RotateCamera() {
         float rotateDir = 0f;
 
         if(rotateOnHoldActive) {
@@ -128,7 +128,7 @@ public class CameraFollowTarget : MonoBehaviour {
         }
     }
 
-    void ZoomCamera() {
+    private void ZoomCamera() {
         float zoomDir = Mathf.Clamp(inputManager.zoomDir, -zoomScrollWheelClamp, zoomScrollWheelClamp);
         zoomAmount -= zoomDir * zoomSpeed * Time.deltaTime;
         zoomAmount = Mathf.Clamp(zoomAmount, zoomRange.x, zoomRange.y);

@@ -12,7 +12,7 @@ public class TilemapVisual : MonoBehaviour {
         public Vector2Int uv11Pixels;
     }
 
-    struct UVCoords {
+    private struct UVCoords {
         public Vector2 uv00;
         public Vector2 uv11;
     }
@@ -21,11 +21,11 @@ public class TilemapVisual : MonoBehaviour {
 
     public Grid<TilemapCell> grid { get; private set; }
 
-    bool updateMesh;
-    Mesh mesh;
-    Dictionary<TilemapSprite, UVCoords> uvCoordsDictionary;
+    private bool updateMesh;
+    private Mesh mesh;
+    private Dictionary<TilemapSprite, UVCoords> uvCoordsDictionary;
 
-    void Awake() {
+    private void Awake() {
         if(Instance == null) Instance = this;
         else Destroy(gameObject);
 
@@ -44,7 +44,7 @@ public class TilemapVisual : MonoBehaviour {
         }
     }
 
-    void LateUpdate() {
+    private void LateUpdate() {
         updateMesh = true;
         if(updateMesh) {
             updateMesh = false;
@@ -76,11 +76,11 @@ public class TilemapVisual : MonoBehaviour {
         }
     }
 
-    void Grid_OnGridValueChanged(object sender, Grid<TilemapCell>.OnGridObjectChangedEventArgs e) {
+    private void Grid_OnGridValueChanged(object sender, Grid<TilemapCell>.OnGridObjectChangedEventArgs e) {
         updateMesh = true;
     }
 
-    void UpdateHeatMapVisual() {
+    private void UpdateHeatMapVisual() {
         MeshUtils.CreateEmptyMeshArrays(grid.width * grid.height, out Vector3[] vertices, out Vector2[] uv, out int[] triangles);
 
         for(int x = 0; x < grid.width; x++) {

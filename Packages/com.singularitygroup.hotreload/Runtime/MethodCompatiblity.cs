@@ -5,7 +5,7 @@ using System.Reflection;
 using SingularityGroup.HotReload.MonoMod.Utils;
 
 namespace SingularityGroup.HotReload {
-    static class MethodCompatiblity {
+internal static class MethodCompatiblity {
         internal static bool AreMethodsCompatible(MethodBase previousMethod, MethodBase patchMethod) { 
             var previousConstructor  = previousMethod as ConstructorInfo;
             var patchConstructor = patchMethod as ConstructorInfo;
@@ -19,8 +19,8 @@ namespace SingularityGroup.HotReload {
             }
             return false;
         }
-            
-        static bool AreMethodBasesCompatible(MethodBase previousMethod, MethodBase patchMethod) {
+
+        private static bool AreMethodBasesCompatible(MethodBase previousMethod, MethodBase patchMethod) {
             if(previousMethod.Name != patchMethod.Name) {
                 return false;
             }
@@ -66,8 +66,8 @@ namespace SingularityGroup.HotReload {
             }
             return CompareParameters(new ArraySegment<ParameterInfo>(prevParams), patchParamsSegment);
         }
-        
-        static bool LikelyHasExplicitThis(ParameterInfo[] prevParams, ParameterInfo[] patchParams, MethodBase previousMethod) {
+
+        private static bool LikelyHasExplicitThis(ParameterInfo[] prevParams, ParameterInfo[] patchParams, MethodBase previousMethod) {
             if (patchParams.Length != prevParams.Length + 1) {
                 return false;
             }
@@ -80,12 +80,12 @@ namespace SingularityGroup.HotReload {
             }
             return patchParams[0].Name == "this";
         }
-        
-        static bool ParamTypeMatches(Type patchT, Type originalT) {
+
+        private static bool ParamTypeMatches(Type patchT, Type originalT) {
             return patchT == originalT || patchT.IsByRef && patchT.GetElementType() == originalT;
         }
-        
-        static bool CompareParameters(ArraySegment<ParameterInfo> x, ArraySegment<ParameterInfo> y) {
+
+        private static bool CompareParameters(ArraySegment<ParameterInfo> x, ArraySegment<ParameterInfo> y) {
             if(x.Count != y.Count) {
                 return false;
             }
@@ -96,13 +96,12 @@ namespace SingularityGroup.HotReload {
             }
             return true;
         }
-            
 
-        static bool AreConstructorsCompatible(ConstructorInfo x, ConstructorInfo y) {
+        private static bool AreConstructorsCompatible(ConstructorInfo x, ConstructorInfo y) {
             return AreMethodBasesCompatible(x, y);
         }
-            
-        static bool AreMethodInfosCompatible(MethodInfo x, MethodInfo y) {
+
+        private static bool AreMethodInfosCompatible(MethodInfo x, MethodInfo y) {
             return AreMethodBasesCompatible(x, y) && x.ReturnType == y.ReturnType;
         }
     }

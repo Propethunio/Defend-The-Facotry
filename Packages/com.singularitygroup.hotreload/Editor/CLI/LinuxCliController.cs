@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using Debug = UnityEngine.Debug;
 
 namespace SingularityGroup.HotReload.Editor.Cli {
-
-    class LinuxCliController : ICliController {
-        Process process;
+internal class LinuxCliController : ICliController {
+    private Process process;
 
         public string BinaryFileName => "CodePatcherCLI";
         public string PlatformName => "linux-x64";

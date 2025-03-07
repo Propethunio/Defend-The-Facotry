@@ -14,11 +14,11 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 namespace SingularityGroup.HotReload {
-    static class IpHelper {
+internal static class IpHelper {
         // get my local ip address
 
-        static DateTime cachedAt;
-        static string ipCached;
+        private static DateTime cachedAt;
+        private static string ipCached;
         public static string GetIpAddressCached() {
             if (string.IsNullOrEmpty(ipCached) || DateTime.UtcNow - cachedAt > TimeSpan.FromSeconds(5)) {
                 ipCached = GetIpAddress();
@@ -51,7 +51,7 @@ namespace SingularityGroup.HotReload {
         }
 
         // https://datatracker.ietf.org/doc/html/rfc1918#section-3
-        static bool IsLocalIp(byte[] ipAddress) {
+        private static bool IsLocalIp(byte[] ipAddress) {
             return ipAddress[0] == 10
                 || ipAddress[0] == 172
                 && ipAddress[1] >= 16

@@ -8,9 +8,9 @@ using System;
 
 namespace SingularityGroup.HotReload.Editor.Cli {
     internal static class CliUtils {
-        static readonly string projectIdentifier = GetProjectIdentifier();
+        private static readonly string projectIdentifier = GetProjectIdentifier();
 
-        class Config {
+        private class Config {
             public bool singleInstance;
         }
 

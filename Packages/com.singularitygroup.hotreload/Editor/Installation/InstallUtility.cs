@@ -11,8 +11,8 @@ using Unity.CodeEditor;
 #endif
 
 namespace SingularityGroup.HotReload.Editor {
-    static class InstallUtility {
-        const string installFlagPath = PackageConst.LibraryCachePath + "/installFlag.txt";
+internal static class InstallUtility {
+    private const string installFlagPath = PackageConst.LibraryCachePath + "/installFlag.txt";
 
         public static void DebugClearInstallState() {
             File.Delete(installFlagPath);
@@ -44,8 +44,8 @@ namespace SingularityGroup.HotReload.Editor {
             //Avoid opening the window on domain reload
             EditorApplication.delayCall += HandleNewInstall;
         }
-        
-        static void HandleNewInstall() {
+
+        private static void HandleNewInstall() {
             if (EditorCodePatcher.licenseType == UnityLicenseType.UnityPro) {
                 RedeemLicenseHelper.I.StartRegistration();
             }

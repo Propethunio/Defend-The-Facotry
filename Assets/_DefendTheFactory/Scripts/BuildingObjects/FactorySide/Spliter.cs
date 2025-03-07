@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
-
-    ConveyorBelt inputBelt;
-    WorldItem newItem;
-    Dictionary<LogisticDir, ConveyorBelt> outputBelts = new();
-    Dictionary<LogisticDir, Vector2Int> outputPositions = new();
+    private ConveyorBelt inputBelt;
+    private WorldItem newItem;
+    private Dictionary<LogisticDir, ConveyorBelt> outputBelts = new();
+    private Dictionary<LogisticDir, Vector2Int> outputPositions = new();
 
     public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
@@ -28,7 +27,7 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
         SetupOutputBelt(rightPosition, LogisticDir.Right);
     }
 
-    void SetupInputBelt(Vector2Int position) {
+    private void SetupInputBelt(Vector2Int position) {
         if(!IsPositionValid(position)) return;
 
         Action action = () => HandleGridObjectChange(position);
@@ -40,7 +39,7 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
         }
     }
 
-    void HandleGridObjectChange(Vector2Int position) {
+    private void HandleGridObjectChange(Vector2Int position) {
         if(ShouldSnap(position, out ConveyorBelt belt)) {
             inputBelt = belt;
         } else {
@@ -48,7 +47,7 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
         }
     }
 
-    void SetupOutputBelt(Vector2Int position, LogisticDir logisticDir) {
+    private void SetupOutputBelt(Vector2Int position, LogisticDir logisticDir) {
         outputBelts[logisticDir] = null;
 
         if(!IsPositionValid(position)) return;
@@ -63,7 +62,7 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
         }
     }
 
-    void HandleGridObjectChange(LogisticDir dir) {
+    private void HandleGridObjectChange(LogisticDir dir) {
         Vector2Int position = outputPositions[dir];
 
         if(ShouldSnapBack(position, out ConveyorBelt belt)) {

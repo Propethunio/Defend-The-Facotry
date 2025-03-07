@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
 
 public class Constructor : BaseDataPlacedObject<ConstructorSO> {
-
-    ConveyorBelt inputBelt;
-    ConveyorBelt outputBelt;
-    int storedInputItems;
-    int storedOutputItems;
-    float craftingProgress;
+    private ConveyorBelt inputBelt;
+    private ConveyorBelt outputBelt;
+    private int storedInputItems;
+    private int storedOutputItems;
+    private float craftingProgress;
 
     public override void Initialize(Vector2Int origin, BuildingDir dir, ConstructorSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
     }
 
-    void Update() {
+    private void Update() {
         if(storedInputItems < buildableDataSO.itemRecipeList[0].inputItemList[0].amount || storedOutputItems >= buildableDataSO.maxStoredOutputItems) return;
 
         craftingProgress += Time.deltaTime;
@@ -24,7 +23,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
         }
     }
 
-    void OnDestroy() {
+    private void OnDestroy() {
         Unsubscribe();
     }
 
@@ -39,7 +38,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
         base.DestroySelf();
     }
 
-    void SetupBelts() {
+    private void SetupBelts() {
         inputBelt = gameObject.AddComponent<ConveyorBelt>();
         outputBelt = gameObject.AddComponent<ConveyorBelt>();
         Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.inputBeltPosition, dir);
@@ -48,27 +47,27 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
         outputBelt.SetupBuildingBelt(beltPos, dir, this);
     }
 
-    void Subscribe() {
+    private void Subscribe() {
         TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
     }
 
-    void Unsubscribe() {
+    private void Unsubscribe() {
         TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
     }
 
-    void OnEarlyTick() {
+    private void OnEarlyTick() {
         TryGetItemFromInputBelt();
         TryPutItemOnOutputBelt();
     }
 
-    void TryGetItemFromInputBelt() {
+    private void TryGetItemFromInputBelt() {
         if(inputBelt.endItem == null || storedInputItems == buildableDataSO.maxStoredInputItems || inputBelt.endItem.itemSO != buildableDataSO.itemRecipeList[0].inputItemList[0].item) return;
 
         inputBelt.endItem.DestroySelf();
         storedInputItems++;
     }
 
-    void TryPutItemOnOutputBelt() {
+    private void TryPutItemOnOutputBelt() {
         if(outputBelt.startItem != null || storedOutputItems == 0) return;
 
         WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, buildableDataSO.itemRecipeList[0].outputItemList[0].item);

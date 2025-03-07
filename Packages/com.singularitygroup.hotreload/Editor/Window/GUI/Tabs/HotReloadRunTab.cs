@@ -259,8 +259,8 @@ namespace SingularityGroup.HotReload.Editor {
         }
 
         internal static bool ShouldRenderConsumption(HotReloadRunTabState currentState) => (currentState.running && !currentState.starting && !currentState.stopping && currentState.loginStatus?.isLicensed != true && currentState.loginStatus?.isFree != true && !EditorCodePatcher.LoginNotRequired) && !(currentState.loginStatus == null || currentState.loginStatus.isFree);
-        
-        void OnGUICore() {
+
+        private void OnGUICore() {
             using (var scope = new EditorGUILayout.ScrollViewScope(_runTabScrollPos, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUILayout.MaxHeight(Math.Max(HotReloadWindowStyles.windowScreenHeight, 800)), GUILayout.MaxWidth(Math.Max(HotReloadWindowStyles.windowScreenWidth, 800)))) {
                 _runTabScrollPos.x = scope.scrollPosition.x;
                 _runTabScrollPos.y = scope.scrollPosition.y;
@@ -324,24 +324,24 @@ namespace SingularityGroup.HotReload.Editor {
                 && !currentState.requestingDownloadAndRun
             ;
         }
-        
-        static Texture2D GetFoldoutIcon(AlertEntry alertEntry) {
+
+        private static Texture2D GetFoldoutIcon(AlertEntry alertEntry) {
             InvertibleIcon alertIcon = InvertibleIcon.FoldoutClosed;
             if (HotReloadTimelineHelper.expandedEntries.Contains(alertEntry)) {
                 alertIcon = InvertibleIcon.FoldoutOpen;
             }
             return GUIHelper.GetInvertibleIcon(alertIcon);
         }
-        
-        static void ToggleEntry(AlertEntry alertEntry) {
+
+        private static void ToggleEntry(AlertEntry alertEntry) {
             if (HotReloadTimelineHelper.expandedEntries.Contains(alertEntry)) {
                 HotReloadTimelineHelper.expandedEntries.Remove(alertEntry);
             } else {
                 HotReloadTimelineHelper.expandedEntries.Add(alertEntry);
             }
         }
-        
-        static void RenderEntries(TimelineType timelineType) {
+
+        private static void RenderEntries(TimelineType timelineType) {
             List<AlertEntry> alertEntries;
             
             alertEntries = timelineType == TimelineType.Suggestions ? HotReloadTimelineHelper.Suggestions : HotReloadTimelineHelper.EventsTimeline;
@@ -489,7 +489,7 @@ namespace SingularityGroup.HotReload.Editor {
         }
         
         private Vector2 suggestionsScroll;
-        static GUILayoutOption[] timelineButtonOptions = new[] { GUILayout.Height(27), GUILayout.Width(100) };
+        private static GUILayoutOption[] timelineButtonOptions = new[] { GUILayout.Height(27), GUILayout.Width(100) };
 
         internal static void RenderBars(HotReloadRunTabState currentState) {
             if (currentState.suggestionCount > 0) {
@@ -588,9 +588,9 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        static bool _repaint;
-        static bool _instantRepaint;
-        static DateTime _lastRepaint;
+        private static bool _repaint;
+        private static bool _instantRepaint;
+        private static DateTime _lastRepaint;
         private EditorIndicationState.IndicationStatus _lastStatus;
         public override void Update() {
             if (EditorIndicationState.SpinnerActive) {
@@ -709,7 +709,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        void RenderIndicationPanel() {
+        private void RenderIndicationPanel() {
             using (new EditorGUILayout.HorizontalScope(HotReloadWindowStyles.SectionInnerBox)) {
                 RenderIndication();
                 if (HotReloadWindowStyles.windowScreenWidth > Constants.IndicationTextHideWidth) {
@@ -778,14 +778,15 @@ namespace SingularityGroup.HotReload.Editor {
                 } 
             }
         }
-        
-        static GUIStyle _openSettingsStyle;
-        static GUIStyle openSettingsStyle => _openSettingsStyle ?? (_openSettingsStyle = new GUIStyle(GUI.skin.button) {
+
+        private static GUIStyle _openSettingsStyle;
+
+        private static GUIStyle openSettingsStyle => _openSettingsStyle ?? (_openSettingsStyle = new GUIStyle(GUI.skin.button) {
             fontStyle = FontStyle.Normal,
             fixedHeight = 25,
         });
-        
-        static GUILayoutOption[] _bigButtonHeight;
+
+        private static GUILayoutOption[] _bigButtonHeight;
         public static GUILayoutOption[] bigButtonHeight => _bigButtonHeight ?? (_bigButtonHeight = new [] {GUILayout.Height(25)});
         
         private static GUIContent indieLicenseContent;
@@ -870,7 +871,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        const string assetStoreProInfo = "Unity Pro/Enterprise users from company with your number of employees require a Business license. Please upgrade your license on our website.";
+        private const string assetStoreProInfo = "Unity Pro/Enterprise users from company with your number of employees require a Business license. Please upgrade your license on our website.";
         internal static void RenderBusinessLicenseInfo(GUIStyle style) {
             GUILayout.Space(8);
             using (new EditorGUILayout.HorizontalScope()) {
@@ -905,10 +906,10 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        const string GetLicense = "Get License";
-        const string ContactSupport = "Contact Support";
-        const string UpgradeLicense = "Upgrade License";
-        const string ManageLicense = "Manage License";
+        private const string GetLicense = "Get License";
+        private const string ContactSupport = "Contact Support";
+        private const string UpgradeLicense = "Upgrade License";
+        private const string ManageLicense = "Manage License";
         internal static Dictionary<string, LicenseErrorData> _licenseErrorData;
         internal static Dictionary<string, LicenseErrorData> LicenseErrorData => _licenseErrorData ?? (_licenseErrorData = new Dictionary<string, LicenseErrorData> {
             { "DeviceNotLicensedException", new LicenseErrorData(description: "Another device is using your license. Please reach out to customer support for assistance.", showSupportButton: true, supportButtonText: ContactSupport) },
@@ -959,7 +960,7 @@ namespace SingularityGroup.HotReload.Editor {
             OpenURLButton.Render(buyLicenseButton, Constants.ProductPurchaseURL);
         }
 
-        static void RenderLicenseActionButtons(HotReloadRunTabState currentState) {
+        private static void RenderLicenseActionButtons(HotReloadRunTabState currentState) {
             var errInfo = GetLicenseErrorDataOrDefault(currentState, currentState.loginStatus?.lastLicenseError);
             if (errInfo.showBuyButton || errInfo.showManageLicenseButton) {
                 using(new EditorGUILayout.HorizontalScope()) {
@@ -1043,7 +1044,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        PromoCodeErrorType ToErrorType(string error) {
+        private PromoCodeErrorType ToErrorType(string error) {
             switch (error) {
                 case "Input is missing":           return PromoCodeErrorType.MISSING_INPUT;
                 case "only POST is supported":     return PromoCodeErrorType.INVALID_HTTP_METHOD;
@@ -1066,7 +1067,7 @@ namespace SingularityGroup.HotReload.Editor {
             return PromoCodeErrorType.NONE;
         }
 
-        string ToPrettyErrorMessage(PromoCodeErrorType errorType) {
+        private string ToPrettyErrorMessage(PromoCodeErrorType errorType) {
             var defaultMsg = "We apologize, an error happened while activating your promo code. Please reach out to customer support for assistance.";
             switch (errorType) {
                 case PromoCodeErrorType.MISSING_INPUT:
@@ -1088,7 +1089,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        MessageType ToMessageType(PromoCodeErrorType errorType) {
+        private MessageType ToMessageType(PromoCodeErrorType errorType) {
             switch (errorType) {
                 case PromoCodeErrorType.MISSING_INPUT:            return MessageType.Error;
                 case PromoCodeErrorType.INVALID_HTTP_METHOD:      return MessageType.Error;
@@ -1192,8 +1193,8 @@ namespace SingularityGroup.HotReload.Editor {
                 }
             }
         }
-        
-        async static Task LoginOnDownloadAndRun(LoginData loginData = null) {
+
+        private async static Task LoginOnDownloadAndRun(LoginData loginData = null) {
             var ok = await EditorCodePatcher.DownloadAndRun(loginData);
             if (ok && loginData != null) {
                 HotReloadPrefs.ErrorHidden = false;
@@ -1202,7 +1203,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        async static Task LogoutOnDownloadAndRun() {
+        private async static Task LogoutOnDownloadAndRun() {
             var ok = await EditorCodePatcher.DownloadAndRun();
             if (!ok) {
                 return;
@@ -1230,10 +1231,11 @@ namespace SingularityGroup.HotReload.Editor {
                 }
             }
         }
-        
-        Texture2D _greenTextureLight;
-        Texture2D _greenTextureDark;
-        Texture2D GreenTexture => EditorGUIUtility.isProSkin 
+
+        private Texture2D _greenTextureLight;
+        private Texture2D _greenTextureDark;
+
+        private Texture2D GreenTexture => EditorGUIUtility.isProSkin 
             ? _greenTextureDark ? _greenTextureDark : (_greenTextureDark = MakeTexture(0.5f))
             : _greenTextureLight ? _greenTextureLight : (_greenTextureLight = MakeTexture(0.85f));
         

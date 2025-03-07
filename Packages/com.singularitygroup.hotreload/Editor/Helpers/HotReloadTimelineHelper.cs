@@ -104,7 +104,7 @@ namespace SingularityGroup.HotReload.Editor {
         private static List<AlertEntry> eventsTimeline = new List<AlertEntry>();
         internal static List<AlertEntry> EventsTimeline => eventsTimeline;
 
-        static readonly string filePath = Path.Combine(PackageConst.LibraryCachePath, "eventEntries.json");
+        private static readonly string filePath = Path.Combine(PackageConst.LibraryCachePath, "eventEntries.json");
 
         public static void InitPersistedEvents() {
             if (!File.Exists(filePath)) {
@@ -203,7 +203,7 @@ namespace SingularityGroup.HotReload.Editor {
         internal static int CompileErrorsCount => EventsTimeline.Count(alert => alert.alertType == AlertType.CompileError);
         internal static int AppliedChangesCount => EventsTimeline.Count(alert => alert.alertType == AlertType.AppliedChange);
 
-        static Regex shortDescriptionRegex = new Regex(@"^(\w+)\s(\w+)(?=:)", RegexOptions.Compiled);
+        private static Regex shortDescriptionRegex = new Regex(@"^(\w+)\s(\w+)(?=:)", RegexOptions.Compiled);
         
         internal static int GetRunTabTimelineEventCount() {
             int total = 0;

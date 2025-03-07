@@ -59,8 +59,8 @@ namespace SingularityGroup.HotReload.Editor {
         private GUIStyle paddedStyle;
         
         private Vector2 _settingsTabScrollPos;
-        
-        HotReloadSettingsTabState currentState;
+
+        private HotReloadSettingsTabState currentState;
         public override void OnGUI() {
             // HotReloadAboutTabState ensures rendering is consistent between Layout and Repaint calls
             // Without it errors like this happen:
@@ -165,7 +165,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        void RenderUnityAutoRefresh() {
+        private void RenderUnityAutoRefresh() {
             var newSettings = EditorGUILayout.BeginToggleGroup(new GUIContent("Allow to manage Unity's Auto Compile settings (recommended)"), HotReloadPrefs.AllowDisableUnityAutoRefresh);
             if (newSettings != HotReloadPrefs.AllowDisableUnityAutoRefresh) {
                 HotReloadPrefs.AllowDisableUnityAutoRefresh = newSettings;
@@ -180,8 +180,8 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.EndToggleGroup();
             EditorGUILayout.Space(3f);
         }
-        
-        void RenderAssetRefresh() {
+
+        private void RenderAssetRefresh() {
             var newSettings = EditorGUILayout.BeginToggleGroup(new GUIContent("Asset refresh (recommended)"), HotReloadPrefs.AllAssetChanges);
             if (newSettings != HotReloadPrefs.AllAssetChanges) {
                 HotReloadPrefs.AllAssetChanges = newSettings;
@@ -206,8 +206,8 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.EndToggleGroup();
             EditorGUILayout.Space(3f);
         }
-        
-        void RenderIncludeShaderChanges() {
+
+        private void RenderIncludeShaderChanges() {
             HotReloadPrefs.IncludeShaderChanges = EditorGUILayout.BeginToggleGroup(new GUIContent("Refresh shaders"), HotReloadPrefs.IncludeShaderChanges);
             string toggleDescription;
             if (HotReloadPrefs.IncludeShaderChanges) {
@@ -219,7 +219,7 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.EndToggleGroup();
         }
 
-        void RenderConsoleWindow() {
+        private void RenderConsoleWindow() {
             if (!HotReloadCli.CanOpenInBackground) {
                 return;
             }
@@ -247,8 +247,8 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.EndToggleGroup();
             EditorGUILayout.Space(3f);
         }
-        
-        void RenderAutostart() {
+
+        private void RenderAutostart() {
             var newSettings = EditorGUILayout.BeginToggleGroup(new GUIContent("Autostart on Unity open"), HotReloadPrefs.LaunchOnEditorStart);
             if (newSettings != HotReloadPrefs.LaunchOnEditorStart) {
                 HotReloadPrefs.LaunchOnEditorStart = newSettings;
@@ -264,7 +264,7 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.Space();
         }
 
-        void RenderShowNotifications() {
+        private void RenderShowNotifications() {
             GUILayout.Label("Indications", HotReloadWindowStyles.NotificationsTitleStyle);
             
             string toggleDescription;
@@ -276,7 +276,7 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.LabelField(toggleDescription, HotReloadWindowStyles.WrapStyle);
         }
 
-        void RenderShowPatchingNotifications() {
+        private void RenderShowPatchingNotifications() {
             HotReloadPrefs.ShowPatchingNotifications = EditorGUILayout.BeginToggleGroup(new GUIContent("Patching Indication"), HotReloadPrefs.ShowPatchingNotifications);
             string toggleDescription;
             if (!EditorWindowHelper.supportsNotifications) {
@@ -290,7 +290,7 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.EndToggleGroup();
         }
 
-        void RenderShowCompilingUnsupportedNotifications() {
+        private void RenderShowCompilingUnsupportedNotifications() {
             HotReloadPrefs.ShowCompilingUnsupportedNotifications = EditorGUILayout.BeginToggleGroup(new GUIContent("Compiling Unsupported Changes Indication"), HotReloadPrefs.ShowCompilingUnsupportedNotifications);
             string toggleDescription;
             if (!EditorWindowHelper.supportsNotifications) {
@@ -303,8 +303,8 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.LabelField(toggleDescription, HotReloadWindowStyles.WrapStyle);
             EditorGUILayout.EndToggleGroup();
         }
-        
-        void RenderAutoRecompileUnsupportedChanges() {
+
+        private void RenderAutoRecompileUnsupportedChanges() {
             HotReloadPrefs.AutoRecompileUnsupportedChanges = EditorGUILayout.BeginToggleGroup(new GUIContent("Auto recompile unsupported changes (recommended)"), HotReloadPrefs.AutoRecompileUnsupportedChanges && EditorCodePatcher.autoRecompileUnsupportedChangesSupported);
             string toggleDescription;
             if (!EditorCodePatcher.autoRecompileUnsupportedChangesSupported) {
@@ -317,8 +317,8 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.LabelField(toggleDescription, HotReloadWindowStyles.WrapStyle);
             EditorGUILayout.EndToggleGroup();
         }
-        
-        void RenderAutoRecompilePartiallyUnsupportedChanges() {
+
+        private void RenderAutoRecompilePartiallyUnsupportedChanges() {
             HotReloadPrefs.AutoRecompilePartiallyUnsupportedChanges = EditorGUILayout.BeginToggleGroup(new GUIContent("Include partially unsupported changes"), HotReloadPrefs.AutoRecompilePartiallyUnsupportedChanges);
             string toggleDescription;
             if (HotReloadPrefs.AutoRecompilePartiallyUnsupportedChanges) {
@@ -329,8 +329,8 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.LabelField(toggleDescription, HotReloadWindowStyles.WrapStyle);
             EditorGUILayout.EndToggleGroup();
         }
-        
-        void RenderAutoRecompileUnsupportedChangesImmediately() {
+
+        private void RenderAutoRecompileUnsupportedChangesImmediately() {
             HotReloadPrefs.AutoRecompileUnsupportedChangesImmediately = EditorGUILayout.BeginToggleGroup(new GUIContent("Recompile immediately"), HotReloadPrefs.AutoRecompileUnsupportedChangesImmediately);
             string toggleDescription;
             if (HotReloadPrefs.AutoRecompileUnsupportedChangesImmediately) {
@@ -341,8 +341,8 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.LabelField(toggleDescription, HotReloadWindowStyles.WrapStyle);
             EditorGUILayout.EndToggleGroup();
         }
-        
-        void RenderAutoRecompileUnsupportedChangesInPlayMode() {
+
+        private void RenderAutoRecompileUnsupportedChangesInPlayMode() {
             HotReloadPrefs.AutoRecompileUnsupportedChangesInPlayMode = EditorGUILayout.BeginToggleGroup(new GUIContent("Recompile in Play Mode"), HotReloadPrefs.AutoRecompileUnsupportedChangesInPlayMode);
             string toggleDescription;
             if (HotReloadPrefs.AutoRecompileUnsupportedChangesInPlayMode) {
@@ -353,8 +353,8 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.LabelField(toggleDescription, HotReloadWindowStyles.WrapStyle);
             EditorGUILayout.EndToggleGroup();
         }
-        
-        void RenderAutoRecompileUnsupportedChangesOnExitPlayMode() {
+
+        private void RenderAutoRecompileUnsupportedChangesOnExitPlayMode() {
             HotReloadPrefs.AutoRecompileUnsupportedChangesOnExitPlayMode = EditorGUILayout.BeginToggleGroup(new GUIContent("Recompile on exit Play Mode"), HotReloadPrefs.AutoRecompileUnsupportedChangesOnExitPlayMode);
             string toggleDescription;
             if (HotReloadPrefs.AutoRecompileUnsupportedChangesOnExitPlayMode) {
@@ -366,7 +366,7 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.EndToggleGroup();
         }
 
-        void RenderOnDevice() {
+        private void RenderOnDevice() {
             HotReloadPrefs.ShowOnDevice = EditorGUILayout.Foldout(HotReloadPrefs.ShowOnDevice, "On-Device", true, HotReloadWindowStyles.FoldoutStyle);
             if (!HotReloadPrefs.ShowOnDevice) {
                 return;
@@ -622,7 +622,7 @@ namespace SingularityGroup.HotReload.Editor {
         /// <param name="okText">Shown when condition is true</param>
         /// <param name="notOkText">Shown when condition is false</param>
         /// <param name="suggestedSolutionText">Shown when <paramref name="condition"/> is false</param>
-        void DrawHorizontalCheck(bool condition, string okText, string notOkText = null, string suggestedSolutionText = null, bool hasFix = true) {
+        private void DrawHorizontalCheck(bool condition, string okText, string notOkText = null, string suggestedSolutionText = null, bool hasFix = true) {
             if (okText == null) {
                 throw new ArgumentNullException(nameof(okText));
             }
@@ -670,15 +670,15 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        void DrawDisabledCircle(Rect rect) => DrawCircleIcon(rect,
+        private void DrawDisabledCircle(Rect rect) => DrawCircleIcon(rect,
             Resources.Load<Texture>("icon_circle_gray"),
             Color.clear); // smaller circle draws less attention
 
-        void DrawBlackCircle(Rect rect) => DrawCircleIcon(rect,
+        private void DrawBlackCircle(Rect rect) => DrawCircleIcon(rect,
             Resources.Load<Texture>("icon_circle_black"),
             new Color(0.14f, 0.14f, 0.14f)); // black is too dark in unity light theme
 
-        void DrawCircleIcon(Rect rect, Texture circleIcon, Color borderColor) {
+        private void DrawCircleIcon(Rect rect, Texture circleIcon, Color borderColor) {
             // Note: drawing texture from resources is pixelated on the edges, so it has some transperancy around the edges.
             // While building for Android, Resources.Load returns null for our editor Resources. 
             if (circleIcon != null) {

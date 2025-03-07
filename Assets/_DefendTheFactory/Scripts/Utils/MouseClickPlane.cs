@@ -4,7 +4,7 @@ public class MouseClickPlane : MonoBehaviour {
 
     public static MouseClickPlane Instance;
 
-    void Awake() {
+    private void Awake() {
         if(Instance == null) Instance = this;
         else Destroy(gameObject);
     }

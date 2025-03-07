@@ -21,29 +21,29 @@ using UnityEngine.SceneManagement;
 [assembly: InternalsVisibleTo("SingularityGroup.HotReload.Editor")]
 
 namespace SingularityGroup.HotReload {
-    class RegisterPatchesResult {
+internal class RegisterPatchesResult {
         // note: doesn't include removals and method definition changes (e.g. renames)
         public readonly List<MethodPatch> patchedMethods = new List<MethodPatch>();
         public readonly List<SMethod> patchedSMethods = new List<SMethod>();
         public readonly List<Tuple<SMethod, string>> patchFailures = new List<Tuple<SMethod, string>>();
     }
-    
-    class CodePatcher {
+
+internal class CodePatcher {
         public static readonly CodePatcher I = new CodePatcher();
         /// <summary>Tag for use in Debug.Log.</summary>
         public const string TAG = "HotReload";
         
         internal int PatchesApplied { get; private set; }
-        string PersistencePath {get;}
-        
-        List<MethodPatchResponse> pendingPatches;
-        readonly List<MethodPatchResponse> patchHistory;
-        readonly HashSet<string> seenResponses = new HashSet<string>();
-        string[] assemblySearchPaths;
-        SymbolResolver symbolResolver;
-        readonly string tmpDir;
-        
-        CodePatcher() {
+        private string PersistencePath {get;}
+
+        private List<MethodPatchResponse> pendingPatches;
+        private readonly List<MethodPatchResponse> patchHistory;
+        private readonly HashSet<string> seenResponses = new HashSet<string>();
+        private string[] assemblySearchPaths;
+        private SymbolResolver symbolResolver;
+        private readonly string tmpDir;
+
+        private CodePatcher() {
             pendingPatches = new List<MethodPatchResponse>();
             patchHistory = new List<MethodPatchResponse>(); 
             if(UnityHelper.IsEditor) {
@@ -62,12 +62,11 @@ namespace SingularityGroup.HotReload {
         }
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void InitializeUnityEvents() {
+        private static void InitializeUnityEvents() {
             UnityEventHelper.Initialize();
         }
 
-        
-        void LoadPatches(string filePath) {
+        private void LoadPatches(string filePath) {
             PlayerLog("Loading patches from file {0}", filePath);
             var file = new FileInfo(filePath);
             if(file.Exists) {
@@ -95,8 +94,8 @@ namespace SingularityGroup.HotReload {
             pendingPatches.Add(patches);
             return ApplyPatches(persist);
         }
-        
-        RegisterPatchesResult ApplyPatches(bool persist) {
+
+        private RegisterPatchesResult ApplyPatches(bool persist) {
             PlayerLog("ApplyPatches. {0} patches pending.", pendingPatches.Count);
             EnsureSymbolResolver();
 
@@ -135,9 +134,9 @@ namespace SingularityGroup.HotReload {
             PatchesApplied = 0;
         }
 
-        static bool didLog;
+        private static bool didLog;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void WarnOnSceneLoad() {
+        private static void WarnOnSceneLoad() {
             SceneManager.sceneLoaded += (_, __) => {
                 if (didLog || !UnityEventHelper.UnityMethodsAdded()) {
                     return;
@@ -147,7 +146,7 @@ namespace SingularityGroup.HotReload {
             };
         }
 
-        void HandleMethodPatchResponse(MethodPatchResponse response, RegisterPatchesResult result) {
+        private void HandleMethodPatchResponse(MethodPatchResponse response, RegisterPatchesResult result) {
             EnsureSymbolResolver();
 
             foreach(var patch in response.patches) {
@@ -187,10 +186,10 @@ namespace SingularityGroup.HotReload {
             }
         }
 
-        Dictionary<MethodBase, MethodBase> previousPatchMethods = new Dictionary<MethodBase, MethodBase>();
-        List<MethodBase> newMethods = new List<MethodBase>();
+        private Dictionary<MethodBase, MethodBase> previousPatchMethods = new Dictionary<MethodBase, MethodBase>();
+        private List<MethodBase> newMethods = new List<MethodBase>();
 
-        string PatchMethod(Module module, SMethod sOriginalMethod, SMethod sPatchMethod, bool containsBurstJobs, RegisterPatchesResult patchesResult) {
+        private string PatchMethod(Module module, SMethod sOriginalMethod, SMethod sPatchMethod, bool containsBurstJobs, RegisterPatchesResult patchesResult) {
             try {
                 var patchMethod = module.ResolveMethod(sPatchMethod.metadataToken);
                 var start = DateTime.UtcNow;
@@ -246,8 +245,8 @@ namespace SingularityGroup.HotReload {
                 return HandleMethodPatchFailure(sOriginalMethod, ex);
             }
         }
-        
-        struct ResolveMethodState {
+
+        private struct ResolveMethodState {
             public readonly SMethod originalMethod;
             public readonly int offset;
             public readonly bool tryLowerTokens;
@@ -270,8 +269,8 @@ namespace SingularityGroup.HotReload {
                     match ?? this.match);
             }
         }
-        
-        struct ResolveMethodResult {
+
+        private struct ResolveMethodResult {
             public readonly MethodBase resolvedMethod;
             public readonly bool tokenOutOfRange;
             public ResolveMethodResult(MethodBase resolvedMethod, bool tokenOutOfRange) {
@@ -279,8 +278,8 @@ namespace SingularityGroup.HotReload {
                 this.tokenOutOfRange = tokenOutOfRange;
             }
         }
-        
-        ResolveMethodState TryResolveMethod(SMethod originalMethod, MethodBase patchMethod) {
+
+        private ResolveMethodState TryResolveMethod(SMethod originalMethod, MethodBase patchMethod) {
             var state = new ResolveMethodState(originalMethod, offset: 0, tryLowerTokens: true, tryHigherTokens: true, match: null);
             var result = TryResolveMethodCore(state.originalMethod, patchMethod, 0);
             if(result.resolvedMethod != null) {
@@ -309,9 +308,8 @@ namespace SingularityGroup.HotReload {
             }
             return state;
         }
-        
-        
-        ResolveMethodResult TryResolveMethodCore(SMethod methodToResolve, MethodBase patchMethod, int offset) {
+
+        private ResolveMethodResult TryResolveMethodCore(SMethod methodToResolve, MethodBase patchMethod, int offset) {
             bool tokenOutOfRange = false;
             MethodBase resolvedMethod = null;
             try {
@@ -326,8 +324,8 @@ namespace SingularityGroup.HotReload {
             }
             return new ResolveMethodResult(resolvedMethod, tokenOutOfRange);
         }
-        
-        MethodBase TryGetMethodBaseWithRelativeToken(SMethod sOriginalMethod, int offset) {
+
+        private MethodBase TryGetMethodBaseWithRelativeToken(SMethod sOriginalMethod, int offset) {
             return symbolResolver.Resolve(new SMethod(sOriginalMethod.assemblyName, 
                 sOriginalMethod.displayName, 
                 sOriginalMethod.metadataToken + offset,
@@ -335,14 +333,14 @@ namespace SingularityGroup.HotReload {
                 sOriginalMethod.genericTypeArguments,
                 sOriginalMethod.simpleName));
         }
-    
-        string HandleMethodPatchFailure(SMethod method, Exception exception) {
+
+        private string HandleMethodPatchFailure(SMethod method, Exception exception) {
             var err = $"Failed to apply patch for method {method.displayName} in assembly {method.assemblyName}\n{exception}";
             Log.Warning(err);
             return err;
         }
 
-        void EnsureSymbolResolver() {
+        private void EnsureSymbolResolver() {
             if (symbolResolver == null) {
                 var searchPaths = new HashSet<string>();
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -369,7 +367,7 @@ namespace SingularityGroup.HotReload {
         
         
         //Allow one save operation at a time.
-        readonly SemaphoreSlim gate = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim gate = new SemaphoreSlim(1);
         public async Task SaveAppliedPatches(string filePath) {
             await gate.WaitAsync();
             try {
@@ -378,8 +376,8 @@ namespace SingularityGroup.HotReload {
                 gate.Release();
             }
         }
-        
-        async Task SaveAppliedPatchesNoLock(string filePath) {
+
+        private async Task SaveAppliedPatchesNoLock(string filePath) {
             if (filePath == null) {
                 throw new ArgumentNullException(nameof(filePath));
             }
@@ -423,15 +421,15 @@ namespace SingularityGroup.HotReload {
         
         
         [StringFormatMethod("format")]
-        static void PlayerLog(string format, params object[] args) {
+        private static void PlayerLog(string format, params object[] args) {
 #if !UNITY_EDITOR
             HotReload.Log.Info(format, args);
 #endif //!UNITY_EDITOR
         }
-        
-        class SimpleMethodComparer : IEqualityComparer<SMethod> {
+
+        private class SimpleMethodComparer : IEqualityComparer<SMethod> {
             public static readonly SimpleMethodComparer I = new SimpleMethodComparer();
-            SimpleMethodComparer() { }
+            private SimpleMethodComparer() { }
             public bool Equals(SMethod x, SMethod y) => x.metadataToken == y.metadataToken;
             public int GetHashCode(SMethod x) {
                 return x.metadataToken;

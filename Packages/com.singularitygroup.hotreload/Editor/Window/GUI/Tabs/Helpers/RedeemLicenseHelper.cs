@@ -42,15 +42,15 @@ namespace SingularityGroup.HotReload.Editor {
         private string status;
         private string error;
 
-        const string statusSuccess = "success";
-        const string statusAlreadyClaimed = "already redeemed by this user/device";
-        const string unknownError = "We apologize, an error happened while redeeming your license. Please reach out to customer support for assistance.";
+        private const string statusSuccess = "success";
+        private const string statusAlreadyClaimed = "already redeemed by this user/device";
+        private const string unknownError = "We apologize, an error happened while redeeming your license. Please reach out to customer support for assistance.";
 
         private GUILayoutOption[] secondaryButtonLayoutOptions = new[] { GUILayout.MaxWidth(100) };
 
         private bool requestingRedeem;
         private HttpClient redeemClient;
-        const string redeemUrl = "https://vmhzj6jonn3qy7hk7tx7levpli0bstpj.lambda-url.us-east-1.on.aws/redeem";
+        private const string redeemUrl = "https://vmhzj6jonn3qy7hk7tx7levpli0bstpj.lambda-url.us-east-1.on.aws/redeem";
 
         public RedeemLicenseHelper() {
             if (File.Exists(registerFlagPath)) {
@@ -106,7 +106,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        void HandleRegistration(int companySize) {
+        private void HandleRegistration(int companySize) {
             RequestHelper.RequestEditorEvent(new Stat(StatSource.Client, StatLevel.Debug, StatFeature.Licensing, StatEventType.Register), new EditorExtraData { { StatKey.CompanySize, companySize } });
             if (companySize > 10) {
                 FinishRegistration(RegistrationOutcome.Business);
@@ -155,7 +155,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        async Task RedeemLicense(string email, string invoiceNumber) {
+        private async Task RedeemLicense(string email, string invoiceNumber) {
             string validationError;
             if (string.IsNullOrEmpty(invoiceNumber)) {
                 validationError = "Please enter invoice number / order ID.";
@@ -190,7 +190,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        string GetPrettyError(RedeemResponse response) {
+        private string GetPrettyError(RedeemResponse response) {
             var err = response?.error;
             if (err == null) {
                 return unknownError;
@@ -210,7 +210,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        async Task<RedeemResponse> RequestRedeem(string email, string invoiceNumber) {
+        private async Task<RedeemResponse> RequestRedeem(string email, string invoiceNumber) {
             requestingRedeem = true;
             await ThreadUtility.SwitchToThreadPool();
             try {
@@ -289,13 +289,13 @@ namespace SingularityGroup.HotReload.Editor {
             Cleanup();
         }
 
-        void SwitchToStage(RedeemStage stage) {
+        private void SwitchToStage(RedeemStage stage) {
             // remove focus so that the input field re-renders
             GUI.FocusControl(null);
             RedeemStage = stage;
         }
 
-        void Cleanup() {
+        private void Cleanup() {
             redeemClient?.Dispose();
             redeemClient = null;
             _pendingCompanySize = null;

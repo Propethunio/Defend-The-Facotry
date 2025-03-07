@@ -16,7 +16,7 @@ namespace SingularityGroup.HotReload.Editor {
         public float Progress {get; private set;}
         public bool Started {get; private set;}
 
-        class Config {
+        private class Config {
             public Dictionary<string, string> customServerExecutables;
         }
         
@@ -114,7 +114,7 @@ namespace SingularityGroup.HotReload.Editor {
             return true;
         }
 
-        static bool TryUseUserDefinedBinaryPath(ICliController cliController, string targetPath) {
+        private static bool TryUseUserDefinedBinaryPath(ICliController cliController, string targetPath) {
             if (!File.Exists(PackageConst.ConfigFileName)) {
                 return false;
             } 
@@ -153,7 +153,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        static string GetDownloadUrl(ICliController cliController) {
+        private static string GetDownloadUrl(ICliController cliController) {
             const string version = PackageConst.ServerVersion;
             var key = $"{DownloadUtility.GetPackagePrefix(version)}/server/{cliController.PlatformName}/{cliController.BinaryFileName}";
             return DownloadUtility.GetDownloadUrl(key);
@@ -178,8 +178,8 @@ namespace SingularityGroup.HotReload.Editor {
         
         public const string InstallDescription = "For Hot Reload to work, additional components specific to your operating system have to be installed";
     }
-    
-    class DownloadResult {
+
+    internal class DownloadResult {
         public readonly HttpStatusCode statusCode;
         public readonly string error;
         public DownloadResult(HttpStatusCode statusCode, string error) {

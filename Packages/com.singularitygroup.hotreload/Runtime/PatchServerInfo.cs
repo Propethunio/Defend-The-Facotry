@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SingularityGroup.HotReload {
     [Serializable]
-    class PatchServerInfo {
+    internal class PatchServerInfo {
         public readonly string hostName;
         public readonly int port;
         public readonly string commitHash;

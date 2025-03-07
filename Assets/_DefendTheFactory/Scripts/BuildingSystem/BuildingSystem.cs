@@ -15,10 +15,10 @@ public class BuildingSystem {
     public BaseBuildableObjectSO placedObjectTypeSO { get; private set; }
     public BuildingDir dir { get; private set; }
 
-    InputManager inputManager;
-    bool isBuildingSystemActive;
-    bool isDemolishActive;
-    BuildingGhost buildingGhost;
+    private InputManager inputManager;
+    private bool isBuildingSystemActive;
+    private bool isDemolishActive;
+    private BuildingGhost buildingGhost;
 
     public BuildingSystem(int width, int height) {
         if(Instance == null) Instance = this;
@@ -34,7 +34,7 @@ public class BuildingSystem {
         SetSelectedPlacedObject(test);
     }
 
-    void EnableBuildingSystem() {
+    private void EnableBuildingSystem() {
         if(isBuildingSystemActive) return;
 
         dir = BuildingDir.Down;
@@ -43,7 +43,7 @@ public class BuildingSystem {
         Subscribe();
     }
 
-    void DisableBuildingSystem() {
+    private void DisableBuildingSystem() {
         if(!isBuildingSystemActive) return;
 
         placedObjectTypeSO = null;
@@ -54,21 +54,21 @@ public class BuildingSystem {
         Unsubscribe();
     }
 
-    void Subscribe() {
+    private void Subscribe() {
         inputManager.leftClickAction += HandleObjectPlacement;
         inputManager.buildingRotationAction += HandleDirRotation;
         inputManager.rightClickPerformedAction += DisableBuildingSystem;
         inputManager.backClickAction += DisableBuildingSystem;
     }
 
-    void Unsubscribe() {
+    private void Unsubscribe() {
         inputManager.leftClickAction -= HandleObjectPlacement;
         inputManager.buildingRotationAction -= HandleDirRotation;
         inputManager.rightClickPerformedAction -= DisableBuildingSystem;
         inputManager.backClickAction -= DisableBuildingSystem;
     }
 
-    void HandleObjectPlacement() {
+    private void HandleObjectPlacement() {
         if(!MyUtils.IsPointerOverUI() && Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) {
             int x = Mathf.FloorToInt(mousePosition.x);
             int z = Mathf.FloorToInt(mousePosition.z);
@@ -77,7 +77,7 @@ public class BuildingSystem {
         }
     }
 
-    void HandleDirRotation() {
+    private void HandleDirRotation() {
         dir = GetNextDir(dir);
     }
 
@@ -133,7 +133,7 @@ public class BuildingSystem {
         OnSelectedObject?.Invoke();
     }
 
-    void TryPlaceObject(Vector2Int placedObjectOrigin) {
+    private void TryPlaceObject(Vector2Int placedObjectOrigin) {
         List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
         List<ConveyorBelt> beltsToRemove = new();
 

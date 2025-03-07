@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class MaterialScrollY : MonoBehaviour {
 
-    [SerializeField] float scrollSpeed;
-    [SerializeField] Material targetMaterial;
+    [SerializeField] private float scrollSpeed;
+    [SerializeField] private Material targetMaterial;
 
-    float currentOffset;
-    Vector2 textureOffset;
+    private float currentOffset;
+    private Vector2 textureOffset;
 
-    void Start() {
+    private void Start() {
         textureOffset = targetMaterial.mainTextureOffset;
     }
 
-    void Update() {
+    private void Update() {
         currentOffset += scrollSpeed * Time.deltaTime;
 
         if(currentOffset > 1f) {

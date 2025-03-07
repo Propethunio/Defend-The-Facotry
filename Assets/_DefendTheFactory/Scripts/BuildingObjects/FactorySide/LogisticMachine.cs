@@ -13,7 +13,7 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
 
     public override void Initialize(Vector2Int origin, BuildingDir dir, T buildableDataSO) { }
 
-    void OnDestroy() {
+    private void OnDestroy() {
         Unsubscribe();
     }
 
@@ -29,12 +29,12 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
         base.DestroySelf();
     }
 
-    void Subscribe() {
+    private void Subscribe() {
         TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
         TimeTickSystem.Instance.OnLateTick += OnLateTick;
     }
 
-    void Unsubscribe() {
+    private void Unsubscribe() {
         TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
         TimeTickSystem.Instance.OnLateTick -= OnLateTick;
 
