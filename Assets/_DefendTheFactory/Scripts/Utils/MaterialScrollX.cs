@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class MaterialScrollX : MonoBehaviour {
-
     [SerializeField] private float scrollSpeed;
     [SerializeField] private Material targetMaterial;
 
@@ -15,9 +14,10 @@ public class MaterialScrollX : MonoBehaviour {
     private void Update() {
         currentOffset += scrollSpeed * Time.deltaTime;
 
-        if(currentOffset > 1f) {
+        if (currentOffset > 1f) {
             currentOffset -= 1f;
-        } else if(currentOffset < 1f) {
+        }
+        else if (currentOffset < 1f) {
             currentOffset += 1f;
         }
 

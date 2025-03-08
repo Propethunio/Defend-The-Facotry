@@ -2,6 +2,7 @@
 using UnityEngine;
 
 public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
+    public event Action<Vector2Int, Vector2Int> OnVisualUpdate;
 
     [HideInInspector] public Vector2Int previousPosition;
     [HideInInspector] public Vector2Int nextPosition;
@@ -11,9 +12,7 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
 
     private BuildingSystem buildingSystem;
 
-    public event Action<Vector2Int, Vector2Int> OnVisualUpdate;
-
-    public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
+    protected override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
         BaseDataSet(origin, dir, placedObjectDataSO);
     }
 
@@ -25,7 +24,7 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
         GridCell[,] gridArray = buildingSystem.grid.gridArray;
         Vector2Int backPosition = origin - forwardVector;
 
-        if(ShouldSnap(gridArray, backPosition)) {
+        if (ShouldSnap(gridArray, backPosition)) {
             previousPosition = backPosition;
             return;
         }
@@ -37,17 +36,19 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
         bool snapRight = ShouldSnap(gridArray, rightPosition);
         bool snapLeft = ShouldSnap(gridArray, leftPosition);
 
-        if(snapLeft && !snapRight) {
+        if (snapLeft && !snapRight) {
             previousPosition = leftPosition;
-        } else if(snapRight && !snapLeft) {
+        }
+        else if (snapRight && !snapLeft) {
             previousPosition = rightPosition;
-        } else {
+        }
+        else {
             previousPosition = backPosition;
         }
     }
 
     private bool ShouldSnap(GridCell[,] gridArray, Vector2Int position) {
-        if(!IsPositionValid(gridArray, position)) return false;
+        if (!IsPositionValid(gridArray, position)) return false;
 
         ConveyorBelt belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
         return belt != null && belt.nextPosition == origin;
@@ -60,17 +61,17 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     public override void GridSetupDone() {
         BeltManager.Instance.AddBelt(this);
 
-        if(parentBuilding == null) {
+        if (parentBuilding == null) {
             OnVisualUpdate?.Invoke(origin, previousPosition);
         }
     }
 
     public override void DestroySelf() {
-        if(startItem != null) {
+        if (startItem != null) {
             startItem.DestroySelf();
         }
 
-        if(endItem != null) {
+        if (endItem != null) {
             endItem.DestroySelf();
         }
 
@@ -92,11 +93,10 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     }
 
     public bool TrySetWorldItem(WorldItem worldItem) {
-        if(startItem == null) {
-            startItem = worldItem;
-            return true;
-        }
-        return false;
+        if (startItem != null) return false;
+
+        startItem = worldItem;
+        return true;
     }
 
     public void SetWorldItem(WorldItem worldItem) {
@@ -111,8 +111,9 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
         return feedback;
     }
 
-    public void TakeActionOnLastLoopedBelt(bool recivedItemInThisTick, ConveyorBelt nextBelt) {
-        if(recivedItemInThisTick) return;
+    public void TakeActionOnLastLoopedBelt(bool receivedItemInThisTick, ConveyorBelt nextBelt) {
+        if (receivedItemInThisTick) return;
+
         TakeAction(nextBelt);
     }
 
@@ -123,12 +124,15 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     }
 
     private bool TakeActionOnEndItemWithFeedback(ConveyorBelt nextBelt) {
-        if(endItem == null) return false;
-        if(nextBelt == null) {
+        if (endItem == null) return false;
+
+        if (nextBelt == null) {
             nextBelt = buildingSystem.GetGridObject(nextPosition).placedObject as ConveyorBelt;
-            if(nextBelt == null) return false;
+            if (nextBelt == null) return false;
         }
-        if(!nextBelt.TrySetWorldItem(endItem)) return true;
+
+        if (!nextBelt.TrySetWorldItem(endItem)) return true;
+
         MoveEndItem(nextBelt);
         endItem = null;
         return false;
@@ -144,18 +148,22 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     }
 
     private void TakeActionOnEndItem(ConveyorBelt nextBelt) {
-        if(endItem == null) return;
-        if(nextBelt == null) {
+        if (endItem == null) return;
+
+        if (nextBelt == null) {
             nextBelt = buildingSystem.GetGridObject(nextPosition).placedObject as ConveyorBelt;
-            if(nextBelt == null) return;
+            if (nextBelt == null) return;
         }
-        if(!nextBelt.TrySetWorldItem(endItem)) return;
+
+        if (!nextBelt.TrySetWorldItem(endItem)) return;
+
         MoveEndItem(nextBelt);
         endItem = null;
     }
 
     private void TakeActionOnStartItem() {
-        if(startItem == null || endItem != null) return;
+        if (startItem == null || endItem != null) return;
+
         MoveStartItem();
         endItem = startItem;
         startItem = null;
@@ -174,25 +182,26 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     }
 
     private void MoveStartItem() {
-        Vector2 nextPosition = CalculateNextPositionForStartItem();
+        Vector2 nextPos = CalculateNextPositionForStartItem();
         bool isCurved = false;
 
-        switch(dir) {
+        switch (dir) {
             case BuildingDir.Down:
             case BuildingDir.Up:
-                isCurved = startItem.transform.position.x != nextPosition.x;
+                isCurved = !Mathf.Approximately(startItem.transform.position.x, nextPos.x);
                 break;
 
             case BuildingDir.Left:
             case BuildingDir.Right:
-                isCurved = startItem.transform.position.z != nextPosition.y;
+                isCurved = !Mathf.Approximately(startItem.transform.position.z, nextPos.y);
                 break;
         }
 
-        if(isCurved) {
-            startItem.MoveToPositionCurved(nextPosition);
-        } else {
-            startItem.MoveToPosition(nextPosition);
+        if (isCurved) {
+            startItem.MoveToPositionCurved(nextPos);
+        }
+        else {
+            startItem.MoveToPosition(nextPos);
         }
     }
 
@@ -201,7 +210,7 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     }
 
     private Vector2 CalculateNextPositionForStartItem() {
-        switch(dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return origin + new Vector2(0.5f, 0.25f);
             case BuildingDir.Left: return origin + new Vector2(0.25f, 0.5f);
@@ -211,7 +220,7 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     }
 
     private Vector2 CalculateNextPositionForEndItem(ConveyorBelt nextBelt) {
-        switch(dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return nextBelt.origin + new Vector2(0.5f, 0.75f);
             case BuildingDir.Left: return nextBelt.origin + new Vector2(0.75f, 0.5f);

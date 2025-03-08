@@ -2,25 +2,23 @@
 using UnityEngine;
 
 public class BuildingGhost : MonoBehaviour {
-
     public static BuildingGhost Instance { get; private set; }
-
-    public Action positionChanged;
-
-    public Vector3 lastPosition { get; private set; }
 
     [SerializeField] private float snapSpeed;
 
+    public Action positionChanged;
+
+    private Vector3 lastPosition;
     private Transform visual;
     private BuildingSystem buildingSystem;
 
     private void Awake() {
-        if(Instance == null) Instance = this;
-        else return;
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     private void LateUpdate() {
-        if(!visual) return;
+        if (!visual) return;
 
         MoveGhostToGridPosition();
     }
@@ -34,7 +32,7 @@ public class BuildingGhost : MonoBehaviour {
     private void MoveGhostToGridPosition() {
         Vector3 targetPosition = buildingSystem.GetMouseWorldSnappedPosition();
 
-        if(targetPosition != Vector3.back && lastPosition != targetPosition) {
+        if (targetPosition != Vector3.back && lastPosition != targetPosition) {
             lastPosition = targetPosition;
             positionChanged?.Invoke();
         }
@@ -51,7 +49,7 @@ public class BuildingGhost : MonoBehaviour {
     }
 
     private void DestroyVisual() {
-        if(visual != null) {
+        if (visual != null) {
             Destroy(visual.gameObject);
         }
     }

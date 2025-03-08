@@ -8,7 +8,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
     private Dictionary<LogisticDir, ConveyorBelt> inputBelts = new();
     private Dictionary<LogisticDir, Vector2Int> inputPositions = new();
 
-    public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
+    protected override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
     }
 

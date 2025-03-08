@@ -9,7 +9,6 @@ using UnityEditor;
 using UnityEngine;
 
 public class DefendTheFactoryEditor : OdinMenuEditorWindow {
-
     private static readonly string[] mainTabs = { "Machines", "Items", "Recipes", "Towers", "Enemies", "Localization" };
     private int selectedMainTab = 0;
     private int selectedSubTab = 0;
@@ -25,21 +24,16 @@ public class DefendTheFactoryEditor : OdinMenuEditorWindow {
     protected override void OnImGUI() {
         selectedMainTab = GUILayout.Toolbar(selectedMainTab, mainTabs, GUILayout.Height(34));
 
-        if(selectedMainTab == 0) {
+        if (selectedMainTab == 0) {
             string[] machineTypeNames = machineTypes.Select(t => Regex.Replace(t.Name.Replace("SO", ""), "(?<!^)([A-Z])", " $1")).ToArray();
             selectedSubTab = GUILayout.Toolbar(selectedSubTab, machineTypeNames, GUILayout.Height(28));
             selectedType = machineTypes[selectedSubTab];
-        } else if(selectedMainTab == 1) {
-
-        } else if(selectedMainTab == 2) {
-
-        } else if(selectedMainTab == 3) {
-
-        } else if(selectedMainTab == 4) {
-
-        } else {
-
         }
+        else if (selectedMainTab == 1) { }
+        else if (selectedMainTab == 2) { }
+        else if (selectedMainTab == 3) { }
+        else if (selectedMainTab == 4) { }
+        else { }
 
         base.OnImGUI();
     }
@@ -47,12 +41,13 @@ public class DefendTheFactoryEditor : OdinMenuEditorWindow {
     protected override OdinMenuTree BuildMenuTree() {
         OdinMenuTree menuTree = new OdinMenuTree();
 
-        if(selectedMainTab == 0) {
+        if (selectedMainTab == 0) {
             string directory = GetDirectoryForType(selectedType);
             menuTree.Add("Create New", new NewFactoryData(selectedType));
             var assets = menuTree.AddAllAssetsAtPath(string.Empty, directory, selectedType);
             assets.AddIcons<BaseBuildableObjectSO>(x => x.icon);
-        } else if(selectedMainTab == 1) {
+        }
+        else if (selectedMainTab == 1) {
             // Handle the second tab (if necessary)
             /*string towerDirectory = "Assets/_DefendTheFactory/Data/TowerDefense/Towers";
             var towerSection = new MachineTypeMenu(typeof(TowerSO));
@@ -64,19 +59,19 @@ public class DefendTheFactoryEditor : OdinMenuEditorWindow {
         return menuTree;
     }
 
-
     protected override void OnBeginDrawEditors() {
         OdinMenuTreeSelection selected = MenuTree.Selection;
         SirenixEditorGUI.BeginHorizontalToolbar();
         GUILayout.FlexibleSpace();
         selectedObject = selected.SelectedValue as BaseBuildableObjectSO;
 
-        if(selectedObject) {
-            if(SirenixEditorGUI.ToolbarButton("Delete Object")) {
+        if (selectedObject) {
+            if (SirenixEditorGUI.ToolbarButton("Delete Object")) {
                 DeleteCurrentObject();
             }
-        } else if(selected.SelectedValue is NewFactoryData newMachine) {
-            if(SirenixEditorGUI.ToolbarButton("Create Object")) {
+        }
+        else if (selected.SelectedValue is NewFactoryData newMachine) {
+            if (SirenixEditorGUI.ToolbarButton("Create Object")) {
                 newMachine.CreateNewData();
             }
         }
@@ -86,7 +81,8 @@ public class DefendTheFactoryEditor : OdinMenuEditorWindow {
 
     protected override void OnDestroy() {
         base.OnDestroy();
-        if(newFactoryData != null) {
+
+        if (newFactoryData != null) {
             DestroyImmediate(newFactoryData.factoryData);
         }
     }
@@ -98,8 +94,9 @@ public class DefendTheFactoryEditor : OdinMenuEditorWindow {
     }
 
     private static string GetDirectoryForType(Type type) {
-        if(type == typeof(GatheringMachineSO)) return "Assets/_DefendTheFactory/Data/FactorySide/GatheringMachines";
-        if(type == typeof(ConstructorSO)) return "Assets/_DefendTheFactory/Data/FactorySide/Constructors";
+        if (type == typeof(GatheringMachineSO)) return "Assets/_DefendTheFactory/Data/FactorySide/GatheringMachines";
+        if (type == typeof(ConstructorSO)) return "Assets/_DefendTheFactory/Data/FactorySide/Constructors";
+
         return "Assets/_DefendTheFactory/Data/FactorySide";
     }
 
@@ -115,7 +112,7 @@ public class DefendTheFactoryEditor : OdinMenuEditorWindow {
         public BaseBuildableObjectSO factoryData;
 
         public void CreateNewData() {
-            if(string.IsNullOrWhiteSpace(factoryData.nameString)) {
+            if (string.IsNullOrWhiteSpace(factoryData.nameString)) {
                 Debug.LogWarning("Cannot create asset: NameString is empty.");
                 return;
             }

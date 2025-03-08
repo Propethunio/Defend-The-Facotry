@@ -2,7 +2,6 @@ using Unity.Cinemachine;
 using UnityEngine;
 
 public class CameraFollowTarget : MonoBehaviour {
-
     [SerializeField] private CinemachineCamera cinemachineCamera;
     [SerializeField] private bool moveOnEdge;
     [SerializeField] private int edgeScrollSize;
@@ -59,7 +58,8 @@ public class CameraFollowTarget : MonoBehaviour {
     }
 
     private void InputManager_rightClickPerformed() {
-        if(rotateOnHoldActive) return;
+        if (rotateOnHoldActive) return;
+
         moveOnHoldActive = true;
         lastMousePosMove = inputManager.mousePos;
     }
@@ -69,7 +69,8 @@ public class CameraFollowTarget : MonoBehaviour {
     }
 
     private void InputManager_scrollClickPerformed() {
-        if(moveOnHoldActive) return;
+        if (moveOnHoldActive) return;
+
         rotateOnHoldActive = true;
         lastMousePosRotate = inputManager.mousePos.x;
     }
@@ -81,49 +82,54 @@ public class CameraFollowTarget : MonoBehaviour {
     private void MoveCamera() {
         Vector2 inputDir = Vector2.zero;
 
-        if(moveOnHoldActive) {
+        if (moveOnHoldActive) {
             Vector2 newMousePosMove = inputManager.mousePos;
             Vector2 mouseMove = newMousePosMove - lastMousePosMove;
             inputDir.x = Mathf.Clamp(-mouseMove.x, -moveSpeedOnDrag, moveSpeedOnDrag);
             inputDir.y = Mathf.Clamp(-mouseMove.y, -moveSpeedOnDrag, moveSpeedOnDrag);
             lastMousePosMove = newMousePosMove;
-        } else {
+        }
+        else {
             inputDir = inputManager.moveDir;
 
-            if(inputDir == Vector2.zero && moveOnEdge && !rotateOnHoldActive && Application.isFocused) {
+            if (inputDir == Vector2.zero && moveOnEdge && !rotateOnHoldActive && Application.isFocused) {
                 Vector2 mousePos = inputManager.mousePos;
-                if(mousePos.x < edgeScrollSize) {
+
+                if (mousePos.x < edgeScrollSize) {
                     inputDir.x = -1f;
-                } else if(mousePos.x > screenRightScroll) {
+                }
+                else if (mousePos.x > screenRightScroll) {
                     inputDir.x = 1f;
                 }
 
-                if(mousePos.y < edgeScrollSize) {
+                if (mousePos.y < edgeScrollSize) {
                     inputDir.y = -1f;
-                } else if(mousePos.y > screenTopScroll) {
+                }
+                else if (mousePos.y > screenTopScroll) {
                     inputDir.y = 1f;
                 }
             }
         }
 
-        if(inputDir != Vector2.zero) {
-            Vector3 moveDir = target.forward * inputDir.y + target.right * inputDir.x;
-            target.position += moveDir * moveSpeed * Time.deltaTime;
-        }
+        if (inputDir == Vector2.zero) return;
+
+        Vector3 moveDir = target.forward * inputDir.y + target.right * inputDir.x;
+        target.position += moveSpeed * Time.deltaTime * moveDir;
     }
 
     private void RotateCamera() {
         float rotateDir = 0f;
 
-        if(rotateOnHoldActive) {
+        if (rotateOnHoldActive) {
             float newMousePosRotate = inputManager.mousePos.x;
             rotateDir = Mathf.Clamp(newMousePosRotate - lastMousePosRotate, -rotateSpeedOnDrag, rotateSpeedOnDrag);
             lastMousePosRotate = newMousePosRotate;
-        } else {
+        }
+        else {
             rotateDir = inputManager.rotationDir;
         }
 
-        if(rotateDir != 0f) {
+        if (rotateDir != 0f) {
             target.Rotate(0, rotateDir * rotateSpeed * Time.deltaTime, 0);
         }
     }

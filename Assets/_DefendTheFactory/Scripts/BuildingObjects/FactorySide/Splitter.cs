@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
+public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
     private ConveyorBelt inputBelt;
     private WorldItem newItem;
     private Dictionary<LogisticDir, ConveyorBelt> outputBelts = new();
     private Dictionary<LogisticDir, Vector2Int> outputPositions = new();
 
-    public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
+    protected override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
     }
 
@@ -28,36 +28,32 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
     }
 
     private void SetupInputBelt(Vector2Int position) {
-        if(!IsPositionValid(position)) return;
+        if (!IsPositionValid(position)) return;
 
         Action action = () => HandleGridObjectChange(position);
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if(ShouldSnap(position, out ConveyorBelt belt)) {
+        if (ShouldSnap(position, out ConveyorBelt belt)) {
             inputBelt = belt;
         }
     }
 
     private void HandleGridObjectChange(Vector2Int position) {
-        if(ShouldSnap(position, out ConveyorBelt belt)) {
-            inputBelt = belt;
-        } else {
-            inputBelt = null;
-        }
+        inputBelt = ShouldSnap(position, out ConveyorBelt belt) ? belt : null;
     }
 
     private void SetupOutputBelt(Vector2Int position, LogisticDir logisticDir) {
         outputBelts[logisticDir] = null;
 
-        if(!IsPositionValid(position)) return;
+        if (!IsPositionValid(position)) return;
 
         outputPositions[logisticDir] = position;
         Action action = () => HandleGridObjectChange(logisticDir);
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
+        if (ShouldSnapBack(position, out ConveyorBelt belt)) {
             outputBelts[logisticDir] = belt;
         }
     }
@@ -65,27 +61,29 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
     private void HandleGridObjectChange(LogisticDir dir) {
         Vector2Int position = outputPositions[dir];
 
-        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
+        if (ShouldSnapBack(position, out ConveyorBelt belt)) {
             outputBelts[dir] = belt;
-        } else {
+        }
+        else {
             outputBelts[dir] = null;
         }
     }
 
     public override void DestroySelf() {
-        if(newItem != null) {
+        if (newItem != null) {
             newItem.DestroySelf();
         }
+
         base.DestroySelf();
     }
 
     protected override void OnEarlyTick() {
-        if(newItem != null) {
+        if (newItem != null) {
             items.Add(newItem);
             newItem = null;
         }
 
-        if(items.Count == maxStorage || inputBelt == null || inputBelt.endItem == null) return;
+        if (items.Count == maxStorage || inputBelt == null || inputBelt.endItem == null) return;
 
         newItem = inputBelt.endItem;
         inputBelt.ResetWorldItem();
@@ -93,10 +91,10 @@ public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
     }
 
     protected override void OnLateTick() {
-        for(int i = 3; i > 0; i--) {
-            if(items.Count == 0) return;
+        for (int i = 3; i > 0; i--) {
+            if (items.Count == 0) return;
 
-            if(outputBelts[logisticDir] == null || outputBelts[logisticDir].startItem != null) {
+            if (outputBelts[logisticDir] == null || outputBelts[logisticDir].startItem != null) {
                 logisticDir = GetNextDir(logisticDir);
                 continue;
             }

@@ -3,7 +3,6 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Buildable Objects/Base Buildable Object")]
 public class BaseBuildableObjectSO : ScriptableObject {
-
     [field: SerializeField] public Sprite icon { get; private set; }
     [field: SerializeField] public string nameString { get; private set; }
     [field: SerializeField] public Transform prefab { get; private set; }
@@ -12,7 +11,7 @@ public class BaseBuildableObjectSO : ScriptableObject {
     [field: SerializeField] public int height { get; private set; }
 
     public Vector2Int GetRotationOffset(BuildingDir dir) {
-        switch(dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return Vector2Int.zero;
             case BuildingDir.Left: return new Vector2Int(0, width);
@@ -23,12 +22,12 @@ public class BaseBuildableObjectSO : ScriptableObject {
 
     public List<Vector2Int> GetGridPositionList(Vector2Int offset, BuildingDir dir) {
         List<Vector2Int> gridPositionList = new List<Vector2Int>(width * height);
-        bool isLeftRightRotated = dir == BuildingDir.Left || dir == BuildingDir.Right;
+        bool isLeftRightRotated = dir is BuildingDir.Left or BuildingDir.Right;
         int rotatedW = isLeftRightRotated ? height : width;
         int rotatedH = isLeftRightRotated ? width : height;
 
-        for(int x = 0; x < rotatedW; x++) {
-            for(int y = 0; y < rotatedH; y++) {
+        for (int x = 0; x < rotatedW; x++) {
+            for (int y = 0; y < rotatedH; y++) {
                 gridPositionList.Add(offset + new Vector2Int(x, y));
             }
         }
@@ -42,7 +41,7 @@ public class BaseBuildableObjectSO : ScriptableObject {
         float rotatedH = isLeftRightRotated ? width : height;
         Vector2 centerOffset = new Vector2(rotatedW / 2, rotatedH / 2);
 
-        switch(dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return origin + centerOffset;
             case BuildingDir.Left: return origin + new Vector2(centerOffset.x, width - centerOffset.y);
@@ -52,7 +51,7 @@ public class BaseBuildableObjectSO : ScriptableObject {
     }
 
     public Vector2Int GetMachineBeltPosition(Vector2Int origin, Vector2Int beltPos, BuildingDir dir) {
-        switch(dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return origin + beltPos;
             case BuildingDir.Left: return origin + new Vector2Int(beltPos.y, width - beltPos.x - 1);

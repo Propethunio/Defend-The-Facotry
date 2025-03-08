@@ -2,7 +2,6 @@
 using UnityEngine;
 
 public class TilemapVisual : MonoBehaviour {
-
     public static TilemapVisual Instance { get; private set; }
 
     [System.Serializable]
@@ -17,7 +16,7 @@ public class TilemapVisual : MonoBehaviour {
         public Vector2 uv11;
     }
 
-    [SerializeField] private TilemapSpriteUV[] tilemapSpriteUVArray = null;
+    [SerializeField] private TilemapSpriteUV[] tilemapSpriteUVArray;
 
     public Grid<TilemapCell> grid { get; private set; }
 
@@ -26,7 +25,7 @@ public class TilemapVisual : MonoBehaviour {
     private Dictionary<TilemapSprite, UVCoords> uvCoordsDictionary;
 
     private void Awake() {
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
         mesh = new Mesh();
@@ -36,24 +35,22 @@ public class TilemapVisual : MonoBehaviour {
         float textureHeight = texture.height;
         uvCoordsDictionary = new Dictionary<TilemapSprite, UVCoords>();
 
-        foreach(TilemapSpriteUV tilemapSpriteUV in tilemapSpriteUVArray) {
-            uvCoordsDictionary[tilemapSpriteUV.tilemapSprite] = new UVCoords {
-                uv00 = new Vector2(tilemapSpriteUV.uv00Pixels.x / textureWidth, tilemapSpriteUV.uv00Pixels.y / textureHeight),
-                uv11 = new Vector2(tilemapSpriteUV.uv11Pixels.x / textureWidth, tilemapSpriteUV.uv11Pixels.y / textureHeight),
-            };
+        foreach (TilemapSpriteUV tilemapSpriteUV in tilemapSpriteUVArray) {
+            uvCoordsDictionary[tilemapSpriteUV.tilemapSprite] = new UVCoords { uv00 = new Vector2(tilemapSpriteUV.uv00Pixels.x / textureWidth, tilemapSpriteUV.uv00Pixels.y / textureHeight), uv11 = new Vector2(tilemapSpriteUV.uv11Pixels.x / textureWidth, tilemapSpriteUV.uv11Pixels.y / textureHeight), };
         }
     }
 
     private void LateUpdate() {
         updateMesh = true;
-        if(updateMesh) {
-            updateMesh = false;
-            UpdateHeatMapVisual();
-        }
+
+        if (!updateMesh) return;
+
+        updateMesh = false;
+        UpdateHeatMapVisual();
     }
 
     public void Init(int width, int height) {
-        grid = new Grid<TilemapCell>(width, height, (Grid<TilemapCell> g, int x, int y) => new TilemapCell(x, y));
+        grid = new Grid<TilemapCell>(width, height, (_, x, y) => new TilemapCell(x, y));
         grid.OnGridObjectChanged += Grid_OnGridValueChanged;
         UpdateHeatMapVisual();
     }
@@ -71,7 +68,7 @@ public class TilemapVisual : MonoBehaviour {
         int y = Mathf.FloorToInt(worldPosition.y);
         TilemapCell tilemapCell = grid.gridArray[x, y];
 
-        if(tilemapCell != null) {
+        if (tilemapCell != null) {
             tilemapCell.SetTilemapSprite(tilemapSprite);
         }
     }
@@ -83,23 +80,25 @@ public class TilemapVisual : MonoBehaviour {
     private void UpdateHeatMapVisual() {
         MeshUtils.CreateEmptyMeshArrays(grid.width * grid.height, out Vector3[] vertices, out Vector2[] uv, out int[] triangles);
 
-        for(int x = 0; x < grid.width; x++) {
-            for(int y = 0; y < grid.height; y++) {
+        for (int x = 0; x < grid.width; x++) {
+            for (int y = 0; y < grid.height; y++) {
                 int index = x * grid.height + y;
                 Vector3 quadSize = new Vector3(1, 1);
                 TilemapCell gridObject = grid.gridArray[x, y];
                 TilemapSprite tilemapSprite = gridObject.tilemapSprite;
                 Vector2 gridUV00, gridUV11;
 
-                if(tilemapSprite == TilemapSprite.None) {
+                if (tilemapSprite == TilemapSprite.None) {
                     gridUV00 = Vector2.zero;
                     gridUV11 = Vector2.zero;
                     quadSize = Vector3.zero;
-                } else {
+                }
+                else {
                     UVCoords uvCoords = uvCoordsDictionary[tilemapSprite];
                     gridUV00 = uvCoords.uv00;
                     gridUV11 = uvCoords.uv11;
                 }
+
                 MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, new Vector3(x, y) + quadSize * .5f, 0f, quadSize, gridUV00, gridUV11);
             }
         }

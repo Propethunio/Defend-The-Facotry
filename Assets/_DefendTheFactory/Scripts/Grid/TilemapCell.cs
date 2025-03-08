@@ -1,5 +1,4 @@
 public class TilemapCell {
-
     public TilemapSprite tilemapSprite { get; private set; }
     private int x;
     private int y;

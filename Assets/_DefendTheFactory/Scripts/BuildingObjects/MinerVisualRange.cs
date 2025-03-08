@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class MinerVisualRange : MonoBehaviour {
-
     [SerializeField] private Transform centerPosition;
     [SerializeField] private GatheringMachineSO _data;
     [SerializeField] private Color _discColor;

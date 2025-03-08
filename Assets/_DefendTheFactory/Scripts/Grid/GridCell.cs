@@ -1,7 +1,6 @@
 using System;
 
 public class GridCell {
-
     public event Action ObjectChanged;
 
     public BasePlacedObject placedObject { get; private set; }

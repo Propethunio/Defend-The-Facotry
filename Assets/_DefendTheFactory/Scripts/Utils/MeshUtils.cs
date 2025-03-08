@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 
 public static class MeshUtils {
-
     private static Quaternion[] cachedQuaternionEulerArr;
+
     private static void CacheQuaternionEuler() {
-        if(cachedQuaternionEulerArr != null) return;
+        if (cachedQuaternionEulerArr != null) return;
+
         cachedQuaternionEulerArr = new Quaternion[360];
-        for(int i = 0; i < 360; i++) {
+
+        for (int i = 0; i < 360; i++) {
             cachedQuaternionEulerArr[i] = Quaternion.Euler(0, 0, i);
         }
     }
@@ -14,17 +16,20 @@ public static class MeshUtils {
     private static Quaternion GetQuaternionEuler(float rotFloat) {
         int rot = Mathf.RoundToInt(rotFloat);
         rot = rot % 360;
-        if(rot < 0) rot += 360;
+        if (rot < 0) rot += 360;
         //if (rot >= 360) rot -= 360;
-        if(cachedQuaternionEulerArr == null) CacheQuaternionEuler();
+        if (cachedQuaternionEulerArr == null) CacheQuaternionEuler();
         return cachedQuaternionEulerArr[rot];
     }
 
     private static Quaternion[] cachedQuaternionEulerXZArr;
+
     private static void CacheQuaternionEulerXZ() {
-        if(cachedQuaternionEulerXZArr != null) return;
+        if (cachedQuaternionEulerXZArr != null) return;
+
         cachedQuaternionEulerXZArr = new Quaternion[360];
-        for(int i = 0; i < 360; i++) {
+
+        for (int i = 0; i < 360; i++) {
             cachedQuaternionEulerXZArr[i] = Quaternion.Euler(0, i, 0);
         }
     }
@@ -32,9 +37,9 @@ public static class MeshUtils {
     private static Quaternion GetQuaternionEulerXZ(float rotFloat) {
         int rot = Mathf.RoundToInt(rotFloat);
         rot = rot % 360;
-        if(rot < 0) rot += 360;
+        if (rot < 0) rot += 360;
 
-        if(cachedQuaternionEulerXZArr == null) CacheQuaternionEulerXZ();
+        if (cachedQuaternionEulerXZArr == null) CacheQuaternionEulerXZ();
         return cachedQuaternionEulerXZArr[rot];
     }
 
@@ -57,9 +62,10 @@ public static class MeshUtils {
     }
 
     public static Mesh AddToMesh(Mesh mesh, Vector3 pos, float rot, Vector3 baseSize, Vector2 uv00, Vector2 uv11) {
-        if(mesh == null) {
+        if (mesh == null) {
             mesh = CreateEmptyMesh();
         }
+
         Vector3[] vertices = new Vector3[4 + mesh.vertices.Length];
         Vector2[] uvs = new Vector2[4 + mesh.uv.Length];
         int[] triangles = new int[6 + mesh.triangles.Length];
@@ -71,28 +77,29 @@ public static class MeshUtils {
         int index = vertices.Length / 4 - 1;
         //Relocate vertices
         int vIndex = index * 4;
-        int vIndex0 = vIndex;
         int vIndex1 = vIndex + 1;
         int vIndex2 = vIndex + 2;
         int vIndex3 = vIndex + 3;
 
         baseSize *= .5f;
 
-        bool skewed = baseSize.x != baseSize.y;
-        if(skewed) {
-            vertices[vIndex0] = pos + GetQuaternionEuler(rot) * new Vector3(-baseSize.x, baseSize.y);
+        bool skewed = !Mathf.Approximately(baseSize.x, baseSize.y);
+
+        if (skewed) {
+            vertices[vIndex] = pos + GetQuaternionEuler(rot) * new Vector3(-baseSize.x, baseSize.y);
             vertices[vIndex1] = pos + GetQuaternionEuler(rot) * new Vector3(-baseSize.x, -baseSize.y);
             vertices[vIndex2] = pos + GetQuaternionEuler(rot) * new Vector3(baseSize.x, -baseSize.y);
             vertices[vIndex3] = pos + GetQuaternionEuler(rot) * baseSize;
-        } else {
-            vertices[vIndex0] = pos + GetQuaternionEuler(rot - 270) * baseSize;
+        }
+        else {
+            vertices[vIndex] = pos + GetQuaternionEuler(rot - 270) * baseSize;
             vertices[vIndex1] = pos + GetQuaternionEuler(rot - 180) * baseSize;
             vertices[vIndex2] = pos + GetQuaternionEuler(rot - 90) * baseSize;
             vertices[vIndex3] = pos + GetQuaternionEuler(rot - 0) * baseSize;
         }
 
         //Relocate UVs
-        uvs[vIndex0] = new Vector2(uv00.x, uv11.y);
+        uvs[vIndex] = new Vector2(uv00.x, uv11.y);
         uvs[vIndex1] = new Vector2(uv00.x, uv00.y);
         uvs[vIndex2] = new Vector2(uv11.x, uv00.y);
         uvs[vIndex3] = new Vector2(uv11.x, uv11.y);
@@ -100,7 +107,7 @@ public static class MeshUtils {
         //Create triangles
         int tIndex = index * 6;
 
-        triangles[tIndex + 0] = vIndex0;
+        triangles[tIndex + 0] = vIndex;
         triangles[tIndex + 1] = vIndex3;
         triangles[tIndex + 2] = vIndex1;
 
@@ -127,13 +134,15 @@ public static class MeshUtils {
 
         baseSize *= .5f;
 
-        bool skewed = baseSize.x != baseSize.y;
-        if(skewed) {
+        bool skewed = !Mathf.Approximately(baseSize.x, baseSize.y);
+
+        if (skewed) {
             vertices[vIndex0] = pos + GetQuaternionEuler(rot) * new Vector3(-baseSize.x, baseSize.y);
             vertices[vIndex1] = pos + GetQuaternionEuler(rot) * new Vector3(-baseSize.x, -baseSize.y);
             vertices[vIndex2] = pos + GetQuaternionEuler(rot) * new Vector3(baseSize.x, -baseSize.y);
             vertices[vIndex3] = pos + GetQuaternionEuler(rot) * baseSize;
-        } else {
+        }
+        else {
             vertices[vIndex0] = pos + GetQuaternionEuler(rot - 270) * baseSize;
             vertices[vIndex1] = pos + GetQuaternionEuler(rot - 180) * baseSize;
             vertices[vIndex2] = pos + GetQuaternionEuler(rot - 90) * baseSize;
@@ -168,13 +177,15 @@ public static class MeshUtils {
 
         baseSize *= .5f;
 
-        bool skewed = baseSize.x != baseSize.z;
-        if(skewed) {
+        bool skewed = !Mathf.Approximately(baseSize.x, baseSize.z);
+
+        if (skewed) {
             vertices[vIndex0] = pos + GetQuaternionEulerXZ(rot) * new Vector3(-baseSize.x, 0, baseSize.z);
             vertices[vIndex1] = pos + GetQuaternionEulerXZ(rot) * new Vector3(-baseSize.x, 0, -baseSize.z);
             vertices[vIndex2] = pos + GetQuaternionEulerXZ(rot) * new Vector3(baseSize.x, 0, -baseSize.z);
             vertices[vIndex3] = pos + GetQuaternionEulerXZ(rot) * baseSize;
-        } else {
+        }
+        else {
             vertices[vIndex0] = pos + GetQuaternionEulerXZ(rot - 270) * baseSize;
             vertices[vIndex1] = pos + GetQuaternionEulerXZ(rot - 180) * baseSize;
             vertices[vIndex2] = pos + GetQuaternionEulerXZ(rot - 90) * baseSize;

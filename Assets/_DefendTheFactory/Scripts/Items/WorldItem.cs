@@ -2,7 +2,6 @@
 using UnityEngine;
 
 public class WorldItem : MonoBehaviour {
-
     public ItemSO itemSO { get; private set; }
 
     private Tween moveTween;
@@ -11,7 +10,7 @@ public class WorldItem : MonoBehaviour {
         Vector3 worldPosition = new Vector3(gridPosition.x, 0.31f, gridPosition.y);
         Quaternion rotation = Quaternion.identity;
 
-        switch(dir) {
+        switch (dir) {
             case BuildingDir.Down:
                 worldPosition += new Vector3(0.5f, 0, 0.75f);
                 rotation = Quaternion.Euler(0, 180, 0);
@@ -37,7 +36,7 @@ public class WorldItem : MonoBehaviour {
     }
 
     public void MoveToPosition(Vector2 worldPosition) {
-        if(moveTween != null && moveTween.IsActive()) {
+        if (moveTween != null && moveTween.IsActive()) {
             moveTween.Kill();
         }
 
@@ -45,7 +44,7 @@ public class WorldItem : MonoBehaviour {
     }
 
     public void MoveToPositionCurved(Vector2 worldPosition) {
-        if(moveTween != null && moveTween.IsActive()) {
+        if (moveTween != null && moveTween.IsActive()) {
             moveTween.Kill();
         }
 
@@ -55,12 +54,11 @@ public class WorldItem : MonoBehaviour {
         Vector3 endPosition = new Vector3(worldPosition.x, startPosition.y, worldPosition.y);
 
         // Create a curved path using CatmullRom or a custom curve
-        moveTween = transform.DOPath(new Vector3[] { startPosition, controlPoint, endPosition }, .5f, PathType.CatmullRom)
-            .SetEase(Ease.Linear).SetLookAt(0.01f); // Smooth easing for curve motion
+        moveTween = transform.DOPath(new Vector3[] { startPosition, controlPoint, endPosition }, .5f, PathType.CatmullRom).SetEase(Ease.Linear).SetLookAt(0.01f); // Smooth easing for curve motion
     }
 
     public void DestroySelf() {
-        if(moveTween != null && moveTween.IsActive()) {
+        if (moveTween != null && moveTween.IsActive()) {
             moveTween.Kill();
         }
 

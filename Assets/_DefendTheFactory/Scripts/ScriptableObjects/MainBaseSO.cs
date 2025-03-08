@@ -4,7 +4,6 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Buildable Objects/Main Base")]
 public class MainBaseSO : BaseBuildableObjectSO {
-
     [field: SerializeField] public List<BeltPositionWithDir> inputBeltPositions { get; private set; }
 
     [Serializable]

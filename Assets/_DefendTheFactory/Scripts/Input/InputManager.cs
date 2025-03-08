@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour {
-
     public static InputManager Instance { get; private set; }
 
     public Vector2 mousePos { get; private set; }
@@ -18,7 +17,7 @@ public class InputManager : MonoBehaviour {
     private InputMap input;
 
     private void Awake() {
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
         input = new InputMap();

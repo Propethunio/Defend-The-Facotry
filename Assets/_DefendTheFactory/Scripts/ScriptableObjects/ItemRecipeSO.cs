@@ -3,7 +3,6 @@ using UnityEngine;
 
 [CreateAssetMenu()]
 public class ItemRecipeSO : ScriptableObject {
-
     public List<ItemIntPair> outputItemList;
     public List<ItemIntPair> inputItemList;
     public int craftingTicks;

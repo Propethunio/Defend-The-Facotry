@@ -2,19 +2,19 @@
 using UnityEngine;
 
 public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseBuildableObjectSO {
-
-    public T buildableDataSO { get; protected set; }
+    public T buildableDataSO { get; private set; }
 
     public static BasePlacedObject Create(Vector3 worldPosition, BuildingDir dir, T placedObjectDataSO) {
         return Instantiate(placedObjectDataSO.prefab, worldPosition, Quaternion.Euler(0, BuildingSystem.Instance.GetRotationAngle(dir), 0)).GetComponent<BasePlacedObject>();
     }
 
-    public abstract void Initialize(Vector2Int origin, BuildingDir dir, T placedObjectDataSO);
+    protected abstract void Initialize(Vector2Int origin, BuildingDir dir, T placedObjectDataSO);
 
     public override void SetData(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
-        if(placedObjectDataSO is T castedDataSO) {
+        if (placedObjectDataSO is T castedDataSO) {
             Initialize(origin, dir, castedDataSO);
-        } else {
+        }
+        else {
             Debug.LogError($"Invalid type passed to Initialize. Expected {typeof(T)} but got {placedObjectDataSO.GetType()}");
         }
     }
@@ -27,7 +27,7 @@ public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseB
     }
 
     protected virtual void TriggerGridObjectChanged() {
-        foreach(Vector2Int gridPosition in GetGridPositionList()) {
+        foreach (Vector2Int gridPosition in GetGridPositionList()) {
             BuildingSystem.Instance.grid.TriggerGridObjectChanged(gridPosition.x, gridPosition.y);
         }
     }

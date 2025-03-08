@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SingleItemUI : MonoBehaviour {
-
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text amountText;
 
@@ -20,7 +19,7 @@ public class SingleItemUI : MonoBehaviour {
     }
 
     private void OnItemChanged(ItemSO item, int amount) {
-        if(this.item != item) return;
+        if (this.item != item) return;
 
         amountText.text = amount.ToString();
     }

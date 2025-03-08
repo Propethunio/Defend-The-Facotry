@@ -11,7 +11,7 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
     protected LogisticDir logisticDir = LogisticDir.Straight;
     protected Dictionary<Action, Vector2Int> objectChangedEvents = new();
 
-    public override void Initialize(Vector2Int origin, BuildingDir dir, T buildableDataSO) { }
+    protected override void Initialize(Vector2Int origin, BuildingDir dir, T buildableDataSO) { }
 
     private void OnDestroy() {
         Unsubscribe();

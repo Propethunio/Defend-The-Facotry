@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BasePlacedObject : MonoBehaviour {
-
     [HideInInspector] public BuildingDir dir;
     public Vector2Int origin { get; protected set; }
 

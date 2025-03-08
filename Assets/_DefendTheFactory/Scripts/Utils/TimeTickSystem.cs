@@ -2,7 +2,6 @@
 using UnityEngine;
 
 public class TimeTickSystem : MonoBehaviour {
-
     public static TimeTickSystem Instance { get; private set; }
 
     public event Action OnProductionTick;
@@ -18,27 +17,27 @@ public class TimeTickSystem : MonoBehaviour {
     private int productionTicksAmount;
 
     private void Awake() {
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
     private void Update() {
-        if(!isTicking) return;
+        if (!isTicking) return;
 
         tickTimer += Time.deltaTime;
 
-        if(tickTimer >= PRODUCTION_TICK_TIMER_MAX) {
-            tickTimer -= PRODUCTION_TICK_TIMER_MAX;
-            productionTicksAmount++;
-            OnProductionTick?.Invoke();
+        if (!(tickTimer >= PRODUCTION_TICK_TIMER_MAX)) return;
 
-            if(productionTicksAmount == PRODUCTION_TICKS_FOR_FULL_TICK) {
-                productionTicksAmount = 0;
-                OnEarlyTick?.Invoke();
-                OnTick?.Invoke();
-                OnLateTick?.Invoke();
-            }
-        }
+        tickTimer -= PRODUCTION_TICK_TIMER_MAX;
+        productionTicksAmount++;
+        OnProductionTick?.Invoke();
+
+        if (productionTicksAmount != PRODUCTION_TICKS_FOR_FULL_TICK) return;
+
+        productionTicksAmount = 0;
+        OnEarlyTick?.Invoke();
+        OnTick?.Invoke();
+        OnLateTick?.Invoke();
     }
 
     public void ToggleIsTick() {

@@ -1,20 +1,19 @@
 using UnityEngine;
 
 public class GhostBeltVisualController : MonoBehaviour {
-
     [SerializeField] private GameObject straightBeltVisual;
     [SerializeField] private GameObject leftTurnVisual;
     [SerializeField] private GameObject rightTurnVisual;
 
     private Vector2Int origin;
-    private BeltManager beltMenager;
+    private BeltManager beltManager;
     private BuildingGhost buildingGhost;
     private BuildingSystem buildingSystem;
     private GridCell[,] gridArray;
     private ConveyorBeltVisualController modifiedBeltVisual;
 
     private void Start() {
-        beltMenager = BeltManager.Instance;
+        beltManager = BeltManager.Instance;
         buildingSystem = BuildingSystem.Instance;
         gridArray = buildingSystem.grid.gridArray;
         buildingSystem.OnObjectPlaced += ResetModifiedBelt;
@@ -26,7 +25,7 @@ public class GhostBeltVisualController : MonoBehaviour {
         buildingSystem.OnObjectPlaced -= ResetModifiedBelt;
         buildingGhost.positionChanged -= SetVisual;
 
-        if(modifiedBeltVisual != null) {
+        if (modifiedBeltVisual != null) {
             modifiedBeltVisual.ShowStraightVisual();
         }
     }
@@ -38,7 +37,7 @@ public class GhostBeltVisualController : MonoBehaviour {
 
         TryModifyNextBelt(origin + forwardVector);
 
-        if(gridArray[origin.x, origin.y].placedObject != null || ShouldSnap(origin - forwardVector)) {
+        if (gridArray[origin.x, origin.y].placedObject != null || ShouldSnap(origin - forwardVector)) {
             ShowStraightVisual();
             return;
         }
@@ -48,32 +47,35 @@ public class GhostBeltVisualController : MonoBehaviour {
         bool snapRight = ShouldSnap(origin + rightVector);
         bool snapLeft = ShouldSnap(origin - rightVector);
 
-        if(snapLeft && !snapRight) {
+        if (snapLeft && !snapRight) {
             ShowLeftVisual();
-        } else if(snapRight && !snapLeft) {
+        }
+        else if (snapRight && !snapLeft) {
             ShowRightVisual();
-        } else {
+        }
+        else {
             ShowStraightVisual();
         }
     }
 
     private void TryModifyNextBelt(Vector2Int nextPosition) {
-        if(modifiedBeltVisual != null) {
+        if (modifiedBeltVisual != null) {
             modifiedBeltVisual.ShowStraightVisual();
             modifiedBeltVisual = null;
         }
 
-        if(!IsPositionValid(nextPosition)) return;
+        if (!IsPositionValid(nextPosition)) return;
 
         ConveyorBelt nextBelt = gridArray[nextPosition.x, nextPosition.y].placedObject as ConveyorBelt;
-        if(nextBelt == null || nextBelt.parentBuilding != null || !beltMenager.beltEndsDict.ContainsKey(nextBelt) || nextBelt.nextPosition == origin || nextBelt.previousPosition == origin) {
+
+        if (nextBelt == null || nextBelt.parentBuilding != null || !beltManager.beltEndsDict.ContainsKey(nextBelt) || nextBelt.nextPosition == origin || nextBelt.previousPosition == origin) {
             return;
         }
 
-        if(IsPositionValid(new Vector2Int(nextBelt.previousPosition.x, nextBelt.previousPosition.y))) {
+        if (IsPositionValid(new Vector2Int(nextBelt.previousPosition.x, nextBelt.previousPosition.y))) {
             ConveyorBelt beltConnectedToNextBelt = gridArray[nextBelt.previousPosition.x, nextBelt.previousPosition.y].placedObject as ConveyorBelt;
 
-            if(beltConnectedToNextBelt != null && beltConnectedToNextBelt.nextPosition == nextBelt.origin) {
+            if (beltConnectedToNextBelt != null && beltConnectedToNextBelt.nextPosition == nextBelt.origin) {
                 return;
             }
         }
@@ -82,9 +84,10 @@ public class GhostBeltVisualController : MonoBehaviour {
         Vector2Int forwardVector = buildingSystem.GetDirForwardVector(nextBelt.dir);
         Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
 
-        if(nextBelt.origin - rightVector == origin) {
+        if (nextBelt.origin - rightVector == origin) {
             modifiedBeltVisual.ShowLeftVisual();
-        } else {
+        }
+        else {
             modifiedBeltVisual.ShowRightVisual();
         }
     }

@@ -4,7 +4,6 @@ using UnityEngine;
 using UtilsClass;
 
 public class BuildingSystem {
-
     public static BuildingSystem Instance { get; private set; }
 
     public Action OnSelectedObject;
@@ -12,21 +11,21 @@ public class BuildingSystem {
     public Action OnObjectPlaced;
 
     public Grid<GridCell> grid { get; private set; }
-    public BaseBuildableObjectSO placedObjectTypeSO { get; private set; }
     public BuildingDir dir { get; private set; }
 
+    private BaseBuildableObjectSO placedObjectTypeSO;
     private InputManager inputManager;
     private bool isBuildingSystemActive;
     private bool isDemolishActive;
-    private BuildingGhost buildingGhost;
 
     public BuildingSystem(int width, int height) {
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
         else return;
-        grid = new Grid<GridCell>(width, height, (Grid<GridCell> g, int x, int y) => new GridCell());
+
+        grid = new Grid<GridCell>(width, height, (_, _, _) => new GridCell());
         inputManager = InputManager.Instance;
-        buildingGhost = BuildingGhost.Instance;
-        buildingGhost.Init();
+        var buildingGhost1 = BuildingGhost.Instance;
+        buildingGhost1.Init();
     }
 
     public void Test(BaseBuildableObjectSO test) {
@@ -35,7 +34,7 @@ public class BuildingSystem {
     }
 
     private void EnableBuildingSystem() {
-        if(isBuildingSystemActive) return;
+        if (isBuildingSystemActive) return;
 
         dir = BuildingDir.Down;
         isBuildingSystemActive = true;
@@ -44,7 +43,7 @@ public class BuildingSystem {
     }
 
     private void DisableBuildingSystem() {
-        if(!isBuildingSystemActive) return;
+        if (!isBuildingSystemActive) return;
 
         placedObjectTypeSO = null;
         isBuildingSystemActive = false;
@@ -69,12 +68,12 @@ public class BuildingSystem {
     }
 
     private void HandleObjectPlacement() {
-        if(!MyUtils.IsPointerOverUI() && Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) {
-            int x = Mathf.FloorToInt(mousePosition.x);
-            int z = Mathf.FloorToInt(mousePosition.z);
-            Vector2Int placedObjectOrigin = new Vector2Int(x, z);
-            TryPlaceObject(placedObjectOrigin);
-        }
+        if (MyUtils.IsPointerOverUI() || !Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
+
+        int x = Mathf.FloorToInt(mousePosition.x);
+        int z = Mathf.FloorToInt(mousePosition.z);
+        Vector2Int placedObjectOrigin = new Vector2Int(x, z);
+        TryPlaceObject(placedObjectOrigin);
     }
 
     private void HandleDirRotation() {
@@ -82,20 +81,21 @@ public class BuildingSystem {
     }
 
     public void HandleDemolish() {
-        if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
+        if (!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
 
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);
 
         BasePlacedObject placedObject = grid.gridArray[x, z].placedObject;
-        if(placedObject == null) return;
+        if (placedObject == null) return;
 
-        if(placedObject is ConveyorBelt conveyorBelt && conveyorBelt.parentBuilding != null) {
+        if (placedObject is ConveyorBelt conveyorBelt && conveyorBelt.parentBuilding != null) {
             placedObject = conveyorBelt.parentBuilding;
         }
 
         List<Vector2Int> gridPositionList = placedObject.GetGridPositionList();
-        foreach(Vector2Int gridPosition in gridPositionList) {
+
+        foreach (Vector2Int gridPosition in gridPositionList) {
             grid.gridArray[gridPosition.x, gridPosition.y].ClearPlacedObject();
         }
 
@@ -103,13 +103,10 @@ public class BuildingSystem {
     }
 
     private void UpdateCanBuildTilemap() {
-        for(int x = 0; x < grid.width; x++) {
-            for(int y = 0; y < grid.height; y++) {
+        for (int x = 0; x < grid.width; x++) {
+            for (int y = 0; y < grid.height; y++) {
                 // Tilemap
-                TilemapVisual.Instance.SetTilemapSprite(new Vector3(x, y),
-                    grid.gridArray[x, y].placedObject == null ?
-                    TilemapSprite.CanBuild :
-                    TilemapSprite.CannotBuild);
+                TilemapVisual.Instance.SetTilemapSprite(new Vector3(x, y), grid.gridArray[x, y].placedObject == null ? TilemapSprite.CanBuild : TilemapSprite.CannotBuild);
             }
         }
     }
@@ -124,9 +121,10 @@ public class BuildingSystem {
     private void RefreshSelectedObjectType() {
         UpdateCanBuildTilemap();
 
-        if(placedObjectTypeSO == null) {
+        if (placedObjectTypeSO == null) {
             TilemapVisual.Instance.Hide();
-        } else {
+        }
+        else {
             TilemapVisual.Instance.Show();
         }
 
@@ -137,24 +135,27 @@ public class BuildingSystem {
         List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
         List<ConveyorBelt> beltsToRemove = new();
 
-        foreach(Vector2Int gridPosition in gridPositionList) {
+        int gridPositionCount = gridPositionList.Count;
+
+        for (int i = 0; i < gridPositionCount; i++) {
+            Vector2Int gridPosition = gridPositionList[i];
             GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
-            if(cell == null || (cell.placedObject != null && cell.placedObject is not ConveyorBelt)) {
-                return;
-            }
 
-            if(cell.placedObject != null) {
-                ConveyorBelt belt = cell.placedObject as ConveyorBelt;
+            if (cell == null || (cell.placedObject != null && cell.placedObject is not ConveyorBelt)) return;
 
-                if(belt.parentBuilding != null) {
-                    return;
-                }
+            if (cell.placedObject == null) continue;
 
-                beltsToRemove.Add(belt);
-            }
+            ConveyorBelt belt = cell.placedObject as ConveyorBelt;
+
+            if (belt.parentBuilding != null) return;
+
+            beltsToRemove.Add(belt);
         }
 
-        foreach(ConveyorBelt belt in beltsToRemove) {
+        int beltsToRemoveCount = beltsToRemove.Count;
+
+        for (var i = 0; i < beltsToRemoveCount; i++) {
+            var belt = beltsToRemove[i];
             belt.DestroySelf();
         }
 
@@ -163,7 +164,8 @@ public class BuildingSystem {
         BasePlacedObject placedObject = BaseDataPlacedObject<BaseBuildableObjectSO>.Create(placedObjectWorldPosition, dir, placedObjectTypeSO);
         placedObject.SetData(placedObjectOrigin, dir, placedObjectTypeSO);
 
-        foreach(Vector2Int gridPosition in gridPositionList) {
+        for (int i = 0; i < gridPositionCount; i++) {
+            Vector2Int gridPosition = gridPositionList[i];
             grid.gridArray[gridPosition.x, gridPosition.y].SetPlacedObject(placedObject);
         }
 
@@ -186,7 +188,6 @@ public class BuildingSystem {
     }
 
     public GridCell GetGridObject(Vector3 worldPosition) {
-
         int x = Mathf.FloorToInt(worldPosition.x);
         int z = Mathf.FloorToInt(worldPosition.z);
         return grid.gridArray[x, z];
@@ -197,24 +198,23 @@ public class BuildingSystem {
     }
 
     public Vector3 GetMouseWorldSnappedPosition() {
-        if(!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return Vector3.back;
+        if (!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return Vector3.back;
 
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);
 
-        if(placedObjectTypeSO != null) {
+        if (placedObjectTypeSO != null) {
             Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
             Vector3 placedObjectWorldPosition = new Vector3(x, 0, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
             return placedObjectWorldPosition;
-        } else {
+        }
+        else {
             return mousePosition;
         }
     }
 
     public Quaternion GetPlacedObjectRotation() {
-        if(placedObjectTypeSO == null) return Quaternion.identity;
-
-        return Quaternion.Euler(0, GetRotationAngle(dir), 0);
+        return placedObjectTypeSO == null ? Quaternion.identity : Quaternion.Euler(0, GetRotationAngle(dir), 0);
     }
 
     public BaseBuildableObjectSO GetPlacedObjectTypeSO() {
@@ -241,8 +241,8 @@ public class BuildingSystem {
         grid.gridArray[beltPosition.x, beltPosition.y].SetPlacedObject(belt);
     }
 
-    public BuildingDir GetNextDir(BuildingDir dir) {
-        switch(dir) {
+    private BuildingDir GetNextDir(BuildingDir dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return BuildingDir.Left;
             case BuildingDir.Left: return BuildingDir.Up;
@@ -252,7 +252,7 @@ public class BuildingSystem {
     }
 
     public Vector2Int GetDirForwardVector(BuildingDir dir) {
-        switch(dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return new Vector2Int(0, -1);
             case BuildingDir.Left: return new Vector2Int(-1, 0);
@@ -262,7 +262,7 @@ public class BuildingSystem {
     }
 
     public int GetRotationAngle(BuildingDir dir) {
-        switch(dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return 0;
             case BuildingDir.Left: return 90;

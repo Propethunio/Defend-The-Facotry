@@ -1,11 +1,10 @@
 using UnityEngine;
 
 public class MouseClickPlane : MonoBehaviour {
-
     public static MouseClickPlane Instance;
 
     private void Awake() {
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 

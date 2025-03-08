@@ -5,7 +5,6 @@ using UnityEngine;
 using UtilsClass;
 
 public class BeltManager {
-
     public static BeltManager Instance { get; private set; }
 
     public event Action OnBeltAdded;
@@ -15,19 +14,18 @@ public class BeltManager {
 
     private GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
     private List<BeltPath> beltPathList = new();
-
-    public Transform debugVisualParent { get; private set; }
+    private Transform debugVisualParent;
 
     public BeltManager(bool showDebug) {
-        if(Instance == null) Instance = this;
+        if (Instance == null) Instance = this;
         else return;
 
         TimeTickSystem.Instance.OnTick += OnTick;
 
-        if(showDebug) {
-            debugVisualParent = new GameObject("Belt Debug Visual").transform;
-            new DebugVisual();
-        }
+        if (!showDebug) return;
+
+        debugVisualParent = new GameObject("Belt Debug Visual").transform;
+        new DebugVisual();
     }
 
     ~BeltManager() {
@@ -37,7 +35,7 @@ public class BeltManager {
     private void OnTick() {
         int beltPathsCount = beltPathList.Count;
 
-        for(int i = 0; i < beltPathsCount; i++) {
+        for (int i = 0; i < beltPathsCount; i++) {
             beltPathList[i].TakeAction();
         }
     }
@@ -46,17 +44,17 @@ public class BeltManager {
         BeltPath connectingBeltPath = null;
         ConveyorBelt connectingBelt = TryGetConnectingBelt(newBelt.previousPosition);
 
-        if(connectingBelt != null && connectingBelt.nextPosition == newBelt.origin && (connectingBelt.parentBuilding == null || newBelt.parentBuilding == null)) {
+        if (connectingBelt != null && connectingBelt.nextPosition == newBelt.origin && (connectingBelt.parentBuilding == null || newBelt.parentBuilding == null)) {
             ConnectToPreviousBelt(newBelt, connectingBelt, ref connectingBeltPath);
         }
 
         connectingBelt = TryGetConnectingBelt(newBelt.nextPosition);
 
-        if(connectingBelt != null && (connectingBelt.parentBuilding == null || newBelt.parentBuilding == null)) {
+        if (connectingBelt != null && (connectingBelt.parentBuilding == null || newBelt.parentBuilding == null)) {
             ConnectToNextBelt(newBelt, connectingBelt, ref connectingBeltPath);
         }
 
-        if(connectingBeltPath == null) {
+        if (connectingBeltPath == null) {
             CreateNewBeltPath(newBelt, ref connectingBeltPath);
         }
 
@@ -64,9 +62,10 @@ public class BeltManager {
     }
 
     private ConveyorBelt TryGetConnectingBelt(Vector2Int connectingPosition) {
-        if(connectingPosition.x >= 0 && connectingPosition.x < gridArray.GetLength(0) && connectingPosition.y >= 0 && connectingPosition.y < gridArray.GetLength(1)) {
+        if (connectingPosition.x >= 0 && connectingPosition.x < gridArray.GetLength(0) && connectingPosition.y >= 0 && connectingPosition.y < gridArray.GetLength(1)) {
             return gridArray[connectingPosition.x, connectingPosition.y].placedObject as ConveyorBelt;
         }
+
         return null;
     }
 
@@ -75,26 +74,27 @@ public class BeltManager {
         connectingBeltPath.beltList.Add(newBelt);
         beltEndsDict.Add(newBelt, connectingBeltPath);
 
-        if(connectingBeltPath.beltList.Count > 2) {
+        if (connectingBeltPath.beltList.Count > 2) {
             beltEndsDict.Remove(previousBelt);
         }
     }
 
     private void ConnectToNextBelt(ConveyorBelt newBelt, ConveyorBelt nextBelt, ref BeltPath connectingBeltPath) {
-        if(nextBelt.parentBuilding == null && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin) {
+        if (nextBelt.parentBuilding == null && beltEndsDict.ContainsKey(nextBelt) && nextBelt.nextPosition != newBelt.origin) {
             ConveyorBelt beltConnectedToNextBelt = TryGetConnectingBelt(nextBelt.previousPosition);
 
-            if(beltConnectedToNextBelt == null || beltConnectedToNextBelt.nextPosition != nextBelt.origin) {
+            if (beltConnectedToNextBelt == null || beltConnectedToNextBelt.nextPosition != nextBelt.origin) {
                 nextBelt.previousPosition = newBelt.origin;
             }
         }
 
-        if(nextBelt.previousPosition == newBelt.origin) {
-            if(connectingBeltPath != null) {
-                MergeBeltPaths(newBelt, nextBelt, connectingBeltPath);
-            } else {
-                InsertIntoExistingPath(newBelt, nextBelt, ref connectingBeltPath);
-            }
+        if (nextBelt.previousPosition != newBelt.origin) return;
+
+        if (connectingBeltPath != null) {
+            MergeBeltPaths(newBelt, nextBelt, connectingBeltPath);
+        }
+        else {
+            InsertIntoExistingPath(newBelt, nextBelt, ref connectingBeltPath);
         }
     }
 
@@ -103,7 +103,7 @@ public class BeltManager {
         bool mergedSingleBelt = mainBeltPath.beltList.Count == 1;
         MergeBeltPaths(beltEndFromMainPath, beltStartFromDeletedPath, mainBeltPath);
 
-        if(mergedSingleBelt) {
+        if (mergedSingleBelt) {
             beltEndsDict.Add(beltEndFromMainPath, mainBeltPath);
         }
     }
@@ -112,14 +112,14 @@ public class BeltManager {
         BeltPath pathToMerge = beltEndsDict[startBeltFromDeletedPath];
         beltEndsDict.Remove(endBeltFromMainPath);
 
-        if(mainBeltPath == pathToMerge) {
+        if (mainBeltPath == pathToMerge) {
             beltEndsDict.Remove(startBeltFromDeletedPath);
             return;
         }
 
         mainBeltPath.beltList.AddRange(pathToMerge.beltList);
 
-        if(pathToMerge.beltList.Count > 1) {
+        if (pathToMerge.beltList.Count > 1) {
             beltEndsDict.Remove(startBeltFromDeletedPath);
         }
 
@@ -132,7 +132,7 @@ public class BeltManager {
         connectingBeltPath.beltList.Insert(0, newBelt);
         beltEndsDict.Add(newBelt, connectingBeltPath);
 
-        if(connectingBeltPath.beltList.Count > 2) {
+        if (connectingBeltPath.beltList.Count > 2) {
             beltEndsDict.Remove(nextBelt);
         }
     }
@@ -148,27 +148,30 @@ public class BeltManager {
         ConveyorBelt newStartBelt = null;
         ConveyorBelt newEndBelt = null;
 
-        if(!beltEndsDict.TryGetValue(belt, out BeltPath beltPath)) {
+        if (!beltEndsDict.TryGetValue(belt, out BeltPath beltPath)) {
             beltPath = beltPathList.FirstOrDefault(path => path.beltList.Contains(belt));
         }
 
         int beltIndex = beltPath.beltList.IndexOf(belt);
 
-        if(beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition) {
+        if (beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition) {
             RemoveFromLoop(beltIndex, beltPath, ref newStartBelt, ref newEndBelt);
-        } else if(beltIndex == 0) {
-            RemoveFromPathStart(beltPath, belt, ref newStartBelt, ref newEndBelt);
-        } else if(beltIndex == beltPath.beltList.Count - 1) {
-            RemoveFromPathEnd(beltIndex, beltPath, belt, ref newStartBelt, ref newEndBelt);
-        } else {
+        }
+        else if (beltIndex == 0) {
+            RemoveFromPathStart(beltPath, belt, ref newStartBelt);
+        }
+        else if (beltIndex == beltPath.beltList.Count - 1) {
+            RemoveFromPathEnd(beltIndex, beltPath, belt, ref newEndBelt);
+        }
+        else {
             RemoveFromPathMiddle(beltIndex, beltPath, ref newStartBelt, ref newEndBelt);
         }
 
-        if(newStartBelt != null) {
+        if (newStartBelt != null) {
             CheckForNewStartBeltConnections(newStartBelt);
         }
 
-        if(newEndBelt != null) {
+        if (newEndBelt != null) {
             CheckForNewEndBeltConnections(newEndBelt);
         }
 
@@ -176,11 +179,13 @@ public class BeltManager {
     }
 
     private void RemoveFromLoop(int beltIndex, BeltPath beltPath, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
-        if(beltIndex == 0) {
+        if (beltIndex == 0) {
             beltPath.beltList.RemoveAt(0);
-        } else if(beltIndex == beltPath.beltList.Count - 1) {
+        }
+        else if (beltIndex == beltPath.beltList.Count - 1) {
             beltPath.beltList.RemoveAt(beltIndex);
-        } else {
+        }
+        else {
             List<ConveyorBelt> firstPart = beltPath.beltList.GetRange(0, beltIndex);
             List<ConveyorBelt> secondPart = beltPath.beltList.GetRange(beltIndex + 1, beltPath.beltList.Count - beltIndex - 1);
             beltPath.beltList.Clear();
@@ -194,26 +199,27 @@ public class BeltManager {
         beltEndsDict.Add(newEndBelt, beltPath);
     }
 
-    private void RemoveFromPathStart(BeltPath beltPath, ConveyorBelt belt, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
+    private void RemoveFromPathStart(BeltPath beltPath, ConveyorBelt belt, ref ConveyorBelt newStartBelt) {
         beltPath.beltList.RemoveAt(0);
         beltEndsDict.Remove(belt);
 
-        if(beltPath.beltList.Count > 0) {
+        if (beltPath.beltList.Count > 0) {
             newStartBelt = beltPath.beltList[0];
             beltEndsDict[newStartBelt] = beltPath;
-        } else {
+        }
+        else {
             beltPathList.Remove(beltPath);
         }
     }
 
-    private void RemoveFromPathEnd(int beltIndex, BeltPath beltPath, ConveyorBelt belt, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
+    private void RemoveFromPathEnd(int beltIndex, BeltPath beltPath, ConveyorBelt belt, ref ConveyorBelt newEndBelt) {
         beltPath.beltList.RemoveAt(beltIndex);
         beltEndsDict.Remove(belt);
 
-        if(beltPath.beltList.Count >= 2) {
-            newEndBelt = beltPath.beltList[^1];
-            beltEndsDict[newEndBelt] = beltPath;
-        }
+        if (beltPath.beltList.Count < 2) return;
+
+        newEndBelt = beltPath.beltList[^1];
+        beltEndsDict[newEndBelt] = beltPath;
     }
 
     private void RemoveFromPathMiddle(int beltIndex, BeltPath beltPath, ref ConveyorBelt newStartBelt, ref ConveyorBelt newEndBelt) {
@@ -223,7 +229,7 @@ public class BeltManager {
         beltPath.beltList.AddRange(firstPart);
         beltEndsDict[firstPart[0]] = beltPath;
 
-        if(firstPart.Count >= 2) {
+        if (firstPart.Count >= 2) {
             newEndBelt = firstPart[^1];
             beltEndsDict[newEndBelt] = beltPath;
         }
@@ -234,7 +240,7 @@ public class BeltManager {
         newStartBelt = secondPart[0];
         beltEndsDict[newStartBelt] = newSecondPath;
 
-        if(secondPart.Count >= 2) {
+        if (secondPart.Count >= 2) {
             beltEndsDict[secondPart[^1]] = newSecondPath;
         }
     }
@@ -243,13 +249,12 @@ public class BeltManager {
         Vector2Int forwardDirection = newStartBelt.nextPosition - newStartBelt.origin;
         Vector2Int newPreviousPosition = newStartBelt.origin - forwardDirection;
 
-        if(newPreviousPosition != newStartBelt.previousPosition) {
-
-            if(TryToConnectStartBeltStraight(newStartBelt, newPreviousPosition)) {
+        if (newPreviousPosition != newStartBelt.previousPosition) {
+            if (TryToConnectStartBeltStraight(newStartBelt, newPreviousPosition)) {
                 return;
             }
 
-            if(TryToConnectStartBeltSides(newStartBelt, forwardDirection)) {
+            if (TryToConnectStartBeltSides(newStartBelt, forwardDirection)) {
                 return;
             }
 
@@ -263,12 +268,10 @@ public class BeltManager {
     private bool TryToConnectStartBeltStraight(ConveyorBelt newStartBelt, Vector2Int newPreviousPosition) {
         ConveyorBelt connectedStraightBelt = TryGetConnectingBelt(newPreviousPosition);
 
-        if(connectedStraightBelt != null && connectedStraightBelt.nextPosition == newStartBelt.origin) {
-            ConnectNewStartBeltStraight(newStartBelt, connectedStraightBelt, newPreviousPosition);
-            return true;
-        }
+        if (connectedStraightBelt == null || connectedStraightBelt.nextPosition != newStartBelt.origin) return false;
 
-        return false;
+        ConnectNewStartBeltStraight(newStartBelt, connectedStraightBelt, newPreviousPosition);
+        return true;
     }
 
     private void ConnectNewStartBeltStraight(ConveyorBelt newStartBelt, ConveyorBelt connectedStraightBelt, Vector2Int newPreviousPosition) {
@@ -287,17 +290,16 @@ public class BeltManager {
         ConveyorBelt connectedLeftBelt = TryGetConnectingBelt(leftPosition);
         ConveyorBelt connectedRightBelt = TryGetConnectingBelt(rightPosition);
 
-        if(connectedLeftBelt != null && connectedLeftBelt.nextPosition == newStartBelt.origin && (connectedRightBelt == null || connectedRightBelt.nextPosition != newStartBelt.origin)) {
+        if (connectedLeftBelt != null && connectedLeftBelt.nextPosition == newStartBelt.origin && (connectedRightBelt == null || connectedRightBelt.nextPosition != newStartBelt.origin)) {
             ConnectNewStartBeltLeft(newStartBelt, connectedLeftBelt, leftPosition);
             return true;
         }
 
-        if(connectedRightBelt != null && connectedRightBelt.nextPosition == newStartBelt.origin && (connectedLeftBelt == null || connectedLeftBelt.nextPosition != newStartBelt.origin)) {
-            ConnectNewStartBeltRight(newStartBelt, connectedRightBelt, rightPosition);
-            return true;
-        }
+        if (connectedRightBelt == null || connectedRightBelt.nextPosition != newStartBelt.origin || (connectedLeftBelt != null && connectedLeftBelt.nextPosition == newStartBelt.origin))
+            return false;
 
-        return false;
+        ConnectNewStartBeltRight(newStartBelt, connectedRightBelt, rightPosition);
+        return true;
     }
 
     private void ConnectNewStartBeltLeft(ConveyorBelt newStartBelt, ConveyorBelt connectedLeftBelt, Vector2Int leftPosition) {
@@ -316,13 +318,12 @@ public class BeltManager {
         Vector2Int backDirection = newEndBelt.origin - newEndBelt.previousPosition;
         Vector2Int newNextPosition = newEndBelt.origin + backDirection;
 
-        if(newNextPosition != newEndBelt.nextPosition) {
-
-            if(TryToConnectEndBeltStraight(newEndBelt, newNextPosition)) {
+        if (newNextPosition != newEndBelt.nextPosition) {
+            if (TryToConnectEndBeltStraight(newEndBelt, newNextPosition)) {
                 return;
             }
 
-            if(TryToConnectEndBeltSides(newEndBelt, backDirection)) {
+            if (TryToConnectEndBeltSides(newEndBelt, backDirection)) {
                 return;
             }
 
@@ -337,12 +338,10 @@ public class BeltManager {
     private bool TryToConnectEndBeltStraight(ConveyorBelt newEndBelt, Vector2Int newNextPosition) {
         ConveyorBelt connectedStraightBelt = TryGetConnectingBelt(newNextPosition);
 
-        if(connectedStraightBelt != null && connectedStraightBelt.previousPosition == newEndBelt.origin) {
-            ConnectNewEndBeltStraight(newEndBelt, connectedStraightBelt, newNextPosition);
-            return true;
-        }
+        if (connectedStraightBelt == null || connectedStraightBelt.previousPosition != newEndBelt.origin) return false;
 
-        return false;
+        ConnectNewEndBeltStraight(newEndBelt, connectedStraightBelt, newNextPosition);
+        return true;
     }
 
     private void ConnectNewEndBeltStraight(ConveyorBelt newEndBelt, ConveyorBelt connectedStraightBelt, Vector2Int newNextPosition) {
@@ -360,7 +359,7 @@ public class BeltManager {
     }
 
     private Quaternion GetRotation(BuildingDir dir) {
-        switch(dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return Quaternion.Euler(0, 0, 0);
             case BuildingDir.Left: return Quaternion.Euler(0, 90, 0);
@@ -370,7 +369,7 @@ public class BeltManager {
     }
 
     private Vector2Int GetRotationOffset(BuildingDir dir) {
-        switch(dir) {
+        switch (dir) {
             default:
             case BuildingDir.Down: return Vector2Int.zero;
             case BuildingDir.Left: return new Vector2Int(0, 1);
@@ -385,17 +384,16 @@ public class BeltManager {
         ConveyorBelt connectedLeftBelt = TryGetConnectingBelt(leftPosition);
         ConveyorBelt connectedRightBelt = TryGetConnectingBelt(rightPosition);
 
-        if(connectedLeftBelt != null && connectedLeftBelt.previousPosition == newEndBelt.origin && (connectedRightBelt == null || connectedRightBelt.previousPosition != newEndBelt.origin)) {
+        if (connectedLeftBelt != null && connectedLeftBelt.previousPosition == newEndBelt.origin && (connectedRightBelt == null || connectedRightBelt.previousPosition != newEndBelt.origin)) {
             ConnectNewEndBeltLeft(newEndBelt, connectedLeftBelt, leftPosition);
             return true;
         }
 
-        if(connectedRightBelt != null && connectedRightBelt.previousPosition == newEndBelt.origin && (connectedLeftBelt == null || connectedLeftBelt.previousPosition != newEndBelt.origin)) {
-            ConnectNewEndBeltRight(newEndBelt, connectedRightBelt, rightPosition);
-            return true;
-        }
+        if (connectedRightBelt == null || connectedRightBelt.previousPosition != newEndBelt.origin || (connectedLeftBelt != null && connectedLeftBelt.previousPosition == newEndBelt.origin))
+            return false;
 
-        return false;
+        ConnectNewEndBeltRight(newEndBelt, connectedRightBelt, rightPosition);
+        return true;
     }
 
     private void ConnectNewEndBeltLeft(ConveyorBelt newEndBelt, ConveyorBelt connectedLeftBelt, Vector2Int leftPosition) {
@@ -419,13 +417,13 @@ public class BeltManager {
     }
 
     public class BeltPath {
-
         public List<ConveyorBelt> beltList { get; private set; } = new();
 
         public void TakeAction() {
-            if(beltList[^1].origin == beltList[0].previousPosition) {
+            if (beltList[^1].origin == beltList[0].previousPosition) {
                 ExecuteLoopActions();
-            } else {
+            }
+            else {
                 ExecuteStandardActions();
             }
         }
@@ -434,13 +432,14 @@ public class BeltManager {
             List<ConveyorBelt> beltsToRepeat = new();
             int beltStopIndex = beltList.Count - 2;
 
-            if(beltList[^1].TakeActionOnFirstLoopedBelt(out bool didMovedItem, beltList[0])) {
+            if (beltList[^1].TakeActionOnFirstLoopedBelt(out bool didMovedItem, beltList[0])) {
                 beltsToRepeat.Add(beltList[^1]);
 
-                for(int i = beltStopIndex; i >= 0; i--) {
-                    if(beltList[i].TakeActionWithShouldRepeatFeedback(beltList[i + 1])) {
+                for (int i = beltStopIndex; i >= 0; i--) {
+                    if (beltList[i].TakeActionWithShouldRepeatFeedback(beltList[i + 1])) {
                         beltsToRepeat.Add(beltList[i]);
-                    } else {
+                    }
+                    else {
                         beltStopIndex = i - 1;
                         break;
                     }
@@ -448,30 +447,32 @@ public class BeltManager {
             }
 
             // ✅ Ensure beltStopIndex is within valid range before using
-            if(beltStopIndex < 0) beltStopIndex = beltList.Count - 1; // Loops back if necessary
+            if (beltStopIndex < 0) beltStopIndex = beltList.Count - 1; // Loops back if necessary
             int nextIndex = (beltStopIndex + 1) % beltList.Count; // ✅ Safe looping index
 
             bool movedToNext = beltList[beltStopIndex].TakeActionOnFirstBeltAfterStop(beltList[nextIndex]);
 
-            for(int i = beltStopIndex - 1; i > 0; i--) {
+            for (int i = beltStopIndex - 1; i > 0; i--) {
                 beltList[i].TakeAction(beltList[i + 1]);
             }
 
             beltList[0].TakeActionOnLastLoopedBelt(didMovedItem, beltList[1]);
 
             // ✅ Fixes Off-by-One Error
-            for(int i = 1; i < beltsToRepeat.Count; i++) {
+            for (int i = 1; i < beltsToRepeat.Count; i++) {
                 beltsToRepeat[i].TakeAction(beltsToRepeat[i - 1]);
             }
 
             // ✅ Prevents Out-of-Bounds Access
-            if(beltsToRepeat.Count >= 2) {
-                if(movedToNext) {
+            if (beltsToRepeat.Count >= 2) {
+                if (movedToNext) {
                     beltsToRepeat[^1].TakeActionOnLastRepeatBelt(beltsToRepeat[^2]);
-                } else {
+                }
+                else {
                     beltsToRepeat[^1].TakeAction(beltsToRepeat[^2]);
                 }
-            } else if(beltsToRepeat.Count == 1) {
+            }
+            else if (beltsToRepeat.Count == 1) {
                 beltsToRepeat[0].TakeAction(null);
             }
         }
@@ -479,7 +480,7 @@ public class BeltManager {
         private void ExecuteStandardActions() {
             beltList[^1].TakeLastBeltStandardAction();
 
-            for(int i = beltList.Count - 2; i >= 0; i--) {
+            for (int i = beltList.Count - 2; i >= 0; i--) {
                 beltList[i].TakeAction(beltList[i + 1]);
             }
         }
@@ -509,14 +510,14 @@ public class BeltManager {
         }
 
         private void RefreshVisual() {
-            foreach(BeltPathDebugVisual beltPathDebugVisual in beltPathDebugVisualList) {
+            foreach (BeltPathDebugVisual beltPathDebugVisual in beltPathDebugVisualList) {
                 beltPathDebugVisual.DestroySelf();
             }
 
             beltPathDebugVisualList.Clear();
             int pathNumber = 0;
 
-            foreach(BeltPath beltPath in Instance.beltPathList) {
+            foreach (BeltPath beltPath in Instance.beltPathList) {
                 pathNumber++;
                 beltPathDebugVisualList.Add(new BeltPathDebugVisual(beltPath, pathNumber));
             }
@@ -533,11 +534,12 @@ public class BeltManager {
             Vector2Int gridPosition = beltPath.beltList[0].origin;
             Transform nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
 
-            if(beltPath.beltList.Count == 1) {
+            if (beltPath.beltList.Count == 1) {
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.cyan;
                 pathParent.position += new Vector3(0, .33f, 0);
                 return;
-            } else {
+            }
+            else {
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.green;
             }
 
@@ -545,13 +547,13 @@ public class BeltManager {
             nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
             nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.red;
 
-            for(int i = 0; i < beltPath.beltList.Count - 1; i++) {
+            for (int i = 0; i < beltPath.beltList.Count - 1; i++) {
                 ConveyorBelt belt = beltPath.beltList[i];
                 ConveyorBelt nextBelt = beltPath.beltList[i + 1];
                 gridPosition = belt.origin;
                 Vector2Int nextGridPosition = nextBelt.origin;
 
-                if(i > 0) {
+                if (i > 0) {
                     nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
                     nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.blue;
                 }
@@ -562,7 +564,7 @@ public class BeltManager {
                 nodeVisual.eulerAngles = new Vector3(0, -MyUtils.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
             }
 
-            if(beltPath.beltList[^1].nextPosition == beltPath.beltList[0].origin && beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition) {
+            if (beltPath.beltList[^1].nextPosition == beltPath.beltList[0].origin && beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition) {
                 gridPosition = beltPath.beltList[^1].origin;
                 nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, BuildingSystem.Instance.GetWorldPosition(gridPosition) + new Vector3(.5f, 0, .5f), Quaternion.identity, pathParent);
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.yellow;

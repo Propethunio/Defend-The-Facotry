@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class ItemsUI : MonoBehaviour {
-
     [SerializeField] private SingleItemUI itemPrefab;
 
     private void Start() {

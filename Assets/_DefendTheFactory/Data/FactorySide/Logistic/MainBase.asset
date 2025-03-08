@@ -22,8 +22,8 @@ MonoBehaviour:
   <height>k__BackingField: 3
   <inputBeltPositions>k__BackingField:
   - <beltPosition>k__BackingField: {x: 1, y: 0}
-    <beltDir>k__BackingField: 2
+    <beltDir>k__BackingField: 0
   - <beltPosition>k__BackingField: {x: 0, y: 1}
-    <beltDir>k__BackingField: 3
-  - <beltPosition>k__BackingField: {x: 2, y: 1}
     <beltDir>k__BackingField: 1
+  - <beltPosition>k__BackingField: {x: 2, y: 1}
+    <beltDir>k__BackingField: 3
