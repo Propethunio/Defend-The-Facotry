@@ -2,8 +2,7 @@
 using UtilsClass;
 
 public class GameManager : MonoBehaviour {
-    [SerializeField] private int width;
-    [SerializeField] private int height;
+    [SerializeField] private MapDataSO data;
     [SerializeField] private bool showBeltDebug;
 
     private void Awake() {
@@ -11,10 +10,12 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start() {
-        new BuildingSystem(width, height);
+        MapGenerator mapGenerator = new MapGenerator(data);
+        new BuildingSystem(mapGenerator.width, mapGenerator.height);
+        mapGenerator.GenerateMap();
         new BeltManager(showBeltDebug);
-        MouseClickPlane.Instance.Setup(width, height);
-        TilemapVisual.Instance.Init(width, height);
+        MouseClickPlane.Instance.Setup(mapGenerator.width, mapGenerator.height);
+        TilemapVisual.Instance.Init(mapGenerator.width, mapGenerator.height);
         TimeTickSystem.Instance.SetIsTicking(true);
     }
 

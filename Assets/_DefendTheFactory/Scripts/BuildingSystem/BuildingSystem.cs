@@ -141,7 +141,7 @@ public class BuildingSystem {
             Vector2Int gridPosition = gridPositionList[i];
             GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
 
-            if (cell == null || (cell.placedObject != null && cell.placedObject is not ConveyorBelt)) return;
+            if (cell == null || cell.isPathCell || (cell.placedObject != null && cell.placedObject is not ConveyorBelt)) return;
 
             if (cell.placedObject == null) continue;
 

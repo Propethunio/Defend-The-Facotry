@@ -2082,7 +2082,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -48.7}
+  m_AnchoredPosition: {x: 10, y: -48.69995}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &909294435
@@ -3028,8 +3028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a8cafbe3ea074949a215fa399020004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 25
-  height: 25
+  data: {fileID: 11400000, guid: e74b6e4c28d327143948909efc68f967, type: 2}
   showBeltDebug: 1
 --- !u!4 &1329027455
 Transform:
@@ -5195,7 +5194,7 @@ Transform:
   m_GameObject: {fileID: 6751589351973941032}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
