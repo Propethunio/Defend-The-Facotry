@@ -10,6 +10,6 @@ public class MouseClickPlane : MonoBehaviour {
 
     public void Setup(int x, int y) {
         transform.localScale = new Vector3(x, 0.01f, y);
-        transform.position = new Vector3(x / 2f, 0f, y / 2f);
+        transform.position = new Vector3(x / 2f, -0.1f, y / 2f);
     }
 }

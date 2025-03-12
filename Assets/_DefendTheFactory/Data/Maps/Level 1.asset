@@ -12,16 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58a43df204524ce4aa7d7884669b6c16, type: 3}
   m_Name: Level 1
   m_EditorClassIdentifier: 
-  <widthRange>k__BackingField: {x: 60, y: 68}
-  <heightRange>k__BackingField: {x: 36, y: 42}
-  <portalBorderRange>k__BackingField: {x: 3, y: 6}
-  <baseBorderRange>k__BackingField: {x: 18, y: 22}
-  <heightBorder>k__BackingField: 4
-  <minimumPathLenght>k__BackingField: 30
-  <maximumPathLenght>k__BackingField: 180
-  <minimumStraightLenghtOnStart>k__BackingField: 3
-  <minimumStraightLenghtOnEnd>k__BackingField: 3
-  <maximumStraightLenght>k__BackingField: 5
+  <widthRange>k__BackingField: {x: 82, y: 90}
+  <heightRange>k__BackingField: {x: 60, y: 66}
+  <portalPaddingRange>k__BackingField: {x: 6, y: 12}
+  <basePaddingRange>k__BackingField: {x: 26, y: 30}
+  <PathLenghtRange>k__BackingField: {x: 95, y: 110}
+  <heightPadding>k__BackingField: 12
+  <minimumStraightLenghtOnPortal>k__BackingField: 5
+  <minimumStraightLenghtOnBase>k__BackingField: 4
+  <maximumStraightPathLenght>k__BackingField: 8
+  <maximumBacktrackingPathLenght>k__BackingField: 6
+  <backtrackingPreventingPadding>k__BackingField: 8
+  <backtracksAmountRange>k__BackingField: {x: 2, y: 3}
+  <shouldPreventSquareLoops>k__BackingField: 1
+  <shouldAllowPathSplits>k__BackingField: 1
+  <splitsAmountRange>k__BackingField: {x: 1, y: 3}
+  <splitLengthRange>k__BackingField: {x: 8, y: 14}
+  <splitPadding>k__BackingField: 12
   <pathStraightPrefab>k__BackingField: {fileID: 3624640286859052353, guid: 40b3381b8f0fa5e49915d4276db04cd3,
     type: 3}
   <pathTurnPrefab>k__BackingField: {fileID: 2121214299932134041, guid: ed04d2d0e6cfda546969106e315fd82f,

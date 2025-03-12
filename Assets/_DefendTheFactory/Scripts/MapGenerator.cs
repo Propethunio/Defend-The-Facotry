@@ -9,9 +9,13 @@ public class MapGenerator {
     private HashSet<Vector2Int> path = new HashSet<Vector2Int>();
     private MapDataSO data;
     private int currentStraightLength;
-    private BuildingDir pathDir;
+    private BuildingDir currentPathDir;
+    private BuildingDir lastPathDir;
     private Vector2Int heightBounds;
     private bool shouldGenerateAgain;
+    private bool preventDiagonal;
+    private int backtrackedTimes;
+    private Vector2Int backtrackingBorder;
 
     public MapGenerator(MapDataSO mapData) {
         data = mapData;
@@ -20,48 +24,65 @@ public class MapGenerator {
     }
 
     public void GenerateMap() {
-        int x = Random.Range(data.portalBorderRange.x, data.portalBorderRange.y);
-        int y = Random.Range(data.heightBorder, height - data.heightBorder);
-        int baseBorder = Random.Range(data.baseBorderRange.x, data.baseBorderRange.y);
-        int pathEndX = width - baseBorder - data.minimumStraightLenghtOnEnd;
-        heightBounds = new Vector2Int(data.heightBorder, height - data.heightBorder);
+        int baseBorder = Random.Range(data.basePaddingRange.x, data.basePaddingRange.y);
+        int y = Random.Range(baseBorder, height - baseBorder);
+        int x = width - baseBorder + data.minimumStraightLenghtOnBase;
+        int portalBorder = Random.Range(data.portalPaddingRange.x, data.portalPaddingRange.y);
+        int portalX = portalBorder + data.minimumStraightLenghtOnPortal;
+        heightBounds = new Vector2Int(data.heightPadding, height - data.heightPadding);
+        backtrackingBorder = new Vector2Int(portalX + data.backtrackingPreventingPadding, x - data.backtrackingPreventingPadding);
+#if UNITY_EDITOR
         int safetyCheck = 0;
+#endif
 
-        while (path.Count < data.minimumPathLenght || path.Count > data.maximumPathLenght || shouldGenerateAgain) {
+        while (path.Count < data.PathLenghtRange.x || path.Count > data.PathLenghtRange.y || backtrackedTimes < data.backtracksAmountRange.x || shouldGenerateAgain) {
+            GeneratePath(x, y, portalX, portalBorder);
+#if UNITY_EDITOR
             safetyCheck++;
 
-            if (safetyCheck > 550) {
-                Debug.Log("SAFETY BREAK");
-                return;
-            }
+            if (safetyCheck <= 1000) continue;
 
-            GeneratePath(x, y, baseBorder, pathEndX);
+            Debug.LogError($"Path generation failed! Safety break: {safetyCheck} attempts!");
+            return;
+#endif
         }
 
+#if UNITY_EDITOR
+        Debug.Log($"[MAP GENERATOR INFO]Path valid after {safetyCheck} generations");
+#endif
         LayPathAsync();
-
-        //PopulateMap(width, height);
     }
 
-    private void GeneratePath(int x, int y, int baseBorder, int pathEndX) {
+    private void GeneratePath(int x, int y, int portalX, int portalBorder) {
         path.Clear();
-        pathDir = BuildingDir.Right;
+        currentPathDir = BuildingDir.Left;
+        lastPathDir = BuildingDir.Left;
         currentStraightLength = 0;
+        backtrackedTimes = 0;
         shouldGenerateAgain = false;
+        preventDiagonal = false;
         path.Add(new Vector2Int(x, y));
+        int mostProgressedX = x - data.backtrackingPreventingPadding;
 
-        for (int i = 0; i < data.minimumStraightLenghtOnStart; i++) {
-            x++;
+        for (int i = 0; i < data.minimumStraightLenghtOnBase; i++) {
+            x--;
             currentStraightLength++;
             path.Add(new Vector2Int(x, y));
         }
 
-        while (x < pathEndX) {
-            while (true) {
-                int move = Random.Range(0, 3);
+        while (x > portalX) {
+            HashSet<int> attemptedMoves = new HashSet<int>();
 
-                if (move == 0 && PathCellIsValid(x + 1, y) && MoveIsValid(BuildingDir.Right)) {
-                    x++;
+            while (true) {
+                int move = Random.Range(0, 4);
+
+                if (move == 0 && PathCellIsValid(x - 1, y) && MoveIsValid(BuildingDir.Left)) {
+                    x--;
+
+                    if (x < mostProgressedX) {
+                        mostProgressedX = x;
+                    }
+
                     break;
                 }
 
@@ -74,21 +95,33 @@ public class MapGenerator {
                     y--;
                     break;
                 }
+
+                if (move == 3 && CanBacktrack(mostProgressedX, x) && PathCellIsValid(x + 1, y) && MoveIsValid(BuildingDir.Right)) {
+                    x++;
+                    break;
+                }
+
+                attemptedMoves.Add(move);
+
+                if (attemptedMoves.Count != 4) continue;
+
+                shouldGenerateAgain = true;
+                return;
             }
 
             path.Add(new Vector2Int(x, y));
         }
 
-        for (int i = 0; i < data.minimumStraightLenghtOnEnd; i++) {
-            x++;
+        for (int i = 0; i < data.minimumStraightLenghtOnPortal; i++) {
+            x--;
             path.Add(new Vector2Int(x, y));
         }
 
-        if (y < baseBorder || y > height - baseBorder) shouldGenerateAgain = true;
+        if (y < portalBorder || y > height - portalBorder) shouldGenerateAgain = true;
     }
 
     private bool PathCellIsValid(int x, int y) {
-        return !path.Contains(new Vector2Int(x, y)) && IsCellInBounds(y) && GetNeighbouringPathCount(x, y) == 1;
+        return !path.Contains(new Vector2Int(x, y)) && IsCellInBounds(y) && GetNeighbouringPathCount(x, y) == 1 && (!data.shouldPreventSquareLoops || GetNeighbouringPathCountDiagonal(x, y) <= 1);
     }
 
     private bool IsCellInBounds(int y) {
@@ -104,18 +137,49 @@ public class MapGenerator {
         return count;
     }
 
+    private int GetNeighbouringPathCountDiagonal(int x, int y) {
+        int count = 0;
+        if (path.Contains(new Vector2Int(x + 1, y + 1))) count++;
+        if (path.Contains(new Vector2Int(x + 1, y - 1))) count++;
+        if (path.Contains(new Vector2Int(x - 1, y + 1))) count++;
+        if (path.Contains(new Vector2Int(x - 1, y - 1))) count++;
+        return count;
+    }
+
     private bool MoveIsValid(BuildingDir dir) {
-        if (dir == pathDir) {
-            if (currentStraightLength >= data.maximumStraightLenght) return false;
+        if (dir == currentPathDir) {
+            if (currentStraightLength == data.maximumStraightPathLenght) return false;
 
             currentStraightLength++;
+
+            if (currentStraightLength == 3) {
+                preventDiagonal = false;
+            }
         }
         else {
-            pathDir = dir;
+            if (dir == lastPathDir) {
+                if (preventDiagonal) return false;
+
+                preventDiagonal = true;
+            }
+            else {
+                preventDiagonal = false;
+            }
+
+            lastPathDir = currentPathDir;
+            currentPathDir = dir;
             currentStraightLength = 1;
+
+            if (currentPathDir == BuildingDir.Right) {
+                backtrackedTimes++;
+            }
         }
 
         return true;
+    }
+
+    private bool CanBacktrack(int mostProgressedX, int x) {
+        return backtrackedTimes != data.backtracksAmountRange.y && mostProgressedX + data.maximumBacktrackingPathLenght >= x && x > backtrackingBorder.x && x < backtrackingBorder.y;
     }
 
     private void LayPath() { }
@@ -158,7 +222,7 @@ public class MapGenerator {
             GameObject prefab = GetPathCellPrefab(GetNeighboursValue(cell.x, cell.y));
             GameObject.Instantiate(prefab, new Vector3(cell.x + .5f, 0, cell.y + .5f), Quaternion.Euler(0, GetRotation(GetNeighboursValue(cell.x, cell.y)), 0));
 
-            await Task.Delay(1);
+            await Task.Delay(50);
         }
     }
 }
