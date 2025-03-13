@@ -17,13 +17,13 @@ MonoBehaviour:
   <portalPaddingRange>k__BackingField: {x: 6, y: 12}
   <basePaddingRange>k__BackingField: {x: 26, y: 30}
   <PathLenghtRange>k__BackingField: {x: 95, y: 110}
-  <heightPadding>k__BackingField: 12
-  <minimumStraightLenghtOnPortal>k__BackingField: 5
+  <heightPadding>k__BackingField: 10
+  <minimumStraightLenghtOnPortal>k__BackingField: 3
   <minimumStraightLenghtOnBase>k__BackingField: 4
   <maximumStraightPathLenght>k__BackingField: 8
   <maximumBacktrackingPathLenght>k__BackingField: 6
-  <backtrackingPreventingPadding>k__BackingField: 8
-  <backtracksAmountRange>k__BackingField: {x: 2, y: 3}
+  <backtrackingPreventingPadding>k__BackingField: 16
+  <backtracksAmountRange>k__BackingField: {x: 2, y: 4}
   <shouldPreventSquareLoops>k__BackingField: 1
   <shouldAllowPathSplits>k__BackingField: 1
   <splitsAmountRange>k__BackingField: {x: 1, y: 3}
@@ -35,3 +35,9 @@ MonoBehaviour:
     type: 3}
   <pathSplitPrefab>k__BackingField: {fileID: 4817381128936455604, guid: baa85a9b958568545afa2c101fa4bc18,
     type: 3}
+  <groundPrefab>k__BackingField: {fileID: 8733235323630270510, guid: d8df5d0e31d3d824cb092aee26932333,
+    type: 3}
+  <baseData>k__BackingField: {fileID: 11400000, guid: 880c3e562302de4458612e4919efea08,
+    type: 2}
+  <portalData>k__BackingField: {fileID: 11400000, guid: 343ad8baed0cfbb49bc10c979c9ffbbf,
+    type: 2}

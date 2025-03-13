@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ public class MapGenerator {
     private bool preventDiagonal;
     private int backtrackedTimes;
     private Vector2Int backtrackingBorder;
+    private Vector2Int pathStart;
+    private Vector2Int pathEnd;
 
     public MapGenerator(MapDataSO mapData) {
         data = mapData;
@@ -23,7 +26,7 @@ public class MapGenerator {
         height = Random.Range(data.heightRange.x, data.heightRange.y);
     }
 
-    public void GenerateMap() {
+    public async Task GenerateMap() {
         int baseBorder = Random.Range(data.basePaddingRange.x, data.basePaddingRange.y);
         int y = Random.Range(baseBorder, height - baseBorder);
         int x = width - baseBorder + data.minimumStraightLenghtOnBase;
@@ -31,6 +34,7 @@ public class MapGenerator {
         int portalX = portalBorder + data.minimumStraightLenghtOnPortal;
         heightBounds = new Vector2Int(data.heightPadding, height - data.heightPadding);
         backtrackingBorder = new Vector2Int(portalX + data.backtrackingPreventingPadding, x - data.backtrackingPreventingPadding);
+        pathStart = new Vector2Int(x, y);
 #if UNITY_EDITOR
         int safetyCheck = 0;
 #endif
@@ -50,7 +54,10 @@ public class MapGenerator {
 #if UNITY_EDITOR
         Debug.Log($"[MAP GENERATOR INFO]Path valid after {safetyCheck} generations");
 #endif
-        LayPathAsync();
+        await LayPathAsync();
+        await PopulateMapAsync();
+        await SpawnPortalAsync();
+        await SpawnBase();
     }
 
     private void GeneratePath(int x, int y, int portalX, int portalBorder) {
@@ -117,7 +124,12 @@ public class MapGenerator {
             path.Add(new Vector2Int(x, y));
         }
 
-        if (y < portalBorder || y > height - portalBorder) shouldGenerateAgain = true;
+        if (y < portalBorder || y > height - portalBorder) {
+            shouldGenerateAgain = true;
+            return;
+        }
+
+        pathEnd = new Vector2Int(x, y);
     }
 
     private bool PathCellIsValid(int x, int y) {
@@ -182,8 +194,6 @@ public class MapGenerator {
         return backtrackedTimes != data.backtracksAmountRange.y && mostProgressedX + data.maximumBacktrackingPathLenght >= x && x > backtrackingBorder.x && x < backtrackingBorder.y;
     }
 
-    private void LayPath() { }
-
     private int GetNeighboursValue(int x, int y) {
         int value = 0;
         if (path.Contains(new Vector2Int(x + 1, y))) value++;
@@ -212,17 +222,76 @@ public class MapGenerator {
         return 0;
     }
 
-    private void PopulateMap(int width, int height) { }
+    private void PopulateMap() {
+        LayPath();
+    }
+
+    private void LayPath() {
+        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+
+        foreach (var cell in path) {
+            grid[cell.x, cell.y].MarkPathCell();
+            int neighboursValue = GetNeighboursValue(cell.x, cell.y);
+            GameObject.Instantiate(GetPathCellPrefab(neighboursValue), new Vector3(cell.x + .5f, 0, cell.y + .5f), Quaternion.Euler(0, GetRotation(neighboursValue), 0));
+        }
+    }
 
     private async Task LayPathAsync() {
         GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
 
         foreach (var cell in path) {
             grid[cell.x, cell.y].MarkPathCell();
-            GameObject prefab = GetPathCellPrefab(GetNeighboursValue(cell.x, cell.y));
-            GameObject.Instantiate(prefab, new Vector3(cell.x + .5f, 0, cell.y + .5f), Quaternion.Euler(0, GetRotation(GetNeighboursValue(cell.x, cell.y)), 0));
+            GameObject.Instantiate(GetPathCellPrefab(GetNeighboursValue(cell.x, cell.y)), new Vector3(cell.x + .5f, 0, cell.y + .5f), Quaternion.Euler(0, GetRotation(GetNeighboursValue(cell.x, cell.y)), 0));
 
-            await Task.Delay(50);
+            await Task.Delay(20);
         }
+    }
+
+    private async Task PopulateMapAsync() {
+        var grid = BuildingSystem.Instance.grid.gridArray;
+        List<Vector3> spawnPositions = new List<Vector3>();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (path.Contains(new Vector2Int(x, y))) continue;
+
+                spawnPositions.Add(new Vector3(x + 0.5f, 0, y + 0.5f));
+
+                if (spawnPositions.Count >= 7) {
+                    await SpawnTilesBatch(spawnPositions);
+                    spawnPositions.Clear();
+                }
+            }
+        }
+
+        if (spawnPositions.Count > 0) {
+            await SpawnTilesBatch(spawnPositions);
+        }
+    }
+
+    private async Task SpawnTilesBatch(List<Vector3> positions) {
+        foreach (var pos in positions) {
+            GameObject.Instantiate(data.groundPrefab, pos, Quaternion.identity);
+        }
+
+        await Task.Yield();
+    }
+
+    private async Task SpawnPortalAsync() {
+        await Task.Delay(500);
+
+        Vector2Int origin = pathEnd + new Vector2Int(-data.portalData.width, -data.baseData.height / 2);
+        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down);
+    }
+
+    private async Task SpawnBase() {
+        await Task.Delay(500);
+
+        Vector2Int origin = pathStart + new Vector2Int(1, -data.baseData.height / 2);
+        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.baseData, BuildingDir.Right);
+    }
+
+    private async Task SpawnVegetationAsync() {
+        await Task.Delay(25);
     }
 }

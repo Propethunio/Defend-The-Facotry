@@ -22,4 +22,7 @@ public class MapDataSO : ScriptableObject {
     [field: SerializeField] public GameObject pathStraightPrefab { get; private set; }
     [field: SerializeField] public GameObject pathTurnPrefab { get; private set; }
     [field: SerializeField] public GameObject pathSplitPrefab { get; private set; }
+    [field: SerializeField] public GameObject groundPrefab { get; private set; }
+    [field: SerializeField] public MainBaseSO baseData { get; private set; }
+    [field: SerializeField] public BaseBuildableObjectSO portalData { get; private set; }
 }

@@ -173,6 +173,31 @@ public class BuildingSystem {
         OnObjectPlaced?.Invoke();
     }
 
+    public void TryPlaceMapGeneratedObject(Vector2Int placedObjectOrigin, BaseBuildableObjectSO generatedObject, BuildingDir dir) {
+        List<Vector2Int> gridPositionList = generatedObject.GetGridPositionList(placedObjectOrigin, dir);
+
+        int gridPositionCount = gridPositionList.Count;
+
+        for (int i = 0; i < gridPositionCount; i++) {
+            Vector2Int gridPosition = gridPositionList[i];
+            GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
+
+            if (cell == null || cell.isPathCell || cell.placedObject != null) return;
+        }
+
+        Vector2Int rotationOffset = generatedObject.GetRotationOffset(dir);
+        Vector3 placedObjectWorldPosition = new Vector3(placedObjectOrigin.x, 0, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
+        BasePlacedObject placedObject = BaseDataPlacedObject<BaseBuildableObjectSO>.Create(placedObjectWorldPosition, dir, generatedObject);
+        placedObject.SetData(placedObjectOrigin, dir, generatedObject);
+
+        for (int i = 0; i < gridPositionCount; i++) {
+            Vector2Int gridPosition = gridPositionList[i];
+            grid.gridArray[gridPosition.x, gridPosition.y].SetPlacedObject(placedObject);
+        }
+
+        placedObject.GridSetupDone();
+    }
+
     public Vector2Int GetGridPosition(Vector3 worldPosition) {
         int x = Mathf.FloorToInt(worldPosition.x);
         int z = Mathf.FloorToInt(worldPosition.z);
