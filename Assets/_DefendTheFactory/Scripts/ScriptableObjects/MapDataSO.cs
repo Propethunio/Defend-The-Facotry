@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Map Data")]
@@ -25,4 +27,12 @@ public class MapDataSO : ScriptableObject {
     [field: SerializeField] public GameObject groundPrefab { get; private set; }
     [field: SerializeField] public MainBaseSO baseData { get; private set; }
     [field: SerializeField] public BaseBuildableObjectSO portalData { get; private set; }
+    [field: SerializeField] public int resourcesOnMapPercent { get; private set; }
+    [field: SerializeField] public List<ResourceWeightPair> resourcesOnMap { get; private set; }
+}
+
+[Serializable]
+public struct ResourceWeightPair {
+    [field: SerializeField] public ResourceNodeSO resourceNode { get; private set; }
+    [field: SerializeField] public int weight { get; private set; }
 }

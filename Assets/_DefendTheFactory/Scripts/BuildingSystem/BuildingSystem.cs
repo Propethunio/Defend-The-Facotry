@@ -139,9 +139,12 @@ public class BuildingSystem {
 
         for (int i = 0; i < gridPositionCount; i++) {
             Vector2Int gridPosition = gridPositionList[i];
+            
+            if (!IsValidGridPosition(gridPosition)) return;
+            
             GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
 
-            if (cell == null || cell.isPathCell || (cell.placedObject != null && cell.placedObject is not ConveyorBelt)) return;
+            if (cell.isPathCell || (cell.placedObject != null && cell.placedObject is not ConveyorBelt)) return;
 
             if (cell.placedObject == null) continue;
 
@@ -177,12 +180,15 @@ public class BuildingSystem {
         List<Vector2Int> gridPositionList = generatedObject.GetGridPositionList(placedObjectOrigin, dir);
 
         int gridPositionCount = gridPositionList.Count;
-
+        
         for (int i = 0; i < gridPositionCount; i++) {
             Vector2Int gridPosition = gridPositionList[i];
+            
+            if (!IsValidGridPosition(gridPosition)) return;
+            
             GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
 
-            if (cell == null || cell.isPathCell || cell.placedObject != null) return;
+            if (cell.isPathCell || cell.placedObject != null) return;
         }
 
         Vector2Int rotationOffset = generatedObject.GetRotationOffset(dir);
@@ -218,8 +224,8 @@ public class BuildingSystem {
         return grid.gridArray[x, z];
     }
 
-    public bool IsValidGridPosition(Vector2Int gridPosition) {
-        return grid.gridArray[gridPosition.x, gridPosition.y] != null;
+    private bool IsValidGridPosition(Vector2Int gridPosition) {
+        return (gridPosition.x >= 0 && gridPosition.x < grid.gridArray.GetLength(0) && gridPosition.y >= 0 && gridPosition.y < grid.gridArray.GetLength(1));
     }
 
     public Vector3 GetMouseWorldSnappedPosition() {

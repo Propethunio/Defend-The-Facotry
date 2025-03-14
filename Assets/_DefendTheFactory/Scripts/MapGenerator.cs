@@ -58,6 +58,7 @@ public class MapGenerator {
         await PopulateMapAsync();
         await SpawnPortalAsync();
         await SpawnBase();
+        await SpawnVegetationAsync();
     }
 
     private void GeneratePath(int x, int y, int portalX, int portalBorder) {
@@ -285,13 +286,54 @@ public class MapGenerator {
     }
 
     private async Task SpawnBase() {
-        await Task.Delay(500);
+        await Task.Delay(300);
 
         Vector2Int origin = pathStart + new Vector2Int(1, -data.baseData.height / 2);
         BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.baseData, BuildingDir.Right);
     }
 
     private async Task SpawnVegetationAsync() {
-        await Task.Delay(25);
+        await Task.Delay(200);
+        
+        List<Vector2Int> allCells = new List<Vector2Int>();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                allCells.Add(new Vector2Int(x, y));
+            }
+        }
+
+        List<Vector2Int> spawnLocations = allCells.OrderBy(_ => Random.value).Take(Mathf.CeilToInt(allCells.Count * data.resourcesOnMapPercent / 100f)).ToList();
+
+        int spawnsCount = spawnLocations.Count;
+
+        for (int i = 0; i < spawnsCount; i++) {
+            BuildingSystem.Instance.TryPlaceMapGeneratedObject(spawnLocations[i], SelectRandomResourceSO(), GetRandomRotation());
+            await Task.Delay(5);
+        }
+    }
+
+    private ResourceNodeSO SelectRandomResourceSO() {
+        int totalWeight = data.resourcesOnMap.Sum(resource => resource.weight);
+        int roll = Random.Range(0, totalWeight);
+        int cumulative = 0;
+
+        foreach (var resource in data.resourcesOnMap.OrderByDescending(r => r.weight)) {
+            cumulative += resource.weight;
+
+            if (roll < cumulative) return resource.resourceNode;
+        }
+
+        return null;
+    }
+
+    private BuildingDir GetRandomRotation() {
+        int roll = Random.Range(0, 4);
+
+        if (roll == 0) return BuildingDir.Right;
+        if (roll == 1) return BuildingDir.Up;
+        if (roll == 2) return BuildingDir.Down;
+
+        return BuildingDir.Left;
     }
 }

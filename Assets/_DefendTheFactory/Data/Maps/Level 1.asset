@@ -41,3 +41,14 @@ MonoBehaviour:
     type: 2}
   <portalData>k__BackingField: {fileID: 11400000, guid: 343ad8baed0cfbb49bc10c979c9ffbbf,
     type: 2}
+  <resourcesOnMapPercent>k__BackingField: 8
+  <resourcesOnMap>k__BackingField:
+  - <resourceNode>k__BackingField: {fileID: 11400000, guid: 8809047efe3d2d944b4e66ccb2185303,
+      type: 2}
+    <weight>k__BackingField: 6
+  - <resourceNode>k__BackingField: {fileID: 11400000, guid: 0ba2dd04846207b4e9a3bf145d3c03d9,
+      type: 2}
+    <weight>k__BackingField: 2
+  - <resourceNode>k__BackingField: {fileID: 11400000, guid: 29b7cb6e4c205e44bb75fb07acd25462,
+      type: 2}
+    <weight>k__BackingField: 1
