@@ -20,6 +20,7 @@ public class MapDataSO : ScriptableObject {
     [field: SerializeField] public bool shouldAllowPathSplits { get; private set; }
     [field: SerializeField] public Vector2Int splitsAmountRange { get; private set; }
     [field: SerializeField] public Vector2Int splitLengthRange { get; private set; }
+    [field: SerializeField] public Vector2Int splitHeightRange { get; private set; }
     [field: SerializeField] public int splitPadding { get; private set; }
     [field: SerializeField] public GameObject pathStraightPrefab { get; private set; }
     [field: SerializeField] public GameObject pathTurnPrefab { get; private set; }
