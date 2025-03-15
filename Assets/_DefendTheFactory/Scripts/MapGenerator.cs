@@ -19,6 +19,9 @@ public class MapGenerator {
     private Vector2Int backtrackingBorder;
     private Vector2Int pathStart;
     private Vector2Int pathEnd;
+    private int loopsAmount;
+    private Vector2Int splitPadding;
+    private int splitAmount;
 
     public MapGenerator(MapDataSO mapData) {
         data = mapData;
@@ -35,6 +38,8 @@ public class MapGenerator {
         heightBounds = new Vector2Int(data.heightPadding, height - data.heightPadding);
         backtrackingBorder = new Vector2Int(portalX + data.backtrackingPreventingPadding, x - data.backtrackingPreventingPadding);
         pathStart = new Vector2Int(x, y);
+        splitPadding = new Vector2Int(x - data.splitPadding, portalX + data.splitPadding + data.splitLengthRange.y);
+        splitAmount = Random.Range(data.splitsAmountRange.x, data.splitsAmountRange.y);
 #if UNITY_EDITOR
         int safetyCheck = 0;
 #endif
@@ -69,6 +74,7 @@ public class MapGenerator {
         backtrackedTimes = 0;
         shouldGenerateAgain = false;
         preventDiagonal = false;
+        loopsAmount = 0;
         path.Add(new Vector2Int(x, y));
         int mostProgressedX = x - data.backtrackingPreventingPadding;
 
@@ -118,6 +124,11 @@ public class MapGenerator {
             }
 
             path.Add(new Vector2Int(x, y));
+
+            if(data.shouldAllowPathSplits && x < splitPadding.x && x > splitPadding.y && loopsAmount < splitAmount && Random.Range(0, 5) == 0)
+            {
+                GenerateSplitedPaths(x, y);
+            }
         }
 
         for (int i = 0; i < data.minimumStraightLenghtOnPortal; i++) {
@@ -131,6 +142,25 @@ public class MapGenerator {
         }
 
         pathEnd = new Vector2Int(x, y);
+    }
+
+    private void GenerateSplitedPaths(int x, int y)
+    {
+        int width = Random.Range(data.splitLengthRange.x, data.splitLengthRange.y);
+        int height = Random.Range(data.splitHeightRange.x, data.splitHeightRange.y);
+
+        Vector2Int mergePoint = new Vector2Int(x - width, Random.Range(-height, height));
+
+        if (randomValue == 0)
+        {
+
+        } else if(randomValue == 1)
+        {
+
+        } else
+        {
+
+        }
     }
 
     private bool PathCellIsValid(int x, int y) {
