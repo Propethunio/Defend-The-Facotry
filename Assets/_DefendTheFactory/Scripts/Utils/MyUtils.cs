@@ -13,13 +13,5 @@ namespace UtilsClass {
             EventSystem.current.RaycastAll(pe, hits);
             return hits.Count > 0;
         }
-
-        public static float GetAngleFromVectorFloat3D(Vector3 dir) {
-            dir = dir.normalized;
-            float n = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
-            if(n < 0) n += 360;
-
-            return n;
-        }
     }
 }

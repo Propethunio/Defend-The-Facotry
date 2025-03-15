@@ -1,112 +1,110 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spliter : LogisticMachine<BaseBuildableObjectSO> {
+public class Spliter : LogisticMachine {
 
-    ConveyorBelt inputBelt;
-    WorldItem newItem;
-    Dictionary<LogisticDir, ConveyorBelt> outputBelts = new();
-    Dictionary<LogisticDir, Vector2Int> outputPositions = new();
-
-    public override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
-        BaseDataSet(origin, dir, buildableDataSO);
-    }
+    int suckedItems;
+    List<WorldItem> items = new();
+    [SerializeField] ItemSO itemToCreate;
+    LogisticDir logisticDir = LogisticDir.Straight;
 
     public override void GridSetupDone() {
-        base.GridSetupDone();
-        Vector2Int forwardVector = BuildingSystem.Instance.GetDirForwardVector(dir);
+        buildingSystem = BuildingSystem.Instance;
+        Subscribe();
+    }
+
+    public override void OnEarlyTick() {
+        if(suckedItems > 0) {
+            currentStorage += suckedItems;
+            suckedItems = 0;
+            items.Clear();
+        }
+
+        if(currentStorage > maxStorage) return;
+
+        Vector2Int forwardVector = buildingSystem.GetDirForwardVector(dir);
         Vector2Int nextPosition = origin + forwardVector;
+
+        GridCell[,] gridArray = buildingSystem.grid.gridArray;
+
+        if(ShouldSnap(gridArray, nextPosition, out ConveyorBelt belt)) {
+            if(belt.worldItem != null) {
+                belt.worldItem.MoveToGridPosition(origin);
+                items.Add(belt.worldItem);
+                belt.ResetWorldItem();
+                suckedItems++;
+            }
+        }
+    }
+
+    public override void OnTick() {
+
+    }
+
+    public override void OnLateTick() {
+        if(currentStorage == 0) return;
+
+        Vector2Int forwardVector = buildingSystem.GetDirForwardVector(dir);
+
+        GridCell[,] gridArray = buildingSystem.grid.gridArray;
         Vector2Int backPosition = origin - forwardVector;
+
         Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
         Vector2Int rightPosition = origin + rightVector;
         Vector2Int leftPosition = origin - rightVector;
 
-        SetupInputBelt(nextPosition);
-        SetupOutputBelt(backPosition, LogisticDir.Straight);
-        SetupOutputBelt(leftPosition, LogisticDir.Left);
-        SetupOutputBelt(rightPosition, LogisticDir.Right);
-    }
 
-    void SetupInputBelt(Vector2Int position) {
-        if(!IsPositionValid(position)) return;
 
-        Action action = () => HandleGridObjectChange(position);
-        gridArray[position.x, position.y].ObjectChanged += action;
-        objectChangedEvents.Add(action, position);
-
-        if(ShouldSnap(position, out ConveyorBelt belt)) {
-            inputBelt = belt;
-        }
-    }
-
-    void HandleGridObjectChange(Vector2Int position) {
-        if(ShouldSnap(position, out ConveyorBelt belt)) {
-            inputBelt = belt;
-        } else {
-            inputBelt = null;
-        }
-    }
-
-    void SetupOutputBelt(Vector2Int position, LogisticDir logisticDir) {
-        outputBelts[logisticDir] = null;
-
-        if(!IsPositionValid(position)) return;
-
-        outputPositions[logisticDir] = position;
-        Action action = () => HandleGridObjectChange(logisticDir);
-        gridArray[position.x, position.y].ObjectChanged += action;
-        objectChangedEvents.Add(action, position);
-
-        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
-            outputBelts[logisticDir] = belt;
-        }
-    }
-
-    void HandleGridObjectChange(LogisticDir dir) {
-        Vector2Int position = outputPositions[dir];
-
-        if(ShouldSnapBack(position, out ConveyorBelt belt)) {
-            outputBelts[dir] = belt;
-        } else {
-            outputBelts[dir] = null;
-        }
-    }
-
-    public override void DestroySelf() {
-        if(newItem != null) {
-            newItem.DestroySelf();
-        }
-        base.DestroySelf();
-    }
-
-    protected override void OnEarlyTick() {
-        if(newItem != null) {
-            items.Add(newItem);
-            newItem = null;
-        }
-
-        if(items.Count == maxStorage || inputBelt == null || inputBelt.endItem == null) return;
-
-        newItem = inputBelt.endItem;
-        inputBelt.ResetWorldItem();
-        newItem.MoveToPosition(origin);
-    }
-
-    protected override void OnLateTick() {
         for(int i = 3; i > 0; i--) {
-            if(items.Count == 0) return;
+            Vector2Int operationDir = new();
 
-            if(outputBelts[logisticDir] == null || outputBelts[logisticDir].startItem != null) {
-                logisticDir = GetNextDir(logisticDir);
-                continue;
+            switch(logisticDir) {
+                case LogisticDir.Straight:
+                    operationDir = backPosition;
+                    break;
+                case LogisticDir.Left:
+                    operationDir = leftPosition;
+                    break;
+                case LogisticDir.Right:
+                    operationDir = rightPosition;
+                    break;
             }
 
-            WorldItem worldItem = items[0];
-            worldItem.MoveToPosition(outputBelts[logisticDir].origin);
-            outputBelts[logisticDir].SetWorldItem(worldItem);
-            items.RemoveAt(0);
+            if(ShouldSnapBack(gridArray, operationDir, out ConveyorBelt belt)) {
+                if(belt.worldItem == null) {
+                    WorldItem worldItem = WorldItem.Create(origin, itemToCreate);
+                    worldItem.MoveToGridPosition(operationDir);
+                    belt.TrySetWorldItem(worldItem);
+                    currentStorage--;
+                }
+            }
+
             logisticDir = GetNextDir(logisticDir);
+            if(currentStorage == 0) {
+                break;
+            }
         }
+    }
+
+    bool ShouldSnap(GridCell[,] gridArray, Vector2Int position, out ConveyorBelt belt) {
+        belt = null;
+
+        if(!IsPositionValid(gridArray, position)) return false;
+
+        belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
+        return belt != null && belt.nextPosition == origin;
+    }
+
+    bool ShouldSnapBack(GridCell[,] gridArray, Vector2Int position, out ConveyorBelt belt) {
+        belt = null;
+
+        if(!IsPositionValid(gridArray, position)) return false;
+
+        belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
+        return belt != null && belt.previousPosition == origin;
+    }
+
+    bool IsPositionValid(GridCell[,] gridArray, Vector2Int position) {
+        return position.x >= 0 && position.x < gridArray.GetLength(0) && position.y >= 0 && position.y < gridArray.GetLength(1);
     }
 }

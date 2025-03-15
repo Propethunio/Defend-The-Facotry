@@ -1,10 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu()]
 public class ItemRecipeSO : ScriptableObject {
 
-    public List<ItemIntPair> outputItemList;
-    public List<ItemIntPair> inputItemList;
-    public int craftingTicks;
+    public List<RecipeItem> outputItemList;
+    public List<RecipeItem> inputItemList;
+    public float craftingEffort;
+
+
+    [System.Serializable]
+    public struct RecipeItem {
+
+        public ItemSO item;
+        public int amount;
+
+    }
+
 }

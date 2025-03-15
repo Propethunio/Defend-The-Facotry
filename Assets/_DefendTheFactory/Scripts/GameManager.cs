@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UtilsClass;
 
 public class GameManager : MonoBehaviour {
 
@@ -17,26 +16,19 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         HandleDebugSpawnItem();
-        HandleDebugDeleteBuilding();
     }
 
     void HandleDebugSpawnItem() {
         if(Input.GetKeyDown(KeyCode.I)) {
-            BasePlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
+            PlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
             if(placedObject != null && placedObject is ConveyorBelt) {
                 ConveyorBelt belt = placedObject as ConveyorBelt;
 
-                if(belt.startItem == null) {
-                    WorldItem worldItem = WorldItem.Create(belt.origin, belt.dir, GameAssets.i.itemSO_Refs.ironOre);
+                if(belt.worldItem == null) {
+                    WorldItem worldItem = WorldItem.Create(belt.GetGridPosition(), GameAssets.i.itemSO_Refs.ironOre);
                     belt.TrySetWorldItem(worldItem);
                 }
             }
-        }
-    }
-
-    void HandleDebugDeleteBuilding() {
-        if(Input.GetMouseButtonDown(1) && !MyUtils.IsPointerOverUI()) {
-            BuildingSystem.Instance.HandleDemolish();
         }
     }
 }

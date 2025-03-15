@@ -1,16 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
+public class GatheringMachine : PlacedObject, IItemStorage {
 
-    ConveyorBelt outputBelt;
-    List<ResourceNode> nodesInRange = new();
-    ResourceNode currentNode;
+    public event EventHandler OnItemStorageCountChanged;
+
+    [SerializeField] ConveyorBelt outputBelt;
+    [SerializeField] float resourceSearchRange;
+    [SerializeField] Vector2Int ghostBeltPosition;
+    [SerializeField] ResourcesEnum gatheredResource;
+    [SerializeField] float gatheringTime;
+    [SerializeField] int maxStoredItems;
+
+    public GameObject prefab;
+
+    public ItemSO producedItem;
+
+    bool resourcesInRange;
+    bool storageFull;
     int storedItemsCount;
-    int productionTicks;
+    float timer;
 
-    public override void Initialize(Vector2Int origin, BuildingDir dir, GatheringMachineSO buildableDataSO) {
-        BaseDataSet(origin, dir, buildableDataSO);
+    void Update() {
+        if(!resourcesInRange || storageFull) return;
+
+        timer += Time.deltaTime;
+        if(timer >= gatheringTime) {
+            timer -= gatheringTime;
+            Gather();
+        }
     }
 
     void OnDestroy() {
@@ -20,62 +38,39 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     public override void GridSetupDone() {
         SetupBelt();
         Subscribe();
-        SearchForResources();
 
-        if(nodesInRange.Count > 0) {
-            PickClosestNode();
-        }
-    }
+        Vector2Int centerPosition = placedObjectTypeSO.GetMachineCenterPosition(origin, placedObjectTypeSO.width, placedObjectTypeSO.height, dir);
 
-    public override void DestroySelf() {
-        outputBelt.DestroySelf();
-        base.DestroySelf();
-    }
-
-    void SearchForResources() {
-        Vector2 centerPosition = buildableDataSO.GetCenterPosition(origin, dir);
         GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
 
-        float searchRange = buildableDataSO.resourceSearchRange;
-        int bottom = (int)Mathf.Floor(centerPosition.y - searchRange);
-        int top = (int)Mathf.Ceil(centerPosition.y + searchRange - 1);
-        int left = (int)Mathf.Floor(centerPosition.x - searchRange);
-        int right = (int)Mathf.Ceil(centerPosition.x + searchRange - 1);
+        int top = (int)Mathf.Ceil(centerPosition.y - resourceSearchRange);
+        int bottom = (int)Mathf.Floor(centerPosition.y + resourceSearchRange - 1);
+        int left = (int)Mathf.Ceil(centerPosition.x - resourceSearchRange);
+        int right = (int)Mathf.Floor(centerPosition.x + resourceSearchRange - 1);
 
-        for(int y = bottom; y <= top; y++) {
+
+        for(int y = top; y <= bottom; y++) {
             for(int x = left; x <= right; x++) {
-
-                if(!IsPositionValid(gridArray, new Vector2Int(x, y)) || !IsInsideCircle(centerPosition, new Vector2Int(x, y))) continue;
-
-                ResourceNode node = gridArray[x, y].placedObject as ResourceNode;
-                if(node == null || node.buildableDataSO.resourceType != buildableDataSO.gatheredResource || nodesInRange.Contains(node)) continue;
-
-                nodesInRange.Add(node);
-                node.NodeGatheredCompletly += HandleNodeDestroyed;
+                if(IsPositionValid(gridArray, new Vector2Int(x, y)) && inside_circle(centerPosition, new Vector2Int(x, y))) {
+                    //Instantiate(prefab, new Vector3(x, 0, y), Quaternion.identity);
+                    ResourceNode node = gridArray[x, y].placedObject as ResourceNode;
+                    if(node != null && node.ResourceType == gatheredResource) {
+                        resourcesInRange = true;
+                        Debug.Log($"FOUND RESOURCE ON CELL: {x}, {y}! I CAN GATHER :D");
+                    }
+                }
             }
+        }
+
+        if(!resourcesInRange) {
+            Debug.Log($"NO RESOURCES CLOSE TO ME :( I WILL NOT WORK");
         }
     }
 
-    bool IsInsideCircle(Vector2 center, Vector2Int point) {
-        float dx = center.x - (point.x + 0.5f);
-        float dy = center.y - (point.y + 0.5f);
-        return dx * dx + dy * dy <= buildableDataSO.resourceSearchRange * buildableDataSO.resourceSearchRange + 0.5f;
-    }
-
-    void PickClosestNode() {
-        Vector2 machineCenterPosition = buildableDataSO.GetCenterPosition(origin, dir);
-        float currentDistance = Mathf.Infinity;
-        currentNode = null;
-
-        foreach(ResourceNode node in nodesInRange) {
-            Vector2 nodeCenterPosition = node.buildableDataSO.GetCenterPosition(node.origin, node.dir);
-            float distanceToNode = (machineCenterPosition - nodeCenterPosition).sqrMagnitude;
-
-            if(distanceToNode < currentDistance) {
-                currentNode = node;
-                currentDistance = distanceToNode;
-            }
-        }
+    bool inside_circle(Vector2Int center, Vector2Int point) {
+        int dx = center.x - point.x;
+        int dy = center.y - point.y;
+        return dx * dx + dy * dy <= resourceSearchRange * resourceSearchRange;
     }
 
     bool ShouldSnapBack(GridCell[,] gridArray, Vector2Int position, out ConveyorBelt belt) {
@@ -92,48 +87,24 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     }
 
     void Subscribe() {
-        TimeTickSystem.Instance.OnProductionTick += OnProductionTick;
         TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
     }
 
     void Unsubscribe() {
-        TimeTickSystem.Instance.OnProductionTick -= OnProductionTick;
         TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
-        int nodesAmount = nodesInRange.Count;
-
-        for(int i = 0; i < nodesAmount; i++) {
-            nodesInRange[i].NodeGatheredCompletly -= HandleNodeDestroyed;
-        }
     }
 
     void SetupBelt() {
-        outputBelt = gameObject.AddComponent<ConveyorBelt>();
-        Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.outputBeltPosition, dir);
-        outputBelt.SetupBuildingBelt(beltPos, dir, this);
-    }
-
-    void OnProductionTick() {
-        if(currentNode == null || storedItemsCount == buildableDataSO.maxStoredOutputItems) return;
-
-        productionTicks++;
-
-        if(productionTicks == buildableDataSO.ticksForGather) {
-            productionTicks = 0;
-            Gather();
-        }
+        Vector2Int beltPos = placedObjectTypeSO.GetMachineBeltPosition(origin, ghostBeltPosition, dir);
+        outputBelt.SetupBuildingBelt(beltPos, dir);
     }
 
     void Gather() {
-        currentNode.MineRsource();
         storedItemsCount++;
-    }
 
-    void HandleNodeDestroyed(ResourceNode node) {
-        node.NodeGatheredCompletly -= HandleNodeDestroyed;
-        nodesInRange.Remove(node);
-
-        if(node == currentNode) {
-            PickClosestNode();
+        if(storedItemsCount == maxStoredItems) {
+            storageFull = true;
+            timer = 0f;
         }
     }
 
@@ -144,11 +115,12 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     }
 
     void TryPutItemOnBelt() {
-        if(outputBelt.startItem != null) return;
+        if(outputBelt.worldItem != null) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, buildableDataSO.producedItem);
-        outputBelt.SetWorldItem(worldItem);
+        WorldItem worldItem = WorldItem.Create(outputBelt.GetGridPosition(), producedItem);
+        outputBelt.TrySetWorldItem(worldItem);
         storedItemsCount--;
+        storageFull = false;
     }
 
     public ItemSO GetMiningResourceItem() {
@@ -158,4 +130,33 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     public int GetItemStoredCount(ItemSO filterItemScriptableObject) {
         return storedItemsCount;
     }
+
+    public bool TryGetStoredItem(ItemSO[] filterItemSO, out ItemSO itemSO) {
+        if(ItemSO.IsItemSOInFilter(GameAssets.i.itemSO_Refs.any, filterItemSO) ||
+            ItemSO.IsItemSOInFilter(new ItemSO(), filterItemSO)) {
+            // If filter matches any or filter matches this itemType
+            if(storedItemsCount > 0) {
+                storedItemsCount--;
+                itemSO = new ItemSO();
+                OnItemStorageCountChanged?.Invoke(this, EventArgs.Empty);
+                TriggerGridObjectChanged();
+                return true;
+            } else {
+                itemSO = null;
+                return false;
+            }
+        } else {
+            itemSO = null;
+            return false;
+        }
+    }
+
+    public ItemSO[] GetItemSOThatCanStore() {
+        return new ItemSO[] { GameAssets.i.itemSO_Refs.none };
+    }
+
+    public bool TryStoreItem(ItemSO itemScriptableObject) {
+        return false;
+    }
+
 }

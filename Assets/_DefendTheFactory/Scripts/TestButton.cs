@@ -1,13 +1,9 @@
-using TMPro;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TestButton : MonoBehaviour {
-
-    [SerializeField] BaseBuildableObjectSO obj;
-
-    void Start() {
-        GetComponentInChildren<TMP_Text>().text = obj.nameString;
-        GetComponent<Button>().onClick.AddListener(() => BuildingSystem.Instance.Test(obj));
+    public void SetItem(PlacedObjectTypeSO test) {
+        BuildingSystem.Instance.Test(test);
     }
 }
