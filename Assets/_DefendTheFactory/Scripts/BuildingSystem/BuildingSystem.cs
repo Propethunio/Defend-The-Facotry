@@ -139,9 +139,9 @@ public class BuildingSystem {
 
         for (int i = 0; i < gridPositionCount; i++) {
             Vector2Int gridPosition = gridPositionList[i];
-            
+
             if (!IsValidGridPosition(gridPosition)) return;
-            
+
             GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
 
             if (cell.isPathCell || (cell.placedObject != null && cell.placedObject is not ConveyorBelt)) return;
@@ -176,16 +176,16 @@ public class BuildingSystem {
         OnObjectPlaced?.Invoke();
     }
 
-    public void TryPlaceMapGeneratedObject(Vector2Int placedObjectOrigin, BaseBuildableObjectSO generatedObject, BuildingDir dir) {
+    public void TryPlaceMapGeneratedObject(Vector2Int placedObjectOrigin, BaseBuildableObjectSO generatedObject, BuildingDir dir, Transform parent = null) {
         List<Vector2Int> gridPositionList = generatedObject.GetGridPositionList(placedObjectOrigin, dir);
 
         int gridPositionCount = gridPositionList.Count;
-        
+
         for (int i = 0; i < gridPositionCount; i++) {
             Vector2Int gridPosition = gridPositionList[i];
-            
+
             if (!IsValidGridPosition(gridPosition)) return;
-            
+
             GridCell cell = grid.gridArray[gridPosition.x, gridPosition.y];
 
             if (cell.isPathCell || cell.placedObject != null) return;
@@ -194,6 +194,11 @@ public class BuildingSystem {
         Vector2Int rotationOffset = generatedObject.GetRotationOffset(dir);
         Vector3 placedObjectWorldPosition = new Vector3(placedObjectOrigin.x, 0, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
         BasePlacedObject placedObject = BaseDataPlacedObject<BaseBuildableObjectSO>.Create(placedObjectWorldPosition, dir, generatedObject);
+
+        if (parent != null) {
+            placedObject.transform.parent = parent;
+        }
+
         placedObject.SetData(placedObjectOrigin, dir, generatedObject);
 
         for (int i = 0; i < gridPositionCount; i++) {

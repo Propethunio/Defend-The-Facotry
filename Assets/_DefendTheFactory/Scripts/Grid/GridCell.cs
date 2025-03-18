@@ -19,4 +19,8 @@ public class GridCell {
     public void MarkPathCell() {
         isPathCell = true;
     }
+    
+    public void UnmarkPathCell() {
+        isPathCell = false;
+    }
 }

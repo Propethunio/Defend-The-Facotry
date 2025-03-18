@@ -28,6 +28,7 @@ MonoBehaviour:
   <shouldAllowPathSplits>k__BackingField: 1
   <splitsAmountRange>k__BackingField: {x: 1, y: 3}
   <splitLengthRange>k__BackingField: {x: 8, y: 14}
+  <splitHeightRange>k__BackingField: {x: 0, y: 0}
   <splitPadding>k__BackingField: 12
   <pathStraightPrefab>k__BackingField: {fileID: 3624640286859052353, guid: 40b3381b8f0fa5e49915d4276db04cd3,
     type: 3}
@@ -39,13 +40,14 @@ MonoBehaviour:
     type: 3}
   <baseData>k__BackingField: {fileID: 11400000, guid: 880c3e562302de4458612e4919efea08,
     type: 2}
+  <basePaddingPreventingObjectGeneration>k__BackingField: 3
   <portalData>k__BackingField: {fileID: 11400000, guid: 343ad8baed0cfbb49bc10c979c9ffbbf,
     type: 2}
-  <resourcesOnMapPercent>k__BackingField: 8
+  <resourcesOnMapPercent>k__BackingField: 7
   <resourcesOnMap>k__BackingField:
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: 8809047efe3d2d944b4e66ccb2185303,
       type: 2}
-    <weight>k__BackingField: 6
+    <weight>k__BackingField: 7
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: 0ba2dd04846207b4e9a3bf145d3c03d9,
       type: 2}
     <weight>k__BackingField: 2

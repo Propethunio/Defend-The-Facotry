@@ -7,6 +7,10 @@ public class MapGenerator {
     public int width { get; private set; }
     public int height { get; private set; }
 
+    private Transform mainParent;
+    private Transform terrainParent;
+    private Transform pathParent;
+    private Transform resourcesParent;
     private HashSet<Vector2Int> path = new HashSet<Vector2Int>();
     private MapDataSO data;
     private int currentStraightLength;
@@ -22,11 +26,19 @@ public class MapGenerator {
     private int loopsAmount;
     private Vector2Int splitPadding;
     private int splitAmount;
+    private HashSet<Vector2Int> basePaddingCells = new HashSet<Vector2Int>();
 
     public MapGenerator(MapDataSO mapData) {
         data = mapData;
         width = Random.Range(data.widthRange.x, data.widthRange.y);
         height = Random.Range(data.heightRange.x, data.heightRange.y);
+        mainParent = new GameObject("Map Generator").transform;
+        terrainParent = new GameObject("Terrain").transform;
+        pathParent = new GameObject("Path").transform;
+        resourcesParent = new GameObject("Resources").transform;
+        terrainParent.parent = mainParent;
+        pathParent.parent = mainParent;
+        resourcesParent.parent = mainParent;
     }
 
     public async Task GenerateMap() {
@@ -59,6 +71,7 @@ public class MapGenerator {
 #if UNITY_EDITOR
         Debug.Log($"[MAP GENERATOR INFO]Path valid after {safetyCheck} generations");
 #endif
+
         await LayPathAsync();
         await PopulateMapAsync();
         await SpawnPortalAsync();
@@ -125,9 +138,8 @@ public class MapGenerator {
 
             path.Add(new Vector2Int(x, y));
 
-            if(data.shouldAllowPathSplits && x < splitPadding.x && x > splitPadding.y && loopsAmount < splitAmount && Random.Range(0, 5) == 0)
-            {
-                GenerateSplitedPaths(x, y);
+            if (data.shouldAllowPathSplits && loopsAmount < splitAmount && x < splitPadding.x && x > splitPadding.y && currentPathDir != BuildingDir.Right && Random.Range(0, 15) == 0) {
+                GenerateSplitPaths(ref x, ref y);
             }
         }
 
@@ -144,23 +156,77 @@ public class MapGenerator {
         pathEnd = new Vector2Int(x, y);
     }
 
-    private void GenerateSplitedPaths(int x, int y)
-    {
-        int width = Random.Range(data.splitLengthRange.x, data.splitLengthRange.y);
-        int height = Random.Range(data.splitHeightRange.x, data.splitHeightRange.y);
+    private void GenerateSplitPaths(ref int x, ref int y) {
+        int splitWidth = Random.Range(data.splitLengthRange.x, data.splitLengthRange.y);
+        int splitHeight = Random.Range(data.splitHeightRange.x, data.splitHeightRange.y);
+        Vector2Int mergePoint = new Vector2Int(x - splitWidth, y + Random.Range(-splitHeight, splitHeight));
+        int lengthToMergePoint = splitWidth + Mathf.Abs(y - mergePoint.y);
+        BuildingDir firstSplitStartDir;
+        BuildingDir secondSplitStartDir;
+        HashSet<Vector2Int> firstSplitPathsCells = new HashSet<Vector2Int>();
+        HashSet<Vector2Int> secondSplitPathsCells = new HashSet<Vector2Int>();
 
-        Vector2Int mergePoint = new Vector2Int(x - width, Random.Range(-height, height));
+        firstSplitPathsCells.Clear();
+        secondSplitPathsCells.Clear();
+        int firstPathX = x;
+        int firstPathY = y;
+        int secondPathX = x;
+        int secondPathY = y;
+        int randomValue = Random.Range(0, 3);
 
-        if (randomValue == 0)
-        {
-
-        } else if(randomValue == 1)
-        {
-
-        } else
-        {
-
+        if (randomValue == 0) {
+            firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Up);
+            secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Down);
         }
+        else if (randomValue == 1) {
+            firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Up);
+            secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Left);
+        }
+        else {
+            firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Left);
+            secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Down);
+        }
+
+        Vector2Int firstSplitMove = GetVectorBaseOnDirection(firstSplitStartDir);
+        Vector2Int secondSplitMove = GetVectorBaseOnDirection(secondSplitStartDir);
+
+        for (int i = 0; i < 3; i++) {
+            if (PathCellIsValid(firstPathX + firstSplitMove.x, firstPathY + firstSplitMove.y) && MoveIsValid(firstSplitStartDir)) {
+                firstPathX += firstSplitMove.x;
+                firstPathY += firstSplitMove.y;
+                firstSplitPathsCells.Add(new Vector2Int(firstPathX, firstPathY));
+            }
+
+            if (PathCellIsValid(secondPathX + secondSplitMove.x, secondPathY + secondSplitMove.y) && MoveIsValid(secondSplitStartDir)) {
+                secondPathX += secondSplitMove.x;
+                secondPathY += secondSplitMove.y;
+                secondSplitPathsCells.Add(new Vector2Int(secondPathX, secondPathY));
+            }
+        }
+    }
+
+    Vector2Int GetVectorBaseOnDirection(BuildingDir dir) {
+        if (dir == BuildingDir.Up) return Vector2Int.up;
+        if (dir == BuildingDir.Down) return Vector2Int.down;
+        if (dir == BuildingDir.Left) return Vector2Int.left;
+
+        return Vector2Int.right;
+    }
+
+    private BuildingDir GetDirectionRotatedByLastStepDirection(BuildingDir direction) {
+        if (currentPathDir == BuildingDir.Up) {
+            if (direction == BuildingDir.Left) return BuildingDir.Up;
+            if (direction == BuildingDir.Up) return BuildingDir.Right;
+            if (direction == BuildingDir.Down) return BuildingDir.Left;
+        }
+
+        if (currentPathDir == BuildingDir.Down) {
+            if (direction == BuildingDir.Left) return BuildingDir.Down;
+            if (direction == BuildingDir.Up) return BuildingDir.Left;
+            if (direction == BuildingDir.Down) return BuildingDir.Right;
+        }
+
+        return direction;
     }
 
     private bool PathCellIsValid(int x, int y) {
@@ -272,7 +338,7 @@ public class MapGenerator {
 
         foreach (var cell in path) {
             grid[cell.x, cell.y].MarkPathCell();
-            GameObject.Instantiate(GetPathCellPrefab(GetNeighboursValue(cell.x, cell.y)), new Vector3(cell.x + .5f, 0, cell.y + .5f), Quaternion.Euler(0, GetRotation(GetNeighboursValue(cell.x, cell.y)), 0));
+            GameObject.Instantiate(GetPathCellPrefab(GetNeighboursValue(cell.x, cell.y)), new Vector3(cell.x + .5f, 0, cell.y + .5f), Quaternion.Euler(0, GetRotation(GetNeighboursValue(cell.x, cell.y)), 0), pathParent);
 
             await Task.Delay(20);
         }
@@ -302,7 +368,7 @@ public class MapGenerator {
 
     private async Task SpawnTilesBatch(List<Vector3> positions) {
         foreach (var pos in positions) {
-            GameObject.Instantiate(data.groundPrefab, pos, Quaternion.identity);
+            GameObject.Instantiate(data.groundPrefab, pos, Quaternion.identity, terrainParent);
         }
 
         await Task.Yield();
@@ -312,19 +378,32 @@ public class MapGenerator {
         await Task.Delay(500);
 
         Vector2Int origin = pathEnd + new Vector2Int(-data.portalData.width, -data.baseData.height / 2);
-        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down);
+        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down, mainParent);
     }
 
     private async Task SpawnBase() {
         await Task.Delay(300);
 
         Vector2Int origin = pathStart + new Vector2Int(1, -data.baseData.height / 2);
-        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.baseData, BuildingDir.Right);
+        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.baseData, BuildingDir.Right, mainParent);
+        Vector2 baseCenterPosition = data.baseData.GetCenterPosition(origin, BuildingDir.Right);
+        int endX = (int)baseCenterPosition.x + data.basePaddingPreventingObjectGeneration;
+        int endY = (int)baseCenterPosition.y + data.basePaddingPreventingObjectGeneration;
+        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+
+        for (int x = (int)baseCenterPosition.x - data.basePaddingPreventingObjectGeneration; x <= endX; x++) {
+            for (int y = (int)baseCenterPosition.y - data.basePaddingPreventingObjectGeneration; y <= endY; y++) {
+                if (grid[x, y].isPathCell) continue;
+
+                grid[x, y].MarkPathCell();
+                basePaddingCells.Add(new Vector2Int(x, y));
+            }
+        }
     }
 
     private async Task SpawnVegetationAsync() {
         await Task.Delay(200);
-        
+
         List<Vector2Int> allCells = new List<Vector2Int>();
 
         for (int x = 0; x < width; x++) {
@@ -338,8 +417,14 @@ public class MapGenerator {
         int spawnsCount = spawnLocations.Count;
 
         for (int i = 0; i < spawnsCount; i++) {
-            BuildingSystem.Instance.TryPlaceMapGeneratedObject(spawnLocations[i], SelectRandomResourceSO(), GetRandomRotation());
+            BuildingSystem.Instance.TryPlaceMapGeneratedObject(spawnLocations[i], SelectRandomResourceSO(), GetRandomRotation(), resourcesParent);
             await Task.Delay(5);
+        }
+
+        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+
+        foreach (Vector2Int basePaddingCell in basePaddingCells) {
+            grid[basePaddingCell.x, basePaddingCell.y].UnmarkPathCell();
         }
     }
 
