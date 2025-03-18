@@ -157,23 +157,32 @@ public class MapGenerator {
     }
 
     private void GenerateSplitPaths(ref int x, ref int y) {
+    return;
+    bool success = false;
+    int attempts = 0;
+    int maxAttempts = 1000; // you can adjust this value as needed
+
+    while (!success && attempts < maxAttempts) {
+        attempts++;
+
+        // Calculate target merge point based on split parameters.
         int splitWidth = Random.Range(data.splitLengthRange.x, data.splitLengthRange.y);
         int splitHeight = Random.Range(data.splitHeightRange.x, data.splitHeightRange.y);
         Vector2Int mergePoint = new Vector2Int(x - splitWidth, y + Random.Range(-splitHeight, splitHeight));
         int lengthToMergePoint = splitWidth + Mathf.Abs(y - mergePoint.y);
+        int minSplitPathLength = lengthToMergePoint + 6; // minimal length (can be tuned)
+        int maxSplitPathLength = lengthToMergePoint + 18; // or any max you want to enforce
+
+        // Two lists representing the two split paths (each starting at (x,y))
+        List<Vector2Int> firstSplitPath = new List<Vector2Int>();
+        List<Vector2Int> secondSplitPath = new List<Vector2Int>();
+        firstSplitPath.Add(new Vector2Int(x, y));
+        secondSplitPath.Add(new Vector2Int(x, y));
+
+        // Determine the initial directions for the two split paths.
         BuildingDir firstSplitStartDir;
         BuildingDir secondSplitStartDir;
-        HashSet<Vector2Int> firstSplitPathsCells = new HashSet<Vector2Int>();
-        HashSet<Vector2Int> secondSplitPathsCells = new HashSet<Vector2Int>();
-
-        firstSplitPathsCells.Clear();
-        secondSplitPathsCells.Clear();
-        int firstPathX = x;
-        int firstPathY = y;
-        int secondPathX = x;
-        int secondPathY = y;
         int randomValue = Random.Range(0, 3);
-
         if (randomValue == 0) {
             firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Up);
             secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Down);
@@ -186,26 +195,213 @@ public class MapGenerator {
             firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Left);
             secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Down);
         }
-
         Vector2Int firstSplitMove = GetVectorBaseOnDirection(firstSplitStartDir);
         Vector2Int secondSplitMove = GetVectorBaseOnDirection(secondSplitStartDir);
 
-        for (int i = 0; i < 3; i++) {
-            if (PathCellIsValid(firstPathX + firstSplitMove.x, firstPathY + firstSplitMove.y) && MoveIsValid(firstSplitStartDir)) {
-                firstPathX += firstSplitMove.x;
-                firstPathY += firstSplitMove.y;
-                firstSplitPathsCells.Add(new Vector2Int(firstPathX, firstPathY));
+        // Make a few initial moves (e.g., 2 steps) to separate the two branches.
+        int initialSteps = 1;
+        bool initialValid = true;
+        for (int i = 0; i < initialSteps; i++) {
+            Vector2Int nextFirst = firstSplitPath.Last() + firstSplitMove;
+            Vector2Int nextSecond = secondSplitPath.Last() + secondSplitMove;
+            if (IsValidSplitCell(nextFirst, firstSplitPath, secondSplitPath) &&
+                IsValidSplitCell(nextSecond, secondSplitPath, firstSplitPath)) {
+                firstSplitPath.Add(nextFirst);
+                secondSplitPath.Add(nextSecond);
             }
-
-            if (PathCellIsValid(secondPathX + secondSplitMove.x, secondPathY + secondSplitMove.y) && MoveIsValid(secondSplitStartDir)) {
-                secondPathX += secondSplitMove.x;
-                secondPathY += secondSplitMove.y;
-                secondSplitPathsCells.Add(new Vector2Int(secondPathX, secondPathY));
+            else {
+                // Try new parameters if the initial separation fails.
+                initialValid = false;
+                break;
             }
         }
+        if (!initialValid)
+            continue; // retry from the beginning
+
+        // Grow both branches concurrently until both reach the merge point
+        // while enforcing equal branch lengths.
+        bool generationFailed = false;
+        while (firstSplitPath.Count <= maxSplitPathLength && secondSplitPath.Count <= maxSplitPathLength) {
+            bool firstAtMerge = (firstSplitPath.Last() == mergePoint);
+            bool secondAtMerge = (secondSplitPath.Last() == mergePoint);
+
+            // When both branches have reached the merge point and are long enough, we are done.
+            if (firstAtMerge && secondAtMerge &&
+                firstSplitPath.Count >= minSplitPathLength && secondSplitPath.Count >= minSplitPathLength) {
+                break;
+            }
+
+            // If one branch has reached the merge point too early, force a detour.
+            if (firstAtMerge && !secondAtMerge) {
+                List<Vector2Int> detourMoves = GetValidSplitMovesAwayFromMerge(firstSplitPath.Last(), firstSplitPath, secondSplitPath, mergePoint);
+                if (detourMoves.Count > 0) {
+                    firstSplitPath.Add(detourMoves[Random.Range(0, detourMoves.Count)]);
+                    continue;
+                }
+                else {
+                    generationFailed = true;
+                    break;
+                }
+            }
+            if (secondAtMerge && !firstAtMerge) {
+                List<Vector2Int> detourMoves = GetValidSplitMovesAwayFromMerge(secondSplitPath.Last(), secondSplitPath, firstSplitPath, mergePoint);
+                if (detourMoves.Count > 0) {
+                    secondSplitPath.Add(detourMoves[Random.Range(0, detourMoves.Count)]);
+                    continue;
+                }
+                else {
+                    generationFailed = true;
+                    break;
+                }
+            }
+
+            // Both branches are still en route to merge: pick valid moves concurrently.
+            List<Vector2Int> firstOptions = GetValidSplitMoves(firstSplitPath.Last(), firstSplitPath, secondSplitPath, mergePoint);
+            List<Vector2Int> secondOptions = GetValidSplitMoves(secondSplitPath.Last(), secondSplitPath, firstSplitPath, mergePoint);
+            if (firstOptions.Count == 0 || secondOptions.Count == 0) {
+                generationFailed = true;
+                break;
+            }
+
+            // Choose one move from each branch.
+            Vector2Int nextFirst = firstOptions[Random.Range(0, firstOptions.Count)];
+            Vector2Int nextSecond = secondOptions[Random.Range(0, secondOptions.Count)];
+
+            // Ensure the new moves are not adjacent to each other.
+            if (!AreCellsAdjacent(nextFirst, nextSecond)) {
+                firstSplitPath.Add(nextFirst);
+                secondSplitPath.Add(nextSecond);
+            }
+            else {
+                // If the chosen moves would cause the branches to touch, try another option.
+                firstOptions.Remove(nextFirst);
+                if (firstOptions.Count == 0) {
+                    generationFailed = true;
+                    break;
+                }
+                continue;
+            }
+        }
+
+        // Check if both branches reached the merge point successfully.
+        if (generationFailed || firstSplitPath.Last() != mergePoint || secondSplitPath.Last() != mergePoint) {
+            continue; // retry with new random parameters
+        }
+
+        // Successfully generated both branches.
+        foreach (var cell in firstSplitPath)
+            path.Add(cell);
+        foreach (var cell in secondSplitPath)
+            path.Add(cell);
+
+        // Update the main path’s current position to the merge point.
+        x = mergePoint.x;
+        y = mergePoint.y;
+        success = true;
     }
 
-    Vector2Int GetVectorBaseOnDirection(BuildingDir dir) {
+    if (!success) {
+        // If after maxAttempts we couldn't generate split paths,
+        // signal failure so that the main generation loop can restart.
+        //shouldGenerateAgain = true;
+    }
+    
+    Debug.Log(success);
+}
+
+
+// Helper: Checks if a cell is valid for a split branch.
+    private bool IsValidSplitCell(Vector2Int cell, List<Vector2Int> ownPath, List<Vector2Int> otherPath) {
+        // Do not allow cell if it already belongs to the main path or either branch.
+        if (path.Contains(cell) || ownPath.Contains(cell) || otherPath.Contains(cell))
+            return false;
+
+        // Ensure the cell is within vertical bounds.
+        if (!IsCellInBounds(cell.y))
+            return false;
+
+        // Allow only one neighbouring cell within the branch.
+        if (GetNeighbourCount(cell, ownPath) > 1)
+            return false;
+
+        // Prevent cells that would be adjacent to the other branch.
+        if (IsAdjacentToPath(cell, otherPath))
+            return false;
+
+        return true;
+    }
+
+// Helper: Count adjacent (non-diagonal) neighbours from a given list.
+    private int GetNeighbourCount(Vector2Int cell, List<Vector2Int> pathList) {
+        int count = 0;
+        Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        foreach (var d in directions) {
+            if (pathList.Contains(cell + d))
+                count++;
+        }
+
+        return count;
+    }
+
+// Helper: Check if a cell is adjacent (non-diagonally) to any cell in a given list.
+    private bool IsAdjacentToPath(Vector2Int cell, List<Vector2Int> pathList) {
+        Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        foreach (var d in directions) {
+            if (pathList.Contains(cell + d))
+                return true;
+        }
+
+        return false;
+    }
+
+// Helper: Get valid next moves for a split branch (biased to not stray too far from the merge point).
+    private List<Vector2Int> GetValidSplitMoves(Vector2Int current, List<Vector2Int> ownPath, List<Vector2Int> otherPath, Vector2Int mergePoint) {
+        List<Vector2Int> moves = new List<Vector2Int>();
+        Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        int currentDist = Mathf.Abs(current.x - mergePoint.x) + Mathf.Abs(current.y - mergePoint.y);
+
+        foreach (var d in directions) {
+            Vector2Int next = current + d;
+
+            if (!IsValidSplitCell(next, ownPath, otherPath))
+                continue;
+
+            int nextDist = Mathf.Abs(next.x - mergePoint.x) + Mathf.Abs(next.y - mergePoint.y);
+
+            // Allow moves that do not increase the distance by more than 1.
+            if (nextDist <= currentDist + 1)
+                moves.Add(next);
+        }
+
+        return moves;
+    }
+
+// Helper: When a branch is at the merge point too early, find a detour move (avoiding the merge point).
+    private List<Vector2Int> GetValidSplitMovesAwayFromMerge(Vector2Int current, List<Vector2Int> ownPath, List<Vector2Int> otherPath, Vector2Int mergePoint) {
+        List<Vector2Int> moves = new List<Vector2Int>();
+        Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        foreach (var d in directions) {
+            Vector2Int next = current + d;
+
+            if (next == mergePoint)
+                continue;
+
+            if (IsValidSplitCell(next, ownPath, otherPath))
+                moves.Add(next);
+        }
+
+        return moves;
+    }
+
+// Helper: Checks if two cells are adjacent (non-diagonally).
+    private bool AreCellsAdjacent(Vector2Int a, Vector2Int b) {
+        return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
+    }
+
+    private Vector2Int GetVectorBaseOnDirection(BuildingDir dir) {
         if (dir == BuildingDir.Up) return Vector2Int.up;
         if (dir == BuildingDir.Down) return Vector2Int.down;
         if (dir == BuildingDir.Left) return Vector2Int.left;
