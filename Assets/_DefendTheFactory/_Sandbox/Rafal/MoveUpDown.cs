@@ -3,20 +3,20 @@ using System.Collections;
 
 public class MoveUpDown : MonoBehaviour
 {
-    public float height = 2.0f; // Maksymalna wysokoï¿½ï¿½ przemieszczenia
-    public float speed = 1.0f; // Prï¿½dkoï¿½ï¿½ przemieszczenia
+    public float height = 2.0f; // Maksymalna wysokoœæ przemieszczenia
+    public float speed = 1.0f; // Prêdkoœæ przemieszczenia
     private Vector3 startPos;
     private Vector3 endPos;
     private bool movingUp = true;
 
-    private void Start()
+    void Start()
     {
         startPos = transform.position;
         endPos = new Vector3(startPos.x, startPos.y + height, startPos.z);
         StartCoroutine(MoveObject());
     }
 
-    private IEnumerator MoveObject()
+    IEnumerator MoveObject()
     {
         while (true)
         {
@@ -24,12 +24,12 @@ public class MoveUpDown : MonoBehaviour
             float step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, movingUp ? endPos : startPos, step);
 
-            // Sprawdï¿½, czy osiï¿½gniï¿½to skrajne poï¿½oï¿½enie
+            // SprawdŸ, czy osi¹gniêto skrajne po³o¿enie
             if (Vector3.Distance(transform.position, movingUp ? endPos : startPos) < 0.001f)
             {
-                // Zmieï¿½ kierunek ruchu
+                // Zmieñ kierunek ruchu
                 movingUp = !movingUp;
-                // Czekaj pï¿½ sekundy
+                // Czekaj pó³ sekundy
                 yield return new WaitForSeconds(0.5f);
             }
 

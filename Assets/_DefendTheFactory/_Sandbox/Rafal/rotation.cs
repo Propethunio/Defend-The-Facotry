@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class rotation : MonoBehaviour
 {
-    public float speed = 50.0f; // Prï¿½dkoï¿½ï¿½ obrotu
+    public float speed = 50.0f; // Prêdkoœæ obrotu
 
-    private void Update()
+    void Update()
     {
-        // Obraca obiekt wokï¿½ osi Z
+        // Obraca obiekt wokó³ osi Z
         transform.Rotate(Vector3.forward, speed * Time.deltaTime);
     }
 }

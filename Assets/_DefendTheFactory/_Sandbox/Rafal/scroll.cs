@@ -6,12 +6,12 @@ public class scroll : MonoBehaviour
 {
     public float scrollSpeedX;
     public float scrollSpeedY;
-    public Material targetMaterial; // Materiaï¿½, ktï¿½ry bï¿½dzie przesuwany
+    public Material targetMaterial; // Materia³, który bêdzie przesuwany
 
-    // Update jest wywoï¿½ywane raz na klatkï¿½
-    private void Update()
+    // Update jest wywo³ywane raz na klatkê
+    void Update()
     {
-        if (targetMaterial != null) // Sprawdï¿½, czy materiaï¿½ jest przypisany
+        if (targetMaterial != null) // SprawdŸ, czy materia³ jest przypisany
         {
             targetMaterial.mainTextureOffset = new Vector2(Time.realtimeSinceStartup * scrollSpeedX, Time.realtimeSinceStartup * scrollSpeedY / 2);
         }
