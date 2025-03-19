@@ -26,9 +26,9 @@ MonoBehaviour:
   <backtracksAmountRange>k__BackingField: {x: 2, y: 4}
   <shouldPreventSquareLoops>k__BackingField: 1
   <shouldAllowPathSplits>k__BackingField: 1
-  <splitsAmountRange>k__BackingField: {x: 1, y: 3}
-  <splitLengthRange>k__BackingField: {x: 8, y: 14}
-  <splitHeightRange>k__BackingField: {x: 0, y: 0}
+  <splitsAmountRange>k__BackingField: {x: 1, y: 1}
+  <splitLengthRange>k__BackingField: {x: 4, y: 11}
+  <splitHeightRange>k__BackingField: {x: 4, y: 4}
   <splitPadding>k__BackingField: 12
   <pathStraightPrefab>k__BackingField: {fileID: 3624640286859052353, guid: 40b3381b8f0fa5e49915d4276db04cd3,
     type: 3}
@@ -43,7 +43,7 @@ MonoBehaviour:
   <basePaddingPreventingObjectGeneration>k__BackingField: 3
   <portalData>k__BackingField: {fileID: 11400000, guid: 343ad8baed0cfbb49bc10c979c9ffbbf,
     type: 2}
-  <resourcesOnMapPercent>k__BackingField: 7
+  <resourcesOnMapPercent>k__BackingField: 8
   <resourcesOnMap>k__BackingField:
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: 8809047efe3d2d944b4e66ccb2185303,
       type: 2}

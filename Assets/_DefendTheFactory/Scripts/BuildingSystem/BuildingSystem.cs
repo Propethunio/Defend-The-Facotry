@@ -6,6 +6,8 @@ using UtilsClass;
 public class BuildingSystem {
     public static BuildingSystem Instance { get; private set; }
 
+    public event Action OnSystemEnabled;
+    public event Action OnSystemDisabled;
     public Action OnSelectedObject;
     public Action OnBuildCanceled;
     public Action OnObjectPlaced;
@@ -24,8 +26,11 @@ public class BuildingSystem {
 
         grid = new Grid<GridCell>(width, height, (_, _, _) => new GridCell());
         inputManager = InputManager.Instance;
-        var buildingGhost1 = BuildingGhost.Instance;
-        buildingGhost1.Init();
+        BuildingGhost.Instance.Init();
+    }
+
+    ~BuildingSystem() {
+        Unsubscribe();
     }
 
     public void Test(BaseBuildableObjectSO test) {
@@ -40,6 +45,7 @@ public class BuildingSystem {
         isBuildingSystemActive = true;
         TilemapVisual.Instance.Show();
         Subscribe();
+        OnSystemEnabled?.Invoke();
     }
 
     private void DisableBuildingSystem() {
@@ -51,6 +57,7 @@ public class BuildingSystem {
         TilemapVisual.Instance.Hide();
         OnBuildCanceled?.Invoke();
         Unsubscribe();
+        OnSystemDisabled?.Invoke();
     }
 
     private void Subscribe() {
