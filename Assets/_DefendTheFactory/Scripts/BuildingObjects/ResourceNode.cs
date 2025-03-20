@@ -21,6 +21,10 @@ public class ResourceNode : BaseDataPlacedObject<ResourceNodeSO> {
         base.DestroySelf();
     }
 
+    public override void MouseLeftClickObject() {
+        ClickResource();
+    }
+
     public void MineResource() {
         amountLeft--;
 
@@ -29,7 +33,7 @@ public class ResourceNode : BaseDataPlacedObject<ResourceNodeSO> {
         }
     }
 
-    public void ClickResource() {
+    private void ClickResource() {
         clicksLeft--;
 
         if (clicksLeft != 0) return;

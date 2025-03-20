@@ -41,7 +41,7 @@ public class MapGenerator {
         resourcesParent.parent = mainParent;
     }
 
-    public async Task GenerateMap() {
+    public void GenerateMap(bool async) {
         int baseBorder = Random.Range(data.basePaddingRange.x, data.basePaddingRange.y);
         int y = Random.Range(baseBorder, height - baseBorder);
         int x = width - baseBorder + data.minimumStraightLenghtOnBase;
@@ -63,20 +63,21 @@ public class MapGenerator {
 
             if (safetyCheck <= 1000) continue;
 
-            Debug.LogError($"Path generation failed! Safety break: {safetyCheck} attempts!");
+            Debug.LogError($"[MAP GENERATOR ERROR] Path generation failed! Safety break: {safetyCheck} attempts!");
             return;
 #endif
         }
 
 #if UNITY_EDITOR
-        Debug.Log($"[MAP GENERATOR INFO]Path valid after {safetyCheck} generations");
+        Debug.Log($"[MAP GENERATOR INFO] Path valid after {safetyCheck} generations");
 #endif
 
-        await LayPathAsync();
-        await PopulateMapAsync();
-        await SpawnPortalAsync();
-        await SpawnBase();
-        await SpawnVegetationAsync();
+        if (async) {
+            GenerateAsync();
+            return;
+        }
+
+        PopulateMap();
     }
 
     private void GeneratePath(int x, int y, int portalX, int portalBorder) {
@@ -157,158 +158,169 @@ public class MapGenerator {
     }
 
     private void GenerateSplitPaths(ref int x, ref int y) {
-    return;
-    bool success = false;
-    int attempts = 0;
-    int maxAttempts = 1000; // you can adjust this value as needed
+        return;
 
-    while (!success && attempts < maxAttempts) {
-        attempts++;
+        bool success = false;
+        int attempts = 0;
+        int maxAttempts = 1000; // you can adjust this value as needed
 
-        // Calculate target merge point based on split parameters.
-        int splitWidth = Random.Range(data.splitLengthRange.x, data.splitLengthRange.y);
-        int splitHeight = Random.Range(data.splitHeightRange.x, data.splitHeightRange.y);
-        Vector2Int mergePoint = new Vector2Int(x - splitWidth, y + Random.Range(-splitHeight, splitHeight));
-        int lengthToMergePoint = splitWidth + Mathf.Abs(y - mergePoint.y);
-        int minSplitPathLength = lengthToMergePoint + 6; // minimal length (can be tuned)
-        int maxSplitPathLength = lengthToMergePoint + 18; // or any max you want to enforce
+        while (!success && attempts < maxAttempts) {
+            attempts++;
 
-        // Two lists representing the two split paths (each starting at (x,y))
-        List<Vector2Int> firstSplitPath = new List<Vector2Int>();
-        List<Vector2Int> secondSplitPath = new List<Vector2Int>();
-        firstSplitPath.Add(new Vector2Int(x, y));
-        secondSplitPath.Add(new Vector2Int(x, y));
+            // Calculate target merge point based on split parameters.
+            int splitWidth = Random.Range(data.splitLengthRange.x, data.splitLengthRange.y);
+            int splitHeight = Random.Range(data.splitHeightRange.x, data.splitHeightRange.y);
+            Vector2Int mergePoint = new Vector2Int(x - splitWidth, y + Random.Range(-splitHeight, splitHeight));
+            int lengthToMergePoint = splitWidth + Mathf.Abs(y - mergePoint.y);
+            int minSplitPathLength = lengthToMergePoint + 6; // minimal length (can be tuned)
+            int maxSplitPathLength = lengthToMergePoint + 18; // or any max you want to enforce
 
-        // Determine the initial directions for the two split paths.
-        BuildingDir firstSplitStartDir;
-        BuildingDir secondSplitStartDir;
-        int randomValue = Random.Range(0, 3);
-        if (randomValue == 0) {
-            firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Up);
-            secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Down);
-        }
-        else if (randomValue == 1) {
-            firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Up);
-            secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Left);
-        }
-        else {
-            firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Left);
-            secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Down);
-        }
-        Vector2Int firstSplitMove = GetVectorBaseOnDirection(firstSplitStartDir);
-        Vector2Int secondSplitMove = GetVectorBaseOnDirection(secondSplitStartDir);
+            // Two lists representing the two split paths (each starting at (x,y))
+            List<Vector2Int> firstSplitPath = new List<Vector2Int>();
+            List<Vector2Int> secondSplitPath = new List<Vector2Int>();
+            firstSplitPath.Add(new Vector2Int(x, y));
+            secondSplitPath.Add(new Vector2Int(x, y));
 
-        // Make a few initial moves (e.g., 2 steps) to separate the two branches.
-        int initialSteps = 1;
-        bool initialValid = true;
-        for (int i = 0; i < initialSteps; i++) {
-            Vector2Int nextFirst = firstSplitPath.Last() + firstSplitMove;
-            Vector2Int nextSecond = secondSplitPath.Last() + secondSplitMove;
-            if (IsValidSplitCell(nextFirst, firstSplitPath, secondSplitPath) &&
-                IsValidSplitCell(nextSecond, secondSplitPath, firstSplitPath)) {
-                firstSplitPath.Add(nextFirst);
-                secondSplitPath.Add(nextSecond);
+            // Determine the initial directions for the two split paths.
+            BuildingDir firstSplitStartDir;
+            BuildingDir secondSplitStartDir;
+            int randomValue = Random.Range(0, 3);
+
+            if (randomValue == 0) {
+                firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Up);
+                secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Down);
+            }
+            else if (randomValue == 1) {
+                firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Up);
+                secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Left);
             }
             else {
-                // Try new parameters if the initial separation fails.
-                initialValid = false;
-                break;
-            }
-        }
-        if (!initialValid)
-            continue; // retry from the beginning
-
-        // Grow both branches concurrently until both reach the merge point
-        // while enforcing equal branch lengths.
-        bool generationFailed = false;
-        while (firstSplitPath.Count <= maxSplitPathLength && secondSplitPath.Count <= maxSplitPathLength) {
-            bool firstAtMerge = (firstSplitPath.Last() == mergePoint);
-            bool secondAtMerge = (secondSplitPath.Last() == mergePoint);
-
-            // When both branches have reached the merge point and are long enough, we are done.
-            if (firstAtMerge && secondAtMerge &&
-                firstSplitPath.Count >= minSplitPathLength && secondSplitPath.Count >= minSplitPathLength) {
-                break;
+                firstSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Left);
+                secondSplitStartDir = GetDirectionRotatedByLastStepDirection(BuildingDir.Down);
             }
 
-            // If one branch has reached the merge point too early, force a detour.
-            if (firstAtMerge && !secondAtMerge) {
-                List<Vector2Int> detourMoves = GetValidSplitMovesAwayFromMerge(firstSplitPath.Last(), firstSplitPath, secondSplitPath, mergePoint);
-                if (detourMoves.Count > 0) {
-                    firstSplitPath.Add(detourMoves[Random.Range(0, detourMoves.Count)]);
-                    continue;
+            Vector2Int firstSplitMove = GetVectorBaseOnDirection(firstSplitStartDir);
+            Vector2Int secondSplitMove = GetVectorBaseOnDirection(secondSplitStartDir);
+
+            // Make a few initial moves (e.g., 2 steps) to separate the two branches.
+            int initialSteps = 1;
+            bool initialValid = true;
+
+            for (int i = 0; i < initialSteps; i++) {
+                Vector2Int nextFirst = firstSplitPath.Last() + firstSplitMove;
+                Vector2Int nextSecond = secondSplitPath.Last() + secondSplitMove;
+
+                if (IsValidSplitCell(nextFirst, firstSplitPath, secondSplitPath) && IsValidSplitCell(nextSecond, secondSplitPath, firstSplitPath)) {
+                    firstSplitPath.Add(nextFirst);
+                    secondSplitPath.Add(nextSecond);
                 }
                 else {
-                    generationFailed = true;
+                    // Try new parameters if the initial separation fails.
+                    initialValid = false;
                     break;
                 }
             }
-            if (secondAtMerge && !firstAtMerge) {
-                List<Vector2Int> detourMoves = GetValidSplitMovesAwayFromMerge(secondSplitPath.Last(), secondSplitPath, firstSplitPath, mergePoint);
-                if (detourMoves.Count > 0) {
-                    secondSplitPath.Add(detourMoves[Random.Range(0, detourMoves.Count)]);
-                    continue;
+
+            if (!initialValid)
+                continue; // retry from the beginning
+
+            // Grow both branches concurrently until both reach the merge point
+            // while enforcing equal branch lengths.
+            bool generationFailed = false;
+
+            while (firstSplitPath.Count <= maxSplitPathLength && secondSplitPath.Count <= maxSplitPathLength) {
+                bool firstAtMerge = (firstSplitPath.Last() == mergePoint);
+                bool secondAtMerge = (secondSplitPath.Last() == mergePoint);
+
+                // When both branches have reached the merge point and are long enough, we are done.
+                if (firstAtMerge && secondAtMerge && firstSplitPath.Count >= minSplitPathLength && secondSplitPath.Count >= minSplitPathLength) {
+                    break;
+                }
+
+                // If one branch has reached the merge point too early, force a detour.
+                if (firstAtMerge && !secondAtMerge) {
+                    List<Vector2Int> detourMoves = GetValidSplitMovesAwayFromMerge(firstSplitPath.Last(), firstSplitPath, secondSplitPath, mergePoint);
+
+                    if (detourMoves.Count > 0) {
+                        firstSplitPath.Add(detourMoves[Random.Range(0, detourMoves.Count)]);
+                        continue;
+                    }
+                    else {
+                        generationFailed = true;
+                        break;
+                    }
+                }
+
+                if (secondAtMerge && !firstAtMerge) {
+                    List<Vector2Int> detourMoves = GetValidSplitMovesAwayFromMerge(secondSplitPath.Last(), secondSplitPath, firstSplitPath, mergePoint);
+
+                    if (detourMoves.Count > 0) {
+                        secondSplitPath.Add(detourMoves[Random.Range(0, detourMoves.Count)]);
+                        continue;
+                    }
+                    else {
+                        generationFailed = true;
+                        break;
+                    }
+                }
+
+                // Both branches are still en route to merge: pick valid moves concurrently.
+                List<Vector2Int> firstOptions = GetValidSplitMoves(firstSplitPath.Last(), firstSplitPath, secondSplitPath, mergePoint);
+                List<Vector2Int> secondOptions = GetValidSplitMoves(secondSplitPath.Last(), secondSplitPath, firstSplitPath, mergePoint);
+
+                if (firstOptions.Count == 0 || secondOptions.Count == 0) {
+                    generationFailed = true;
+                    break;
+                }
+
+                // Choose one move from each branch.
+                Vector2Int nextFirst = firstOptions[Random.Range(0, firstOptions.Count)];
+                Vector2Int nextSecond = secondOptions[Random.Range(0, secondOptions.Count)];
+
+                // Ensure the new moves are not adjacent to each other.
+                if (!AreCellsAdjacent(nextFirst, nextSecond)) {
+                    firstSplitPath.Add(nextFirst);
+                    secondSplitPath.Add(nextSecond);
                 }
                 else {
-                    generationFailed = true;
-                    break;
+                    // If the chosen moves would cause the branches to touch, try another option.
+                    firstOptions.Remove(nextFirst);
+
+                    if (firstOptions.Count == 0) {
+                        generationFailed = true;
+                        break;
+                    }
+
+                    continue;
                 }
             }
 
-            // Both branches are still en route to merge: pick valid moves concurrently.
-            List<Vector2Int> firstOptions = GetValidSplitMoves(firstSplitPath.Last(), firstSplitPath, secondSplitPath, mergePoint);
-            List<Vector2Int> secondOptions = GetValidSplitMoves(secondSplitPath.Last(), secondSplitPath, firstSplitPath, mergePoint);
-            if (firstOptions.Count == 0 || secondOptions.Count == 0) {
-                generationFailed = true;
-                break;
+            // Check if both branches reached the merge point successfully.
+            if (generationFailed || firstSplitPath.Last() != mergePoint || secondSplitPath.Last() != mergePoint) {
+                continue; // retry with new random parameters
             }
 
-            // Choose one move from each branch.
-            Vector2Int nextFirst = firstOptions[Random.Range(0, firstOptions.Count)];
-            Vector2Int nextSecond = secondOptions[Random.Range(0, secondOptions.Count)];
+            // Successfully generated both branches.
+            foreach (var cell in firstSplitPath)
+                path.Add(cell);
 
-            // Ensure the new moves are not adjacent to each other.
-            if (!AreCellsAdjacent(nextFirst, nextSecond)) {
-                firstSplitPath.Add(nextFirst);
-                secondSplitPath.Add(nextSecond);
-            }
-            else {
-                // If the chosen moves would cause the branches to touch, try another option.
-                firstOptions.Remove(nextFirst);
-                if (firstOptions.Count == 0) {
-                    generationFailed = true;
-                    break;
-                }
-                continue;
-            }
+            foreach (var cell in secondSplitPath)
+                path.Add(cell);
+
+            // Update the main path’s current position to the merge point.
+            x = mergePoint.x;
+            y = mergePoint.y;
+            success = true;
         }
 
-        // Check if both branches reached the merge point successfully.
-        if (generationFailed || firstSplitPath.Last() != mergePoint || secondSplitPath.Last() != mergePoint) {
-            continue; // retry with new random parameters
+        if (!success) {
+            // If after maxAttempts we couldn't generate split paths,
+            // signal failure so that the main generation loop can restart.
+            //shouldGenerateAgain = true;
         }
 
-        // Successfully generated both branches.
-        foreach (var cell in firstSplitPath)
-            path.Add(cell);
-        foreach (var cell in secondSplitPath)
-            path.Add(cell);
-
-        // Update the main path’s current position to the merge point.
-        x = mergePoint.x;
-        y = mergePoint.y;
-        success = true;
+        Debug.Log(success);
     }
-
-    if (!success) {
-        // If after maxAttempts we couldn't generate split paths,
-        // signal failure so that the main generation loop can restart.
-        //shouldGenerateAgain = true;
-    }
-    
-    Debug.Log(success);
-}
-
 
 // Helper: Checks if a cell is valid for a split branch.
     private bool IsValidSplitCell(Vector2Int cell, List<Vector2Int> ownPath, List<Vector2Int> otherPath) {
@@ -517,6 +529,10 @@ public class MapGenerator {
 
     private void PopulateMap() {
         LayPath();
+        GenerateGround();
+        SpawnPortal();
+        SpawnBase();
+        SpawnVegetation();
     }
 
     private void LayPath() {
@@ -525,8 +541,98 @@ public class MapGenerator {
         foreach (var cell in path) {
             grid[cell.x, cell.y].MarkPathCell();
             int neighboursValue = GetNeighboursValue(cell.x, cell.y);
-            GameObject.Instantiate(GetPathCellPrefab(neighboursValue), new Vector3(cell.x + .5f, 0, cell.y + .5f), Quaternion.Euler(0, GetRotation(neighboursValue), 0));
+            GameObject.Instantiate(GetPathCellPrefab(neighboursValue), new Vector3(cell.x + .5f, 0, cell.y + .5f), Quaternion.Euler(0, GetRotation(neighboursValue), 0), pathParent);
         }
+    }
+
+    private void GenerateGround() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (path.Contains(new Vector2Int(x, y))) continue;
+
+                GameObject.Instantiate(data.groundPrefab, new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity, terrainParent);
+            }
+        }
+    }
+
+    private void SpawnPortal() {
+        Vector2Int origin = pathEnd + new Vector2Int(-data.portalData.width, -data.baseData.height / 2);
+        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down, mainParent);
+    }
+
+    private void SpawnBase() {
+        Vector2Int origin = pathStart + new Vector2Int(1, -data.baseData.height / 2);
+        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.baseData, BuildingDir.Right, mainParent);
+        Vector2 baseCenterPosition = data.baseData.GetCenterPosition(origin, BuildingDir.Right);
+        int endX = (int)baseCenterPosition.x + data.basePaddingPreventingObjectGeneration;
+        int endY = (int)baseCenterPosition.y + data.basePaddingPreventingObjectGeneration;
+        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+
+        for (int x = (int)baseCenterPosition.x - data.basePaddingPreventingObjectGeneration; x <= endX; x++) {
+            for (int y = (int)baseCenterPosition.y - data.basePaddingPreventingObjectGeneration; y <= endY; y++) {
+                if (grid[x, y].isPathCell) continue;
+
+                grid[x, y].MarkPathCell();
+                basePaddingCells.Add(new Vector2Int(x, y));
+            }
+        }
+    }
+
+    private void SpawnVegetation() {
+        List<Vector2Int> allCells = new List<Vector2Int>();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                allCells.Add(new Vector2Int(x, y));
+            }
+        }
+
+        List<Vector2Int> spawnLocations = allCells.OrderBy(_ => Random.value).Take(Mathf.CeilToInt(allCells.Count * data.resourcesOnMapPercent / 100f)).ToList();
+        int spawnsCount = spawnLocations.Count;
+
+        for (int i = 0; i < spawnsCount; i++) {
+            BuildingSystem.Instance.TryPlaceMapGeneratedObject(spawnLocations[i], SelectRandomResourceSO(), GetRandomRotation(), resourcesParent);
+        }
+
+        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+
+        foreach (Vector2Int basePaddingCell in basePaddingCells) {
+            grid[basePaddingCell.x, basePaddingCell.y].UnmarkPathCell();
+        }
+    }
+
+    private ResourceNodeSO SelectRandomResourceSO() {
+        int totalWeight = data.resourcesOnMap.Sum(resource => resource.weight);
+        int roll = Random.Range(0, totalWeight);
+        int cumulative = 0;
+
+        foreach (var resource in data.resourcesOnMap.OrderByDescending(r => r.weight)) {
+            cumulative += resource.weight;
+
+            if (roll < cumulative) return resource.resourceNode;
+        }
+
+        return null;
+    }
+
+    private BuildingDir GetRandomRotation() {
+        int roll = Random.Range(0, 4);
+
+        if (roll == 0) return BuildingDir.Right;
+        if (roll == 1) return BuildingDir.Up;
+        if (roll == 2) return BuildingDir.Down;
+
+        return BuildingDir.Left;
+    }
+
+    // ---------- ASYNC GENERATION TO SHOWCASE HOW IT WORKS ----------
+
+    private async Task GenerateAsync() {
+        await LayPathAsync();
+        await GenerateGroundAsync();
+        await SpawnPortalAsync();
+        await SpawnBaseAsync();
+        await SpawnVegetationAsync();
     }
 
     private async Task LayPathAsync() {
@@ -540,8 +646,7 @@ public class MapGenerator {
         }
     }
 
-    private async Task PopulateMapAsync() {
-        var grid = BuildingSystem.Instance.grid.gridArray;
+    private async Task GenerateGroundAsync() {
         List<Vector3> spawnPositions = new List<Vector3>();
 
         for (int x = 0; x < width; x++) {
@@ -551,18 +656,18 @@ public class MapGenerator {
                 spawnPositions.Add(new Vector3(x + 0.5f, 0, y + 0.5f));
 
                 if (spawnPositions.Count >= 7) {
-                    await SpawnTilesBatch(spawnPositions);
+                    await SpawnGroundCellsBatch(spawnPositions);
                     spawnPositions.Clear();
                 }
             }
         }
 
         if (spawnPositions.Count > 0) {
-            await SpawnTilesBatch(spawnPositions);
+            await SpawnGroundCellsBatch(spawnPositions);
         }
     }
 
-    private async Task SpawnTilesBatch(List<Vector3> positions) {
+    private async Task SpawnGroundCellsBatch(List<Vector3> positions) {
         foreach (var pos in positions) {
             GameObject.Instantiate(data.groundPrefab, pos, Quaternion.identity, terrainParent);
         }
@@ -577,7 +682,7 @@ public class MapGenerator {
         BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down, mainParent);
     }
 
-    private async Task SpawnBase() {
+    private async Task SpawnBaseAsync() {
         await Task.Delay(300);
 
         Vector2Int origin = pathStart + new Vector2Int(1, -data.baseData.height / 2);
@@ -622,29 +727,5 @@ public class MapGenerator {
         foreach (Vector2Int basePaddingCell in basePaddingCells) {
             grid[basePaddingCell.x, basePaddingCell.y].UnmarkPathCell();
         }
-    }
-
-    private ResourceNodeSO SelectRandomResourceSO() {
-        int totalWeight = data.resourcesOnMap.Sum(resource => resource.weight);
-        int roll = Random.Range(0, totalWeight);
-        int cumulative = 0;
-
-        foreach (var resource in data.resourcesOnMap.OrderByDescending(r => r.weight)) {
-            cumulative += resource.weight;
-
-            if (roll < cumulative) return resource.resourceNode;
-        }
-
-        return null;
-    }
-
-    private BuildingDir GetRandomRotation() {
-        int roll = Random.Range(0, 4);
-
-        if (roll == 0) return BuildingDir.Right;
-        if (roll == 1) return BuildingDir.Up;
-        if (roll == 2) return BuildingDir.Down;
-
-        return BuildingDir.Left;
     }
 }

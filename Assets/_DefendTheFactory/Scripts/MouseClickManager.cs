@@ -1,17 +1,18 @@
-using System;
 using UnityEngine;
 using UtilsClass;
 
-public class MouseClickManager : MonoBehaviour {
+public class MouseClickManager {
     private bool isBuildingSystemEnabled;
     private Camera cam;
+    private InputManager input;
 
-    private void Start() {
+    public MouseClickManager() {
         cam = Camera.main;
+        input = InputManager.Instance;
         Subscribe();
     }
 
-    private void OnDestroy() {
+    ~MouseClickManager() {
         Unsubscribe();
     }
 
@@ -19,14 +20,14 @@ public class MouseClickManager : MonoBehaviour {
         BuildingSystem buildingSystem = BuildingSystem.Instance;
         buildingSystem.OnSystemEnabled += BuildingSystemEnabled;
         buildingSystem.OnSystemDisabled += BuildingSystemDisabled;
-        InputManager.Instance.leftClickAction += HandleLeftClickAction;
+        input.leftClickAction += HandleLeftClickAction;
     }
 
     private void Unsubscribe() {
         BuildingSystem buildingSystem = BuildingSystem.Instance;
         buildingSystem.OnSystemEnabled -= BuildingSystemEnabled;
         buildingSystem.OnSystemDisabled -= BuildingSystemDisabled;
-        InputManager.Instance.leftClickAction -= HandleLeftClickAction;
+        input.leftClickAction -= HandleLeftClickAction;
     }
 
     private void BuildingSystemEnabled() {
@@ -38,19 +39,12 @@ public class MouseClickManager : MonoBehaviour {
     }
 
     private void HandleLeftClickAction() {
-        if(isBuildingSystemEnabled || MyUtils.IsPointerOverUI()) return;
+        if (isBuildingSystemEnabled || MyUtils.IsPointerOverUI()) return;
 
-        Ray ray = cam.ScreenPointToRay(InputManager.Instance.mousePos);
-        //Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        
-        Physics.Raycast(ray, out RaycastHit hit);
+        Ray ray = cam.ScreenPointToRay(input.mousePos);
 
-        if (hit.collider != null) {
-            
-        }
-        
-        ResourceNode node = new ResourceNode();
-        
-        node.ClickResource();
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6)) return;
+
+        hit.transform.GetComponent<BasePlacedObject>().MouseLeftClickObject();
     }
 }

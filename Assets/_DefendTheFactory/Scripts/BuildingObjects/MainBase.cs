@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MainBase : BaseDataPlacedObject<MainBaseSO> {
@@ -37,7 +38,7 @@ public class MainBase : BaseDataPlacedObject<MainBaseSO> {
         for (int i = 0; i < inputBeltsCount; i++) {
             ConveyorBelt belt = gameObject.AddComponent<ConveyorBelt>();
             Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.inputBeltPositions[i].beltPosition, dir);
-            belt.SetupBuildingBelt(beltPos, buildableDataSO.inputBeltPositions[i].beltDir, this);
+            belt.SetupBuildingBelt(beltPos, GetRotatedBeltDir(buildableDataSO.inputBeltPositions[i].beltDir), this);
             inputBelts.Add(belt);
         }
 
@@ -56,5 +57,20 @@ public class MainBase : BaseDataPlacedObject<MainBaseSO> {
         itemsManager.AddItems(belt.endItem.itemSO, 1);
         belt.endItem.DestroySelf();
         belt.ResetWorldItem();
+    }
+
+    private BuildingDir GetRotatedBeltDir(BuildingDir beltDir) {
+        switch (dir) {
+            default:
+            case BuildingDir.Up: return beltDir;
+            case BuildingDir.Left: return RotateDirectionClockwise(beltDir, 3);
+            case BuildingDir.Down: return RotateDirectionClockwise(beltDir, 2);
+            case BuildingDir.Right: return RotateDirectionClockwise(beltDir, 1);
+        }
+    }
+
+    private BuildingDir RotateDirectionClockwise(BuildingDir dir, int steps) {
+        int newDir = ((int)dir + steps) % 4;
+        return (BuildingDir)newDir;
     }
 }

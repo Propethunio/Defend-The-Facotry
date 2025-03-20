@@ -635,9 +635,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4331c96c17831944ab3180f498244b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseColliderLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -2537,6 +2534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: e74b6e4c28d327143948909efc68f967, type: 2}
   showBeltDebug: 1
+  generateMapAsync: 0
 --- !u!4 &1329027455
 Transform:
   m_ObjectHideFlags: 0

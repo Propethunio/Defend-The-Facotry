@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 
-public class Mouse3D : MonoBehaviour {
-    [SerializeField] private LayerMask mouseColliderLayerMask;
-
+public class Mouse3D : MonoBehaviour { 
     private static Mouse3D Instance;
     private Camera cam;
 
@@ -20,7 +18,7 @@ public class Mouse3D : MonoBehaviour {
     private bool TryGetMouseWorldPosition_Instance(out Vector3 mousePosition) {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, Mathf.Infinity, mouseColliderLayerMask)) {
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, Mathf.Infinity, 1 << 3)) {
             mousePosition = raycastHit.point;
             return true;
         }
