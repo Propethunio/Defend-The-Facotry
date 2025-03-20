@@ -20,6 +20,13 @@ MonoBehaviour:
     type: 3}
   <width>k__BackingField: 1
   <height>k__BackingField: 2
+  <cost>k__BackingField:
+  - item: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
+    amount: 15
+  - item: {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23, type: 2}
+    amount: 5
+  <isDestroyable>k__BackingField: 1
+  <itemsGivenBack>k__BackingField: 1
   <outputBeltPosition>k__BackingField: {x: 0, y: 0}
   <maxStoredOutputItems>k__BackingField: 1
   <gatheredResource>k__BackingField: 1

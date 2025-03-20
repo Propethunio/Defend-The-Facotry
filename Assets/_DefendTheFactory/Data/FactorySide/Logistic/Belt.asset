@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e067cb39f592b2e4c9715625936463b4, type: 3}
   m_Name: Belt
   m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 0}
   <nameString>k__BackingField: Conveyor Belt
   <prefab>k__BackingField: {fileID: 7788273569947618330, guid: d7a93aabf0fd4954681931fb8e54feee,
     type: 3}
@@ -19,3 +20,8 @@ MonoBehaviour:
     type: 3}
   <width>k__BackingField: 1
   <height>k__BackingField: 1
+  <cost>k__BackingField:
+  - item: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
+    amount: 1
+  <isDestroyable>k__BackingField: 1
+  <itemsGivenBack>k__BackingField: 1

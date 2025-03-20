@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e067cb39f592b2e4c9715625936463b4, type: 3}
   m_Name: Spliter
   m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 0}
   <nameString>k__BackingField: Spliter
   <prefab>k__BackingField: {fileID: 6328227677590226635, guid: 89eceb0362eb7934583bd741bc137349,
     type: 3}
@@ -19,3 +20,10 @@ MonoBehaviour:
     type: 3}
   <width>k__BackingField: 1
   <height>k__BackingField: 1
+  <cost>k__BackingField:
+  - item: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
+    amount: 6
+  - item: {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23, type: 2}
+    amount: 3
+  <isDestroyable>k__BackingField: 1
+  <itemsGivenBack>k__BackingField: 1

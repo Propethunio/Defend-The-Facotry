@@ -17,6 +17,7 @@ public class BuildingSystem {
 
     private BaseBuildableObjectSO placedObjectTypeSO;
     private InputManager inputManager;
+    private ItemsManager itemsManager;
     private bool isBuildingSystemActive;
     private bool isDemolishActive;
 
@@ -26,6 +27,7 @@ public class BuildingSystem {
 
         grid = new Grid<GridCell>(width, height, (_, _, _) => new GridCell());
         inputManager = InputManager.Instance;
+        itemsManager = ItemsManager.Instance;
         BuildingGhost.Instance.Init();
     }
 
@@ -139,6 +141,8 @@ public class BuildingSystem {
     }
 
     private void TryPlaceObject(Vector2Int placedObjectOrigin) {
+        if (!CanAfford()) return;
+
         List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
         List<ConveyorBelt> beltsToRemove = new();
 
@@ -169,6 +173,7 @@ public class BuildingSystem {
             belt.DestroySelf();
         }
 
+        ConsumeItems();
         Vector2Int rotationOffset = placedObjectTypeSO.GetRotationOffset(dir);
         Vector3 placedObjectWorldPosition = new Vector3(placedObjectOrigin.x, 0, placedObjectOrigin.y) + new Vector3(rotationOffset.x, 0, rotationOffset.y);
         BasePlacedObject placedObject = BaseDataPlacedObject<BaseBuildableObjectSO>.Create(placedObjectWorldPosition, dir, placedObjectTypeSO);
@@ -214,6 +219,24 @@ public class BuildingSystem {
         }
 
         placedObject.GridSetupDone();
+    }
+
+    private bool CanAfford() {
+        int itemsCostCount = placedObjectTypeSO.cost.Count;
+
+        for (int i = 0; i < itemsCostCount; i++) {
+            if (!itemsManager.CanAfford(placedObjectTypeSO.cost[i].item, placedObjectTypeSO.cost[i].amount)) return false;
+        }
+
+        return true;
+    }
+
+    private void ConsumeItems() {
+        int itemsCostCount = placedObjectTypeSO.cost.Count;
+
+        for (int i = 0; i < itemsCostCount; i++) {
+            itemsManager.RemoveItems(placedObjectTypeSO.cost[i].item, placedObjectTypeSO.cost[i].amount);
+        }
     }
 
     public Vector2Int GetGridPosition(Vector3 worldPosition) {
