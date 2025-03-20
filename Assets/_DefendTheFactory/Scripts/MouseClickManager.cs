@@ -45,6 +45,6 @@ public class MouseClickManager {
 
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6)) return;
 
-        hit.transform.GetComponent<BasePlacedObject>().MouseLeftClickObject();
+        hit.transform.GetComponent<IReactOnMouse>().MouseLeftClickObject();
     }
 }
