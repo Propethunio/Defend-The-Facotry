@@ -24,4 +24,8 @@ public class MaterialScrollX : MonoBehaviour {
         textureOffset.x = currentOffset;
         targetMaterial.mainTextureOffset = textureOffset;
     }
+
+    private void OnDestroy() {
+        targetMaterial.mainTextureOffset = Vector2.zero;
+    }
 }
