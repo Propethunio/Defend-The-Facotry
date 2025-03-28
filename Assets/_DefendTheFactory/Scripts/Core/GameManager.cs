@@ -7,13 +7,16 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private bool showBeltDebug;
     [SerializeField] private bool generateMapAsync;
 
+    private Stopwatch stopwatch = new Stopwatch();
+    public EnemyLogic enemyPrefab;
+    
     private void Awake() {
+        stopwatch.Start();
         new ItemsManager();
     }
 
     private void Start() {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
+        new WaveManager(enemyPrefab);
         MapGenerator mapGenerator = new MapGenerator(data);
         new BuildingSystem(mapGenerator.width, mapGenerator.height);
         new BeltManager(showBeltDebug);

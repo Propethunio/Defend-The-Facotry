@@ -11,7 +11,7 @@ public class MapGenerator {
     private Transform terrainParent;
     private Transform pathParent;
     private Transform resourcesParent;
-    private HashSet<Vector2Int> path = new HashSet<Vector2Int>();
+    private List<Vector2Int> path = new List<Vector2Int>();
     private MapDataSO data;
     private int currentStraightLength;
     private BuildingDir currentPathDir;
@@ -78,6 +78,7 @@ public class MapGenerator {
         }
 
         PopulateMap();
+        WaveManager.Instance.SetPath(path);
     }
 
     private void GeneratePath(int x, int y, int portalX, int portalBorder) {
@@ -558,6 +559,8 @@ public class MapGenerator {
     private void SpawnPortal() {
         Vector2Int origin = pathEnd + new Vector2Int(-data.portalData.width, -data.baseData.height / 2);
         BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down, mainParent);
+        Vector2 portalCenter = data.portalData.GetCenterPosition(origin, BuildingDir.Down);
+        WaveManager.Instance.SetSpawnPosition(new Vector3(portalCenter.x, 0f, portalCenter.y));
     }
 
     private void SpawnBase() {

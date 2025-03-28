@@ -2535,6 +2535,8 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: e74b6e4c28d327143948909efc68f967, type: 2}
   showBeltDebug: 1
   generateMapAsync: 0
+  enemyPrefab: {fileID: -144336740464344315, guid: cccd576cc8da69848ba905da363234a9,
+    type: 3}
 --- !u!4 &1329027455
 Transform:
   m_ObjectHideFlags: 0
