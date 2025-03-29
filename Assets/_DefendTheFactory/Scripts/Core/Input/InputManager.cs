@@ -10,7 +10,7 @@ public class InputManager : MonoBehaviour {
     public float rotationDir { get; private set; }
     public float zoomDir { get; private set; }
 
-    public event Action leftClickAction, rightClickPerformedAction, rightClickCanceledAction, scrollClickPerformedAction, scrollClickCanceledAction;
+    public event Action mouseMoveAction, leftClickAction, rightClickPerformedAction, rightClickCanceledAction, scrollClickPerformedAction, scrollClickCanceledAction;
     public event Action backClickAction, buildingMenuAction, buildingRotationAction;
     public event Action<int> timeChangeAction;
 
@@ -23,6 +23,12 @@ public class InputManager : MonoBehaviour {
         input = new InputMap();
         SubscribeEvents();
         EnableGameInput();
+    }
+
+    private void Update() {
+        if (moveDir != Vector2.zero || rotationDir != 0f || zoomDir != 0f) {
+            mouseMoveAction?.Invoke();
+        }
     }
 
     public void EnableMenuInput() {
@@ -48,7 +54,7 @@ public class InputManager : MonoBehaviour {
         input.GameInput.RightClick.canceled += RightClick_canceled;
         input.GameInput.ScrollClick.performed += ScrollClick_performed;
         input.GameInput.ScrollClick.canceled += ScrollClick_canceled;
-        input.GameInput.Pouse.performed += Pouse_performed;
+        input.GameInput.Pouse.performed += Pause_performed;
         input.GameInput.TimeNormal.performed += TimeNormal_performed;
         input.GameInput.TimeFast.performed += TimeFast_performed;
         input.GameInput.TimeExtraFast.performed += TimeExtraFast_performed;
@@ -83,6 +89,7 @@ public class InputManager : MonoBehaviour {
 
     private void PointerPosition_performed(InputAction.CallbackContext obj) {
         mousePos = obj.ReadValue<Vector2>();
+        mouseMoveAction?.Invoke();
     }
 
     private void LeftClick_performed(InputAction.CallbackContext obj) {
@@ -105,7 +112,7 @@ public class InputManager : MonoBehaviour {
         scrollClickCanceledAction?.Invoke();
     }
 
-    private void Pouse_performed(InputAction.CallbackContext obj) {
+    private void Pause_performed(InputAction.CallbackContext obj) {
         timeChangeAction?.Invoke(0);
     }
 

@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour {
         MapGenerator mapGenerator = new MapGenerator(data);
         new BuildingSystem(mapGenerator.width, mapGenerator.height);
         new BeltManager(showBeltDebug);
-        new MouseClickManager();
+        new MouseInteractionManager();
         mapGenerator.GenerateMap(generateMapAsync);
         MouseClickPlane.Instance.Setup(mapGenerator.width, mapGenerator.height);
         TilemapVisual.Instance.Init(mapGenerator.width, mapGenerator.height);

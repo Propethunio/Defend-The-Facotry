@@ -1,18 +1,19 @@
 using UnityEngine;
 using UtilsClass;
 
-public class MouseClickManager {
+public class MouseInteractionManager {
     private bool isBuildingSystemEnabled;
     private Camera cam;
     private InputManager input;
+    private IReactOnMouse lastHoveredObject;
 
-    public MouseClickManager() {
+    public MouseInteractionManager() {
         cam = Camera.main;
         input = InputManager.Instance;
         Subscribe();
     }
 
-    ~MouseClickManager() {
+    ~MouseInteractionManager() {
         Unsubscribe();
     }
 
@@ -21,6 +22,7 @@ public class MouseClickManager {
         buildingSystem.OnSystemEnabled += BuildingSystemEnabled;
         buildingSystem.OnSystemDisabled += BuildingSystemDisabled;
         input.leftClickAction += HandleLeftClickAction;
+        input.mouseMoveAction += HandleMouseHover;
     }
 
     private void Unsubscribe() {
@@ -28,6 +30,7 @@ public class MouseClickManager {
         buildingSystem.OnSystemEnabled -= BuildingSystemEnabled;
         buildingSystem.OnSystemDisabled -= BuildingSystemDisabled;
         input.leftClickAction -= HandleLeftClickAction;
+        input.mouseMoveAction -= HandleMouseHover;
     }
 
     private void BuildingSystemEnabled() {
@@ -46,5 +49,25 @@ public class MouseClickManager {
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6)) return;
 
         hit.transform.GetComponent<IReactOnMouse>().MouseLeftClickObject();
+    }
+
+    private void HandleMouseHover() {
+        if (isBuildingSystemEnabled || MyUtils.IsPointerOverUI()) return;
+
+        Ray ray = cam.ScreenPointToRay(input.mousePos);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6)) {
+            IReactOnMouse hoveredObject = hit.transform.GetComponent<IReactOnMouse>();
+
+            if (lastHoveredObject == hoveredObject) return;
+
+            lastHoveredObject?.MouseExitObject();
+            hoveredObject.MouseEnterObject();
+            lastHoveredObject = hoveredObject;
+        }
+        else if (lastHoveredObject != null) {
+            lastHoveredObject.MouseExitObject();
+            lastHoveredObject = null;
+        }
     }
 }
