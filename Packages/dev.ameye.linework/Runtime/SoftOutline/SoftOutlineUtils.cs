@@ -29,8 +29,8 @@ namespace Linework.SoftOutline
             return this;
         }
     }
-
-    internal static class ShaderPath
+    
+    static class ShaderPath
     {
         public const string Mask = "Hidden/Outlines/Soft Outline/Mask";
         public const string Silhouette = "Hidden/Outlines/Soft Outline/Silhouette";
@@ -41,8 +41,8 @@ namespace Linework.SoftOutline
         public const string Dilate = "Hidden/Outlines/Soft Outline/Dilate";
         public const string Outline = "Hidden/Outlines/Soft Outline/Outline";
     }
-
-    internal static class ShaderPass
+    
+    static class ShaderPass
     {
         public const int Mask = 0;
         public const int Silhouette = 0;
@@ -52,7 +52,7 @@ namespace Linework.SoftOutline
         public const int Outline = 0;
     }
 
-    internal static class ShaderPassName
+    static class ShaderPassName
     {
         public const string Mask = "Mask (Soft Outline)";
         public const string Silhouette = "Silhouette (Soft Outline)";
@@ -60,7 +60,7 @@ namespace Linework.SoftOutline
         public const string Outline = "Outline (Soft Outline)";
     }
 
-    internal static class ShaderPropertyId
+    static class ShaderPropertyId
     {
         public static readonly int Samples = Shader.PropertyToID("_Samples");
         public static readonly int KernelSize = Shader.PropertyToID("_KernelSize");
@@ -71,20 +71,20 @@ namespace Linework.SoftOutline
         public static readonly int OutlineGap = Shader.PropertyToID("_OutlineGap");
         public static readonly int SilhouetteBuffer = Shader.PropertyToID("_SilhouetteBuffer");
     }
-
-    internal static class ShaderFeature
+    
+    static class ShaderFeature
     {
         public const string AlphaCutout = "ALPHA_CUTOUT";
         public const string HardOutline = "HARD_OUTLINE";
         public const string ScaleWithResolution = "SCALE_WITH_RESOLUTION";
     }
-
-    internal static class Keyword
+    
+    static class Keyword
     {
         public static readonly GlobalKeyword OutlineColor = GlobalKeyword.Create("_OUTLINE_COLOR");
     }
 
-    internal static class Buffer
+    static class Buffer
     {
         public const string Silhouette = "_SilhouetteBuffer";
         public const string Blur = "_BlurBuffer";

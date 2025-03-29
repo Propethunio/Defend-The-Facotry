@@ -8,6 +8,7 @@ namespace Linework.Editor.WideOutline
     public class OutlineEditor : UnityEditor.Editor
     {
         private SerializedProperty renderingLayer;
+        private SerializedProperty layerMask;
         private SerializedProperty renderQueue;
         private SerializedProperty occlusion;
         private SerializedProperty cullMode;
@@ -23,6 +24,7 @@ namespace Linework.Editor.WideOutline
         private void OnEnable()
         {
             renderingLayer = serializedObject.FindProperty(nameof(Outline.RenderingLayer));
+            layerMask = serializedObject.FindProperty(nameof(Outline.layerMask));
             renderQueue = serializedObject.FindProperty(nameof(Outline.renderQueue));
             occlusion = serializedObject.FindProperty(nameof(Outline.occlusion));
             cullMode = serializedObject.FindProperty(nameof(Outline.cullingMode));
@@ -43,9 +45,13 @@ namespace Linework.Editor.WideOutline
         {
             serializedObject.Update();
 
-            EditorGUILayout.LabelField("Render", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Filters", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(renderingLayer, EditorUtils.CommonStyles.OutlineLayer);
+            EditorGUILayout.PropertyField(layerMask, EditorUtils.CommonStyles.LayerMask);
             EditorGUILayout.PropertyField(renderQueue, EditorUtils.CommonStyles.RenderQueue);
+            EditorGUILayout.Space();
+            
+            EditorGUILayout.LabelField("Render", EditorStyles.boldLabel);
             if (!customDepthEnabled.boolValue)
             {
                 EditorGUILayout.PropertyField(occlusion, EditorUtils.CommonStyles.OutlineOcclusion);
@@ -70,6 +76,10 @@ namespace Linework.Editor.WideOutline
                 EditorGUILayout.HelpBox("GPU instancing breaks the SRP Batcher. See the documentation for details.", MessageType.Warning);
             }
             EditorGUILayout.PropertyField(vertexAnimation, EditorUtils.CommonStyles.VertexAnimation);
+            if (vertexAnimation.boolValue)
+            {
+                EditorGUILayout.HelpBox("With vertex animation enabled, the outline color should be set by your object's shader. See the documentation for details.", MessageType.Warning);
+            }
             EditorGUILayout.Space();
             
             if ((WideOutlineOcclusion) occlusion.intValue != WideOutlineOcclusion.AsMask)
@@ -78,14 +88,10 @@ namespace Linework.Editor.WideOutline
                 using (new EditorGUI.DisabledScope(vertexAnimation.boolValue))
                 {
                     EditorGUILayout.PropertyField(color, EditorUtils.CommonStyles.OutlineColor);
-                    using (new EditorGUI.DisabledScope(disableWidthControl.boolValue))
-                    {
-                        EditorGUILayout.PropertyField(width, EditorUtils.CommonStyles.OutlineWidth);
-                    }
                 }
-                if (vertexAnimation.boolValue)
+                using (new EditorGUI.DisabledScope(disableWidthControl.boolValue))
                 {
-                    EditorGUILayout.HelpBox("When using vertex animation, the outline color should be set by your object's shader. See the documentation for details.", MessageType.Warning);
+                    EditorGUILayout.PropertyField(width, EditorUtils.CommonStyles.OutlineWidth);
                 }
             }
             else

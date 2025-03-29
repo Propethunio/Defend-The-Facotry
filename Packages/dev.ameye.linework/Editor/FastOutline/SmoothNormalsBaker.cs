@@ -3,7 +3,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using UnityEngine;
 
-namespace Linework.FastOutline
+namespace Linework.Editor.FastOutline
 {
     public static class SmoothNormalsBaker
     {
@@ -20,8 +20,11 @@ namespace Linework.FastOutline
                 Debug.LogError($"Mesh {mesh.name} did not contain any tangents.");
                 return null;
             }
-            
+#if HAS_PACKAGE_UNITY_COLLECTIONS_2_1_0_EXP_4
             var smoothedNormalsMap = new UnsafeParallelHashMap<Vector3, Vector3>(vertexCount, Allocator.Persistent);
+#else
+            var smoothedNormalsMap = new UnsafeHashMap<Vector3, Vector3>(vertexCount, Allocator.Persistent);
+#endif
             for (var i = 0; i < vertexCount; i++)
             {
                 if (smoothedNormalsMap.ContainsKey(vertices[i]))
@@ -33,7 +36,7 @@ namespace Linework.FastOutline
                     smoothedNormalsMap.Add(vertices[i], normals[i]);
                 }
             }
-            
+
             var normalsNativeArray = new NativeArray<Vector3>(normals, Allocator.Persistent);
             var verticesNativeArray = new NativeArray<Vector3>(vertices, Allocator.Persistent);
             var tangentsNativeArray = new NativeArray<Vector4>(tangents, Allocator.Persistent);
@@ -52,20 +55,28 @@ namespace Linework.FastOutline
             bakedNormals.Dispose();
             return bakedSmoothedNormals;
         }
-        
+
         private struct BakeNormalJob : IJobParallelFor
         {
             [ReadOnly] public NativeArray<Vector3> vertices, normals;
             [ReadOnly] public NativeArray<Vector4> tangents;
             [NativeDisableContainerSafetyRestriction]
+#if HAS_PACKAGE_UNITY_COLLECTIONS_2_1_0_EXP_4
             [ReadOnly] public UnsafeParallelHashMap<Vector3, Vector3> smoothedNormals;
+#else
+              [ReadOnly] public UnsafeHashMap<Vector3, Vector3> smoothedNormals;
+#endif
             [WriteOnly] public NativeArray<Vector2> bakedNormals;
 
             public BakeNormalJob(
                 NativeArray<Vector3> vertices,
                 NativeArray<Vector3> normals,
                 NativeArray<Vector4> tangents,
+#if HAS_PACKAGE_UNITY_COLLECTIONS_2_1_0_EXP_4
                 UnsafeParallelHashMap<Vector3, Vector3> smoothedNormals,
+#else
+                  UnsafeHashMap<Vector3, Vector3> smoothedNormals,
+#endif
                 NativeArray<Vector2> bakedNormals)
             {
                 this.vertices = vertices;

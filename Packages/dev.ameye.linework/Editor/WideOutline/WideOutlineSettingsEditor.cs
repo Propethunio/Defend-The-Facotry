@@ -1,3 +1,4 @@
+using System;
 using Linework.Common.Utils;
 using Linework.Editor.Common.Utils;
 using Linework.WideOutline;
@@ -97,11 +98,14 @@ namespace Linework.Editor.WideOutline
                     EditorGUILayout.PropertyField(width, EditorUtils.CommonStyles.OutlineWidth);
                     EditorGUILayout.PropertyField(customMaterial, EditorUtils.CommonStyles.CustomMaterial);
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+            EditorGUILayout.Space();
             
             serializedObject.ApplyModifiedProperties();
-            EditorGUILayout.Space();
             outlineList.Draw();
+            
             EditorGUILayout.Space();
             
             if (occlusionChanged)

@@ -29,7 +29,6 @@ namespace Linework.EdgeDetection
         [Range(0.0f, 1.0f)] public float luminanceSensitivity = 0.3f;
         public bool objectId = true;
         public bool particles = false;
-        public bool sectionsMask, depthMask, normalsMask, luminanceMask;
         public SectionMapInput sectionMapInput = SectionMapInput.None;
         public Texture2D sectionTexture;
         public UVSet sectionTextureUvSet;
@@ -67,6 +66,13 @@ namespace Linework.EdgeDetection
         [RenderingLayerMask]
         public uint SectionRenderingLayer = 1;
 #endif
+#if UNITY_6000_0_OR_NEWER
+        public RenderingLayerMask SectionMaskRenderingLayer = 0;
+#else
+        [RenderingLayerMask]
+        public uint SectionMaskRenderingLayer = 0;
+#endif
+        public MaskInfluence maskInfluence = MaskInfluence.Sections | MaskInfluence.Depth | MaskInfluence.Normals | MaskInfluence.Luminance;
         
         public InjectionPoint InjectionPoint => injectionPoint;
         public bool ShowInSceneView => showInSceneView;

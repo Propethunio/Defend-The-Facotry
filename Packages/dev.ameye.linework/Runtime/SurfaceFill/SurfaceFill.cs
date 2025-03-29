@@ -65,6 +65,11 @@ namespace Linework.SurfaceFill
                     var (srcBlend, dstBlend) = RenderUtils.GetSrcDstBlend(fill.blendMode);
                     fill.material.SetInt(CommonShaderPropertyId.FullScreenColorBlendModeSource, srcBlend);
                     fill.material.SetInt(CommonShaderPropertyId.FullScreenColorBlendModeDestination, dstBlend);
+                    if (fill.materialType == MaterialType.Custom && fill.customMaterial != null)
+                    {
+                        fill.customMaterial.SetInt(CommonShaderPropertyId.FullScreenColorBlendModeSource, srcBlend);
+                        fill.customMaterial.SetInt(CommonShaderPropertyId.FullScreenColorBlendModeDestination, dstBlend);
+                    }
                     
                     mask.DisableKeyword(ShaderFeature.AlphaCutout);
                     // TODO: enable in future update
@@ -157,7 +162,7 @@ namespace Linework.SurfaceFill
                             throw new ArgumentOutOfRangeException();
                     }
                     fill.material.SetColor(ShaderPropertyId.PrimaryColor, fill.primaryColor);
-                    fill.material.SetColor(ShaderPropertyId.SecondaryColor, fill.secondaryColor);
+                    fill.material.SetColor(ShaderPropertyId.SecondaryColor, fill.pattern == Pattern.Glow ? Color.clear : fill.secondaryColor);
                     fill.material.SetFloat(ShaderPropertyId.FrequencyX, fill.frequencyX);
                     fill.material.SetFloat(ShaderPropertyId.FrequencyY, fill.frequencyY);
                     fill.material.SetFloat(ShaderPropertyId.Density, fill.density);
@@ -176,6 +181,12 @@ namespace Linework.SurfaceFill
                     fill.material.SetFloat(CommonShaderPropertyId.FullScreenStencilComparison, (float) CompareFunction.Equal);
                     fill.material.SetFloat(CommonShaderPropertyId.FullScreenStencilReference, 1 << i);
                     fill.material.SetFloat(CommonShaderPropertyId.FullScreenStencilReadMask, 1 << i);
+                    if (fill.materialType == MaterialType.Custom && fill.customMaterial != null)
+                    {
+                        fill.customMaterial.SetFloat(CommonShaderPropertyId.FullScreenStencilComparison, (float) CompareFunction.Equal);
+                        fill.customMaterial.SetFloat(CommonShaderPropertyId.FullScreenStencilReference, 1 << i);
+                        fill.customMaterial.SetFloat(CommonShaderPropertyId.FullScreenStencilReadMask, 1 << i);
+                    }
 
                     if (fill.IsActive()) lastActiveFillIndex = i;
 
@@ -245,9 +256,23 @@ namespace Linework.SurfaceFill
                             {
                                 fill.material.SetFloat(CommonShaderPropertyId.FullScreenStencilPass, (float) StencilOp.Zero);
                                 fill.material.SetFloat(CommonShaderPropertyId.FullScreenStencilFail, (float) StencilOp.Zero);
+
+                                if (fill.materialType == MaterialType.Custom && fill.customMaterial != null)
+                                {
+                                    fill.customMaterial.SetFloat(CommonShaderPropertyId.FullScreenStencilPass, (float) StencilOp.Zero);
+                                    fill.customMaterial.SetFloat(CommonShaderPropertyId.FullScreenStencilFail, (float) StencilOp.Zero);
+                                }
                             }
                             
-                            Blitter.BlitTexture(context.cmd, Vector2.one, fill.material, 0);
+                            switch (fill.materialType)  
+                            {  
+                                case MaterialType.Basic:  
+                                    Blitter.BlitTexture(context.cmd, Vector2.one, fill.material, 0);
+                                    break;  
+                                case MaterialType.Custom when fill.customMaterial != null:  
+                                    Blitter.BlitTexture(context.cmd, Vector2.one, fill.customMaterial, 0);  
+                                    break;  
+                            }
                             
                             i++;
                         }
@@ -264,7 +289,6 @@ namespace Linework.SurfaceFill
                 var lightData = frameData.Get<UniversalLightData>();
 
                 var sortingCriteria = cameraData.defaultOpaqueSortFlags;
-                var renderQueueRange = RenderQueueRange.opaque;
                 
                 var i = 0;
                 foreach (var fill in settings.Fills)
@@ -277,8 +301,16 @@ namespace Linework.SurfaceFill
 
                     var drawingSettings = RenderingUtils.CreateDrawingSettings(RenderUtils.DefaultShaderTagIds, renderingData, cameraData, lightData, sortingCriteria);
                     drawingSettings.overrideMaterial = mask;
+                    
+                    var renderQueueRange = fill.renderQueue switch
+                    {
+                        OutlineRenderQueue.Opaque => RenderQueueRange.opaque,
+                        OutlineRenderQueue.Transparent => RenderQueueRange.transparent,
+                        OutlineRenderQueue.OpaqueAndTransparent => RenderQueueRange.all,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
 
-                    var filteringSettings = new FilteringSettings(renderQueueRange, -1, fill.RenderingLayer);
+                    var filteringSettings = new FilteringSettings(renderQueueRange, fill.layerMask, fill.RenderingLayer);
                     var renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
 
                     var blendState = BlendState.defaultValue;
@@ -348,7 +380,6 @@ namespace Linework.SurfaceFill
                     maskCmd.Clear();
 
                     var sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
-                    var renderQueueRange = RenderQueueRange.opaque;
                     
                     var maskIndex = 0;
                     foreach (var fill in settings.Fills)
@@ -363,7 +394,15 @@ namespace Linework.SurfaceFill
                         drawingSettings.overrideMaterial = mask;
                         drawingSettings.overrideShaderPassIndex = ShaderPass.Mask;
                         
-                        var filteringSettings = new FilteringSettings(renderQueueRange, -1, fill.RenderingLayer);
+                        var renderQueueRange = fill.renderQueue switch
+                        {
+                            OutlineRenderQueue.Opaque => RenderQueueRange.opaque,
+                            OutlineRenderQueue.Transparent => RenderQueueRange.transparent,
+                            OutlineRenderQueue.OpaqueAndTransparent => RenderQueueRange.all,
+                            _ => throw new ArgumentOutOfRangeException()
+                        };
+                        
+                        var filteringSettings = new FilteringSettings(renderQueueRange, fill.layerMask, fill.RenderingLayer);
                         var renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
 
                         var blendState = BlendState.defaultValue;
@@ -429,11 +468,27 @@ namespace Linework.SurfaceFill
                         {
                             fill.material.SetFloat(CommonShaderPropertyId.FullScreenStencilPass, (float) StencilOp.Zero);
                             fill.material.SetFloat(CommonShaderPropertyId.FullScreenStencilFail, (float) StencilOp.Zero);
+                            
+                            if (fill.materialType == MaterialType.Custom && fill.customMaterial != null)
+                            {
+                                fill.customMaterial.SetFloat(CommonShaderPropertyId.FullScreenStencilPass, (float) StencilOp.Zero);
+                                fill.customMaterial.SetFloat(CommonShaderPropertyId.FullScreenStencilFail, (float) StencilOp.Zero);
+                            }
                         }
-
+                        
                         CoreUtils.SetRenderTarget(fillCmd, renderingData.cameraData.renderer.cameraColorTargetHandle, cameraDepthRTHandle); // if using cameraColorRTHandle this does not render in scene view when rendering after post processing with post processing enabled
-                        Blitter.BlitTexture(fillCmd, Vector2.one, fill.material, 0);
-
+                        
+                        
+                        switch (fill.materialType)  
+                        {  
+                            case MaterialType.Basic:  
+                                Blitter.BlitTexture(fillCmd, Vector2.one, fill.material, 0);
+                                break;  
+                            case MaterialType.Custom when fill.customMaterial != null:  
+                                Blitter.BlitTexture(fillCmd, Vector2.one, fill.customMaterial, 0);  
+                                break;  
+                        }
+                        
                         i++;
                     }
                 }
@@ -517,7 +572,8 @@ namespace Linework.SurfaceFill
         #pragma warning disable 618, 672
         public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
         {
-            if (settings == null || renderingData.cameraData.cameraType == CameraType.SceneView && !settings.ShowInSceneView) return;
+            if (settings == null || surfaceFillPass == null || renderingData.cameraData.cameraType == CameraType.SceneView && !settings.ShowInSceneView) return;
+            if (renderingData.cameraData.cameraType is CameraType.Preview or CameraType.Reflection) return;
 
             surfaceFillPass.ConfigureInput(ScriptableRenderPassInput.Color);
             surfaceFillPass.ConfigureInput(ScriptableRenderPassInput.Depth);

@@ -7,7 +7,94 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Headers should be listed in this order: Added, Changed, Deprecated, Removed, Fixed, Security -->
 
-## [1.4.0] - Unreleased
+## [1.4.9] - 2025-03-20
+
+### Added
+
+- Edge Detection: Added option to exclude renderers from getting outlined
+
+### Fixed
+
+- Soft Outline: Fixed dilation shader bleeding over edges of screen
+- Edge Detection: Fixed edge detection shader bleeding over edges of screen
+- Unity 2022: Fixed edge detection vertex animation not working for Unity 2022
+
+## [1.4.8] - 2025-03-13
+
+### Fixed
+
+- Android: Fixed graphics format not being supported
+- Fixed some incorrect files being included in 1.4.7
+
+## [1.4.7] - 2025-03-12
+
+### Fixed
+
+- Addressables: Added additional null checks to prevent errors during addressables build on Windows
+
+## [1.4.6] - 2025-03-08
+
+### Added
+
+- Compatibility Window: Added check to detect the active pipeline asset
+- Compatibility Window: Added check to detect whether Spatial-Temporal Post-processing is enabled
+
+### Fixed
+
+- Unity 2022: Fixed a rendering issue when realtime reflection probes are present
+- Compatibility mode: Fixed a rendering issue when realtime reflection probes are present
+- Unity 2022: Added step to clear stencil buffer after rendering fast outline to avoid unexpected interactions with other effects
+- GPU Instancing: Fixed editor issue for OutlineOverride when showing integer fields
+
+## [1.4.5] - 2025-02-24
+
+### Changed
+
+- Moved SmoothNormalsBaker to editor namespace
+
+### Fixed
+
+- Improved compatibility with other packages depending on older versions of com.unity.collections
+
+## [1.4.4] - 2025-02-24
+
+### Fixed
+
+- Surface Fill: Fixed issue with layer mask
+
+## [1.4.3] - 2025-02-22
+
+### Added
+
+- Added layer mask filter option to filter outlines/fills by layer in addition to rendering layer
+- Surface Fill: Added option to set render queue (adds support for transparent objects)
+
+### Changed
+
+- Improved section map object ID hash function to reduce ID collisions
+
+## [1.4.2] - 2025-02-22
+
+### Fixed
+
+- Edge Detection: Fixed depth/height fade variable names
+
+### Changed
+
+- Changed from `TextureDesc.format` to `TextureDesc.colorFormat` for improved compatibility with older version of Unity 6
+- Temporarily disabled fill functionality for section map 
+
+## [1.4.1] - 2025-02-18
+
+### Added
+
+- Surface Fill: Added option to set custom fill material (experimental)
+
+### Fixed
+
+- Surface Fill: Fixed issue with glow pattern where secondary color was being set but not needed
+
+## [1.4.0] - 2025-02-17
 
 ### Added
 
@@ -19,6 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Wide Outline: Added option to set render queue (adds support for outlined transparent objects)
 - Wide Outline: Added UV Transform property to alpha cutout outlines
 - Wide Outline: Added gap property which allows for adding a gap between an object and its outline
+- Wide Outline: Added option to set custom wide outline material (experimental)
 - Edge Detection: Added option to fade edge color by height
 - Edge Detection: Added option to switch section map precision between 8 bit and 16 bit
 - Edge Detection: Added option to set section map clear color

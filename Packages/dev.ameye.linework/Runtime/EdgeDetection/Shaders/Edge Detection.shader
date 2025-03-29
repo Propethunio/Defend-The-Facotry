@@ -414,7 +414,7 @@
                 /// COMPOSITE EDGES
                 ///
 
-                if (fill) return _FillColor;
+                // if (fill) return _FillColor;
                 
                 float4 line_color = _OutlineColor;
                 
@@ -431,14 +431,14 @@
 
                 #if defined(FADE_BY_DISTANCE)
                 float distance = length(positionWS - _WorldSpaceCameraPos);
-                float fade = 1.0 - saturate(1.0 - (distance - _DistanceFadeStart) / _DistanceFadeDistance);
-                line_color = lerp(line_color, _DistanceFadeColor * _DistanceFadeColor.a, fade);
+                float distance_fade = 1.0 - saturate(1.0 - (distance - _DistanceFadeStart) / _DistanceFadeDistance);
+                line_color = lerp(line_color, _DistanceFadeColor * _DistanceFadeColor.a, distance_fade);
                 #endif
 
                 #if defined(FADE_BY_HEIGHT)
                 float height = positionWS.y;
-                float fade = 1.0 - saturate(1.0 - (height - _HeightFadeStart) / _HeightFadeDistance);
-                line_color = lerp(line_color, _HeightFadeColor * _HeightFadeColor.a, fade);
+                float height_fade = 1.0 - saturate(1.0 - (height - _HeightFadeStart) / _HeightFadeDistance);
+                line_color = lerp(line_color, _HeightFadeColor * _HeightFadeColor.a, height_fade);
                 #endif
 
                 return lerp(_BackgroundColor, line_color, edge);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Linework.Common.Utils;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Linework.WideOutline
 {

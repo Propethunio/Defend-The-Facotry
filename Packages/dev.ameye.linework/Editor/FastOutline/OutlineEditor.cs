@@ -13,6 +13,7 @@ namespace Linework.Editor.FastOutline
     public class OutlineEditor : UnityEditor.Editor
     {
         private SerializedProperty renderingLayer;
+        private SerializedProperty layerMask;
         private SerializedProperty renderQueue;
         private SerializedProperty occlusion;
         private SerializedProperty maskingStrategy;
@@ -31,6 +32,7 @@ namespace Linework.Editor.FastOutline
         private void OnEnable()
         {
             renderingLayer = serializedObject.FindProperty(nameof(Outline.RenderingLayer));
+            layerMask = serializedObject.FindProperty(nameof(Outline.layerMask));
             renderQueue = serializedObject.FindProperty(nameof(Outline.renderQueue));
             occlusion = serializedObject.FindProperty(nameof(Outline.occlusion));
             maskingStrategy = serializedObject.FindProperty(nameof(Outline.maskingStrategy));
@@ -51,9 +53,13 @@ namespace Linework.Editor.FastOutline
         {
             serializedObject.Update();
 
-            EditorGUILayout.LabelField("Render", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Filters", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(renderingLayer, EditorUtils.CommonStyles.OutlineLayer);
+            EditorGUILayout.PropertyField(layerMask, EditorUtils.CommonStyles.LayerMask);
             EditorGUILayout.PropertyField(renderQueue, EditorUtils.CommonStyles.RenderQueue);
+            EditorGUILayout.Space();
+            
+            EditorGUILayout.LabelField("Render", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(occlusion, EditorUtils.CommonStyles.OutlineOcclusion);
             EditorGUILayout.PropertyField(blendMode, EditorUtils.CommonStyles.OutlineBlendMode);
             if ((Occlusion) occlusion.intValue == Occlusion.WhenNotOccluded)

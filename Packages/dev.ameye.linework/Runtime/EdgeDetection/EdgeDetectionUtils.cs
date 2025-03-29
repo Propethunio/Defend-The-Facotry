@@ -8,35 +8,38 @@ namespace Linework.EdgeDetection
     public sealed class ShaderResources
     {
         public Shader section;
+        public Shader sectionMask;
         public Shader outline;
 
         public ShaderResources Load()
         {
             section = Shader.Find(ShaderPath.Section);
+            sectionMask = Shader.Find(ShaderPath.SectionMask);
             outline = Shader.Find(ShaderPath.Outline);
             return this;
         }
     }
-
-    internal static class ShaderPath
+    
+    static class ShaderPath
     {
         public const string Outline = "Hidden/Outlines/Edge Detection/Outline";
         public const string Section = "Hidden/Outlines/Edge Detection/Section";
+        public const string SectionMask = "Hidden/Outlines/Edge Detection/Section Mask";
     }
 
-    internal static class Keyword
+    static class Keyword
     {
         public static readonly GlobalKeyword ScreenSpaceOcclusion = GlobalKeyword.Create("_SCREEN_SPACE_OCCLUSION");
         public static readonly GlobalKeyword SectionPass = GlobalKeyword.Create("_SECTION_PASS");
     }
 
-    internal static class ShaderPassName
+    static class ShaderPassName
     {
         public const string Section = "Section (Edge Detection)";
         public const string Outline = "Outline (Edge Detection)";
     }
-
-    internal static class ShaderPropertyId
+    
+    static class ShaderPropertyId
     {
         // Line appearance.
         public static readonly int BackgroundColor = Shader.PropertyToID("_BackgroundColor");
@@ -64,7 +67,7 @@ namespace Linework.EdgeDetection
         public static readonly int SectionTexture = Shader.PropertyToID("_SectionTexture");
     }
 
-    internal static class Buffer
+    static class Buffer
     {
         public const string Section = "_SectionBuffer";
     }
@@ -80,6 +83,17 @@ namespace Linework.EdgeDetection
         All = ~0,
     }
     
+    [Flags]
+    public enum MaskInfluence
+    {
+        Nothing = 0,
+        Sections = 1 << 0,
+        Depth = 1 << 1,
+        Normals = 1 << 2,
+        Luminance = 1 << 3,
+        All = ~0,
+    }
+    
     public enum DebugView
     {
         None,
@@ -92,8 +106,8 @@ namespace Linework.EdgeDetection
         [InspectorName("Sections")]
         Sections
     }
-
-    internal static class ShaderFeature
+    
+    static class ShaderFeature
     {
         public const string DepthDiscontinuity = "DEPTH";
         public const string NormalDiscontinuity = "NORMALS";

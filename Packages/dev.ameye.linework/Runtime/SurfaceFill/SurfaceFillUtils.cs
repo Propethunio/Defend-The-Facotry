@@ -16,25 +16,25 @@ namespace Linework.SurfaceFill
             return this;
         }
     }
-
-    internal static class ShaderPath
+    
+    static class ShaderPath
     {
         public const string Mask = "Hidden/Outlines/Surface Fill/Mask";
         public const string Fill = "Hidden/Outlines/Fill";
     }
 
-    internal static class ShaderPass
+    static class ShaderPass
     {
         public const int Mask = 0;
     }
-
-    internal static class ShaderPassName
+    
+    static class ShaderPassName
     {
         public const string Mask = "Mask (Surface Fill)";
         public const string Fill = "Fill (Surface Fill)";
     }
-
-    internal static class ShaderPropertyId
+    
+    static class ShaderPropertyId
     {
         public static readonly int PrimaryColor = Shader.PropertyToID("_Primary_Color");
         public static readonly int SecondaryColor = Shader.PropertyToID("_Secondary_Color");
@@ -52,7 +52,7 @@ namespace Linework.SurfaceFill
         public static readonly int Power = Shader.PropertyToID("_Power");
     }
 
-    internal static class ShaderFeature
+    static class ShaderFeature
     {
         public const string AlphaCutout = "ALPHA_CUTOUT";
         

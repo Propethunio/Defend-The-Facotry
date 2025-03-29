@@ -20,6 +20,8 @@ namespace Linework.Editor.EdgeDetection
         private SerializedProperty sectionMapPrecision;
         private SerializedProperty sectionMapClearValue;
         private SerializedProperty sectionRenderingLayer;
+        private SerializedProperty maskRenderingLayer;
+        private SerializedProperty maskInfluence;
         private SerializedProperty objectId;
         private SerializedProperty particles;
         private SerializedProperty sectionMapInput;
@@ -37,10 +39,6 @@ namespace Linework.Editor.EdgeDetection
         private SerializedProperty grazingAngleMaskHardness;
         private SerializedProperty normalSensitivity;
         private SerializedProperty luminanceSensitivity;
-        private SerializedProperty sectionsMask;
-        private SerializedProperty depthMask;
-        private SerializedProperty normalsMask;
-        private SerializedProperty luminanceMask;
 
         // Outline.
         private SerializedProperty kernel;
@@ -80,6 +78,8 @@ namespace Linework.Editor.EdgeDetection
             sectionMapPrecision = serializedObject.FindProperty(nameof(EdgeDetectionSettings.sectionMapPrecision));
             sectionMapClearValue = serializedObject.FindProperty(nameof(EdgeDetectionSettings.sectionMapClearValue));
             sectionRenderingLayer = serializedObject.FindProperty(nameof(EdgeDetectionSettings.SectionRenderingLayer));
+            maskRenderingLayer = serializedObject.FindProperty(nameof(EdgeDetectionSettings.SectionMaskRenderingLayer));
+            maskInfluence = serializedObject.FindProperty(nameof(EdgeDetectionSettings.maskInfluence));
             objectId = serializedObject.FindProperty(nameof(EdgeDetectionSettings.objectId));
             particles = serializedObject.FindProperty(nameof(EdgeDetectionSettings.particles));
             sectionMapInput = serializedObject.FindProperty(nameof(EdgeDetectionSettings.sectionMapInput));
@@ -109,10 +109,6 @@ namespace Linework.Editor.EdgeDetection
             grazingAngleMaskHardness = serializedObject.FindProperty(nameof(EdgeDetectionSettings.grazingAngleMaskHardness));
             normalSensitivity = serializedObject.FindProperty(nameof(EdgeDetectionSettings.normalSensitivity));
             luminanceSensitivity = serializedObject.FindProperty(nameof(EdgeDetectionSettings.luminanceSensitivity));
-            sectionsMask = serializedObject.FindProperty(nameof(EdgeDetectionSettings.sectionsMask));
-            depthMask = serializedObject.FindProperty(nameof(EdgeDetectionSettings.depthMask));
-            normalsMask = serializedObject.FindProperty(nameof(EdgeDetectionSettings.normalsMask));
-            luminanceMask = serializedObject.FindProperty(nameof(EdgeDetectionSettings.luminanceMask));
         
             // Outline.
             kernel = serializedObject.FindProperty(nameof(EdgeDetectionSettings.kernel));
@@ -220,18 +216,17 @@ namespace Linework.Editor.EdgeDetection
                 additionalSectionPassesList.DoLayoutList();
             }, serializedObject);
             
-            EditorUtils.SectionGUI("Discontinuity", showDiscontinuitySection, () =>
+            EditorUtils.SectionGUI("Edge Detection", showDiscontinuitySection, () =>
             {
                 var discontinuityInputValue = (DiscontinuityInput) discontinuityInput.intValue;
                 discontinuityInputValue = (DiscontinuityInput) EditorGUILayout.EnumFlagsField(EditorUtils.CommonStyles.DiscontinuityInput, discontinuityInputValue);
                 discontinuityInput.intValue = (int) discontinuityInputValue;
-                EditorGUILayout.Space();
-                
-                using (new EditorGUI.DisabledScope(!discontinuityInputValue.HasFlag(DiscontinuityInput.Sections)))
-                {
-                    EditorGUILayout.LabelField("Sections", EditorStyles.boldLabel);
-                    EditorGUILayout.PropertyField(sectionsMask, EditorUtils.CommonStyles.SectionMask);
-                }
+                EditorGUILayout.PropertyField(maskRenderingLayer, EditorUtils.CommonStyles.MaskLayer);
+                EditorGUI.indentLevel++;
+                var maskInfluenceValue = (MaskInfluence) maskInfluence.intValue;
+                maskInfluenceValue = (MaskInfluence) EditorGUILayout.EnumFlagsField(EditorUtils.CommonStyles.MaskInfluence, maskInfluenceValue);
+                maskInfluence.intValue = (int) maskInfluenceValue;
+                EditorGUI.indentLevel--;
                 EditorGUILayout.Space();
                 
                 using (new EditorGUI.DisabledScope(!discontinuityInputValue.HasFlag(DiscontinuityInput.Depth)))
@@ -241,7 +236,6 @@ namespace Linework.Editor.EdgeDetection
                     EditorGUILayout.PropertyField(depthDistanceModulation, EditorUtils.CommonStyles.DepthDistanceModulation);
                     EditorGUILayout.PropertyField(grazingAngleMaskPower, EditorUtils.CommonStyles.GrazingAngleMaskPower);
                     EditorGUILayout.PropertyField(grazingAngleMaskHardness, EditorUtils.CommonStyles.GrazingAngleMaskHardness);
-                    EditorGUILayout.PropertyField(depthMask, EditorUtils.CommonStyles.SectionMask);
                 }
                 EditorGUILayout.Space();
 
@@ -249,7 +243,6 @@ namespace Linework.Editor.EdgeDetection
                 {
                     EditorGUILayout.LabelField("Normals", EditorStyles.boldLabel);
                     EditorGUILayout.PropertyField(normalSensitivity, EditorUtils.CommonStyles.Sensitivity);
-                    EditorGUILayout.PropertyField(normalsMask, EditorUtils.CommonStyles.SectionMask);
                 }
                 EditorGUILayout.Space();
 
@@ -257,7 +250,6 @@ namespace Linework.Editor.EdgeDetection
                 {
                     EditorGUILayout.LabelField("Luminance", EditorStyles.boldLabel);
                     EditorGUILayout.PropertyField(luminanceSensitivity, EditorUtils.CommonStyles.Sensitivity);
-                    EditorGUILayout.PropertyField(luminanceMask, EditorUtils.CommonStyles.SectionMask);
                 }
                 EditorGUILayout.Space();
             }, serializedObject);

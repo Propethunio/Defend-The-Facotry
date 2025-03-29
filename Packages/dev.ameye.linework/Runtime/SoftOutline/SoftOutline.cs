@@ -325,7 +325,7 @@ namespace Linework.SoftOutline
                         _ => throw new ArgumentOutOfRangeException()
                     };
                     
-                    var filteringSettings = new FilteringSettings(renderQueueRange, -1, outline.RenderingLayer);
+                    var filteringSettings = new FilteringSettings(renderQueueRange, outline.layerMask, outline.RenderingLayer);
                     var renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
 
                     var blendState = BlendState.defaultValue;
@@ -385,7 +385,7 @@ namespace Linework.SoftOutline
                         _ => throw new ArgumentOutOfRangeException()
                     };
                 
-                    var filteringSettings = new FilteringSettings(renderQueueRange, -1, outline.RenderingLayer);
+                    var filteringSettings = new FilteringSettings(renderQueueRange, outline.layerMask, outline.RenderingLayer);
                     
                     var renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
                     
@@ -447,8 +447,8 @@ namespace Linework.SoftOutline
                     msaaSamples = cameraDescriptor.msaaSamples,
                     useMipMap = false,
                     autoGenerateMips = false,
-                    format = settings.dilationMethod == DilationMethod.Dilate ? GraphicsFormat.R8G8B8A8_UNorm :
-                        settings.type == OutlineType.Hard ? GraphicsFormat.R8_UNorm : GraphicsFormat.R8G8B8A8_UNorm,
+                    colorFormat = settings.dilationMethod == DilationMethod.Dilate ? GraphicsFormat.R8G8B8A8_UNorm :
+                        settings.type == OutlineType.Hard ? GraphicsFormat.R8_UNorm : GraphicsFormat.R8G8B8A8_UNorm, // TODO: Changed to format somewhere in Unity 6 cycle?
                     depthBufferBits = (int) DepthBits.None
                 };
 
@@ -480,7 +480,7 @@ namespace Linework.SoftOutline
                 const float renderTextureScale = 1.0f; 
                 var width = (int)(renderingData.cameraData.cameraTargetDescriptor.width * renderTextureScale);
                 var height = (int)(renderingData.cameraData.cameraTargetDescriptor.height * renderTextureScale);
-
+                
                 var descriptor = new RenderTextureDescriptor(width, height)
                 {
                     dimension = TextureDimension.Tex2D,
@@ -528,7 +528,7 @@ namespace Linework.SoftOutline
                         drawingSettings.overrideMaterial = mask;
                         drawingSettings.overrideShaderPassIndex = ShaderPass.Mask;
 
-                        var filteringSettings = new FilteringSettings(renderQueueRange, -1, outline.RenderingLayer);
+                        var filteringSettings = new FilteringSettings(renderQueueRange, outline.layerMask, outline.RenderingLayer);
                         var renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
 
                         var blendState = BlendState.defaultValue;
@@ -586,7 +586,7 @@ namespace Linework.SoftOutline
                             drawingSettings.enableInstancing = outline.gpuInstancing;
                         }
                        
-                        var filteringSettings = new FilteringSettings(renderQueueRange, -1, outline.RenderingLayer);
+                        var filteringSettings = new FilteringSettings(renderQueueRange, outline.layerMask, outline.RenderingLayer);
                         
                         var renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
                         
@@ -771,8 +771,9 @@ namespace Linework.SoftOutline
         #pragma warning disable 618, 672
         public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
         {
-            if (settings == null || renderingData.cameraData.cameraType == CameraType.SceneView && !settings.ShowInSceneView) return;
-
+            if (settings == null || softOutlinePass == null || renderingData.cameraData.cameraType == CameraType.SceneView && !settings.ShowInSceneView) return;
+            if (renderingData.cameraData.cameraType is CameraType.Preview or CameraType.Reflection) return;
+            
             softOutlinePass.CreateHandles(renderingData);
             softOutlinePass.SetTarget(renderer.cameraDepthTargetHandle);
         }

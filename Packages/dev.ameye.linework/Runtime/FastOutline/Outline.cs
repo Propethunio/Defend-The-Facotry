@@ -1,4 +1,6 @@
+#if !UNITY_6000_0_OR_NEWER
 using Linework.Common.Attributes;
+#endif
 using Linework.Common.Utils;
 using UnityEngine;
 
@@ -16,6 +18,7 @@ namespace Linework.FastOutline
         [RenderingLayerMask]
         public uint RenderingLayer = 1;
 #endif
+        public LayerMask layerMask = ~0;
         public OutlineRenderQueue renderQueue = OutlineRenderQueue.Opaque;
         public Occlusion occlusion = Occlusion.WhenNotOccluded;
         public MaskingStrategy maskingStrategy = MaskingStrategy.Stencil;

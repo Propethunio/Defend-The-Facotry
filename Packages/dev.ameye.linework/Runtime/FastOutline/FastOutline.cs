@@ -184,7 +184,10 @@ namespace Linework.FastOutline
                 layer = settings.Outlines
                     .Where(ShouldRenderStencilMask)
                     .Aggregate(layer, (current, outline) => current | outline.RenderingLayer);
-                var filteringSettings = new FilteringSettings(renderQueueRange, -1, layer);
+                var layerMask = settings.Outlines
+                    .Where(ShouldRenderStencilMask)
+                    .Aggregate(0, (current, outline) => current | outline.layerMask.value);
+                var filteringSettings = new FilteringSettings(renderQueueRange, layerMask, layer);
                 var drawingSettings = RenderingUtils.CreateDrawingSettings(RenderUtils.DefaultShaderTagIds, renderingData, cameraData, lightData, sortingCriteria);
                 drawingSettings.overrideMaterial = mask;
 
@@ -249,7 +252,7 @@ namespace Linework.FastOutline
                         _ => throw new ArgumentOutOfRangeException()
                     };
          
-                    var filteringSettings = new FilteringSettings(renderQueueRange, -1, outline.RenderingLayer);
+                    var filteringSettings = new FilteringSettings(renderQueueRange, outline.layerMask, outline.RenderingLayer);
 
                     // Override stencil state.
                     var renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
@@ -298,8 +301,11 @@ namespace Linework.FastOutline
                     layer = settings.Outlines
                         .Where(ShouldRenderStencilMask)
                         .Aggregate(layer, (current, outline) => current | outline.RenderingLayer);
-                    var renderQueueRange = RenderQueueRange.all; // NOTE: This does not take into account the setting of the outline.
-                    var filteringSettings = new FilteringSettings(renderQueueRange, -1, layer);
+                    var layerMask = settings.Outlines
+                        .Where(ShouldRenderStencilMask)
+                        .Aggregate(0, (current, outline) => current | outline.layerMask.value);
+                    var renderQueueRange = RenderQueueRange.all; // FIXME: This does not take into account the setting of the outline.
+                    var filteringSettings = new FilteringSettings(renderQueueRange, layerMask, layer);
                     var drawingSettings = RenderingUtils.CreateDrawingSettings(RenderUtils.DefaultShaderTagIds, ref renderingData, sortingCriteria);
                    
                     drawingSettings.overrideMaterial = mask;
@@ -352,7 +358,7 @@ namespace Linework.FastOutline
                         drawingSettings.perObjectData = PerObjectData.None;
                         drawingSettings.enableInstancing = false;
 
-                        var filteringSettings = new FilteringSettings(renderQueueRange, -1, outline.RenderingLayer);
+                        var filteringSettings = new FilteringSettings(renderQueueRange, outline.layerMask, outline.RenderingLayer);
                         
                         var renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
                         if (ShouldRenderStencilMask(outline))
@@ -368,12 +374,27 @@ namespace Linework.FastOutline
                         }
                         
                         context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref filteringSettings, ref renderStateBlock);
-
                     }
                 }
 
                 context.ExecuteCommandBuffer(outlineCmd);
                 CommandBufferPool.Release(outlineCmd);
+                
+                // 3. Clear stencil.
+                // -> Clear the stencil buffer.
+                var clearStencilCmd = CommandBufferPool.Get();
+                
+                using (new ProfilingScope(clearStencilCmd, outlineSampler))
+                {
+                    context.ExecuteCommandBuffer(clearStencilCmd);
+                    clearStencilCmd.Clear();
+                
+                    CoreUtils.SetRenderTarget(clearStencilCmd, renderingData.cameraData.renderer.cameraColorTargetHandle, cameraDepthRTHandle); // if using cameraColorRTHandle this does not render in scene view when rendering after post processing with post processing enabled
+                    clearStencilCmd.DrawProcedural(Matrix4x4.identity, clear, 0, MeshTopology.Triangles, 3, 1); 
+                }
+                
+                context.ExecuteCommandBuffer(clearStencilCmd);
+                CommandBufferPool.Release(clearStencilCmd);
             }
             #pragma warning restore 618, 672
             
@@ -451,7 +472,8 @@ namespace Linework.FastOutline
         #pragma warning disable 618, 672
         public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
         {
-            if (settings == null || renderingData.cameraData.cameraType == CameraType.SceneView && !settings.ShowInSceneView) return;
+            if (settings == null || fastOutlinePass == null || renderingData.cameraData.cameraType == CameraType.SceneView && !settings.ShowInSceneView) return;
+            if (renderingData.cameraData.cameraType is CameraType.Preview or CameraType.Reflection) return;
 
             fastOutlinePass.SetTarget(renderer.cameraDepthTargetHandle);
         }

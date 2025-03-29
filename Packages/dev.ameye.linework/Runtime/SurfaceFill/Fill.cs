@@ -1,4 +1,6 @@
+#if !UNITY_6000_0_OR_NEWER
 using Linework.Common.Attributes;
+#endif
 using Linework.Common.Utils;
 using UnityEngine;
 
@@ -15,12 +17,16 @@ namespace Linework.SurfaceFill
         [RenderingLayerMask]
         public uint RenderingLayer = 1;
 #endif
+        public LayerMask layerMask = ~0;
+        public OutlineRenderQueue renderQueue = OutlineRenderQueue.Opaque;
         public Occlusion occlusion = Occlusion.Always;
         public BlendingMode blendMode = BlendingMode.Alpha;
         public bool alphaCutout;
         public Texture2D alphaCutoutTexture;
         [Range(0.0f, 1.0f)] public float alphaCutoutThreshold = 0.5f;
         
+        public MaterialType materialType;
+        public Material customMaterial;
         public Pattern pattern = Pattern.Dots;
         [ColorUsage(true, true)] public Color primaryColor = Color.green;
         [ColorUsage(true, true)] public Color secondaryColor = Color.red;

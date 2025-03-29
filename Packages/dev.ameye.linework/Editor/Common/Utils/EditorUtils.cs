@@ -26,8 +26,9 @@ namespace Linework.Editor.Common.Utils
 
             // Shared outlines.
             public static readonly GUIContent Outlines = EditorGUIUtility.TrTextContent("Outlines", "The list of outlines to render.");
-            public static readonly GUIContent OutlineLayer = EditorGUIUtility.TrTextContent("Layer", "The rendering layer(s) which will get an outline rendered for them.");
-            public static readonly GUIContent RenderQueue = EditorGUIUtility.TrTextContent("Queue", "Which render queue should be used.");
+            public static readonly GUIContent OutlineLayer = EditorGUIUtility.TrTextContent("Rendering Layer", "Only mesh renderers on this rendering layer will receive an outline.");
+            public static readonly GUIContent LayerMask = EditorGUIUtility.TrTextContent("Layer Mask", "Only gameobjects on this layer will receive an outline.");
+            public static readonly GUIContent RenderQueue = EditorGUIUtility.TrTextContent("Queue", "Only gameobjects using this render queue will receive an outline.");
             public static readonly GUIContent OutlineOcclusion = EditorGUIUtility.TrTextContent("Render", "For which occlusion states to render the outline.");
             public static readonly GUIContent OutlineBlendMode = EditorGUIUtility.TrTextContent("Blend", "How to blend the outline with the rest of the scene.");
             public static readonly GUIContent BackgroundColor = EditorGUIUtility.TrTextContent("Background Color", "The color of the background.");
@@ -88,13 +89,13 @@ namespace Linework.Editor.Common.Utils
             public static readonly GUIContent GrazingAngleMaskHardness = EditorGUIUtility.TrTextContent("Sharp Angle Mask Multiplier", "Helps prevent edges from being falsely detected when the camera views a surface at a shallow angle.");
             public static readonly GUIContent SectionsRawValues = EditorGUIUtility.TrTextContent("Raw Values", "Renderers on these layers which will render to the section map.");
             public static readonly GUIContent SectionLayer = EditorGUIUtility.TrTextContent("Layer", "Renderers on these layers which will render to the section map.");
+            public static readonly GUIContent MaskLayer = EditorGUIUtility.TrTextContent("Exclude", "Renderers on these layers which will render to the section map as a mask.");
+            public static readonly GUIContent MaskInfluence = EditorGUIUtility.TrTextContent("From", "Use the section map to mask out regions where edges should not show up.");
             public static readonly GUIContent ObjectId = EditorGUIUtility.TrTextContent("Object ID", "Whether to render each object with a unique ID to the section map.");
             public static readonly GUIContent Particles = EditorGUIUtility.TrTextContent("Particles", "Whether to render each object with a unique ID to the section map.");
-            public static readonly GUIContent SectionMask = EditorGUIUtility.TrTextContent("Section Mask", "Use the section map to mask out regions where edges should not show up.");
             public static readonly GUIContent SectionMapInput = EditorGUIUtility.TrTextContent("Source", "The input used for the section map.");
             public static readonly GUIContent SectionMapPrecision = EditorGUIUtility.TrTextContent("Precision", "The precision of the section map.");
-            public static readonly GUIContent SectionMapClearValue = EditorGUIUtility.TrTextContent("Clear Value", "The clear value of the section map.");
-            public static readonly GUIContent SectionMapPasses = EditorGUIUtility.TrTextContent("Passes", "Any additional section map passes to execute.");
+            public static readonly GUIContent SectionMapClearValue = EditorGUIUtility.TrTextContent("Skybox Value", "The clear value of the section map.");
             public static readonly GUIContent VertexColorChannel = EditorGUIUtility.TrTextContent("Channel", "Which vertex color channel to render to the section map.");
             public static readonly GUIContent SectionTexture = EditorGUIUtility.TrTextContent("Texture", "Which texture to sample when rendering to the section map.");
             public static readonly GUIContent SectionTextureUVSet = EditorGUIUtility.TrTextContent("UV Set", "Which UV set to use when sampling the section texture.");

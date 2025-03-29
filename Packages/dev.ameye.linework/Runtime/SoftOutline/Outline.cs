@@ -19,6 +19,7 @@ namespace Linework.SoftOutline
         [RenderingLayerMask]
         public uint RenderingLayer = 1;
 #endif
+        public LayerMask layerMask = ~0;
         public OutlineRenderQueue renderQueue = OutlineRenderQueue.Opaque;
         public SoftOutlineOcclusion occlusion = SoftOutlineOcclusion.Always;
         public CullingMode cullingMode = CullingMode.Back;

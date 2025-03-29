@@ -1,4 +1,5 @@
 using System;
+using Linework.Common.Utils;
 using Linework.Editor.Common.Utils;
 using Linework.SurfaceFill;
 using UnityEditor;
@@ -9,9 +10,12 @@ namespace Linework.Editor.SurfaceFill
     public class FillEditor : UnityEditor.Editor
     {
         private SerializedProperty renderingLayer;
+        private SerializedProperty layerMask;
+        private SerializedProperty renderQueue;
+        private SerializedProperty materialType;
+        private SerializedProperty customMaterial;
         private SerializedProperty occlusion;
         private SerializedProperty blendMode;
-        private SerializedProperty alphaCutout, alphaCutoutTexture, alphaCutoutThreshold;
         private SerializedProperty pattern;
         private SerializedProperty primaryColor;
         private SerializedProperty secondaryColor;
@@ -31,11 +35,12 @@ namespace Linework.Editor.SurfaceFill
         private void OnEnable()
         {
             renderingLayer = serializedObject.FindProperty(nameof(Fill.RenderingLayer));
+            layerMask = serializedObject.FindProperty(nameof(Fill.layerMask));
+            renderQueue = serializedObject.FindProperty(nameof(Fill.renderQueue));
+            materialType = serializedObject.FindProperty(nameof(Fill.materialType));
+            customMaterial = serializedObject.FindProperty(nameof(Fill.customMaterial));
             occlusion = serializedObject.FindProperty(nameof(Fill.occlusion));
             blendMode = serializedObject.FindProperty(nameof(Fill.blendMode));
-            alphaCutout = serializedObject.FindProperty(nameof(Fill.alphaCutout));
-            alphaCutoutTexture = serializedObject.FindProperty(nameof(Fill.alphaCutoutTexture));
-            alphaCutoutThreshold = serializedObject.FindProperty(nameof(Fill.alphaCutoutThreshold));
             pattern = serializedObject.FindProperty(nameof(Fill.pattern));
             primaryColor = serializedObject.FindProperty(nameof(Fill.primaryColor));
             secondaryColor = serializedObject.FindProperty(nameof(Fill.secondaryColor));
@@ -57,8 +62,13 @@ namespace Linework.Editor.SurfaceFill
         {
             serializedObject.Update();
 
-            EditorGUILayout.LabelField("Render", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Filters", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(renderingLayer, EditorUtils.CommonStyles.FillLayer);
+            EditorGUILayout.PropertyField(layerMask, EditorUtils.CommonStyles.LayerMask);
+            EditorGUILayout.PropertyField(renderQueue, EditorUtils.CommonStyles.RenderQueue);
+            EditorGUILayout.Space();
+            
+            EditorGUILayout.LabelField("Render", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(occlusion, EditorUtils.CommonStyles.FillOcclusion);
             EditorGUILayout.PropertyField(blendMode, EditorUtils.CommonStyles.FillBlendMode);
             // TODO: enable in future update
@@ -73,9 +83,25 @@ namespace Linework.Editor.SurfaceFill
             
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Fill", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(pattern, EditorUtils.CommonStyles.Pattern);
-            RenderPatternSettings();
+            EditorGUILayout.PropertyField(materialType, EditorUtils.CommonStyles.MaterialType);
+            switch ((MaterialType) materialType.intValue)
+            {
+                case MaterialType.Basic:
+                    EditorGUILayout.PropertyField(pattern, EditorUtils.CommonStyles.Pattern);
+                    RenderPatternSettings();
+                    break;
+                case MaterialType.Custom:
+                    EditorGUILayout.PropertyField(customMaterial, EditorUtils.CommonStyles.CustomMaterial);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            if ((MaterialType) materialType.intValue == MaterialType.Custom)
+            {
+                EditorGUILayout.HelpBox("A custom fill material should use a Fullscreen Shader Graph shader with 'Allow Material Override' and 'Enable Stencil' enabled. Also set 'Blend Mode' to 'Custom'.", MessageType.Warning);
+            }
             EditorGUILayout.Space();
+            
             serializedObject.ApplyModifiedProperties();
         }
 

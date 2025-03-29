@@ -6,6 +6,7 @@
         "Unity.RenderPipelines.Universal.Runtime",
         "Unity.RenderPipelines.Core.Runtime",
         "Unity.RenderPipelines.Core.Editor",
+        "Unity.Collections",
         "Unity.RenderPipelines.Universal.2D.Runtime"
     ],
     "includePlatforms": [
@@ -17,6 +18,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.collections",
+            "expression": "2.1.0-exp.4",
+            "define": "HAS_PACKAGE_UNITY_COLLECTIONS_2_1_0_EXP_4"
+        }
+    ],
     "noEngineReferences": false
 }

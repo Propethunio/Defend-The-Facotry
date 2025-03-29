@@ -22,6 +22,7 @@ namespace Linework.WideOutline
         [RenderingLayerMask]
         public uint RenderingLayer = 1;
 #endif
+        public LayerMask layerMask = ~0;
         public OutlineRenderQueue renderQueue = OutlineRenderQueue.Opaque;
         public WideOutlineOcclusion occlusion = WideOutlineOcclusion.Always;
         public CullingMode cullingMode = CullingMode.Back;
