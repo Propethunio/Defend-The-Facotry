@@ -19,11 +19,11 @@ MonoBehaviour:
   type: 0
   hardness: 1
   sharedColor: {r: 0, g: 1, b: 0, a: 1}
-  intensity: 1.2
+  intensity: 1.8
   gap: 0
   blendMode: 2
   dilationMethod: 3
-  kernelSize: 20
+  kernelSize: 5
   blurSpread: 1.35
   blurPasses: 2
   scaleWithResolution: 1

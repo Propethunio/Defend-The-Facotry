@@ -28,7 +28,7 @@ public class MapDataSO : ScriptableObject {
     [field: SerializeField] public GameObject groundPrefab { get; private set; }
     [field: SerializeField] public MainBaseSO baseData { get; private set; }
     [field: SerializeField] public int basePaddingPreventingObjectGeneration { get; private set; }
-    [field: SerializeField] public BaseBuildableObjectSO portalData { get; private set; }
+    [field: SerializeField] public PortalSO portalData { get; private set; }
     [field: SerializeField] public int resourcesOnMapPercent { get; private set; }
     [field: SerializeField] public List<ResourceWeightPair> resourcesOnMap { get; private set; }
 }

@@ -559,8 +559,8 @@ public class MapGenerator {
     private void SpawnPortal() {
         Vector2Int origin = pathEnd + new Vector2Int(-data.portalData.width, -data.baseData.height / 2);
         BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down, mainParent);
-        Vector2 portalCenter = data.portalData.GetCenterPosition(origin, BuildingDir.Down);
-        WaveManager.Instance.SetSpawnPosition(new Vector3(portalCenter.x, 0f, portalCenter.y));
+        Vector2 enemySpawnPosition = data.portalData.GetCenterPosition(origin, BuildingDir.Down) + data.portalData.spawnPointOffsetFromCenter;
+        WaveManager.Instance.SetSpawnPosition(new Vector3(enemySpawnPosition.x, 0f, enemySpawnPosition.y));
     }
 
     private void SpawnBase() {

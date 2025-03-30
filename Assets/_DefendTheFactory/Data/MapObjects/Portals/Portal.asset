@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ae37dabe48661547a58d402732f8a48, type: 3}
+  m_Name: Portal
+  m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 0}
+  <nameString>k__BackingField: Portal
+  <prefab>k__BackingField: {fileID: 4110090257277672476, guid: 344736b65431873458f7cfddc1312a62,
+    type: 3}
+  <visual>k__BackingField: {fileID: 0}
+  <width>k__BackingField: 1
+  <height>k__BackingField: 3
+  <cost>k__BackingField: []
+  <isDestroyable>k__BackingField: 0
+  <itemsGivenBack>k__BackingField: 0
+  <spawnPointOffsetFromCenter>k__BackingField: {x: 0, y: 0}
