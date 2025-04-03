@@ -1923,6 +1923,7 @@ GameObject:
   - component: {fileID: 1066030350}
   - component: {fileID: 1066030351}
   - component: {fileID: 1066030352}
+  - component: {fileID: 1066030353}
   m_Layer: 0
   m_Name: Material Scroll
   m_TagString: Untagged
@@ -1973,6 +1974,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: 0.5
   targetMaterial: {fileID: 2100000, guid: 5ae960f3e6ce08f47a79d74925cebbf6, type: 2}
+--- !u!114 &1066030353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066030349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d213edaab8819bc4999b7a50028ac3b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollSpeed: 0.5
+  targetMaterial: {fileID: 2100000, guid: 6356c2b4438405c4483aa9b012045259, type: 2}
 --- !u!1 &1067434312
 GameObject:
   m_ObjectHideFlags: 0

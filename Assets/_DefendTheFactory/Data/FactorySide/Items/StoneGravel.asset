@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1abca38e197a3845be27e2eabab9723, type: 3}
-  m_Name: SharpLog
+  m_Name: StoneGravel
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 0}
-  <itemName>k__BackingField: Sharp Log
-  <prefab>k__BackingField: {fileID: 6788053349819902491, guid: 06c9ba10eabcb184e9614a8466476c1a,
+  <itemName>k__BackingField: Stone Gravel
+  <prefab>k__BackingField: {fileID: 2002821952129657682, guid: 46f5b37c0d748e045bdf06a3a1605cd6,
     type: 3}

@@ -20,8 +20,11 @@ MonoBehaviour:
     type: 3}
   <width>k__BackingField: 1
   <height>k__BackingField: 1
+  <cost>k__BackingField: []
+  <isDestroyable>k__BackingField: 0
+  <itemsGivenBack>k__BackingField: 0
   <resourceType>k__BackingField: 1
-  <amount>k__BackingField: 15
+  <amount>k__BackingField: 125
   <itemGatheredOnClick>k__BackingField: {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23,
     type: 2}
   <clicksToGather>k__BackingField: 3
