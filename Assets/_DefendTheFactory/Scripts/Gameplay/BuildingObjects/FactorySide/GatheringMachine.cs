@@ -21,7 +21,7 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         Subscribe();
         SearchForResources();
 
-        if(nodesInRange.Count > 0) {
+        if (nodesInRange.Count > 0) {
             PickClosestNode();
         }
     }
@@ -41,13 +41,12 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         int left = (int)Mathf.Floor(centerPosition.x - searchRange);
         int right = (int)Mathf.Ceil(centerPosition.x + searchRange - 1);
 
-        for(int y = bottom; y <= top; y++) {
-            for(int x = left; x <= right; x++) {
-
-                if(!IsPositionValid(gridArray, new Vector2Int(x, y)) || !IsInsideCircle(centerPosition, new Vector2Int(x, y))) continue;
+        for (int y = bottom; y <= top; y++) {
+            for (int x = left; x <= right; x++) {
+                if (!IsPositionValid(gridArray, new Vector2Int(x, y)) || !IsInsideCircle(centerPosition, new Vector2Int(x, y))) continue;
 
                 ResourceNode node = gridArray[x, y].placedObject as ResourceNode;
-                if(node == null || node.buildableDataSO.resourceType != buildableDataSO.gatheredResource || nodesInRange.Contains(node)) continue;
+                if (node == null || node.buildableDataSO.resourceType != buildableDataSO.gatheredResource || nodesInRange.Contains(node)) continue;
 
                 nodesInRange.Add(node);
                 node.NodeGatheredCompletely += HandleNodeDestroyed;
@@ -66,21 +65,21 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         float currentDistance = Mathf.Infinity;
         currentNode = null;
 
-        foreach(ResourceNode node in nodesInRange) {
+        foreach (ResourceNode node in nodesInRange) {
             Vector2 nodeCenterPosition = node.buildableDataSO.GetCenterPosition(node.origin, node.dir);
             float distanceToNode = (machineCenterPosition - nodeCenterPosition).sqrMagnitude;
 
-            if(distanceToNode < currentDistance) {
-                currentNode = node;
-                currentDistance = distanceToNode;
-            }
+            if (!(distanceToNode < currentDistance)) continue;
+
+            currentNode = node;
+            currentDistance = distanceToNode;
         }
     }
 
     private bool ShouldSnapBack(GridCell[,] gridArray, Vector2Int position, out ConveyorBelt belt) {
         belt = null;
 
-        if(!IsPositionValid(gridArray, position)) return false;
+        if (!IsPositionValid(gridArray, position)) return false;
 
         belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
         return belt != null && belt.previousPosition == origin;
@@ -91,16 +90,16 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     }
 
     private void Subscribe() {
-        TimeTickSystem.Instance.OnProductionTick += OnProductionTick;
+        TimeTickSystem.Instance.OnMicroTick += OnMicroTick;
         TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
     }
 
     private void Unsubscribe() {
-        TimeTickSystem.Instance.OnProductionTick -= OnProductionTick;
+        TimeTickSystem.Instance.OnMicroTick -= OnMicroTick;
         TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
         int nodesAmount = nodesInRange.Count;
 
-        for(int i = 0; i < nodesAmount; i++) {
+        for (int i = 0; i < nodesAmount; i++) {
             nodesInRange[i].NodeGatheredCompletely -= HandleNodeDestroyed;
         }
     }
@@ -111,15 +110,15 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         outputBelt.SetupBuildingBelt(beltPos, dir, this);
     }
 
-    private void OnProductionTick() {
-        if(currentNode == null || storedItemsCount == buildableDataSO.maxStoredOutputItems) return;
+    private void OnMicroTick() {
+        if (currentNode == null || storedItemsCount == 2) return;
 
         productionTicks++;
 
-        if(productionTicks == buildableDataSO.ticksForGather) {
-            productionTicks = 0;
-            Gather();
-        }
+        if (productionTicks != buildableDataSO.ticksForGather) return;
+
+        productionTicks = 0;
+        Gather();
     }
 
     private void Gather() {
@@ -131,19 +130,19 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         node.NodeGatheredCompletely -= HandleNodeDestroyed;
         nodesInRange.Remove(node);
 
-        if(node == currentNode) {
+        if (node == currentNode) {
             PickClosestNode();
         }
     }
 
     private void OnEarlyTick() {
-        if(storedItemsCount == 0) return;
+        if (storedItemsCount == 0) return;
 
         TryPutItemOnBelt();
     }
 
     private void TryPutItemOnBelt() {
-        if(outputBelt.startItem != null) return;
+        if (outputBelt.startItem != null) return;
 
         WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, buildableDataSO.producedItem);
         outputBelt.SetWorldItem(worldItem);

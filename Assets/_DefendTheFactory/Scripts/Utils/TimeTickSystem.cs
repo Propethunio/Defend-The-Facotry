@@ -4,7 +4,7 @@ using UnityEngine;
 public class TimeTickSystem : MonoBehaviour {
     public static TimeTickSystem Instance { get; private set; }
 
-    public event Action OnProductionTick;
+    public event Action OnMicroTick;
     public event Action OnEarlyTick;
     public event Action OnTick;
     public event Action OnLateTick;
@@ -30,7 +30,7 @@ public class TimeTickSystem : MonoBehaviour {
 
         tickTimer -= PRODUCTION_TICK_TIMER_MAX;
         productionTicksAmount++;
-        OnProductionTick?.Invoke();
+        OnMicroTick?.Invoke();
 
         if (productionTicksAmount != PRODUCTION_TICKS_FOR_FULL_TICK) return;
 

@@ -4,23 +4,13 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     private ConveyorBelt inputBelt;
     private ConveyorBelt outputBelt;
     private int storedInputItems;
+    private int maxStoredInputItems;
     private int storedOutputItems;
-    private float craftingProgress;
+    private ItemRecipeSO currentRecipe;
+    private int productionTicks;
 
     protected override void Initialize(Vector2Int origin, BuildingDir dir, ConstructorSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
-    }
-
-    private void Update() {
-        if (storedInputItems < buildableDataSO.itemRecipeList[0].inputItemList[0].amount || storedOutputItems >= buildableDataSO.maxStoredOutputItems) return;
-
-        craftingProgress += Time.deltaTime;
-
-        if (!(craftingProgress >= buildableDataSO.itemRecipeList[0].craftingTicks)) return;
-
-        craftingProgress -= buildableDataSO.itemRecipeList[0].craftingTicks;
-        storedOutputItems += buildableDataSO.itemRecipeList[0].outputItemList[0].amount;
-        storedInputItems -= buildableDataSO.itemRecipeList[0].inputItemList[0].amount;
     }
 
     private void OnDestroy() {
@@ -29,6 +19,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
 
     public override void GridSetupDone() {
         SetupBelts();
+        SetupRecipe(0);
         Subscribe();
     }
 
@@ -48,11 +39,36 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     }
 
     private void Subscribe() {
+        TimeTickSystem.Instance.OnMicroTick += OnMicroTick;
         TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
     }
 
     private void Unsubscribe() {
+        TimeTickSystem.Instance.OnMicroTick -= OnMicroTick;
         TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
+    }
+
+    public void SetupRecipe(int index) {
+        currentRecipe = buildableDataSO.itemRecipeList[index];
+        maxStoredInputItems = currentRecipe.inputItemList[0].amount * 2;
+        storedInputItems = 0;
+        storedOutputItems = 0;
+    }
+
+    private void OnMicroTick() {
+        if (storedInputItems < currentRecipe.inputItemList[0].amount || storedOutputItems > currentRecipe.outputItemList[0].amount) return;
+
+        productionTicks++;
+
+        if (productionTicks != currentRecipe.craftingTicks) return;
+
+        productionTicks = 0;
+        Craft();
+    }
+
+    private void Craft() {
+        storedInputItems -= currentRecipe.inputItemList[0].amount;
+        storedOutputItems += currentRecipe.outputItemList[0].amount;
     }
 
     private void OnEarlyTick() {
@@ -61,7 +77,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     }
 
     private void TryGetItemFromInputBelt() {
-        if (inputBelt.endItem == null || storedInputItems == buildableDataSO.maxStoredInputItems || inputBelt.endItem.itemSO != buildableDataSO.itemRecipeList[0].inputItemList[0].item) return;
+        if (inputBelt.endItem == null || storedInputItems == maxStoredInputItems || inputBelt.endItem.itemSO != currentRecipe.inputItemList[0].item) return;
 
         inputBelt.endItem.DestroySelf();
         storedInputItems++;
@@ -70,7 +86,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     private void TryPutItemOnOutputBelt() {
         if (outputBelt.startItem != null || storedOutputItems == 0) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, buildableDataSO.itemRecipeList[0].outputItemList[0].item);
+        WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, currentRecipe.outputItemList[0].item);
         outputBelt.SetWorldItem(worldItem);
         storedOutputItems--;
     }
