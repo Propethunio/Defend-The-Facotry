@@ -135,7 +135,7 @@ PrefabInstance:
     - target: {fileID: 4169209511236219605, guid: 04e98c4cefe7126498f4e198a6674795,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 38
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 4169209511236219605, guid: 04e98c4cefe7126498f4e198a6674795,
         type: 3}
@@ -513,6 +513,79 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1001 &1807039359
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 38
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 37c03f8c57d7ed9468834b99ff76f2b3, type: 2}
+    - target: {fileID: 919132149155446097, guid: e39e371e6859b404394f2defd20cec15,
+        type: 3}
+      propertyPath: m_Name
+      value: 'Balista double shot '
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e39e371e6859b404394f2defd20cec15, type: 3}
 --- !u!1001 &1983276233
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -660,7 +733,7 @@ PrefabInstance:
     - target: {fileID: 5059231314313276339, guid: 4aea6211b5ad7e7469aec6434ba1aa6a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 44
+      value: 46
       objectReference: {fileID: 0}
     - target: {fileID: 5059231314313276339, guid: 4aea6211b5ad7e7469aec6434ba1aa6a,
         type: 3}
@@ -1889,7 +1962,7 @@ PrefabInstance:
     - target: {fileID: 3370599875247066419, guid: d989618d47975fb439417f335db802c5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 41
+      value: 43
       objectReference: {fileID: 0}
     - target: {fileID: 3370599875247066419, guid: d989618d47975fb439417f335db802c5,
         type: 3}
@@ -2177,3 +2250,4 @@ SceneRoots:
   - {fileID: 8713514922272624627}
   - {fileID: 180920512605652746}
   - {fileID: 712384828}
+  - {fileID: 1807039359}
