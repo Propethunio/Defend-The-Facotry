@@ -245,7 +245,7 @@ public class BeltManager {
         }
     }
 
-    private void CheckForNewStartBeltConnections(ConveyorBelt newStartBelt) {
+    public void CheckForNewStartBeltConnections(ConveyorBelt newStartBelt) {
         Vector2Int forwardDirection = newStartBelt.nextPosition - newStartBelt.origin;
         Vector2Int newPreviousPosition = newStartBelt.origin - forwardDirection;
 

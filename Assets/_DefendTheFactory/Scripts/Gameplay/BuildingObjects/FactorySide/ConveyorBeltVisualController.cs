@@ -16,6 +16,7 @@ public class ConveyorBeltVisualController : MonoBehaviour {
     }
 
     private void UpdateVisuals(Vector2Int origin, Vector2Int previousPosition) {
+        _conveyorBelt.OnVisualUpdate -= UpdateVisuals;
         Vector2Int forwardVector = BuildingSystem.Instance.GetDirForwardVector(_conveyorBelt.dir);
         Vector2Int backPosition = origin - forwardVector;
 

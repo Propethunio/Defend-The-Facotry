@@ -51,7 +51,21 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
         if (!IsPositionValid(gridArray, position)) return false;
 
         ConveyorBelt belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
-        return belt != null && belt.nextPosition == origin;
+
+        if (belt != null && belt.nextPosition == origin) return true;
+
+        LogisticMachine<BaseBuildableObjectSO> logisticMachine = gridArray[position.x, position.y].placedObject as LogisticMachine<BaseBuildableObjectSO>;
+
+        if (logisticMachine == null || !logisticMachine.IsOnOutputCell(origin)) return false;
+
+        parentBuilding = logisticMachine;
+
+        logisticMachine.OnDestroyed += () => {
+            parentBuilding = null;
+            BeltManager.Instance.CheckForNewStartBeltConnections(this);
+        };
+
+        return true;
     }
 
     private bool IsPositionValid(GridCell[,] gridArray, Vector2Int position) {
@@ -61,7 +75,7 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
     public override void GridSetupDone() {
         BeltManager.Instance.AddBelt(this);
 
-        if (parentBuilding == null) {
+        if (parentBuilding == null || parentBuilding is LogisticMachine<BaseBuildableObjectSO>) {
             OnVisualUpdate?.Invoke(origin, previousPosition);
         }
     }

@@ -58,6 +58,16 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
         }
     }
 
+    public override bool IsOnOutputCell(Vector2Int position) {
+        foreach (var kvp in outputPositions) {
+            if (kvp.Value == position) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void HandleGridObjectChange(LogisticDir dir) {
         Vector2Int position = outputPositions[dir];
 

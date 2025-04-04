@@ -93,7 +93,7 @@ public class GhostBeltVisualController : MonoBehaviour {
     }
 
     private bool ShouldSnap(Vector2Int position) {
-        return IsPositionValid(position) && gridArray[position.x, position.y].placedObject is ConveyorBelt belt && belt.nextPosition == origin;
+        return IsPositionValid(position) && (gridArray[position.x, position.y].placedObject is ConveyorBelt belt && belt.nextPosition == origin || gridArray[position.x, position.y].placedObject is LogisticMachine<BaseBuildableObjectSO> logistic && logistic.IsOnOutputCell(origin));
     }
 
     private bool IsPositionValid(Vector2Int position) {

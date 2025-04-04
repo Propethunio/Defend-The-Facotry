@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : BaseBuildableObjectSO {
-
+    public event Action OnDestroyed;
+    
     [SerializeField] protected int maxStorage;
 
     protected GridCell[,] gridArray;
@@ -14,6 +15,8 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
     protected override void Initialize(Vector2Int origin, BuildingDir dir, T buildableDataSO) { }
 
     private void OnDestroy() {
+        OnDestroyed?.Invoke();
+        OnDestroyed = null;
         Unsubscribe();
     }
 
@@ -23,9 +26,10 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
     }
 
     public override void DestroySelf() {
-        foreach(WorldItem item in items) {
+        foreach (WorldItem item in items) {
             item.DestroySelf();
         }
+
         base.DestroySelf();
     }
 
@@ -38,7 +42,7 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
         TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
         TimeTickSystem.Instance.OnLateTick -= OnLateTick;
 
-        foreach(KeyValuePair<Action, Vector2Int> kvp in objectChangedEvents) {
+        foreach (KeyValuePair<Action, Vector2Int> kvp in objectChangedEvents) {
             gridArray[kvp.Value.x, kvp.Value.y].ObjectChanged -= kvp.Key;
         }
     }
@@ -47,7 +51,7 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
     protected abstract void OnLateTick();
 
     protected LogisticDir GetNextDir(LogisticDir dir) {
-        switch(dir) {
+        switch (dir) {
             default:
             case LogisticDir.Straight: return LogisticDir.Left;
             case LogisticDir.Left: return LogisticDir.Right;
@@ -58,7 +62,7 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
     protected bool ShouldSnap(Vector2Int position, out ConveyorBelt belt) {
         belt = null;
 
-        if(!IsPositionValid(position)) return false;
+        if (!IsPositionValid(position)) return false;
 
         belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
         return belt != null && belt.nextPosition == origin;
@@ -67,7 +71,7 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
     protected bool ShouldSnapBack(Vector2Int position, out ConveyorBelt belt) {
         belt = null;
 
-        if(!IsPositionValid(position)) return false;
+        if (!IsPositionValid(position)) return false;
 
         belt = gridArray[position.x, position.y].placedObject as ConveyorBelt;
         return belt != null && belt.previousPosition == origin;
@@ -76,4 +80,6 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T> where T : Bas
     protected bool IsPositionValid(Vector2Int position) {
         return position.x >= 0 && position.x < gridArray.GetLength(0) && position.y >= 0 && position.y < gridArray.GetLength(1);
     }
+
+    public abstract bool IsOnOutputCell(Vector2Int position);
 }
