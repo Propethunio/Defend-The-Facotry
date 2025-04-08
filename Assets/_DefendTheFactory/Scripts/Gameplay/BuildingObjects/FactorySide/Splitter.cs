@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
-    private ConveyorBelt inputBelt;
+    private IItemProvider inputMachine;
     private WorldItem newItem;
+    private WorldItem itemReadyToGo;
     private Dictionary<LogisticDir, ConveyorBelt> outputBelts = new();
     private Dictionary<LogisticDir, Vector2Int> outputPositions = new();
 
@@ -34,13 +35,13 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if (ShouldSnap(position, out ConveyorBelt belt)) {
-            inputBelt = belt;
+        if (ShouldSnap(position, out IItemProvider itemProvider)) {
+            inputMachine = itemProvider;
         }
     }
 
     private void HandleGridObjectChange(Vector2Int position) {
-        inputBelt = ShouldSnap(position, out ConveyorBelt belt) ? belt : null;
+        inputMachine = ShouldSnap(position, out IItemProvider itemProvider) ? itemProvider : null;
     }
 
     private void SetupOutputBelt(Vector2Int position, LogisticDir logisticDir) {
@@ -53,9 +54,10 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if (ShouldSnapBack(position, out ConveyorBelt belt)) {
-            outputBelts[logisticDir] = belt;
-        }
+        if (!ShouldSnapBack(position, out ConveyorBelt belt)) return;
+
+        outputBelts[logisticDir] = belt;
+        belt.SetLogisticMachineAsParent(this);
     }
 
     public override bool IsOnOutputCell(Vector2Int position) {
@@ -80,6 +82,10 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
     }
 
     public override void DestroySelf() {
+        if (itemReadyToGo != null) {
+            itemReadyToGo.DestroySelf();
+        }
+
         if (newItem != null) {
             newItem.DestroySelf();
         }
@@ -88,16 +94,20 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
     }
 
     protected override void OnEarlyTick() {
+        if (itemReadyToGo != null) {
+            items.Add(itemReadyToGo);
+            itemReadyToGo = null;
+        }
+
         if (newItem != null) {
-            items.Add(newItem);
+            itemReadyToGo = newItem;
             newItem = null;
         }
 
-        if (items.Count == maxStorage || inputBelt == null || inputBelt.endItem == null) return;
+        if (items.Count == maxStorage || inputMachine == null || !inputMachine.HasItem()) return;
 
-        newItem = inputBelt.endItem;
-        inputBelt.ResetWorldItem();
-        newItem.MoveToPosition(origin);
+        newItem = inputMachine.GetWorldItem();
+        newItem.MoveToPosition(CalculatePositionInsideMachine(inputMachine.GetDir()));
     }
 
     protected override void OnLateTick() {
@@ -110,10 +120,22 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
             }
 
             WorldItem worldItem = items[0];
-            worldItem.MoveToPosition(outputBelts[logisticDir].origin);
+            worldItem.MoveToPosition(CalculatePositionOnBelt(worldItem, outputBelts[logisticDir]));
             outputBelts[logisticDir].SetWorldItem(worldItem);
             items.RemoveAt(0);
             logisticDir = GetNextDir(logisticDir);
         }
+    }
+
+    public override bool ShouldSnapWithLogisticMachine(Vector2Int logisticMachineOrigin) {
+        Vector2Int forwardVector = BuildingSystem.Instance.GetDirForwardVector(dir);
+
+        if (origin - forwardVector == logisticMachineOrigin) return true;
+
+        Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
+
+        if (origin - rightVector == logisticMachineOrigin) return true;
+
+        return origin + rightVector == logisticMachineOrigin;
     }
 }

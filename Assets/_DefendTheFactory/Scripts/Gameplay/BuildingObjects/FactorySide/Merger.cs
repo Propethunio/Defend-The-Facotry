@@ -5,7 +5,8 @@ using UnityEngine;
 public class Merger : LogisticMachine<BaseBuildableObjectSO> {
     private ConveyorBelt outputBelt;
     private List<WorldItem> newItems = new();
-    private Dictionary<LogisticDir, ConveyorBelt> inputBelts = new();
+    private List<WorldItem> itemsReadyToGo = new();
+    private Dictionary<LogisticDir, IItemProvider> inputMachines = new();
     private Dictionary<LogisticDir, Vector2Int> inputPositions = new();
 
     protected override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
@@ -21,14 +22,14 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         Vector2Int rightPosition = origin + rightVector;
         Vector2Int leftPosition = origin - rightVector;
 
-        SetupInputBelt(backPosition, LogisticDir.Straight);
-        SetupInputBelt(leftPosition, LogisticDir.Left);
-        SetupInputBelt(rightPosition, LogisticDir.Right);
+        SetupInput(backPosition, LogisticDir.Straight);
+        SetupInput(leftPosition, LogisticDir.Left);
+        SetupInput(rightPosition, LogisticDir.Right);
         SetupOutputBelt(nextPosition);
     }
 
-    private void SetupInputBelt(Vector2Int position, LogisticDir logisticDir) {
-        inputBelts[logisticDir] = null;
+    private void SetupInput(Vector2Int position, LogisticDir logisticDir) {
+        inputMachines[logisticDir] = null;
 
         if (!IsPositionValid(position)) return;
 
@@ -37,8 +38,8 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if (ShouldSnap(position, out ConveyorBelt belt)) {
-            inputBelts[logisticDir] = belt;
+        if (ShouldSnap(position, out IItemProvider itemProvider)) {
+            inputMachines[logisticDir] = itemProvider;
         }
     }
 
@@ -49,11 +50,11 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
     private void HandleGridObjectChange(LogisticDir dir) {
         Vector2Int position = inputPositions[dir];
 
-        if (ShouldSnap(position, out ConveyorBelt belt)) {
-            inputBelts[dir] = belt;
+        if (ShouldSnap(position, out IItemProvider itemProvider)) {
+            inputMachines[dir] = itemProvider;
         }
         else {
-            inputBelts[dir] = null;
+            inputMachines[dir] = null;
         }
     }
 
@@ -64,48 +65,60 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if (ShouldSnapBack(position, out ConveyorBelt belt)) {
-            outputBelt = belt;
-        }
+        if (!ShouldSnapBack(position, out ConveyorBelt belt)) return;
+
+        outputBelt = belt;
+        belt.SetLogisticMachineAsParent(this);
     }
 
     private void HandleGridObjectChange(Vector2Int position) {
-        if (ShouldSnapBack(position, out ConveyorBelt belt)) {
-            outputBelt = belt;
-        }
-        else {
-            outputBelt = null;
-        }
+        outputBelt = ShouldSnapBack(position, out ConveyorBelt belt) ? belt : null;
     }
 
     public override void DestroySelf() {
-        foreach (WorldItem item in newItems) {
-            item.DestroySelf();
+        int indexCount = newItems.Count;
+
+        for (int i = 0; i < indexCount; i++) {
+            newItems[i].DestroySelf();
+        }
+
+        indexCount = itemsReadyToGo.Count;
+
+        for (int i = 0; i < indexCount; i++) {
+            itemsReadyToGo[i].DestroySelf();
         }
 
         base.DestroySelf();
     }
 
     protected override void OnEarlyTick() {
+        if (itemsReadyToGo.Count > 0) {
+            items.AddRange(itemsReadyToGo);
+            itemsReadyToGo.Clear();
+        }
+
         if (newItems.Count > 0) {
-            items.AddRange(newItems);
+            itemsReadyToGo.AddRange(newItems);
             newItems.Clear();
         }
 
-        if (items.Count == maxStorage) return;
+        int storedItems = items.Count + itemsReadyToGo.Count;
+
+        if (storedItems == maxStorage) return;
 
         for (int i = 3; i > 0; i--) {
-            if (inputBelts[logisticDir] == null || inputBelts[logisticDir].endItem == null) {
+            if (inputMachines[logisticDir] == null || !inputMachines[logisticDir].HasItem()) {
                 logisticDir = GetNextDir(logisticDir);
                 continue;
             }
 
-            inputBelts[logisticDir].endItem.MoveToPosition(origin);
-            newItems.Add(inputBelts[logisticDir].endItem);
-            inputBelts[logisticDir].ResetWorldItem();
+            WorldItem item = inputMachines[logisticDir].GetWorldItem();
+            item.MoveToPosition(CalculatePositionInsideMachine(inputMachines[logisticDir].GetDir()));
+            newItems.Add(item);
             logisticDir = GetNextDir(logisticDir);
+            storedItems++;
 
-            if (items.Count + newItems.Count == maxStorage) return;
+            if (storedItems == maxStorage) return;
         }
     }
 
@@ -113,8 +126,12 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
         if (items.Count == 0 || outputBelt == null || outputBelt.startItem != null) return;
 
         WorldItem worldItem = items[0];
-        worldItem.MoveToPosition(outputBelt.origin);
+        worldItem.MoveToPosition(CalculatePositionOnBelt(worldItem, outputBelt));
         outputBelt.SetWorldItem(worldItem);
         items.RemoveAt(0);
+    }
+
+    public override bool ShouldSnapWithLogisticMachine(Vector2Int logisticMachineOrigin) {
+        return origin + BuildingSystem.Instance.GetDirForwardVector(dir) == logisticMachineOrigin;
     }
 }

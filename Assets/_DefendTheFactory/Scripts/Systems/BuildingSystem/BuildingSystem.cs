@@ -98,7 +98,7 @@ public class BuildingSystem {
         BasePlacedObject placedObject = grid.gridArray[x, z].placedObject;
         if (placedObject == null) return;
 
-        if (placedObject is ConveyorBelt conveyorBelt && conveyorBelt.parentBuilding != null) {
+        if (placedObject is ConveyorBelt conveyorBelt && conveyorBelt.parentBuilding != null && conveyorBelt.parentBuilding is not LogisticMachine<BaseBuildableObjectSO>) {
             placedObject = conveyorBelt.parentBuilding;
         }
 

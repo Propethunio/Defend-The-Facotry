@@ -512,20 +512,14 @@ public class MapGenerator {
     private GameObject GetPathCellPrefab(int value) {
         if (value is 1 or 2 or 3 or 12) return data.pathStraightPrefab;
         if (value is 5 or 6 or 9 or 10) return data.pathTurnPrefab;
-        if (value is 7 or 11 or 13 or 14) return data.pathTurnPrefab;
-
-        Debug.Log($"value: {value}");
-        return null;
+        return value is 7 or 11 or 13 or 14 ? data.pathTurnPrefab : null;
     }
 
     private int GetRotation(int value) {
         if (value is 9 or 11 or 12) return 0;
         if (value is 1 or 2 or 3 or 14 or 10) return 90;
         if (value is 7 or 6) return 180;
-        if (value is 5 or 13) return 270;
-
-        Debug.Log($"value: {value}");
-        return 0;
+        return value is 5 or 13 ? 270 : 0;
     }
 
     private void PopulateMap() {

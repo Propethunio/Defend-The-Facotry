@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UtilsClass;
 using System.Diagnostics;
 
@@ -6,9 +7,12 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private MapDataSO data;
     [SerializeField] private bool showBeltDebug;
     [SerializeField] private bool generateMapAsync;
+    [SerializeField] private bool addResources;
 
     private Stopwatch stopwatch = new Stopwatch();
     public EnemyLogic enemyPrefab;
+    public List<ItemSO> items;
+    
     
     private void Awake() {
         stopwatch.Start();
@@ -27,6 +31,12 @@ public class GameManager : MonoBehaviour {
         TimeTickSystem.Instance.SetIsTicking(true);
         stopwatch.Stop();
         UnityEngine.Debug.Log($"[GAME DIAGNOSTIC INFO] Game setup + map generation took {stopwatch.ElapsedMilliseconds} ms");
+
+        if (addResources) {
+            foreach (var item in items) {
+                ItemsManager.Instance.AddItems(item, 300);   
+            }
+        }
     }
 
     private void Update() {

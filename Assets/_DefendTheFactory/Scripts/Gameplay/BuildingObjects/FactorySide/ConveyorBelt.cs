@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
+public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO>, IItemProvider {
     public event Action<Vector2Int, Vector2Int> OnVisualUpdate;
 
     [HideInInspector] public Vector2Int previousPosition;
@@ -47,6 +47,38 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
         }
     }
 
+    public void SetLogisticMachineAsParent(LogisticMachine<BaseBuildableObjectSO> logisticMachine) {
+        if (parentBuilding != null) return;
+
+        parentBuilding = logisticMachine;
+
+        logisticMachine.OnDestroyed += () => {
+            parentBuilding = null;
+            BeltManager.Instance.CheckForNewStartBeltConnections(this);
+            BeltManager.Instance.RefreshDebug();
+        };
+
+        BeltManager.Instance.RefreshDebug();
+    }
+
+    public bool HasItem() {
+        return endItem != null;
+    }
+
+    public WorldItem GetWorldItem() {
+        WorldItem item = endItem;
+        endItem = null;
+        return item;
+    }
+
+    public BuildingDir GetDir() {
+        return dir;
+    }
+
+    public bool ShouldSnapWithLogisticMachine(Vector2Int logisticMachineOrigin) {
+        return nextPosition == logisticMachineOrigin;
+    }
+
     private bool ShouldSnap(GridCell[,] gridArray, Vector2Int position) {
         if (!IsPositionValid(gridArray, position)) return false;
 
@@ -58,13 +90,7 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO> {
 
         if (logisticMachine == null || !logisticMachine.IsOnOutputCell(origin)) return false;
 
-        parentBuilding = logisticMachine;
-
-        logisticMachine.OnDestroyed += () => {
-            parentBuilding = null;
-            BeltManager.Instance.CheckForNewStartBeltConnections(this);
-        };
-
+        SetLogisticMachineAsParent(logisticMachine);
         return true;
     }
 

@@ -486,6 +486,10 @@ public class BeltManager {
         }
     }
 
+    public void RefreshDebug() {
+        OnBeltAdded?.Invoke();
+    }
+    
     /* --------------- BELT DEBUG VISUAL --------------- */
 
     private class DebugVisual {
@@ -535,17 +539,17 @@ public class BeltManager {
             Transform nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
 
             if (beltPath.beltList.Count == 1) {
-                nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.cyan;
+                nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.magenta;
                 pathParent.position += new Vector3(0, .33f, 0);
                 return;
             }
-            else {
-                nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.green;
-            }
+
+            nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = beltPath.beltList[0].parentBuilding is LogisticMachine<BaseBuildableObjectSO> ? Color.cyan : Color.green;
 
             gridPosition = beltPath.beltList[^1].origin;
             nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
-            nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.red;
+            
+            nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Instance.gridArray[beltPath.beltList[^1].nextPosition.x, beltPath.beltList[^1].nextPosition.y].placedObject is LogisticMachine<BaseBuildableObjectSO> ? Color.black : Color.red;
 
             for (int i = 0; i < beltPath.beltList.Count - 1; i++) {
                 ConveyorBelt belt = beltPath.beltList[i];
