@@ -8,6 +8,8 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
     private WorldItem itemReadyToGo;
     private Dictionary<LogisticDir, ConveyorBelt> outputBelts = new();
     private Dictionary<LogisticDir, Vector2Int> outputPositions = new();
+    private Dictionary<LogisticDir, Splitter> outputSplitters = new();
+    private List<Splitter> splittersWaitingForResource = new();
 
     protected override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
@@ -23,9 +25,9 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
         Vector2Int leftPosition = origin - rightVector;
 
         SetupInputBelt(nextPosition);
-        SetupOutputBelt(backPosition, LogisticDir.Straight);
-        SetupOutputBelt(leftPosition, LogisticDir.Left);
-        SetupOutputBelt(rightPosition, LogisticDir.Right);
+        SetupOutputMachines(backPosition, LogisticDir.Straight);
+        SetupOutputMachines(leftPosition, LogisticDir.Left);
+        SetupOutputMachines(rightPosition, LogisticDir.Right);
     }
 
     private void SetupInputBelt(Vector2Int position) {
@@ -44,8 +46,9 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
         inputMachine = ShouldSnap(position, out IItemProvider itemProvider) ? itemProvider : null;
     }
 
-    private void SetupOutputBelt(Vector2Int position, LogisticDir logisticDir) {
+    private void SetupOutputMachines(Vector2Int position, LogisticDir logisticDir) {
         outputBelts[logisticDir] = null;
+        outputSplitters[logisticDir] = null;
 
         if (!IsPositionValid(position)) return;
 
@@ -54,7 +57,14 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
         gridArray[position.x, position.y].ObjectChanged += action;
         objectChangedEvents.Add(action, position);
 
-        if (!ShouldSnapBack(position, out ConveyorBelt belt)) return;
+        if (!ShouldSnapBack(position, out ConveyorBelt belt)) {
+            Splitter splitter = gridArray[position.x, position.y].placedObject as Splitter;
+
+            if (splitter == null) return;
+
+            outputSplitters[logisticDir] = splitter;
+            return;
+        }
 
         outputBelts[logisticDir] = belt;
         belt.SetLogisticMachineAsParent(this);
@@ -75,9 +85,12 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
 
         if (ShouldSnapBack(position, out ConveyorBelt belt)) {
             outputBelts[dir] = belt;
+            outputSplitters[dir] = null;
         }
         else {
             outputBelts[dir] = null;
+            Splitter splitter = gridArray[position.x, position.y].placedObject as Splitter;
+            outputSplitters[dir] = splitter == null ? null : splitter;
         }
     }
 
@@ -94,17 +107,24 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
     }
 
     protected override void OnEarlyTick() {
-        if (itemReadyToGo != null) {
+        if (itemReadyToGo != null && items.Count < 2) {
             items.Add(itemReadyToGo);
             itemReadyToGo = null;
         }
 
-        if (newItem != null) {
+        if (newItem != null && itemReadyToGo == null) {
             itemReadyToGo = newItem;
             newItem = null;
         }
 
-        if (items.Count == maxStorage || inputMachine == null || !inputMachine.HasItem()) return;
+        if (newItem != null || inputMachine == null) return;
+
+        if (inputMachine is Splitter splitter) {
+            splitter.NotifySplitter(this);
+            return;
+        }
+
+        if (!inputMachine.HasItem()) return;
 
         newItem = inputMachine.GetWorldItem();
         newItem.MoveToPosition(CalculatePositionInsideMachine(inputMachine.GetDir()));
@@ -112,9 +132,19 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
 
     protected override void OnLateTick() {
         for (int i = 3; i > 0; i--) {
-            if (items.Count == 0) return;
+            if (items.Count == 0) break;
 
-            if (outputBelts[logisticDir] == null || outputBelts[logisticDir].startItem != null) {
+            if (outputBelts[logisticDir] == null) {
+                if (outputSplitters[logisticDir] != null && splittersWaitingForResource.Contains(outputSplitters[logisticDir])) {
+                    outputSplitters[logisticDir].MoveItemAfterNotify(items[0]);
+                    items.RemoveAt(0);
+                }
+
+                logisticDir = GetNextDir(logisticDir);
+                continue;
+            }
+
+            if (outputBelts[logisticDir].startItem != null) {
                 logisticDir = GetNextDir(logisticDir);
                 continue;
             }
@@ -125,6 +155,8 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
             items.RemoveAt(0);
             logisticDir = GetNextDir(logisticDir);
         }
+
+        splittersWaitingForResource.Clear();
     }
 
     public override bool ShouldSnapWithLogisticMachine(Vector2Int logisticMachineOrigin) {
@@ -137,5 +169,14 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
         if (origin - rightVector == logisticMachineOrigin) return true;
 
         return origin + rightVector == logisticMachineOrigin;
+    }
+
+    private void NotifySplitter(Splitter splitter) {
+        splittersWaitingForResource.Add(splitter);
+    }
+
+    private void MoveItemAfterNotify(WorldItem worldItem) {
+        newItem = worldItem;
+        newItem.MoveToPosition(CalculatePositionInsideMachine(inputMachine.GetDir()));
     }
 }

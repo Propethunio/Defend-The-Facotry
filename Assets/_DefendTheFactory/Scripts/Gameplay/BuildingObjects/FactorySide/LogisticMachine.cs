@@ -5,8 +5,6 @@ using UnityEngine;
 public abstract class LogisticMachine<T> : BaseDataPlacedObject<T>, IItemProvider where T : BaseBuildableObjectSO {
     public event Action OnDestroyed;
 
-    [SerializeField] protected int maxStorage;
-
     protected GridCell[,] gridArray;
     protected List<WorldItem> items = new();
     protected LogisticDir logisticDir = LogisticDir.Straight;
@@ -67,7 +65,7 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T>, IItemProvide
         if (!IsPositionValid(position)) return false;
 
         itemProvider = gridArray[position.x, position.y].placedObject as IItemProvider;
-        
+
         return itemProvider != null && itemProvider.ShouldSnapWithLogisticMachine(origin);
     }
 

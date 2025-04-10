@@ -104,7 +104,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
 
         int storedItems = items.Count + itemsReadyToGo.Count;
 
-        if (storedItems == maxStorage) return;
+        if (storedItems == 3) return;
 
         for (int i = 3; i > 0; i--) {
             if (inputMachines[logisticDir] == null || !inputMachines[logisticDir].HasItem()) {
@@ -118,7 +118,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
             logisticDir = GetNextDir(logisticDir);
             storedItems++;
 
-            if (storedItems == maxStorage) return;
+            if (storedItems == 3) return;
         }
     }
 
