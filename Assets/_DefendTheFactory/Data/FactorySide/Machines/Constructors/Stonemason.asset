@@ -25,11 +25,10 @@ MonoBehaviour:
     amount: 1
   - item: {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23, type: 2}
     amount: 1
-  <isDestroyable>k__BackingField: 1
-  <itemsGivenBack>k__BackingField: 1
+  <isNotDestroyable>k__BackingField: 0
+  <refundPenalty>k__BackingField: 0
   <outputBeltPosition>k__BackingField: {x: 0, y: 0}
-  <maxStoredOutputItems>k__BackingField: 2
-  <inputBeltPosition>k__BackingField: {x: 1, y: 0}
-  <maxStoredInputItems>k__BackingField: 10
+  <inputBeltPosition>k__BackingField: {x: 0, y: 1}
   <itemRecipeList>k__BackingField:
-  - {fileID: 11400000, guid: 7ef64690dbfa0f847bfe97a47d243896, type: 2}
+  - {fileID: 11400000, guid: bafcc7a83d0b04841a23bb36405a7678, type: 2}
+  - {fileID: 11400000, guid: 5cc1a1e12b3cf964fbbadea6e0bf3062, type: 2}

@@ -6,7 +6,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     private int storedInputItems;
     private int maxStoredInputItems;
     private int storedOutputItems;
-    private ItemRecipeSO currentRecipe;
+    private SimpleItemRecipeSO currentRecipe;
     private int productionTicks;
 
     protected override void Initialize(Vector2Int origin, BuildingDir dir, ConstructorSO buildableDataSO) {
@@ -50,13 +50,13 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
 
     public void SetupRecipe(int index) {
         currentRecipe = buildableDataSO.itemRecipeList[index];
-        maxStoredInputItems = currentRecipe.inputItemList[0].amount * 2;
+        maxStoredInputItems = currentRecipe.inputItem.amount * 2;
         storedInputItems = 0;
         storedOutputItems = 0;
     }
 
     private void OnMicroTick() {
-        if (storedInputItems < currentRecipe.inputItemList[0].amount || storedOutputItems > currentRecipe.outputItemList[0].amount) return;
+        if (storedInputItems < currentRecipe.inputItem.amount || storedOutputItems > currentRecipe.outputItem.amount) return;
 
         productionTicks++;
 
@@ -67,8 +67,8 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     }
 
     private void Craft() {
-        storedInputItems -= currentRecipe.inputItemList[0].amount;
-        storedOutputItems += currentRecipe.outputItemList[0].amount;
+        storedInputItems -= currentRecipe.inputItem.amount;
+        storedOutputItems += currentRecipe.outputItem.amount;
     }
 
     private void OnEarlyTick() {
@@ -77,7 +77,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     }
 
     private void TryGetItemFromInputBelt() {
-        if (inputBelt.endItem == null || storedInputItems == maxStoredInputItems || inputBelt.endItem.itemSO != currentRecipe.inputItemList[0].item) return;
+        if (inputBelt.endItem == null || storedInputItems == maxStoredInputItems || inputBelt.endItem.itemSO != currentRecipe.inputItem.item) return;
 
         inputBelt.endItem.DestroySelf();
         storedInputItems++;
@@ -86,7 +86,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     private void TryPutItemOnOutputBelt() {
         if (outputBelt.startItem != null || storedOutputItems == 0) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, currentRecipe.outputItemList[0].item);
+        WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, currentRecipe.outputItem.item);
         outputBelt.SetWorldItem(worldItem);
         storedOutputItems--;
     }

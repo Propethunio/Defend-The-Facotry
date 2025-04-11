@@ -10,12 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbb41197560568c4ea4b2fb32e44d390, type: 3}
-  m_Name: Sawmill1
+  m_Name: New Item Recipe SO
   m_EditorClassIdentifier: 
-  inputItemList:
+  <inputItemList>k__BackingField:
+  - item: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
+    amount: 2
   - item: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
     amount: 4
-  outputItemList:
+  - item: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
+    amount: 2
+  <outputItemList>k__BackingField:
   - item: {fileID: 11400000, guid: 18cd4d4cff9723c4681468654ae6d1d6, type: 2}
     amount: 2
-  craftingTicks: 20
+  - item: {fileID: 11400000, guid: 6203c45e750880a49a09c88a567eaa4e, type: 2}
+    amount: 1
+  <craftingTicks>k__BackingField: 12

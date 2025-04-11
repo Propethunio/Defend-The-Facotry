@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68f3f9478a7f27d4bb40df622bc447c8, type: 3}
+  m_Name: Stonemason_2
+  m_EditorClassIdentifier: 
+  <inputItem>k__BackingField:
+    item: {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23, type: 2}
+    amount: 12
+  <outputItem>k__BackingField:
+    item: {fileID: 11400000, guid: 8fc0b69270915cf4cb148a6a2f71cad5, type: 2}
+    amount: 2
+  <craftingTicks>k__BackingField: 10
