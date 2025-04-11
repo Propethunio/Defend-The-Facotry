@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
 public abstract class BaseTower<T> : BaseDataPlacedObject<T> where T : BaseTowerSO {
-    protected List<EnemyLogic> enemiesInRange = new List<EnemyLogic>();
+    protected HashSet<EnemyLogic> enemiesInRange = new HashSet<EnemyLogic>();
     private bool readyToAttack = true;
     private float cooldownTimer;
 

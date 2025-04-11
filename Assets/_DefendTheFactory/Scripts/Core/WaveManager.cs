@@ -37,6 +37,6 @@ public class WaveManager {
     private void OnTick() {
         if (Random.Range(0, 100) > 15) return;
 
-        GameObject.Instantiate(enemy, spawnPosition, Quaternion.identity, enemyParentTransform).Init(2f);
+        GameObject.Instantiate(enemy, spawnPosition, Quaternion.identity, enemyParentTransform).Init(Random.Range(0.5f, 2f));
     }
 }

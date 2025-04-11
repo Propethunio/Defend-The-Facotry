@@ -9,8 +9,8 @@ public class TimeTickSystem : MonoBehaviour {
     public event Action OnTick;
     public event Action OnLateTick;
 
-    private const float PRODUCTION_TICK_TIMER_MAX = 0.1f;
-    private const int PRODUCTION_TICKS_FOR_FULL_TICK = 5;
+    private const float MICRO_TICK_TIMER_MAX = 0.1f;
+    private const int MICRO_TICKS_FOR_FULL_TICK = 5;
 
     private bool isTicking;
     private float tickTimer;
@@ -26,13 +26,13 @@ public class TimeTickSystem : MonoBehaviour {
 
         tickTimer += Time.deltaTime;
 
-        if (!(tickTimer >= PRODUCTION_TICK_TIMER_MAX)) return;
+        if (!(tickTimer >= MICRO_TICK_TIMER_MAX)) return;
 
-        tickTimer -= PRODUCTION_TICK_TIMER_MAX;
+        tickTimer -= MICRO_TICK_TIMER_MAX;
         productionTicksAmount++;
         OnMicroTick?.Invoke();
 
-        if (productionTicksAmount != PRODUCTION_TICKS_FOR_FULL_TICK) return;
+        if (productionTicksAmount != MICRO_TICKS_FOR_FULL_TICK) return;
 
         productionTicksAmount = 0;
         OnEarlyTick?.Invoke();

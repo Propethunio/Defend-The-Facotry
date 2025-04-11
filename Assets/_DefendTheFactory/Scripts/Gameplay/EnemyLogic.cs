@@ -5,13 +5,13 @@ public class EnemyLogic : MonoBehaviour {
     public event Action<EnemyLogic> OnDeath;
 
     public bool isFlying { get; private set; }
-
-    private float speed;
-    private float health = 10f;
-    private int shield;
+    public int pathPointIndex { get; private set; }
+    public int health { get; private set; } = 100;
+    public int shield{ get; private set; }
+    public float speed{ get; private set; }
+    
     private int damage;
     private Vector3 nextPoint;
-    private int pathPointIndex;
     private WaveManager waveManager;
     private int pathPointsCount;
 
@@ -49,7 +49,12 @@ public class EnemyLogic : MonoBehaviour {
         DestroyMe();
     }
 
-    public void DamageMe(float damage) {
+    private void DestroyMe() {
+        OnDeath?.Invoke(this);
+        Destroy(gameObject);
+    }
+    
+    public void DamageMe(int damage) {
         health -= damage;
 
         if (health <= 0) {
@@ -57,8 +62,7 @@ public class EnemyLogic : MonoBehaviour {
         }
     }
 
-    private void DestroyMe() {
-        OnDeath?.Invoke(this);
-        Destroy(gameObject);
+    public float CalculateMyProgress() {
+        return Vector3.Distance(transform.position, nextPoint);
     }
 }
