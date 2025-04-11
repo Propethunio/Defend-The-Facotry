@@ -4,10 +4,11 @@ using UnityEngine;
 public class EnemyLogic : MonoBehaviour {
     public event Action<EnemyLogic> OnDeath;
 
+    public bool isFlying { get; private set; }
+
     private float speed;
-    private int health;
+    private float health = 10f;
     private int shield;
-    private bool isFlying;
     private int damage;
     private Vector3 nextPoint;
     private int pathPointIndex;
@@ -45,6 +46,18 @@ public class EnemyLogic : MonoBehaviour {
     }
 
     private void DamageBase() {
+        DestroyMe();
+    }
+
+    public void DamageMe(float damage) {
+        health -= damage;
+
+        if (health <= 0) {
+            DestroyMe();
+        }
+    }
+
+    private void DestroyMe() {
         OnDeath?.Invoke(this);
         Destroy(gameObject);
     }

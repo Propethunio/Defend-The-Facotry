@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da33822df6ed16f43a36a3594a11e969, type: 3}
+  m_Name: Tower
+  m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 0}
+  <nameString>k__BackingField: Tower Test
+  <prefab>k__BackingField: {fileID: 5560026393050196790, guid: 772d2a5cbcc06ea4da28052cc6a5244b,
+    type: 3}
+  <visual>k__BackingField: {fileID: 5560026393050196790, guid: bade24733a32b9b408210b46aeb1499d,
+    type: 3}
+  <width>k__BackingField: 1
+  <height>k__BackingField: 1
+  <cost>k__BackingField: []
+  <isNotDestroyable>k__BackingField: 0
+  <refundPenalty>k__BackingField: 0
+  <damage>k__BackingField: 5
+  <attackSpeed>k__BackingField: 1
+  <range>k__BackingField: 4
+  <canTargetFlying>k__BackingField: 1
+  <projectile>k__BackingField: {fileID: 0}

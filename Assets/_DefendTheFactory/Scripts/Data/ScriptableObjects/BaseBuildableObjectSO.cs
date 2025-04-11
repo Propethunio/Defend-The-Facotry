@@ -10,8 +10,8 @@ public class BaseBuildableObjectSO : ScriptableObject {
     [field: SerializeField] public int width { get; private set; }
     [field: SerializeField] public int height { get; private set; }
     [field: SerializeField] public List<ItemIntPair> cost { get; private set; }
-    [field: SerializeField] public bool isDestroyable { get; private set; }
-    [field: SerializeField, Range(0f, 1f)] public float itemsGivenBack { get; private set; }
+    [field: SerializeField] public bool isNotDestroyable { get; private set; }
+    [field: SerializeField, Range(0f, 1f)] public float refundPenalty { get; private set; }
 
     public Vector2Int GetRotationOffset(BuildingDir dir) {
         switch (dir) {
