@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UtilsClass;
 
 public class GameManager : MonoBehaviour {
@@ -12,10 +14,18 @@ public class GameManager : MonoBehaviour {
     public List<ItemSO> items;
     
     private void Awake() {
-        new ItemsManager();
+        Debug.Log("GameManager");
+        SceneLoader.Instance.OnSceneGroupLoaded += Init;
     }
 
-    private void Start() {
+    private void OnDestroy() {
+        SceneLoader.Instance.OnSceneGroupLoaded -= Init;
+    }
+
+    private void Init() {
+        Debug.Log("GameManager Init");
+        SceneLoader.Instance.OnSceneGroupLoaded -= Init;
+        new ItemsManager();
         new WaveManager(enemyPrefab);
         MapGenerator mapGenerator = new MapGenerator(data);
         new BuildingSystem(mapGenerator.width, mapGenerator.height);

@@ -11,11 +11,13 @@ public sealed class InjectAttribute : PropertyAttribute { }
 public sealed class ProvideAttribute : PropertyAttribute { }
 
 [DefaultExecutionOrder(-1000)]
-public class Injector : MonoBehaviour {
+public class Injector : Singleton<Injector> {
     private const BindingFlags k_bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
     private readonly Dictionary<Type, object> registry = new();
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
+
         var monoBehaviours = FindMonoBehaviours();
         var providers = monoBehaviours.OfType<IDependencyProvider>().ToArray();
         var injectables = monoBehaviours.Where(IsInjectable).ToArray();

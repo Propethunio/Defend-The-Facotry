@@ -6,6 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_DefendTheFactory/Scenes/Core.unity
+    path: Assets/_DefendTheFactory/Scenes/Bootstrapper.unity
+    guid: c56d4a962daec3b429282ca46244afe0
+  - enabled: 1
+    path: Assets/_DefendTheFactory/Scenes/Gameplay.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/_DefendTheFactory/Scenes/Main Menu.unity
+    guid: dfa6f49b447b9e4469bd421346ba19be
+  - enabled: 1
+    path: Assets/_DefendTheFactory/Scenes/Core.unity
+    guid: fde883fc097b45541a729251de2c49ae
+  - enabled: 1
+    path: Assets/_DefendTheFactory/Scenes/GameUI.unity
+    guid: f35ac2d975efef340ae255876722c585
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 9ba349ca5337b8e4a84fab5d5c59ed9c,
+      type: 3}
+  m_UseUCBPForAssetBundles: 0

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : Component {
-    protected static T instance;
+    private static T instance;
     public static bool HasInstance => instance != null;
     public static T TryGetInstance() => instance ? instance : null;
     public static T Current => instance;
