@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace MoreMountains.Feedbacks
 {
 	[CustomPropertyDrawer(typeof(MMSpringFloat))]
-	class MMSpringFloatPropertyDrawer : PropertyDrawer
+	internal class MMSpringFloatPropertyDrawer : PropertyDrawer
 	{
 		protected float _lastTarget;
 		protected float _max;

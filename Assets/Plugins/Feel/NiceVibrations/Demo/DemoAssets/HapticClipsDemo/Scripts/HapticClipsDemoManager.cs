@@ -66,12 +66,12 @@ namespace Lofelt.NiceVibrations
             IconImage.sprite = DemoItems[0].AssociatedSprite;
         }
 
-        void OnHapticsStopped()
+        private void OnHapticsStopped()
         {
             StartCoroutine(BackToIdle());
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             HapticController.PlaybackStopped -= OnHapticsStopped;
             if (HapticController.IsPlaying())
@@ -80,13 +80,13 @@ namespace Lofelt.NiceVibrations
             }
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             HapticController.PlaybackStopped += OnHapticsStopped;
             StartCoroutine(BackToIdle());
         }
 
-        void OnApplicationFocus(bool hasFocus)
+        private void OnApplicationFocus(bool hasFocus)
         {
             if (hasFocus)
             {

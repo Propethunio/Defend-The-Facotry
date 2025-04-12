@@ -16,7 +16,7 @@ namespace MoreMountains.Tools
 		/// <param name="autoRotate"></param>
 		/// <param name="gizmoType"></param>
 		[DrawGizmo(GizmoType.InSelectionHierarchy)]
-		static void DrawHandles(MMAutoRotate autoRotate, GizmoType gizmoType)
+		private static void DrawHandles(MMAutoRotate autoRotate, GizmoType gizmoType)
 		{
 			MMAutoRotate myTarget = autoRotate;
 

@@ -36,7 +36,7 @@ namespace MoreMountains.Tools
 			FadeTween = fadeTween;
 		}
 
-		static MMSoundManagerSoundFadeEvent e;
+		private static MMSoundManagerSoundFadeEvent e;
 		public static void Trigger(Modes mode, int soundID, float fadeDuration, float finalVolume, MMTweenType fadeTween)
 		{
 			e.Mode = mode;

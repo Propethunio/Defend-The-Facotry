@@ -21,16 +21,16 @@ namespace Linework.WideOutline
             return this;
         }
     }
-    
-    static class ShaderPath
+
+    internal static class ShaderPath
     {
         public const string Mask = "Hidden/Outlines/Wide Outline/Mask";
         public const string Silhouette = "Hidden/Outlines/Wide Outline/Silhouette";
         public const string SilhouetteInstanced = "Hidden/Outlines/Wide Outline/Silhouette Instanced";
         public const string Outline = "Hidden/Outlines/Wide Outline/Outline";
     }
-    
-    static class ShaderPass
+
+    internal static class ShaderPass
     {
         public const int Mask = 0;
         public const int Silhouette = 0;
@@ -39,8 +39,8 @@ namespace Linework.WideOutline
         public const int FloodJump = 2;
         public const int Outline = 3;
     }
-    
-    static class ShaderPassName
+
+    internal static class ShaderPassName
     {
         public const string Mask = "Mask (Wide Outline)";
         public const string Silhouette = "Silhouette (Wide Outline)";
@@ -48,8 +48,8 @@ namespace Linework.WideOutline
         public const string Flood = "Flood (Wide Outline)";
         public const string Outline = "Outline (Wide Outline)";
     }
-    
-    static class ShaderPropertyId
+
+    internal static class ShaderPropertyId
     {
         public static readonly int OutlineOccludedColor = Shader.PropertyToID("_OutlineOccludedColor");
         public static readonly int OutlineWidth = Shader.PropertyToID("_OutlineWidth");
@@ -61,20 +61,20 @@ namespace Linework.WideOutline
         public static readonly int InformationBuffer = Shader.PropertyToID("_InformationBuffer");
         public static readonly int SilhouetteDepthBuffer = Shader.PropertyToID("_SilhouetteDepthBuffer");
     }
-    
-    static class ShaderFeature
+
+    internal static class ShaderFeature
     {
         public const string AlphaCutout = "ALPHA_CUTOUT";
         public const string CustomDepth = "CUSTOM_DEPTH";
         public const string InformationBuffer = "INFORMATION_BUFFER";
     }
-    
-    static class Keyword
+
+    internal static class Keyword
     {
         public static readonly GlobalKeyword OutlineColor = GlobalKeyword.Create("_OUTLINE_COLOR");
     }
-    
-    static class Buffer
+
+    internal static class Buffer
     {
         public const string Silhouette = "_SilhouetteBuffer";
         public const string SilhouetteDepth = "_SilhouetteDepthBuffer";

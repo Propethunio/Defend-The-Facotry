@@ -302,7 +302,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// </summary>
 	public struct MMPostProcessingVolumeAutoBlendURPShakeEvent
 	{
-		static MMPostProcessingVolumeAutoBlendURPShakeEvent e;
+		private static MMPostProcessingVolumeAutoBlendURPShakeEvent e;
 		
 		public MMChannelData ChannelData;
 		public MMGlobalPostProcessingVolumeAutoBlend_URP TargetAutoBlend;

@@ -83,7 +83,7 @@ namespace Lofelt.NiceVibrations
         ///
         /// This ensures that the initialization time is spent at startup instead of when
         /// the first haptic is triggered during gameplay.
-        void Start()
+        private void Start()
         {
             HapticController.Init();
         }
@@ -91,7 +91,7 @@ namespace Lofelt.NiceVibrations
         /// <summary>
         /// Forwards an application focus change event to HapticController.
         /// </summary>
-        void OnApplicationFocus(bool hasFocus)
+        private void OnApplicationFocus(bool hasFocus)
         {
             HapticController.ProcessApplicationFocus(hasFocus);
         }
@@ -100,7 +100,7 @@ namespace Lofelt.NiceVibrations
         /// Stops haptic playback on the gamepad when destroyed, to make sure the gamepad
         /// stops vibrating when quitting the application.
         /// </summary>
-        void OnDestroy()
+        private void OnDestroy()
         {
             GamepadRumbler.Stop();
         }

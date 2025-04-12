@@ -26,7 +26,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	public struct MMSpringFloatEvent
 	{
-		static MMSpringFloatEvent e;
+		private static MMSpringFloatEvent e;
 		
 		public MMChannelData ChannelData;
 		public MMSpringComponentBase TargetSpring;

@@ -17,7 +17,7 @@ namespace MoreMountains.Tools
 	/// </summary>
 	public struct MMGameEvent
 	{
-		static MMGameEvent e;
+		private static MMGameEvent e;
 		
 		public string EventName;
 		public int IntParameter;
@@ -81,7 +81,7 @@ namespace MoreMountains.Tools
 		private static Dictionary<Type, List<MMEventListenerBase>> _subscribersList;
 		
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-		static void InitializeStatics()
+		private static void InitializeStatics()
 		{
 			_subscribersList = new Dictionary<Type, List<MMEventListenerBase>>();
 		}

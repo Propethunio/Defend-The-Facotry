@@ -9,7 +9,7 @@ namespace MoreMountains.Tools
 	[CustomEditor(typeof(MMAspectRatioSafeZones), true)]
 	public class MMScreenshotEditor : Editor
 	{
-		static string FolderName = "Screenshots";
+		private static string FolderName = "Screenshots";
 
 		[MenuItem("Tools/More Mountains/Screenshot/Take Screenshot Real Size", false, 801)]
 		public static void MenuScreenshotSize1()

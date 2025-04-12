@@ -26,7 +26,7 @@ namespace MoreMountains.Tools
 			EnterState = enterState;
 		}
 
-		static AIStateEvent e;
+		private static AIStateEvent e;
 		public static void Trigger(AIBrain brain, AIState exitState, AIState enterState)
 		{
 			e.Brain = brain;

@@ -49,7 +49,7 @@ namespace MoreMountains.Tools
 			SwipeDuration = swipeDuration;
 		}
 
-		static MMSwipeEvent e;
+		private static MMSwipeEvent e;
 		public static void Trigger(MMPossibleSwipeDirections direction, float angle, float length, Vector2 origin, Vector2 destination, float swipeDuration)
 		{
 			e.SwipeDirection = direction;

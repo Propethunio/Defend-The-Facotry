@@ -43,7 +43,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// <summary>
 		/// On Start, stores volume, profile and DoF
 		/// </summary>
-		void Start()
+		private void Start()
 		{
 			_volume = GetComponent<Volume>();
 			_profile = _volume.profile;
@@ -53,7 +53,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 		/// <summary>
 		/// On update we set our focus distance and aperture
 		/// </summary>
-		void Update()
+		private void Update()
 		{
 			float distance = Vector3.Distance(CameraTransform.position, FocusTargets[Mathf.FloorToInt(FocusTargetID)].position);
 			_depthOfField.focusDistance.Override(distance);

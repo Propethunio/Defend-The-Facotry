@@ -14,8 +14,8 @@ namespace MoreMountains.Tools
 	/// </summary>
 	public class MMCleanEmptyFolders : MonoBehaviour
 	{
-		static string _consoleLog = "";
-		static List<DirectoryInfo> _listOfEmptyDirectories = new List<DirectoryInfo>();
+		private static string _consoleLog = "";
+		private static List<DirectoryInfo> _listOfEmptyDirectories = new List<DirectoryInfo>();
 
 		/// <summary>
 		/// Parses the project for empty directories and removes them, as well as their associated meta file
@@ -50,7 +50,7 @@ namespace MoreMountains.Tools
 		/// <param name="directory"></param>
 		/// <param name="listOfEmptyDirectories"></param>
 		/// <returns></returns>
-		static bool GetEmptyDirectories(DirectoryInfo directory, List<DirectoryInfo> listOfEmptyDirectories)
+		private static bool GetEmptyDirectories(DirectoryInfo directory, List<DirectoryInfo> listOfEmptyDirectories)
 		{
 			bool directoryIsEmpty = true;
 			directoryIsEmpty = (directory.GetDirectories().Count(x => !GetEmptyDirectories(x, listOfEmptyDirectories)) == 0) && (directory.GetFiles("*.*").All(x => x.Extension == ".meta"));

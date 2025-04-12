@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace MoreMountains.Tools
 {
-	static class MMMonoBehaviourFieldInfo
+internal static class MMMonoBehaviourFieldInfo
 	{
 		public static Dictionary<int, List<FieldInfo>> FieldInfoList = new Dictionary<int, List<FieldInfo>>();
 

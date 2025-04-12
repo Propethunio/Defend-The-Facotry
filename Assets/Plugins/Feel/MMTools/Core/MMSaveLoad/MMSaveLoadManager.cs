@@ -39,7 +39,7 @@ namespace MoreMountains.Tools
 		/// </summary>
 		/// <returns>The save path.</returns>
 		/// <param name="folderName">Folder name.</param>
-		static string DetermineSavePath(string folderName = _defaultFolderName)
+		private static string DetermineSavePath(string folderName = _defaultFolderName)
 		{
 			string savePath;
 			// depending on the device we're on, we assemble the path
@@ -64,7 +64,7 @@ namespace MoreMountains.Tools
 		/// </summary>
 		/// <returns>The save file name.</returns>
 		/// <param name="fileName">File name.</param>
-		static string DetermineSaveFileName(string fileName)
+		private static string DetermineSaveFileName(string fileName)
 		{
 			return fileName;
 		}

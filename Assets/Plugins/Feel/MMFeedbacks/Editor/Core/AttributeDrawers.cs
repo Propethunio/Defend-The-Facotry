@@ -151,11 +151,11 @@ namespace MoreMountains.Feedbacks
 	public class MMFInformationAttributeDrawer : PropertyDrawer
 	{
 		// determines the space after the help box, the space before the text box, and the width of the help box icon
-		const int spaceBeforeTheTextBox = 5;
-		const int spaceAfterTheTextBox = 10;
-		const int iconWidth = 55;
+		private const int spaceBeforeTheTextBox = 5;
+		private const int spaceAfterTheTextBox = 10;
+		private const int iconWidth = 55;
 
-		MMFInformationAttribute informationAttribute { get { return ((MMFInformationAttribute)attribute); } }
+		private MMFInformationAttribute informationAttribute { get { return ((MMFInformationAttribute)attribute); } }
 
 		/// <summary>
 		/// OnGUI, displays the property and the textbox in the specified order

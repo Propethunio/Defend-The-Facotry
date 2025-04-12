@@ -7,7 +7,7 @@ namespace MoreMountains.Tools
 	[CustomPropertyDrawer(typeof(AIAction))]
 	public class AIActionPropertyInspector : PropertyDrawer
 	{
-		const float LineHeight = 16f;
+		private const float LineHeight = 16f;
 
 		#if  UNITY_EDITOR
 

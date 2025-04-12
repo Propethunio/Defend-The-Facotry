@@ -10,23 +10,23 @@ namespace MoreMountains.Feedbacks
 	{
 		public static readonly GUIStyle SmallTickbox = new GUIStyle("ShurikenToggle");
 
-		static readonly Color _splitterdark = new Color(0.12f, 0.12f, 0.12f, 1.333f);
-		static readonly Color _splitterlight = new Color(0.6f, 0.6f, 0.6f, 1.333f);
+		private static readonly Color _splitterdark = new Color(0.12f, 0.12f, 0.12f, 1.333f);
+		private static readonly Color _splitterlight = new Color(0.6f, 0.6f, 0.6f, 1.333f);
 		public static Color Splitter { get { return EditorGUIUtility.isProSkin ? _splitterdark : _splitterlight; } }
 
-		static readonly Color _headerbackgrounddark = new Color(0.1f, 0.1f, 0.1f, 0.2f);
-		static readonly Color _headerbackgroundlight = new Color(1f, 1f, 1f, 0.4f);
+		private static readonly Color _headerbackgrounddark = new Color(0.1f, 0.1f, 0.1f, 0.2f);
+		private static readonly Color _headerbackgroundlight = new Color(1f, 1f, 1f, 0.4f);
 		public static Color HeaderBackground { get { return EditorGUIUtility.isProSkin ? _headerbackgrounddark : _headerbackgroundlight; } }
 
-		static readonly Color _reorderdark = new Color(1f, 1f, 1f, 0.2f);
-		static readonly Color _reorderlight = new Color(0.1f, 0.1f, 0.1f, 0.2f);
+		private static readonly Color _reorderdark = new Color(1f, 1f, 1f, 0.2f);
+		private static readonly Color _reorderlight = new Color(0.1f, 0.1f, 0.1f, 0.2f);
 		public static Color Reorder { get { return EditorGUIUtility.isProSkin ? _reorderdark : _reorderlight; } }
 
-		static readonly Color _timingDark = new Color(1f, 1f, 1f, 0.5f);
-		static readonly Color _timingLight = new Color(0f, 0f, 0f, 0.5f);
-        
-		static readonly Texture2D _paneoptionsicondark;
-		static readonly Texture2D _paneoptionsiconlight;
+		private static readonly Color _timingDark = new Color(1f, 1f, 1f, 0.5f);
+		private static readonly Color _timingLight = new Color(0f, 0f, 0f, 0.5f);
+
+		private static readonly Texture2D _paneoptionsicondark;
+		private static readonly Texture2D _paneoptionsiconlight;
 		public static Texture2D PaneOptionsIcon { get { return EditorGUIUtility.isProSkin ? _paneoptionsicondark : _paneoptionsiconlight; } }
 
 		static MMFeedbackStyling()

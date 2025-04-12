@@ -69,7 +69,7 @@ namespace MoreMountains.Feedbacks
 		public string ConditionEnum = "";
 		public bool Hidden = false;
 
-		BitArray bitArray = new BitArray(32);
+		private BitArray bitArray = new BitArray(32);
 		public bool ContainsBitFlag(int enumValue)
 		{
 			return bitArray.Get(enumValue);
@@ -340,7 +340,7 @@ namespace MoreMountains.Feedbacks
 
 	public static class MMFeedbackStaticMethods
 	{
-		static List<Component> m_ComponentCache = new List<Component>();
+		private static List<Component> m_ComponentCache = new List<Component>();
 
 		/// <summary>
 		/// Grabs a component without allocating memory uselessly

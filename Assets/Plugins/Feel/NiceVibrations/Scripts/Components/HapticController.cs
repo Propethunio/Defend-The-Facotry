@@ -38,32 +38,32 @@ namespace Lofelt.NiceVibrations
     /// cause undefined behaviour and memory leaks.
     public static class HapticController
     {
-        static bool lofeltHapticsInitalized = false;
+        private static bool lofeltHapticsInitalized = false;
 
         // Timer used to call HandleFinishedPlayback() when playback is complete
-        static Timer playbackFinishedTimer = new Timer();
+        private static Timer playbackFinishedTimer = new Timer();
 
         // Duration of the loaded haptic clip, in seconds
-        static float clipLoadedDurationSecs = 0.0f;
+        private static float clipLoadedDurationSecs = 0.0f;
 
         // Whether Load() has been called before
-        static bool clipLoaded = false;
+        private static bool clipLoaded = false;
 
         // The value of the last call to seek()
-        static float lastSeekTime = 0.0f;
+        private static float lastSeekTime = 0.0f;
 
         // Flag indicating if the device supports playing back .haptic clips
-        static bool deviceMeetsAdvancedRequirements = false;
+        private static bool deviceMeetsAdvancedRequirements = false;
 
         // Flag indicating if the user enabled playback looping.
         // This does not necessarily mean that the currently active playback is looping, for
         // example gamepads don't support looping.
-        static bool isLoopingEnabledByUser = false;
+        private static bool isLoopingEnabledByUser = false;
 
         // Flag indicating if the currently active playback is looping
-        static bool isPlaybackLooping = false;
+        private static bool isPlaybackLooping = false;
 
-        static HapticPatterns.PresetType _fallbackPreset = HapticPatterns.PresetType.None;
+        private static HapticPatterns.PresetType _fallbackPreset = HapticPatterns.PresetType.None;
 
         /// <summary>
         /// The haptic preset to be played when it's not possible to play a haptic clip
@@ -328,7 +328,7 @@ namespace Lofelt.NiceVibrations
             }
         }
 
-        static void HandleFinishedPlayback()
+        private static void HandleFinishedPlayback()
         {
             lastSeekTime = 0.0f;
             isPlaybackLooping = false;

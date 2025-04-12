@@ -113,7 +113,7 @@ namespace MoreMountains.Feedbacks
 		/// <param name="p1"></param>
 		/// <param name="p2"></param>
 		/// <returns></returns>
-		static int SortByTimestamp(MMSequenceNote p1, MMSequenceNote p2)
+		private static int SortByTimestamp(MMSequenceNote p1, MMSequenceNote p2)
 		{
 			return p1.Timestamp.CompareTo(p2.Timestamp);
 		}

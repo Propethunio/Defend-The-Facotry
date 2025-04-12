@@ -31,7 +31,7 @@ namespace MoreMountains.Tools
 		/// <summary>
 		/// On reset, we initialize our list
 		/// </summary>
-		void Reset()
+		private void Reset()
 		{
 			SignalList = new MMRadioSignalGeneratorItemList(){
 				new MMRadioSignalGeneratorItem()

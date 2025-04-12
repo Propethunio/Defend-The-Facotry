@@ -10,12 +10,12 @@ namespace MoreMountains.Tools
 	[CustomEditor(typeof(MMRendererSortingLayer), true)]
 	public class MMRendererLayerEditor : Editor
 	{
-		int popupMenuIndex;
-		string[] sortingLayerNames;
+		private int popupMenuIndex;
+		private string[] sortingLayerNames;
 		protected MMRendererSortingLayer _mmRendererSortingLayer;
 		protected Renderer _renderer;
 
-		void OnEnable()
+		private void OnEnable()
 		{
 			sortingLayerNames = GetSortingLayerNames(); 
 			_mmRendererSortingLayer = (MMRendererSortingLayer)target;

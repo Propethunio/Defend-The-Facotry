@@ -21,12 +21,12 @@ namespace MoreMountains.Tools
 		protected string _searchedMonoBehaviourName = "";
 		protected List<string> _resultsList;
 
-		static GUIStyle _padded;
-		static GUIStyle _horizontalPadded;
-		static int _horizontalPadding = 20;
-		static int _verticalPadding = 20;
-		static RectOffset _padding;
-		static RectOffset _horizontalPaddingOnly;
+		private static GUIStyle _padded;
+		private static GUIStyle _horizontalPadded;
+		private static int _horizontalPadding = 20;
+		private static int _verticalPadding = 20;
+		private static RectOffset _padding;
+		private static RectOffset _horizontalPaddingOnly;
 
 		/// <summary>
 		/// Menu bound method
@@ -52,7 +52,7 @@ namespace MoreMountains.Tools
 		/// <summary>
 		/// Initializes padding variables and GUI styles
 		/// </summary>
-		static void InitializePaddingAndStyles()
+		private static void InitializePaddingAndStyles()
 		{
 			if (_padding == null)
 			{

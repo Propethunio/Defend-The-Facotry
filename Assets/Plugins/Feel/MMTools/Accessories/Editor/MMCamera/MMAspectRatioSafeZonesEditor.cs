@@ -12,12 +12,12 @@ namespace MoreMountains.Tools
 	[CanEditMultipleObjects]
 	public class MMAspectRatioSafeZonesEditor : Editor
 	{
-		static MMAspectRatioSafeZones safeZones;
+		private static MMAspectRatioSafeZones safeZones;
 
 		/// <summary>
 		/// On enable, registers to the OnSceneGUI hook
 		/// </summary>
-		void OnEnable()
+		private void OnEnable()
 		{
 			SceneView.duringSceneGui -= OnSceneGUI;
 			safeZones = (MMAspectRatioSafeZones)target;

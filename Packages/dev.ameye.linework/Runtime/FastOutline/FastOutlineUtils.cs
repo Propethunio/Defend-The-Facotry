@@ -25,29 +25,29 @@ namespace Linework.FastOutline
             return this;
         }
     }
-    
-    static class ShaderPath
+
+    internal static class ShaderPath
     {
         public const string Mask = "Hidden/Outlines/Fast Outline/Mask";
         public const string Outline = "Hidden/Outlines/Fast Outline/Outline";
         public const string OutlineInstanced = "Hidden/Outlines/Fast Outline/Outline Instanced";
         public const string Clear = "Hidden/Clear Stencil";
     }
-    
-    static class ShaderPassName
+
+    internal static class ShaderPassName
     {
         public const string Mask = "Mask (Fast Outline)";
         public const string Outline = "Outline (Fast Outline)";
     }
 
-    static class ShaderPropertyId
+    internal static class ShaderPropertyId
     {
         public static readonly int OutlineOccludedColor = Shader.PropertyToID("_OutlineOccludedColor");
         public static readonly int OutlineWidth = Shader.PropertyToID("_OutlineWidth");
         public static readonly int MinOutlineWidth = Shader.PropertyToID("_MinimumOutlineWidth");
     }
 
-    static class ShaderFeature
+    internal static class ShaderFeature
     {
         public const string ScaleWithDistance = "SCALE_WITH_DISTANCE";
         public const string Occlusion = "OCCLUSION";

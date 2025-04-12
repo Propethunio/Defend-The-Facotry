@@ -86,7 +86,7 @@ namespace MoreMountains.Tools
 		/// <summary>
 		/// On reset, we initialize our list
 		/// </summary>
-		void Reset()
+		private void Reset()
 		{
 			Layers = new MMTilemapGeneratorLayerList(){
 				new MMTilemapGeneratorLayer()
@@ -194,7 +194,7 @@ namespace MoreMountains.Tools
 		/// Copies the tilemap's content after a delay because Unity.
 		/// </summary>
 		/// <param name="layer"></param>
-		async static void DelayedCopy(MMTilemapGeneratorLayer layer)
+		private async static void DelayedCopy(MMTilemapGeneratorLayer layer)
 		{
 			await Task.Delay(500);
 			MMTilemapShadow.Copy(layer.CopyTilemap, layer.TargetTilemap);

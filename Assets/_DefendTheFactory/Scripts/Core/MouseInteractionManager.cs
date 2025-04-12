@@ -52,7 +52,13 @@ public class MouseInteractionManager {
     }
 
     private void HandleMouseHover() {
-        if (isBuildingSystemEnabled || MyUtils.IsPointerOverUI()) return;
+        if (isBuildingSystemEnabled || MyUtils.IsPointerOverUI()) {
+            if (lastHoveredObject == null) return;
+
+            lastHoveredObject.MouseExitObject();
+            lastHoveredObject = null;
+            return;
+        }
 
         Ray ray = cam.ScreenPointToRay(input.mousePos);
 

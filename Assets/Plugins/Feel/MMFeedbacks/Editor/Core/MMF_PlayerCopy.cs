@@ -10,13 +10,13 @@ namespace MoreMountains.Feedbacks
 	/// <summary>
 	/// A helper class to copy and paste feedback properties
 	/// </summary>
-	static class MMF_PlayerCopy
+	internal static class MMF_PlayerCopy
 	{
 		static public System.Type Type { get; private set; }
 		public static readonly List<MMF_Feedback> CopiedFeedbacks = new List<MMF_Feedback>();
 		public static readonly Dictionary<MMF_Player, List<MMF_Feedback>> RuntimeChanges = new Dictionary<MMF_Player, List<MMF_Feedback>>();
 
-		static string[] IgnoreList = new string[]
+		private static string[] IgnoreList = new string[]
 		{
 			"m_ObjectHideFlags",
 			"m_CorrespondingSourceObject",

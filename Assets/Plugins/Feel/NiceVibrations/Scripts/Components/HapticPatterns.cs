@@ -22,9 +22,9 @@ namespace Lofelt.NiceVibrations
 
     public static class HapticPatterns
     {
-        static String emphasisTemplate;
-        static String constantTemplate;
-        static NumberFormatInfo numberFormat;
+        private static String emphasisTemplate;
+        private static String constantTemplate;
+        private static NumberFormatInfo numberFormat;
         static private float[] constantPatternTime = new float[] { 0.0f, 0.0f };
 
         /// <summary>
@@ -49,12 +49,12 @@ namespace Lofelt.NiceVibrations
         /// </summary>
         ///
         /// \ref time values have be incremental to be compatible with Preset.
-        struct Pattern
+        private struct Pattern
         {
             public float[] time;
             public float[] amplitude;
 
-            static String clipJsonTemplate;
+            private static String clipJsonTemplate;
 
             static Pattern()
             {
@@ -316,7 +316,7 @@ namespace Lofelt.NiceVibrations
         /// </summary>
         ///
         /// <param name="amplitude">The amplitude of the emphasis, from 0.0 to 1.0</param>
-        static PresetType presetTypeForEmphasis(float amplitude)
+        private static PresetType presetTypeForEmphasis(float amplitude)
         {
             if (amplitude > 0.5f)
             {
@@ -406,7 +406,7 @@ namespace Lofelt.NiceVibrations
             }
         }
 
-        static Preset GetPresetForType(PresetType type)
+        private static Preset GetPresetForType(PresetType type)
         {
             Debug.Assert(type != PresetType.None);
 

@@ -210,7 +210,7 @@ namespace MoreMountains.Tools
 			_numberOfVerticesLastTime = numberOfVertices;
 		}
 
-		MeshEdgePosition FindMeshEdgePosition(RaycastData minimumViewCast, RaycastData maximumViewCast)
+		private MeshEdgePosition FindMeshEdgePosition(RaycastData minimumViewCast, RaycastData maximumViewCast)
 		{
 			float minAngle = minimumViewCast.Angle;
 			float maxAngle = maximumViewCast.Angle;
@@ -238,7 +238,7 @@ namespace MoreMountains.Tools
 			return new MeshEdgePosition(_minPoint, _maxPoint);
 		}
 
-		RaycastData RaycastAtAngle(float angle)
+		private RaycastData RaycastAtAngle(float angle)
 		{
 			_direction = MMMaths.DirectionFromAngle2D(angle, 0f);
 

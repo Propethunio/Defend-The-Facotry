@@ -10,7 +10,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	public struct MMSpringColorEvent
 	{
-		static MMSpringColorEvent e;
+		private static MMSpringColorEvent e;
 		
 		public MMChannelData ChannelData;
 		public MMSpringComponentBase TargetSpring;

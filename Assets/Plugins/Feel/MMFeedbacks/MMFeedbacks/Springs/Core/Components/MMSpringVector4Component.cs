@@ -9,7 +9,7 @@ namespace MoreMountains.Feedbacks
 	/// </summary>
 	public struct MMSpringVector4Event
 	{
-		static MMSpringVector4Event e;
+		private static MMSpringVector4Event e;
 		
 		public MMChannelData ChannelData;
 		public MMSpringComponentBase TargetSpring;

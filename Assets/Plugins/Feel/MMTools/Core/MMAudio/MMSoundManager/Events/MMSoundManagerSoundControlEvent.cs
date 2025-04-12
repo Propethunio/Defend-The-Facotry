@@ -35,7 +35,7 @@ namespace MoreMountains.Tools
 			MMSoundManagerSoundControlEventType = eventType;
 		}
 
-		static MMSoundManagerSoundControlEvent e;
+		private static MMSoundManagerSoundControlEvent e;
 		public static void Trigger(MMSoundManagerSoundControlEventTypes eventType, int soundID, AudioSource source = null)
 		{
 			e.SoundID = soundID;

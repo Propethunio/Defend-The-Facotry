@@ -24,7 +24,7 @@ namespace MoreMountains.Tools
 		/// <summary>
 		/// On update, outputs a text on screen
 		/// </summary>
-		void Update()
+		private void Update()
 		{
 			float test = (Mathf.Sin(Time.time) + 2) * multiplier;
 			MMDebug.DebugOnScreen(Label, test);

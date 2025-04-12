@@ -21,7 +21,7 @@ namespace MoreMountains.Tools
 			Achievement = newAchievement;
 		}
 
-		static MMAchievementUnlockedEvent e;
+		private static MMAchievementUnlockedEvent e;
 		public static void Trigger(MMAchievement newAchievement)
 		{
 			e.Achievement = newAchievement;
@@ -43,7 +43,7 @@ namespace MoreMountains.Tools
 			Achievement = newAchievement;
 		}
 
-		static MMAchievementChangedEvent e;
+		private static MMAchievementChangedEvent e;
 		public static void Trigger(MMAchievement newAchievement)
 		{
 			e.Achievement = newAchievement;

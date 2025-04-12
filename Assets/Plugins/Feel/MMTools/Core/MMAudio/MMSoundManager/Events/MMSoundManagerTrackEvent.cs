@@ -37,7 +37,7 @@ namespace MoreMountains.Tools
 			Volume = volume;
 		}
 
-		static MMSoundManagerTrackEvent e;
+		private static MMSoundManagerTrackEvent e;
 		public static void Trigger(MMSoundManagerTrackEventTypes trackEventType, MMSoundManager.MMSoundManagerTracks track = MMSoundManager.MMSoundManagerTracks.Master, float volume = 1f)
 		{
 			e.TrackEventType = trackEventType;

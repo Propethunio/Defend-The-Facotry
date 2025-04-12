@@ -67,7 +67,7 @@ namespace MoreMountains.Tools
 			PersistenceID = persistenceID;
 		}
 
-		static MMPersistenceEvent e;
+		private static MMPersistenceEvent e;
 		public static void Trigger(MMPersistenceEventType eventType, string persistencyID)
 		{
 			e.PersistenceEventType = eventType;

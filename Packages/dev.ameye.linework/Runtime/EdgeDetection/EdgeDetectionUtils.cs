@@ -19,27 +19,27 @@ namespace Linework.EdgeDetection
             return this;
         }
     }
-    
-    static class ShaderPath
+
+    internal static class ShaderPath
     {
         public const string Outline = "Hidden/Outlines/Edge Detection/Outline";
         public const string Section = "Hidden/Outlines/Edge Detection/Section";
         public const string SectionMask = "Hidden/Outlines/Edge Detection/Section Mask";
     }
 
-    static class Keyword
+    internal static class Keyword
     {
         public static readonly GlobalKeyword ScreenSpaceOcclusion = GlobalKeyword.Create("_SCREEN_SPACE_OCCLUSION");
         public static readonly GlobalKeyword SectionPass = GlobalKeyword.Create("_SECTION_PASS");
     }
 
-    static class ShaderPassName
+    internal static class ShaderPassName
     {
         public const string Section = "Section (Edge Detection)";
         public const string Outline = "Outline (Edge Detection)";
     }
-    
-    static class ShaderPropertyId
+
+    internal static class ShaderPropertyId
     {
         // Line appearance.
         public static readonly int BackgroundColor = Shader.PropertyToID("_BackgroundColor");
@@ -67,7 +67,7 @@ namespace Linework.EdgeDetection
         public static readonly int SectionTexture = Shader.PropertyToID("_SectionTexture");
     }
 
-    static class Buffer
+    internal static class Buffer
     {
         public const string Section = "_SectionBuffer";
     }
@@ -106,8 +106,8 @@ namespace Linework.EdgeDetection
         [InspectorName("Sections")]
         Sections
     }
-    
-    static class ShaderFeature
+
+    internal static class ShaderFeature
     {
         public const string DepthDiscontinuity = "DEPTH";
         public const string NormalDiscontinuity = "NORMALS";

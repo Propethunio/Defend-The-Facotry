@@ -14,7 +14,7 @@ namespace MoreMountains.Tools
 		//protected SceneViewIcon _sceneViewIcon;
 
 		[DrawGizmo(GizmoType.InSelectionHierarchy | GizmoType.NotInSelectionHierarchy)]
-		static void DrawGameObjectName(MMSceneViewIcon sceneViewIcon, GizmoType gizmoType)
+		private static void DrawGameObjectName(MMSceneViewIcon sceneViewIcon, GizmoType gizmoType)
 		{   
 			GUIStyle style = new GUIStyle();
 			style.normal.textColor = Color.blue;	 

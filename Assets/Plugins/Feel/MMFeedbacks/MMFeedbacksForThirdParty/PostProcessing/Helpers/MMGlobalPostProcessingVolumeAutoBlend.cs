@@ -310,7 +310,7 @@ namespace MoreMountains.FeedbacksForThirdParty
 	/// </summary>
 	public struct MMPostProcessingVolumeAutoBlendShakeEvent
 	{
-		static MMPostProcessingVolumeAutoBlendShakeEvent e;
+		private static MMPostProcessingVolumeAutoBlendShakeEvent e;
 		
 		public MMChannelData ChannelData;
 		public MMGlobalPostProcessingVolumeAutoBlend TargetAutoBlend;

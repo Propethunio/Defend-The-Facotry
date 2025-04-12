@@ -395,7 +395,7 @@ namespace MoreMountains.Feedbacks
 		/// <summary>
 		/// On enable, starts listening for FreezeFrame events
 		/// </summary>
-		void OnEnable()
+		private void OnEnable()
 		{
 			MMFreezeFrameEvent.Register(OnMMFreezeFrameEvent);
 			MMTimeScaleEvent.Register(OnTimeScaleEvent);
@@ -404,7 +404,7 @@ namespace MoreMountains.Feedbacks
 		/// <summary>
 		/// On disable, stops listening for FreezeFrame events
 		/// </summary>
-		void OnDisable()
+		private void OnDisable()
 		{
 			MMFreezeFrameEvent.Unregister(OnMMFreezeFrameEvent);
 			MMTimeScaleEvent.Unregister(OnTimeScaleEvent);
