@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneLoader : Singleton<SceneLoader> {
     public event Action OnSceneLoaded;
@@ -27,6 +28,8 @@ public class SceneLoader : Singleton<SceneLoader> {
     }
 
     public async Task LoadSceneGroup(int index, bool loadImmediately = false) {
+        Scene activeScene = SceneManager.GetSceneByName("Bootstrapper");
+        SceneManager.SetActiveScene(activeScene);
         LoadingScreen loadingScreen = Instantiate(loadingScreenPrefab);
 
         if (loadImmediately) {

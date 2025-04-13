@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54ae495a0f247654688552ba94546b19, type: 3}
+  m_Name: SceneLoaderConfig
+  m_EditorClassIdentifier: 
+  sceneGroups:
+  - groupName: Full Game
+    scenes:
+    - asset: {fileID: 102900000, guid: fde883fc097b45541a729251de2c49ae, type: 3}
+      guid: fde883fc097b45541a729251de2c49ae
+    - asset: {fileID: 102900000, guid: 99c9720ab356a0642a771bea13969a05, type: 3}
+      guid: 99c9720ab356a0642a771bea13969a05
+    - asset: {fileID: 102900000, guid: f35ac2d975efef340ae255876722c585, type: 3}
+      guid: f35ac2d975efef340ae255876722c585
+  - groupName: Main Menu
+    scenes:
+    - asset: {fileID: 102900000, guid: dfa6f49b447b9e4469bd421346ba19be, type: 3}
+      guid: dfa6f49b447b9e4469bd421346ba19be
+  - groupName: Game UI
+    scenes:
+    - asset: {fileID: 102900000, guid: f35ac2d975efef340ae255876722c585, type: 3}
+      guid: f35ac2d975efef340ae255876722c585
+  - groupName: Core
+    scenes:
+    - asset: {fileID: 102900000, guid: fde883fc097b45541a729251de2c49ae, type: 3}
+      guid: fde883fc097b45541a729251de2c49ae
+  - groupName: Gameplay
+    scenes:
+    - asset: {fileID: 102900000, guid: 99c9720ab356a0642a771bea13969a05, type: 3}
+      guid: 99c9720ab356a0642a771bea13969a05
+  - groupName: Bootstrapper
+    scenes:
+    - asset: {fileID: 102900000, guid: c56d4a962daec3b429282ca46244afe0, type: 3}
+      guid: c56d4a962daec3b429282ca46244afe0
