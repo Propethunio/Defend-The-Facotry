@@ -11,13 +11,15 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO>, IItemPr
     public BasePlacedObject parentBuilding { get; private set; }
 
     private BuildingSystem buildingSystem;
+    private BeltManager beltManager;
 
     protected override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
         BaseDataSet(origin, dir, placedObjectDataSO);
     }
 
     protected override void Setup() {
-        buildingSystem = BuildingSystem.Instance;
+        buildingSystem = Injector.Resolve<BuildingSystem>();
+        beltManager = Injector.Resolve<BeltManager>();
         Vector2Int forwardVector = buildingSystem.GetDirForwardVector(dir);
         nextPosition = origin + forwardVector;
 
@@ -54,11 +56,11 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO>, IItemPr
 
         logisticMachine.OnDestroyed += () => {
             parentBuilding = null;
-            BeltManager.Instance.CheckForNewStartBeltConnections(this);
-            BeltManager.Instance.RefreshDebug();
+            beltManager.CheckForNewStartBeltConnections(this);
+            beltManager.RefreshDebug();
         };
 
-        BeltManager.Instance.RefreshDebug();
+        beltManager.RefreshDebug();
     }
 
     public bool HasItem() {
@@ -99,7 +101,7 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO>, IItemPr
     }
 
     public override void GridSetupDone() {
-        BeltManager.Instance.AddBelt(this);
+        beltManager.AddBelt(this);
 
         if (parentBuilding == null || parentBuilding is LogisticMachine<BaseBuildableObjectSO>) {
             OnVisualUpdate?.Invoke(origin, previousPosition);
@@ -115,7 +117,7 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO>, IItemPr
             endItem.DestroySelf();
         }
 
-        BeltManager.Instance.RemoveBelt(this);
+        beltManager.RemoveBelt(this);
         base.DestroySelf();
     }
 

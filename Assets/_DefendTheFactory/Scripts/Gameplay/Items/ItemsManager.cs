@@ -2,18 +2,12 @@ using System;
 using System.Collections.Generic;
 
 public class ItemsManager {
-    public static ItemsManager Instance { get; private set; }
-
     public event Action<ItemSO> ItemCreated;
     public event Action<ItemSO, int> ItemAdded;
     public event Action<ItemSO, int> ItemRemoved;
     public event Action<ItemSO, int> ItemChanged;
 
     private Dictionary<ItemSO, int> itemsAmounts { get; set; } = new();
-
-    public ItemsManager() {
-        Instance ??= this;
-    }
 
     public void AddItems(ItemSO item, int amount) {
         if (!itemsAmounts.TryAdd(item, amount)) {

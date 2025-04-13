@@ -1,9 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class TimeTickSystem : MonoBehaviour {
-    public static TimeTickSystem Instance { get; private set; }
-
+public class TimeTickSystem : DependencyMonoBehaviour<TimeTickSystem> {
     public event Action OnMicroTick;
     public event Action OnEarlyTick;
     public event Action OnTick;
@@ -15,11 +13,6 @@ public class TimeTickSystem : MonoBehaviour {
     private bool isTicking;
     private float tickTimer;
     private int productionTicksAmount;
-
-    private void Awake() {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
 
     private void Update() {
         if (!isTicking) return;

@@ -2,9 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour {
-    public static InputManager Instance { get; private set; }
-
+public class InputManager : DependencyMonoBehaviour<InputManager> {
     public Vector2 mousePos { get; private set; }
     public Vector2 moveDir { get; private set; }
     public float rotationDir { get; private set; }
@@ -16,10 +14,7 @@ public class InputManager : MonoBehaviour {
 
     private InputMap input;
 
-    private void Awake() {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-
+    private void Start() {
         input = new InputMap();
         SubscribeEvents();
         EnableGameInput();

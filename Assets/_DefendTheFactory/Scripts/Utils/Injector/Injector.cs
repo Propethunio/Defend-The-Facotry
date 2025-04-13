@@ -31,8 +31,23 @@ public class Injector : Singleton<Injector> {
         }
     }
 
-    public void Register<T>(T instance) {
-        registry[typeof(T)] = instance;
+    private void OnDestroy() {
+        ClearDependencies();
+        registry.Clear();
+        Debug.Log("[Injector] Registry cleared and dependencies wiped.");
+    }
+
+    public static void Register<T>(T instance) {
+        Instance.registry[typeof(T)] = instance;
+    }
+
+    public static T Resolve<T>() where T : class {
+        return Instance.Resolve(typeof(T)) as T;
+    }
+
+    private object Resolve(Type type) {
+        registry.TryGetValue(type, out var instance);
+        return instance;
     }
 
     private void Inject(object instance) {
@@ -156,11 +171,6 @@ public class Injector : Singleton<Injector> {
                 }
             }
         }
-    }
-
-    private object Resolve(Type type) {
-        registry.TryGetValue(type, out var instance);
-        return instance;
     }
 
     private static MonoBehaviour[] FindMonoBehaviours() {

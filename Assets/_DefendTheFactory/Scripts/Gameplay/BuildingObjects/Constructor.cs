@@ -39,13 +39,15 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
     }
 
     private void Subscribe() {
-        TimeTickSystem.Instance.OnMicroTick += OnMicroTick;
-        TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
+        TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
+        timeTickSystem.OnMicroTick += OnMicroTick;
+        timeTickSystem.OnEarlyTick += OnEarlyTick;
     }
 
     private void Unsubscribe() {
-        TimeTickSystem.Instance.OnMicroTick -= OnMicroTick;
-        TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
+        TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
+        timeTickSystem.OnMicroTick -= OnMicroTick;
+        timeTickSystem.OnEarlyTick -= OnEarlyTick;
     }
 
     public void SetupRecipe(int index) {

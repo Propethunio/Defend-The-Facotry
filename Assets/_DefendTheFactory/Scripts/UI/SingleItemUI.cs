@@ -9,11 +9,11 @@ public class SingleItemUI : MonoBehaviour {
     private ItemSO item;
 
     private void OnDestroy() {
-        ItemsManager.Instance.ItemChanged -= OnItemChanged;
+        Injector.Resolve<ItemsManager>().ItemChanged -= OnItemChanged;
     }
 
     public void Init(ItemSO item) {
-        ItemsManager.Instance.ItemChanged += OnItemChanged;
+        Injector.Resolve<ItemsManager>().ItemChanged += OnItemChanged;
         icon.sprite = item.icon;
         this.item = item;
     }

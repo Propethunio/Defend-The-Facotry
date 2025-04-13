@@ -4,8 +4,8 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasScaler))]
 [DisallowMultipleComponent]
 public class ResponsiveCanvasScaler : MonoBehaviour {
+    //TODO: REMOVE DEBUG SERIALIZE 
     [SerializeField] private float uiScale = 1f;
-
     private CanvasScaler canvasScaler;
     private Vector2 lastResolution;
 
@@ -16,6 +16,9 @@ public class ResponsiveCanvasScaler : MonoBehaviour {
     }
 
     private void Update() {
+        //TODO: REMOVE DEBUG APPLY SCALE
+        ApplyScale();
+        
         if (Mathf.Approximately(lastResolution.x, Screen.width) && Mathf.Approximately(lastResolution.y, Screen.height)) return;
 
         lastResolution = new Vector2(Screen.width, Screen.height);

@@ -4,11 +4,11 @@ public class ItemsUI : MonoBehaviour {
     [SerializeField] private SingleItemUI itemPrefab;
 
     private void Start() {
-        ItemsManager.Instance.ItemCreated += OnItemCreated;
+        Injector.Resolve<ItemsManager>().ItemCreated += OnItemCreated;
     }
 
     private void OnDestroy() {
-        ItemsManager.Instance.ItemCreated -= OnItemCreated;
+        Injector.Resolve<ItemsManager>().ItemCreated -= OnItemCreated;
     }
 
     private void OnItemCreated(ItemSO item) {

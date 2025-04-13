@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class ConveyorBeltVisualController : MonoBehaviour {
-
     [SerializeField] private ConveyorBelt _conveyorBelt;
     [SerializeField] private GameObject _straightBeltVisual;
     [SerializeField] private GameObject _leftTurnVisual;
@@ -17,10 +16,10 @@ public class ConveyorBeltVisualController : MonoBehaviour {
 
     private void UpdateVisuals(Vector2Int origin, Vector2Int previousPosition) {
         _conveyorBelt.OnVisualUpdate -= UpdateVisuals;
-        Vector2Int forwardVector = BuildingSystem.Instance.GetDirForwardVector(_conveyorBelt.dir);
+        Vector2Int forwardVector = Injector.Resolve<BuildingSystem>().GetDirForwardVector(_conveyorBelt.dir);
         Vector2Int backPosition = origin - forwardVector;
 
-        if(previousPosition == backPosition) {
+        if (previousPosition == backPosition) {
             ShowStraightVisual();
             return;
         }
@@ -28,9 +27,10 @@ public class ConveyorBeltVisualController : MonoBehaviour {
         Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
         Vector2Int leftPosition = origin - rightVector;
 
-        if(previousPosition == leftPosition) {
+        if (previousPosition == leftPosition) {
             ShowLeftVisual();
-        } else {
+        }
+        else {
             ShowRightVisual();
         }
     }

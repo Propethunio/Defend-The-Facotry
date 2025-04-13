@@ -11,13 +11,15 @@ public class GhostBeltVisualController : MonoBehaviour {
     private BuildingSystem buildingSystem;
     private GridCell[,] gridArray;
     private ConveyorBeltVisualController modifiedBeltVisual;
+    private Mouse3D mouse3D;
 
     private void Start() {
-        beltManager = BeltManager.Instance;
-        buildingSystem = BuildingSystem.Instance;
+        beltManager = Injector.Resolve<BeltManager>();
+        buildingSystem = Injector.Resolve<BuildingSystem>();
+        buildingGhost = Injector.Resolve<BuildingGhost>();
+        mouse3D = Injector.Resolve<Mouse3D>();
         gridArray = buildingSystem.grid.gridArray;
         buildingSystem.OnObjectPlaced += ResetModifiedBelt;
-        buildingGhost = BuildingGhost.Instance;
         buildingGhost.positionChanged += SetVisual;
     }
 
@@ -31,7 +33,7 @@ public class GhostBeltVisualController : MonoBehaviour {
     }
 
     private void SetVisual() {
-        Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition);
+        mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition);
         origin = new Vector2Int((int)mousePosition.x, (int)mousePosition.z);
         Vector2Int forwardVector = buildingSystem.GetDirForwardVector(buildingSystem.dir);
 

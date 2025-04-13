@@ -7,16 +7,16 @@ public class EnemyLogic : MonoBehaviour {
     public bool isFlying { get; private set; }
     public int pathPointIndex { get; private set; }
     public int health { get; private set; } = 100;
-    public int shield{ get; private set; }
-    public float speed{ get; private set; }
-    
+    public int shield { get; private set; }
+    public float speed { get; private set; }
+
     private int damage;
     private Vector3 nextPoint;
     private WaveManager waveManager;
     private int pathPointsCount;
 
     public void Init(float speed) {
-        waveManager = WaveManager.Instance;
+        waveManager = Injector.Resolve<WaveManager>();
         pathPointsCount = waveManager.pathPoints.Count;
         this.speed = speed;
         SetNextPoint();
@@ -53,7 +53,7 @@ public class EnemyLogic : MonoBehaviour {
         OnDeath?.Invoke(this);
         Destroy(gameObject);
     }
-    
+
     public void DamageMe(int damage) {
         health -= damage;
 

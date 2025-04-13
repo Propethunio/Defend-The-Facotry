@@ -15,7 +15,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
 
     public override void GridSetupDone() {
         base.GridSetupDone();
-        Vector2Int forwardVector = BuildingSystem.Instance.GetDirForwardVector(dir);
+        Vector2Int forwardVector = Injector.Resolve<BuildingSystem>().GetDirForwardVector(dir);
         Vector2Int nextPosition = origin + forwardVector;
         Vector2Int backPosition = origin - forwardVector;
         Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
@@ -44,7 +44,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
     }
 
     public override bool IsOnOutputCell(Vector2Int position) {
-        return BuildingSystem.Instance.GetDirForwardVector(dir) + origin == position;
+        return Injector.Resolve<BuildingSystem>().GetDirForwardVector(dir) + origin == position;
     }
 
     private void HandleGridObjectChange(LogisticDir dir) {
@@ -132,6 +132,6 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
     }
 
     public override bool ShouldSnapWithLogisticMachine(Vector2Int logisticMachineOrigin) {
-        return origin + BuildingSystem.Instance.GetDirForwardVector(dir) == logisticMachineOrigin;
+        return origin + Injector.Resolve<BuildingSystem>().GetDirForwardVector(dir) == logisticMachineOrigin;
     }
 }

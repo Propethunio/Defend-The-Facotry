@@ -5,23 +5,18 @@ using UnityEngine;
 using UtilsClass;
 
 public class BeltManager {
-    public static BeltManager Instance { get; private set; }
-
     public event Action OnBeltAdded;
     public event Action OnBeltRemoved;
 
     public Dictionary<ConveyorBelt, BeltPath> beltEndsDict { get; private set; } = new();
 
-    private GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
+    private GridCell[,] gridArray;
     private List<BeltPath> beltPathList = new();
     private Transform debugVisualParent;
 
-    public BeltManager(bool showDebug) {
-        if (Instance == null) Instance = this;
-        else return;
-
-        TimeTickSystem.Instance.OnTick += OnTick;
-
+    public void Init(bool showDebug) {
+        gridArray = Injector.Resolve<BuildingSystem>().grid.gridArray;
+        Injector.Resolve<TimeTickSystem>().OnTick += OnTick;
         if (!showDebug) return;
 
         debugVisualParent = new GameObject("Belt Debug Visual").transform;
@@ -29,7 +24,7 @@ public class BeltManager {
     }
 
     ~BeltManager() {
-        TimeTickSystem.Instance.OnTick -= OnTick;
+        Injector.Resolve<TimeTickSystem>().OnTick -= OnTick;
     }
 
     private void OnTick() {
@@ -489,11 +484,14 @@ public class BeltManager {
     public void RefreshDebug() {
         OnBeltAdded?.Invoke();
     }
-    
-    /* --------------- BELT DEBUG VISUAL --------------- */
+
+    /* ------------------------------------------------------- */
+    /* ------------------ BELT DEBUG VISUAL ------------------ */
+    /* ------------------------------------------------------- */
 
     private class DebugVisual {
         private readonly List<BeltPathDebugVisual> beltPathDebugVisualList = new();
+        private BeltManager Instance = Injector.Resolve<BeltManager>();
 
         public DebugVisual() {
             Instance.OnBeltAdded += Instance_OnBeltAdded;
@@ -530,13 +528,14 @@ public class BeltManager {
 
     private class BeltPathDebugVisual {
         private readonly Transform pathParent;
+        private BeltManager Instance = Injector.Resolve<BeltManager>();
 
         public BeltPathDebugVisual(BeltPath beltPath, int pathNumber) {
             pathParent = new GameObject($"Path: {pathNumber}").transform;
             pathParent.parent = Instance.debugVisualParent;
 
             Vector2Int gridPosition = beltPath.beltList[0].origin;
-            Transform nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
+            Transform nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, Injector.Resolve<BuildingSystem>().GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
 
             if (beltPath.beltList.Count == 1) {
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.magenta;
@@ -547,8 +546,8 @@ public class BeltManager {
             nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = beltPath.beltList[0].parentBuilding is LogisticMachine<BaseBuildableObjectSO> ? Color.cyan : Color.green;
 
             gridPosition = beltPath.beltList[^1].origin;
-            nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
-            
+            nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, Injector.Resolve<BuildingSystem>().GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
+
             nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Instance.gridArray[beltPath.beltList[^1].nextPosition.x, beltPath.beltList[^1].nextPosition.y].placedObject is LogisticMachine<BaseBuildableObjectSO> ? Color.black : Color.red;
 
             for (int i = 0; i < beltPath.beltList.Count - 1; i++) {
@@ -558,21 +557,21 @@ public class BeltManager {
                 Vector2Int nextGridPosition = nextBelt.origin;
 
                 if (i > 0) {
-                    nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, BuildingSystem.Instance.GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
+                    nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualNode, Injector.Resolve<BuildingSystem>().GetWorldPosition(gridPosition), Quaternion.identity, pathParent);
                     nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.blue;
                 }
 
-                nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, BuildingSystem.Instance.GetWorldPosition(gridPosition) + new Vector3(.5f, 0, .5f), Quaternion.identity, pathParent);
+                nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, Injector.Resolve<BuildingSystem>().GetWorldPosition(gridPosition) + new Vector3(.5f, 0, .5f), Quaternion.identity, pathParent);
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.yellow;
-                Vector3 dirToNextBelt = (BuildingSystem.Instance.GetWorldPosition(nextGridPosition) - BuildingSystem.Instance.GetWorldPosition(gridPosition)).normalized;
+                Vector3 dirToNextBelt = (Injector.Resolve<BuildingSystem>().GetWorldPosition(nextGridPosition) - Injector.Resolve<BuildingSystem>().GetWorldPosition(gridPosition)).normalized;
                 nodeVisual.eulerAngles = new Vector3(0, -MyUtils.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
             }
 
             if (beltPath.beltList[^1].nextPosition == beltPath.beltList[0].origin && beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition) {
                 gridPosition = beltPath.beltList[^1].origin;
-                nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, BuildingSystem.Instance.GetWorldPosition(gridPosition) + new Vector3(.5f, 0, .5f), Quaternion.identity, pathParent);
+                nodeVisual = GameObject.Instantiate(GameAssets.i.pfBeltDebugVisualLine, Injector.Resolve<BuildingSystem>().GetWorldPosition(gridPosition) + new Vector3(.5f, 0, .5f), Quaternion.identity, pathParent);
                 nodeVisual.Find("Sprite").GetComponent<SpriteRenderer>().color = Color.yellow;
-                Vector3 dirToNextBelt = (BuildingSystem.Instance.GetWorldPosition(beltPath.beltList[0].origin) - BuildingSystem.Instance.GetWorldPosition(gridPosition)).normalized;
+                Vector3 dirToNextBelt = (Injector.Resolve<BuildingSystem>().GetWorldPosition(beltPath.beltList[0].origin) - Injector.Resolve<BuildingSystem>().GetWorldPosition(gridPosition)).normalized;
                 nodeVisual.eulerAngles = new Vector3(0, -MyUtils.GetAngleFromVectorFloat3D(dirToNextBelt), 0);
             }
 

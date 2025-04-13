@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class TilemapVisual : MonoBehaviour {
-    public static TilemapVisual Instance { get; private set; }
-
+public class TilemapVisual : DependencyMonoBehaviour<TilemapVisual> {
     [System.Serializable]
     public struct TilemapSpriteUV {
         public TilemapSprite tilemapSprite;
@@ -24,10 +22,7 @@ public class TilemapVisual : MonoBehaviour {
     private Mesh mesh;
     private Dictionary<TilemapSprite, UVCoords> uvCoordsDictionary;
 
-    private void Awake() {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-
+    private void Start() {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         Texture texture = GetComponent<MeshRenderer>().material.mainTexture;
@@ -40,9 +35,7 @@ public class TilemapVisual : MonoBehaviour {
         }
     }
 
-    private void LateUpdate() {
-        updateMesh = true;
-
+    private void LateUpdate() { 
         if (!updateMesh) return;
 
         updateMesh = false;

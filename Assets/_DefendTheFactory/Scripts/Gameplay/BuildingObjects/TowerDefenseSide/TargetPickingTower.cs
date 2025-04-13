@@ -45,11 +45,11 @@ public class TargetPickingTower : BaseTower<TargetPickingTowerSO> {
     }
 
     private void Subscribe() {
-        TimeTickSystem.Instance.OnMicroTick += CalculateTarget;
+        Injector.Resolve<TimeTickSystem>().OnMicroTick += CalculateTarget;
     }
 
     private void Unsubscribe() {
-        TimeTickSystem.Instance.OnMicroTick -= CalculateTarget;
+        Injector.Resolve<TimeTickSystem>().OnMicroTick -= CalculateTarget;
     }
 
     private void CalculateTarget() {

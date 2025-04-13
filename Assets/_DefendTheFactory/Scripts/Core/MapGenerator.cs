@@ -27,6 +27,8 @@ public class MapGenerator {
     private Vector2Int splitPadding;
     private int splitAmount;
     private HashSet<Vector2Int> basePaddingCells = new HashSet<Vector2Int>();
+    private BuildingSystem buildingSystem;
+    private WaveManager waveManager;
 
     public MapGenerator(MapDataSO mapData) {
         data = mapData;
@@ -39,6 +41,8 @@ public class MapGenerator {
         terrainParent.parent = mainParent;
         pathParent.parent = mainParent;
         resourcesParent.parent = mainParent;
+        buildingSystem = Injector.Resolve<BuildingSystem>();
+        waveManager = Injector.Resolve<WaveManager>();
     }
 
     public void GenerateMap(bool async) {
@@ -78,7 +82,7 @@ public class MapGenerator {
         }
 
         PopulateMap();
-        WaveManager.Instance.SetPath(path);
+        waveManager.SetPath(path);
     }
 
     private void GeneratePath(int x, int y, int portalX, int portalBorder) {
@@ -512,6 +516,7 @@ public class MapGenerator {
     private GameObject GetPathCellPrefab(int value) {
         if (value is 1 or 2 or 3 or 12) return data.pathStraightPrefab;
         if (value is 5 or 6 or 9 or 10) return data.pathTurnPrefab;
+
         return value is 7 or 11 or 13 or 14 ? data.pathTurnPrefab : null;
     }
 
@@ -519,6 +524,7 @@ public class MapGenerator {
         if (value is 9 or 11 or 12) return 0;
         if (value is 1 or 2 or 3 or 14 or 10) return 90;
         if (value is 7 or 6) return 180;
+
         return value is 5 or 13 ? 270 : 0;
     }
 
@@ -531,7 +537,7 @@ public class MapGenerator {
     }
 
     private void LayPath() {
-        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+        GridCell[,] grid = buildingSystem.grid.gridArray;
 
         foreach (var cell in path) {
             grid[cell.x, cell.y].MarkPathCell();
@@ -552,18 +558,18 @@ public class MapGenerator {
 
     private void SpawnPortal() {
         Vector2Int origin = pathEnd + new Vector2Int(-data.portalData.width, -data.baseData.height / 2);
-        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down, mainParent);
+        buildingSystem.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down, mainParent);
         Vector2 enemySpawnPosition = data.portalData.GetCenterPosition(origin, BuildingDir.Down) + data.portalData.spawnPointOffsetFromCenter;
-        WaveManager.Instance.SetSpawnPosition(new Vector3(enemySpawnPosition.x, 0f, enemySpawnPosition.y));
+        waveManager.SetSpawnPosition(new Vector3(enemySpawnPosition.x, 0f, enemySpawnPosition.y));
     }
 
     private void SpawnBase() {
         Vector2Int origin = pathStart + new Vector2Int(1, -data.baseData.height / 2);
-        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.baseData, BuildingDir.Right, mainParent);
+        buildingSystem.TryPlaceMapGeneratedObject(origin, data.baseData, BuildingDir.Right, mainParent);
         Vector2 baseCenterPosition = data.baseData.GetCenterPosition(origin, BuildingDir.Right);
         int endX = (int)baseCenterPosition.x + data.basePaddingPreventingObjectGeneration;
         int endY = (int)baseCenterPosition.y + data.basePaddingPreventingObjectGeneration;
-        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+        GridCell[,] grid = buildingSystem.grid.gridArray;
 
         for (int x = (int)baseCenterPosition.x - data.basePaddingPreventingObjectGeneration; x <= endX; x++) {
             for (int y = (int)baseCenterPosition.y - data.basePaddingPreventingObjectGeneration; y <= endY; y++) {
@@ -588,10 +594,10 @@ public class MapGenerator {
         int spawnsCount = spawnLocations.Count;
 
         for (int i = 0; i < spawnsCount; i++) {
-            BuildingSystem.Instance.TryPlaceMapGeneratedObject(spawnLocations[i], SelectRandomResourceSO(), GetRandomRotation(), resourcesParent);
+            buildingSystem.TryPlaceMapGeneratedObject(spawnLocations[i], SelectRandomResourceSO(), GetRandomRotation(), resourcesParent);
         }
 
-        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+        GridCell[,] grid = buildingSystem.grid.gridArray;
 
         foreach (Vector2Int basePaddingCell in basePaddingCells) {
             grid[basePaddingCell.x, basePaddingCell.y].UnmarkPathCell();
@@ -633,7 +639,7 @@ public class MapGenerator {
     }
 
     private async Task LayPathAsync() {
-        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+        GridCell[,] grid = buildingSystem.grid.gridArray;
 
         foreach (var cell in path) {
             grid[cell.x, cell.y].MarkPathCell();
@@ -676,18 +682,18 @@ public class MapGenerator {
         await Task.Delay(500);
 
         Vector2Int origin = pathEnd + new Vector2Int(-data.portalData.width, -data.baseData.height / 2);
-        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down, mainParent);
+        buildingSystem.TryPlaceMapGeneratedObject(origin, data.portalData, BuildingDir.Down, mainParent);
     }
 
     private async Task SpawnBaseAsync() {
         await Task.Delay(300);
 
         Vector2Int origin = pathStart + new Vector2Int(1, -data.baseData.height / 2);
-        BuildingSystem.Instance.TryPlaceMapGeneratedObject(origin, data.baseData, BuildingDir.Right, mainParent);
+        buildingSystem.TryPlaceMapGeneratedObject(origin, data.baseData, BuildingDir.Right, mainParent);
         Vector2 baseCenterPosition = data.baseData.GetCenterPosition(origin, BuildingDir.Right);
         int endX = (int)baseCenterPosition.x + data.basePaddingPreventingObjectGeneration;
         int endY = (int)baseCenterPosition.y + data.basePaddingPreventingObjectGeneration;
-        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+        GridCell[,] grid = buildingSystem.grid.gridArray;
 
         for (int x = (int)baseCenterPosition.x - data.basePaddingPreventingObjectGeneration; x <= endX; x++) {
             for (int y = (int)baseCenterPosition.y - data.basePaddingPreventingObjectGeneration; y <= endY; y++) {
@@ -715,11 +721,11 @@ public class MapGenerator {
         int spawnsCount = spawnLocations.Count;
 
         for (int i = 0; i < spawnsCount; i++) {
-            BuildingSystem.Instance.TryPlaceMapGeneratedObject(spawnLocations[i], SelectRandomResourceSO(), GetRandomRotation(), resourcesParent);
+            buildingSystem.TryPlaceMapGeneratedObject(spawnLocations[i], SelectRandomResourceSO(), GetRandomRotation(), resourcesParent);
             await Task.Delay(5);
         }
 
-        GridCell[,] grid = BuildingSystem.Instance.grid.gridArray;
+        GridCell[,] grid = buildingSystem.grid.gridArray;
 
         foreach (Vector2Int basePaddingCell in basePaddingCells) {
             grid[basePaddingCell.x, basePaddingCell.y].UnmarkPathCell();

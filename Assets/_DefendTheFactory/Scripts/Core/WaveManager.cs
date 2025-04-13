@@ -2,26 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WaveManager {
-    public static WaveManager Instance { get; private set; }
-
     private Vector3 spawnPosition;
     private Transform enemyParentTransform;
-
     private EnemyLogic enemy;
-
     public List<Vector2Int> pathPoints { get; private set; } = new List<Vector2Int>();
 
-    public WaveManager(EnemyLogic enemy) {
-        if (Instance == null) Instance = this;
-        else return;
-
+    public void Init(EnemyLogic enemy) {
         enemyParentTransform = new GameObject("Enemies").transform;
         this.enemy = enemy;
-        TimeTickSystem.Instance.OnTick += OnTick;
+        Injector.Resolve<TimeTickSystem>().OnTick += OnTick;
     }
 
     ~WaveManager() {
-        TimeTickSystem.Instance.OnTick -= OnTick;
+        Injector.Resolve<TimeTickSystem>().OnTick -= OnTick;
     }
 
     public void SetPath(List<Vector2Int> pathCells) {

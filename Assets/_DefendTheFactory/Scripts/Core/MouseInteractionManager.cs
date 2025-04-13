@@ -9,7 +9,7 @@ public class MouseInteractionManager {
 
     public MouseInteractionManager() {
         cam = Camera.main;
-        input = InputManager.Instance;
+        input = Injector.Resolve<InputManager>();
         Subscribe();
     }
 
@@ -18,7 +18,7 @@ public class MouseInteractionManager {
     }
 
     private void Subscribe() {
-        BuildingSystem buildingSystem = BuildingSystem.Instance;
+        BuildingSystem buildingSystem = Injector.Resolve<BuildingSystem>();
         buildingSystem.OnSystemEnabled += BuildingSystemEnabled;
         buildingSystem.OnSystemDisabled += BuildingSystemDisabled;
         input.leftClickAction += HandleLeftClickAction;
@@ -26,7 +26,7 @@ public class MouseInteractionManager {
     }
 
     private void Unsubscribe() {
-        BuildingSystem buildingSystem = BuildingSystem.Instance;
+        BuildingSystem buildingSystem = Injector.Resolve<BuildingSystem>();
         buildingSystem.OnSystemEnabled -= BuildingSystemEnabled;
         buildingSystem.OnSystemDisabled -= BuildingSystemDisabled;
         input.leftClickAction -= HandleLeftClickAction;

@@ -19,7 +19,7 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T>, IItemProvide
     }
 
     public override void GridSetupDone() {
-        gridArray = BuildingSystem.Instance.grid.gridArray;
+        gridArray = Injector.Resolve<BuildingSystem>().grid.gridArray;
         Subscribe();
     }
 
@@ -34,13 +34,15 @@ public abstract class LogisticMachine<T> : BaseDataPlacedObject<T>, IItemProvide
     }
 
     private void Subscribe() {
-        TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
-        TimeTickSystem.Instance.OnLateTick += OnLateTick;
+        TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
+        timeTickSystem.OnEarlyTick += OnEarlyTick;
+        timeTickSystem.OnLateTick += OnLateTick;
     }
 
     private void Unsubscribe() {
-        TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
-        TimeTickSystem.Instance.OnLateTick -= OnLateTick;
+        TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
+        timeTickSystem.OnEarlyTick -= OnEarlyTick;
+        timeTickSystem.OnLateTick -= OnLateTick;
 
         foreach (KeyValuePair<Action, Vector2Int> kvp in objectChangedEvents) {
             gridArray[kvp.Value.x, kvp.Value.y].ObjectChanged -= kvp.Key;

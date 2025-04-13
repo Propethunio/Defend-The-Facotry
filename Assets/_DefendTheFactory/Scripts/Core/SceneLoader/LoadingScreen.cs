@@ -14,7 +14,6 @@ public class LoadingScreen : MonoBehaviour {
     private bool canJumpInValue = true;
 
     private void Update() {
-        Debug.Log(loadingBar.value);
         float currentFillAmount = loadingBar.value;
         float progressDifference = Mathf.Abs(currentFillAmount - targetProgress);
         float dynamicFillSpeed = progressDifference * baseFillSpeed;

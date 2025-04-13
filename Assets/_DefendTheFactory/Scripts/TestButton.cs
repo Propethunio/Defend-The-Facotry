@@ -7,6 +7,6 @@ public class TestButton : MonoBehaviour {
 
     private void Start() {
         GetComponentInChildren<TMP_Text>().text = obj.nameString;
-        GetComponent<Button>().onClick.AddListener(() => BuildingSystem.Instance.Test(obj));
+        GetComponent<Button>().onClick.AddListener(() => Injector.Resolve<BuildingSystem>().Test(obj));
     }
 }

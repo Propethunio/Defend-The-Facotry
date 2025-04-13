@@ -10,6 +10,6 @@ public class TilemapCell {
 
     public void SetTilemapSprite(TilemapSprite tilemapSprite) {
         this.tilemapSprite = tilemapSprite;
-        TilemapVisual.Instance.grid.TriggerGridObjectChanged(x, y);
+        Injector.Resolve<TilemapVisual>().grid.TriggerGridObjectChanged(x, y);
     }
 }

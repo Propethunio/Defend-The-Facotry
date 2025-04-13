@@ -4,8 +4,6 @@ using UnityEngine;
 using UtilsClass;
 
 public class BuildingSystem {
-    public static BuildingSystem Instance { get; private set; }
-
     public event Action OnSystemEnabled;
     public event Action OnSystemDisabled;
     public Action OnSelectedObject;
@@ -20,15 +18,16 @@ public class BuildingSystem {
     private ItemsManager itemsManager;
     private bool isBuildingSystemActive;
     private bool isDemolishActive;
+    private TilemapVisual tilemapVisual;
+    private Mouse3D mouse3D;
 
-    public BuildingSystem(int width, int height) {
-        if (Instance == null) Instance = this;
-        else return;
-
+    public void Init(int width, int height) {
         grid = new Grid<GridCell>(width, height, (_, _, _) => new GridCell());
-        inputManager = InputManager.Instance;
-        itemsManager = ItemsManager.Instance;
-        BuildingGhost.Instance.Init();
+        inputManager = Injector.Resolve<InputManager>();
+        itemsManager = Injector.Resolve<ItemsManager>();
+        tilemapVisual = Injector.Resolve<TilemapVisual>();
+        mouse3D = Injector.Resolve<Mouse3D>();
+        Injector.Resolve<BuildingGhost>().Init();
     }
 
     ~BuildingSystem() {
@@ -45,7 +44,7 @@ public class BuildingSystem {
 
         dir = BuildingDir.Down;
         isBuildingSystemActive = true;
-        TilemapVisual.Instance.Show();
+        tilemapVisual.Show();
         Subscribe();
         OnSystemEnabled?.Invoke();
     }
@@ -56,7 +55,7 @@ public class BuildingSystem {
         placedObjectTypeSO = null;
         isBuildingSystemActive = false;
         isDemolishActive = false;
-        TilemapVisual.Instance.Hide();
+        tilemapVisual.Hide();
         OnBuildCanceled?.Invoke();
         Unsubscribe();
         OnSystemDisabled?.Invoke();
@@ -77,7 +76,7 @@ public class BuildingSystem {
     }
 
     private void HandleObjectPlacement() {
-        if (MyUtils.IsPointerOverUI() || !Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
+        if (MyUtils.IsPointerOverUI() || !mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
 
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);
@@ -90,7 +89,7 @@ public class BuildingSystem {
     }
 
     public void HandleDemolish() {
-        if (!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
+        if (!mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
 
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);
@@ -115,7 +114,7 @@ public class BuildingSystem {
         for (int x = 0; x < grid.width; x++) {
             for (int y = 0; y < grid.height; y++) {
                 // Tilemap
-                TilemapVisual.Instance.SetTilemapSprite(new Vector3(x, y), grid.gridArray[x, y].placedObject == null ? TilemapSprite.CanBuild : TilemapSprite.CannotBuild);
+                tilemapVisual.SetTilemapSprite(new Vector3(x, y), grid.gridArray[x, y].placedObject == null ? TilemapSprite.CanBuild : TilemapSprite.CannotBuild);
             }
         }
     }
@@ -131,10 +130,10 @@ public class BuildingSystem {
         UpdateCanBuildTilemap();
 
         if (placedObjectTypeSO == null) {
-            TilemapVisual.Instance.Hide();
+            tilemapVisual.Hide();
         }
         else {
-            TilemapVisual.Instance.Show();
+            tilemapVisual.Show();
         }
 
         OnSelectedObject?.Invoke();
@@ -264,7 +263,7 @@ public class BuildingSystem {
     }
 
     public Vector3 GetMouseWorldSnappedPosition() {
-        if (!Mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return Vector3.back;
+        if (!mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return Vector3.back;
 
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);

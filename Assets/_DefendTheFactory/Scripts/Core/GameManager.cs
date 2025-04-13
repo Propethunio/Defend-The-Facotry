@@ -7,10 +7,10 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private bool showBeltDebug;
     [SerializeField] private bool generateMapAsync;
     [SerializeField] private bool addResources;
-    
+
     public EnemyLogic enemyPrefab;
     public List<ItemSO> items;
-    
+
     private void Awake() {
         Debug.Log("GameManager");
         SceneLoader.Instance.OnSceneGroupLoaded += Init;
@@ -23,21 +23,22 @@ public class GameManager : MonoBehaviour {
     private void Init() {
         Debug.Log("GameManager Init");
         SceneLoader.Instance.OnSceneGroupLoaded -= Init;
-        new ItemsManager();
-        new WaveManager(enemyPrefab);
+        Injector.Resolve<WaveManager>().Init(enemyPrefab);
         MapGenerator mapGenerator = new MapGenerator(data);
-        new BuildingSystem(mapGenerator.width, mapGenerator.height);
-        new BeltManager(showBeltDebug);
+        Injector.Resolve<BuildingSystem>().Init(mapGenerator.width, mapGenerator.height);
+        Injector.Resolve<BeltManager>().Init(showBeltDebug);
         new MouseInteractionManager();
         mapGenerator.GenerateMap(generateMapAsync);
-        MouseClickPlane.Instance.Setup(mapGenerator.width, mapGenerator.height);
-        TilemapVisual.Instance.Init(mapGenerator.width, mapGenerator.height);
-        TimeTickSystem.Instance.SetIsTicking(true);
+        Injector.Resolve<MouseClickPlane>().Setup(mapGenerator.width, mapGenerator.height);
+        Injector.Resolve<TilemapVisual>().Init(mapGenerator.width, mapGenerator.height);
+        Injector.Resolve<TimeTickSystem>().SetIsTicking(true);
 
-        if (addResources) {
-            foreach (var item in items) {
-                ItemsManager.Instance.AddItems(item, 300);   
-            }
+        if (!addResources) return;
+
+        ItemsManager itemsManager = Injector.Resolve<ItemsManager>();
+
+        foreach (var item in items) {
+            itemsManager.AddItems(item, 300);
         }
     }
 
@@ -49,7 +50,7 @@ public class GameManager : MonoBehaviour {
     private void HandleDebugSpawnItem() {
         if (!Input.GetKeyDown(KeyCode.I)) return;
 
-        BasePlacedObject placedObject = BuildingSystem.Instance.GetGridObject(BuildingSystem.Instance.GetMouseWorldSnappedPosition()).placedObject;
+        BasePlacedObject placedObject = Injector.Resolve<BuildingSystem>().GetGridObject(Injector.Resolve<BuildingSystem>().GetMouseWorldSnappedPosition()).placedObject;
         if (!placedObject || placedObject is not ConveyorBelt belt || belt.startItem) return;
 
         WorldItem worldItem = WorldItem.Create(belt.origin, belt.dir, GameAssets.i.itemSO_Refs.ironOre);
@@ -58,7 +59,7 @@ public class GameManager : MonoBehaviour {
 
     private void HandleDebugDeleteBuilding() {
         if (Input.GetMouseButtonDown(1) && !MyUtils.IsPointerOverUI()) {
-            BuildingSystem.Instance.HandleDemolish();
+            Injector.Resolve<BuildingSystem>().HandleDemolish();
         }
     }
 }

@@ -29,7 +29,7 @@ public class CameraFollowTarget : MonoBehaviour {
 
     private void Start() {
         target = transform;
-        inputManager = InputManager.Instance;
+        inputManager = Injector.Resolve<InputManager>();
         cinemachineFollow = cinemachineCamera.GetComponent<CinemachineFollow>();
         followOffset = cinemachineFollow.FollowOffset;
         zoomAmount = followOffset.y;

@@ -7,7 +7,7 @@ public class SceneLoaderEditor : EditorWindow {
     private static SceneLoaderEditor window;
     private const string configPath = "Assets/_DefendTheFactory/Scripts/Editor/Config/SceneLoaderConfig.asset";
 
-    [MenuItem("Tools/Scene Loader Window")]
+    [MenuItem("Tools/Scene Loader")]
     public static void ShowWindow() {
         if (window == null) {
             window = GetWindow<SceneLoaderEditor>("Scene Loader");
@@ -15,6 +15,10 @@ public class SceneLoaderEditor : EditorWindow {
 
         window.LoadConfig();
         window.Show();
+    }
+
+    private void OnEnable() {
+        LoadConfig();
     }
 
     private void LoadConfig() {

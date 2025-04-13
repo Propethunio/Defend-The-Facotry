@@ -4,9 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WorldResourceUI : MonoBehaviour {
-    public static WorldResourceUI Instance;
-
+public class WorldResourceUI : DependencyMonoBehaviour<WorldResourceUI> {
     [SerializeField] private float height;
     [SerializeField] private float startFadeOutTimer;
     [SerializeField] private float fadeTime;
@@ -17,10 +15,7 @@ public class WorldResourceUI : MonoBehaviour {
 
     private Coroutine fadeCoroutine;
 
-    private void Awake() {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-
+    private void Start() {
         canvasGroup.alpha = 0;
         gameObject.SetActive(false);
     }

@@ -5,7 +5,7 @@ public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseB
     public T buildableDataSO { get; private set; }
 
     public static BasePlacedObject Create(Vector3 worldPosition, BuildingDir dir, T placedObjectDataSO) {
-        return Instantiate(placedObjectDataSO.prefab, worldPosition, Quaternion.Euler(0, BuildingSystem.Instance.GetRotationAngle(dir), 0)).GetComponent<BasePlacedObject>();
+        return Instantiate(placedObjectDataSO.prefab, worldPosition, Quaternion.Euler(0, Injector.Resolve<BuildingSystem>().GetRotationAngle(dir), 0)).GetComponent<BasePlacedObject>();
     }
 
     protected abstract void Initialize(Vector2Int origin, BuildingDir dir, T placedObjectDataSO);
@@ -28,7 +28,7 @@ public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseB
 
     protected virtual void TriggerGridObjectChanged() {
         foreach (Vector2Int gridPosition in GetGridPositionList()) {
-            BuildingSystem.Instance.grid.TriggerGridObjectChanged(gridPosition.x, gridPosition.y);
+            Injector.Resolve<BuildingSystem>().grid.TriggerGridObjectChanged(gridPosition.x, gridPosition.y);
         }
     }
 

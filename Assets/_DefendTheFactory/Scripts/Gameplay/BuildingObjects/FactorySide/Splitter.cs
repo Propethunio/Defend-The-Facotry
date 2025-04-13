@@ -17,7 +17,7 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
 
     public override void GridSetupDone() {
         base.GridSetupDone();
-        Vector2Int forwardVector = BuildingSystem.Instance.GetDirForwardVector(dir);
+        Vector2Int forwardVector = Injector.Resolve<BuildingSystem>().GetDirForwardVector(dir);
         Vector2Int nextPosition = origin + forwardVector;
         Vector2Int backPosition = origin - forwardVector;
         Vector2Int rightVector = new Vector2Int(forwardVector.y, -forwardVector.x);
@@ -160,7 +160,7 @@ public class Splitter : LogisticMachine<BaseBuildableObjectSO> {
     }
 
     public override bool ShouldSnapWithLogisticMachine(Vector2Int logisticMachineOrigin) {
-        Vector2Int forwardVector = BuildingSystem.Instance.GetDirForwardVector(dir);
+        Vector2Int forwardVector = Injector.Resolve<BuildingSystem>().GetDirForwardVector(dir);
 
         if (origin - forwardVector == logisticMachineOrigin) return true;
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class BuildingGhost : MonoBehaviour {
-    public static BuildingGhost Instance { get; private set; }
-
+public class BuildingGhost : DependencyMonoBehaviour<BuildingGhost> {
     [SerializeField] private float snapSpeed;
 
     public Action positionChanged;
@@ -12,11 +10,6 @@ public class BuildingGhost : MonoBehaviour {
     private Transform visual;
     private BuildingSystem buildingSystem;
 
-    private void Awake() {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
-
     private void LateUpdate() {
         if (!visual) return;
 
@@ -24,7 +17,7 @@ public class BuildingGhost : MonoBehaviour {
     }
 
     public void Init() {
-        buildingSystem = BuildingSystem.Instance;
+        buildingSystem = Injector.Resolve<BuildingSystem>();
         buildingSystem.OnSelectedObject += RefreshVisual;
         buildingSystem.OnBuildCanceled += DestroyVisual;
     }

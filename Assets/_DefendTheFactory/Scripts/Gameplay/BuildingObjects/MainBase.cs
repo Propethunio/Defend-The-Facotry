@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class MainBase : BaseDataPlacedObject<MainBaseSO> {
@@ -16,7 +15,7 @@ public class MainBase : BaseDataPlacedObject<MainBaseSO> {
     }
 
     protected override void Setup() {
-        itemsManager = ItemsManager.Instance;
+        itemsManager = Injector.Resolve<ItemsManager>();
     }
 
     public override void GridSetupDone() {
@@ -25,11 +24,11 @@ public class MainBase : BaseDataPlacedObject<MainBaseSO> {
     }
 
     private void Subscribe() {
-        TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
+        Injector.Resolve<TimeTickSystem>().OnEarlyTick += OnEarlyTick;
     }
 
     private void Unsubscribe() {
-        TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
+        Injector.Resolve<TimeTickSystem>().OnEarlyTick -= OnEarlyTick;
     }
 
     private void SetupBelts() {

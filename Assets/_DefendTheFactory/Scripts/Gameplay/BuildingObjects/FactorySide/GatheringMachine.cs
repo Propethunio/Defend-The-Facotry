@@ -33,7 +33,7 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
 
     private void SearchForResources() {
         Vector2 centerPosition = buildableDataSO.GetCenterPosition(origin, dir);
-        GridCell[,] gridArray = BuildingSystem.Instance.grid.gridArray;
+        GridCell[,] gridArray = Injector.Resolve<BuildingSystem>().grid.gridArray;
 
         float searchRange = buildableDataSO.resourceSearchRange;
         int bottom = (int)Mathf.Floor(centerPosition.y - searchRange);
@@ -90,13 +90,15 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
     }
 
     private void Subscribe() {
-        TimeTickSystem.Instance.OnMicroTick += OnMicroTick;
-        TimeTickSystem.Instance.OnEarlyTick += OnEarlyTick;
+        TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
+        timeTickSystem.OnMicroTick += OnMicroTick;
+        timeTickSystem.OnEarlyTick += OnEarlyTick;
     }
 
     private void Unsubscribe() {
-        TimeTickSystem.Instance.OnMicroTick -= OnMicroTick;
-        TimeTickSystem.Instance.OnEarlyTick -= OnEarlyTick;
+        TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
+        timeTickSystem.OnMicroTick -= OnMicroTick;
+        timeTickSystem.OnEarlyTick -= OnEarlyTick;
         int nodesAmount = nodesInRange.Count;
 
         for (int i = 0; i < nodesAmount; i++) {

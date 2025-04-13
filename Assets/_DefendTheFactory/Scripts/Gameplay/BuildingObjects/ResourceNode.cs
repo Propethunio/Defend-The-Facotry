@@ -63,7 +63,7 @@ public class ResourceNode : BaseDataPlacedObject<ResourceNodeSO> {
         if (clicksLeft != 0) return;
 
         clicksLeft = buildableDataSO.clicksToGather;
-        ItemsManager.Instance.AddItems(buildableDataSO.itemGatheredOnClick, 1);
+        Injector.Resolve<ItemsManager>().AddItems(buildableDataSO.itemGatheredOnClick, 1);
         MineResource();
     }
 }
