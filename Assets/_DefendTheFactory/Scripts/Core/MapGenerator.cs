@@ -538,22 +538,38 @@ public class MapGenerator {
 
     private void LayPath() {
         GridCell[,] grid = buildingSystem.grid.gridArray;
-
+        Vector2Int startCell = path[0] + Vector2Int.right;
+        GameObject.Instantiate(GetPathCellPrefab(2), new Vector3(startCell.x + .5f, 0, startCell.y + .5f), Quaternion.Euler(0, GetRotation(2), 0), pathParent);
+        
         foreach (var cell in path) {
             grid[cell.x, cell.y].MarkPathCell();
             int neighboursValue = GetNeighboursValue(cell.x, cell.y);
             GameObject.Instantiate(GetPathCellPrefab(neighboursValue), new Vector3(cell.x + .5f, 0, cell.y + .5f), Quaternion.Euler(0, GetRotation(neighboursValue), 0), pathParent);
         }
+        
+        Vector2Int endCell = path[^1] + Vector2Int.left;
+        GameObject.Instantiate(GetPathCellPrefab(2), new Vector3(endCell.x + .5f, 0, endCell.y + .5f), Quaternion.Euler(0, GetRotation(2), 0), pathParent);
     }
 
     private void GenerateGround() {
+        List<Vector2Int> restrictedCells = new List<Vector2Int>(2);
+        restrictedCells.Add(path[0] + Vector2Int.right);
+        restrictedCells.Add(path[^1] + Vector2Int.left);
+        
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if (path.Contains(new Vector2Int(x, y))) continue;
+                Vector2Int cell = new Vector2Int(x, y);
+                if (restrictedCells.Contains(cell) || path.Contains(cell)) continue;
 
-                GameObject.Instantiate(data.groundPrefab, new Vector3(x + 0.5f, 0, y + 0.5f), Quaternion.identity, terrainParent);
+                GameObject.Instantiate(data.groundPrefab, new Vector3(x + 0.5f, 0, y + 0.5f), GetRandomQuaternion(), terrainParent);
             }
         }
+    }
+
+    private Quaternion GetRandomQuaternion() {
+        int[] angles = { 0, 90, 180, 270 };
+        int randomIndex = Random.Range(0, angles.Length);
+        return Quaternion.Euler(0, angles[randomIndex], 0);
     }
 
     private void SpawnPortal() {
