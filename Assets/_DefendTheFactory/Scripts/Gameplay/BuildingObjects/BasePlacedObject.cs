@@ -10,6 +10,7 @@ public abstract class BasePlacedObject : MonoBehaviour, IReactOnMouse {
     protected virtual void Setup() { }
     public virtual void GridSetupDone() { }
     public virtual void DestroySelf() => Destroy(gameObject);
+    public abstract bool ShouldHighlight();
     public virtual void MouseEnterObject() { }
     public virtual void MouseExitObject() { }
     public virtual void MouseLeftClickObject() { }

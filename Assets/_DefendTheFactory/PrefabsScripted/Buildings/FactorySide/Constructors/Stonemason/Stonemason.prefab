@@ -9,8 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 312247860716316089}
+  - component: {fileID: 6812042592820825266}
   - component: {fileID: -2494306926247236580}
-  m_Layer: 0
+  - component: {fileID: -5536942214310283840}
+  m_Layer: 6
   m_Name: Stonemason
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,6 +35,33 @@ Transform:
   - {fileID: 619288903392833302}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &6812042592820825266
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5879861430182639634}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 0, y: 0, z: 0}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!114 &-2494306926247236580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46,6 +75,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dir: 0
+--- !u!114 &-5536942214310283840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5879861430182639634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b06a937e8d35f54a8514417ca8fd584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineLayer:
+    serializedVersion: 0
+    m_Bits: 2
 --- !u!1001 &1934957153432597463
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54,6 +98,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 312247860716316089}
     m_Modifications:
+    - target: {fileID: 700718340905375420, guid: 11f437b63507cb64281d9078717b0dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 848018092301772667, guid: 11f437b63507cb64281d9078717b0dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1315753397900631233, guid: 11f437b63507cb64281d9078717b0dd6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -109,6 +163,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kamieniolom
       objectReference: {fileID: 0}
+    - target: {fileID: 1804164518596642427, guid: 11f437b63507cb64281d9078717b0dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3696896994516485302, guid: 11f437b63507cb64281d9078717b0dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4174611699491843287, guid: 11f437b63507cb64281d9078717b0dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4285436198963635545, guid: 11f437b63507cb64281d9078717b0dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8044066271729513318, guid: 11f437b63507cb64281d9078717b0dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8198420306982406017, guid: 11f437b63507cb64281d9078717b0dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1795078188734583123, guid: 11f437b63507cb64281d9078717b0dd6, type: 3}
@@ -121,7 +205,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8782635161310186085}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 700718340905375420, guid: 11f437b63507cb64281d9078717b0dd6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3430520819480222945}
   m_SourcePrefab: {fileID: 100100000, guid: 11f437b63507cb64281d9078717b0dd6, type: 3}
 --- !u!4 &619288903392833302 stripped
 Transform:
@@ -129,6 +217,34 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1934957153432597463}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1397007421661472107 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 700718340905375420, guid: 11f437b63507cb64281d9078717b0dd6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1934957153432597463}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &3430520819480222945
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397007421661472107}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4554838728281875452, guid: 6f5aab6378669424ab4ab91b5a971a8e, type: 3}
 --- !u!1001 &2217717002987467394
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -201,6 +317,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Belt
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888960444931477414, guid: 27f79e08f7b1fe04695bc5632e07030a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -285,6 +406,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Belt (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888960444931477414, guid: 27f79e08f7b1fe04695bc5632e07030a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

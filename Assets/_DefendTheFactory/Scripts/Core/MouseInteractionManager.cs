@@ -68,6 +68,9 @@ public class MouseInteractionManager {
             if (lastHoveredObject == hoveredObject) return;
 
             lastHoveredObject?.MouseExitObject();
+
+            if (!hoveredObject.ShouldHighlight()) return;
+
             hoveredObject.MouseEnterObject();
             lastHoveredObject = hoveredObject;
         }

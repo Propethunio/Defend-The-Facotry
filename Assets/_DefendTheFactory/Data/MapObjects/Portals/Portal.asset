@@ -20,6 +20,8 @@ MonoBehaviour:
   <width>k__BackingField: 1
   <height>k__BackingField: 3
   <cost>k__BackingField: []
-  <isDestroyable>k__BackingField: 0
-  <itemsGivenBack>k__BackingField: 0
+  <isNotDestroyable>k__BackingField: 1
+  <refundPenalty>k__BackingField: 0
+  <shouldHighlight>k__BackingField: 1
+  <buildingPopupType>k__BackingField: 0
   <spawnPointOffsetFromCenter>k__BackingField: {x: 0, y: 0}

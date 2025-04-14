@@ -27,6 +27,8 @@ MonoBehaviour:
     amount: 1
   <isNotDestroyable>k__BackingField: 0
   <refundPenalty>k__BackingField: 0
+  <shouldHighlight>k__BackingField: 1
+  <buildingPopupType>k__BackingField: 2
   <outputBeltPosition>k__BackingField: {x: 0, y: 0}
   <inputBeltPosition>k__BackingField: {x: 0, y: 1}
   <itemRecipeList>k__BackingField:

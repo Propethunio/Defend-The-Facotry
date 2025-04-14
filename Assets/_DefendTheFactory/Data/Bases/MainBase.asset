@@ -20,6 +20,11 @@ MonoBehaviour:
     type: 3}
   <width>k__BackingField: 3
   <height>k__BackingField: 3
+  <cost>k__BackingField: []
+  <isNotDestroyable>k__BackingField: 1
+  <refundPenalty>k__BackingField: 0
+  <shouldHighlight>k__BackingField: 1
+  <buildingPopupType>k__BackingField: 3
   <inputBeltPositions>k__BackingField:
   - <beltPosition>k__BackingField: {x: 1, y: 0}
     <beltDir>k__BackingField: 0

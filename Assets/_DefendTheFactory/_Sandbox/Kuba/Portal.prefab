@@ -9,8 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4110090257277672476}
+  - component: {fileID: 5016128259301720864}
   - component: {fileID: -6492184420464283039}
-  m_Layer: 0
+  - component: {fileID: -924503302106573394}
+  m_Layer: 6
   m_Name: Portal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,6 +35,33 @@ Transform:
   - {fileID: 2058914935412162129}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &5016128259301720864
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8385714369720679585}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 0, y: 0, z: 0}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!114 &-6492184420464283039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46,6 +75,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dir: 0
+--- !u!114 &-924503302106573394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8385714369720679585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b06a937e8d35f54a8514417ca8fd584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineLayer:
+    serializedVersion: 0
+    m_Bits: 2
 --- !u!1001 &7894578288458429670
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54,6 +98,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4110090257277672476}
     m_Modifications:
+    - target: {fileID: 1102074863902826023, guid: 37dbc210f5f9ff44c9981c4d1cdc6dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8150830441011579575, guid: 37dbc210f5f9ff44c9981c4d1cdc6dd6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -109,11 +158,48 @@ PrefabInstance:
       propertyPath: m_Name
       value: portal
       objectReference: {fileID: 0}
+    - target: {fileID: 8815305568389419021, guid: 37dbc210f5f9ff44c9981c4d1cdc6dd6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8815305568389419021, guid: 37dbc210f5f9ff44c9981c4d1cdc6dd6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7454799455297650129}
   m_SourcePrefab: {fileID: 100100000, guid: 37dbc210f5f9ff44c9981c4d1cdc6dd6, type: 3}
+--- !u!1 &1718524120985806059 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8815305568389419021, guid: 37dbc210f5f9ff44c9981c4d1cdc6dd6,
+    type: 3}
+  m_PrefabInstance: {fileID: 7894578288458429670}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &7454799455297650129
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718524120985806059}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 824681459471619651, guid: 0155fe5a9b9f62448ae84f7cb5d570af, type: 3}
 --- !u!4 &2058914935412162129 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8150830441011579575, guid: 37dbc210f5f9ff44c9981c4d1cdc6dd6,

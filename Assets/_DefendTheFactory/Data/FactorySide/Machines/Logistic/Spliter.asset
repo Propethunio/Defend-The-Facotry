@@ -25,5 +25,7 @@ MonoBehaviour:
     amount: 6
   - item: {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23, type: 2}
     amount: 3
-  <isDestroyable>k__BackingField: 1
-  <itemsGivenBack>k__BackingField: 1
+  <isNotDestroyable>k__BackingField: 0
+  <refundPenalty>k__BackingField: 0
+  <shouldHighlight>k__BackingField: 1
+  <buildingPopupType>k__BackingField: 0

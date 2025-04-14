@@ -21,8 +21,10 @@ MonoBehaviour:
   <width>k__BackingField: 1
   <height>k__BackingField: 1
   <cost>k__BackingField: []
-  <isDestroyable>k__BackingField: 0
-  <itemsGivenBack>k__BackingField: 0
+  <isNotDestroyable>k__BackingField: 1
+  <refundPenalty>k__BackingField: 0
+  <shouldHighlight>k__BackingField: 1
+  <buildingPopupType>k__BackingField: 0
   <resourceType>k__BackingField: 0
   <amount>k__BackingField: 150
   <itemGatheredOnClick>k__BackingField: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc,

@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour {
     public List<ItemSO> items;
 
     private void Awake() {
-        Debug.Log("GameManager");
         SceneLoader.Instance.OnSceneGroupLoaded += Init;
     }
 
@@ -21,7 +20,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Init() {
-        Debug.Log("GameManager Init");
         SceneLoader.Instance.OnSceneGroupLoaded -= Init;
         Injector.Resolve<WaveManager>().Init(enemyPrefab);
         MapGenerator mapGenerator = new MapGenerator(data);

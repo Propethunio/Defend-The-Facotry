@@ -3,6 +3,25 @@ using UnityEngine;
 
 public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseBuildableObjectSO {
     public T buildableDataSO { get; private set; }
+    private ObjectOutline outline;
+
+    public virtual void Start() {
+        if (!buildableDataSO.shouldHighlight) return;
+
+        outline = GetComponent<ObjectOutline>();
+    }
+
+    public override bool ShouldHighlight() {
+        return buildableDataSO.shouldHighlight;
+    }
+
+    public override void MouseEnterObject() {
+        outline.SetOutline(true);
+    }
+
+    public override void MouseExitObject() {
+        outline.SetOutline(false);
+    }
 
     public static BasePlacedObject Create(Vector3 worldPosition, BuildingDir dir, T placedObjectDataSO) {
         return Instantiate(placedObjectDataSO.prefab, worldPosition, Quaternion.Euler(0, Injector.Resolve<BuildingSystem>().GetRotationAngle(dir), 0)).GetComponent<BasePlacedObject>();

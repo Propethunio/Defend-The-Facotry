@@ -17,7 +17,6 @@ public class Injector : Singleton<Injector> {
 
     protected override void Awake() {
         base.Awake();
-
         var monoBehaviours = FindMonoBehaviours();
         var providers = monoBehaviours.OfType<IDependencyProvider>().ToArray();
         var injectables = monoBehaviours.Where(IsInjectable).ToArray();
@@ -34,7 +33,6 @@ public class Injector : Singleton<Injector> {
     private void OnDestroy() {
         ClearDependencies();
         registry.Clear();
-        Debug.Log("[Injector] Registry cleared and dependencies wiped.");
     }
 
     public static void Register<T>(T instance) {

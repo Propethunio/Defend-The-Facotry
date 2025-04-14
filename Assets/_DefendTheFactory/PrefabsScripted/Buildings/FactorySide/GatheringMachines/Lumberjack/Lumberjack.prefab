@@ -9,8 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 312247860716316089}
+  - component: {fileID: -4329261208173854169}
   - component: {fileID: -4349847951828959970}
-  m_Layer: 0
+  - component: {fileID: -8203636349311667691}
+  m_Layer: 6
   m_Name: Lumberjack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,6 +35,33 @@ Transform:
   - {fileID: 5654287240131416242}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &-4329261208173854169
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5879861430182639634}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 0, y: 0, z: 0}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 0
+  m_ImplicitTensor: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!114 &-4349847951828959970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46,6 +75,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dir: 0
+--- !u!114 &-8203636349311667691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5879861430182639634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b06a937e8d35f54a8514417ca8fd584, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineLayer:
+    serializedVersion: 0
+    m_Bits: 2
 --- !u!1001 &2924346884987566772
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54,6 +98,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 312247860716316089}
     m_Modifications:
+    - target: {fileID: 1480704038368386144, guid: 09c8831915fad6f46a8ed60731b8475e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7416669609618221574, guid: 09c8831915fad6f46a8ed60731b8475e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -109,6 +158,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Woodcuter
       objectReference: {fileID: 0}
+    - target: {fileID: 7901175332924485820, guid: 09c8831915fad6f46a8ed60731b8475e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8921282861745703846, guid: 09c8831915fad6f46a8ed60731b8475e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1490171230494088752, guid: 09c8831915fad6f46a8ed60731b8475e, type: 3}
@@ -117,7 +176,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7056909034192139295}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8921282861745703846, guid: 09c8831915fad6f46a8ed60731b8475e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6805080047076360774}
   m_SourcePrefab: {fileID: 100100000, guid: 09c8831915fad6f46a8ed60731b8475e, type: 3}
 --- !u!4 &5654287240131416242 stripped
 Transform:
@@ -125,6 +188,34 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2924346884987566772}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6006568807409529106 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8921282861745703846, guid: 09c8831915fad6f46a8ed60731b8475e,
+    type: 3}
+  m_PrefabInstance: {fileID: 2924346884987566772}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &6805080047076360774
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6006568807409529106}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3202822991634660892, guid: 1f4db6ddeee3c15428ed3d5fd478e318, type: 3}
 --- !u!1001 &4806286364616139011
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -197,6 +288,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Belt
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888960444931477414, guid: 27f79e08f7b1fe04695bc5632e07030a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

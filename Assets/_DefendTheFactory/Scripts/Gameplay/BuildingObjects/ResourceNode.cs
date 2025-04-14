@@ -11,12 +11,11 @@ public class ResourceNode : BaseDataPlacedObject<ResourceNodeSO> {
     [SerializeField] private float maxScaleFactor;
     [SerializeField] private MMFeedbacks onClickFeedback;
 
-    private ObjectOutline outline;
     private int amountLeft;
     private int clicksLeft;
 
-    private void Start() {
-        outline = GetComponent<ObjectOutline>();
+    public override void Start() {
+        base.Start();
         model.rotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
         float randomScale = Random.Range(minScaleFactor, maxScaleFactor);
         model.localScale *= randomScale;
@@ -34,14 +33,6 @@ public class ResourceNode : BaseDataPlacedObject<ResourceNodeSO> {
     public override void DestroySelf() {
         NodeGatheredCompletely?.Invoke(this);
         base.DestroySelf();
-    }
-
-    public override void MouseEnterObject() {
-        outline.SetOutline(true);
-    }
-
-    public override void MouseExitObject() {
-        outline.SetOutline(false);
     }
 
     public override void MouseLeftClickObject() {
