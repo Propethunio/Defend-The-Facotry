@@ -40,4 +40,8 @@ public class TimeTickSystem : DependencyMonoBehaviour<TimeTickSystem> {
     public void SetIsTicking(bool shouldTick) {
         isTicking = shouldTick;
     }
+
+    public int TicksPerSecond() {
+        return (int)(1f / MICRO_TICK_TIMER_MAX);
+    }
 }

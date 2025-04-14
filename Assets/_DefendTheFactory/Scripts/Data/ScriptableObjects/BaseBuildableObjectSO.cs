@@ -12,6 +12,7 @@ public class BaseBuildableObjectSO : ScriptableObject {
     [field: SerializeField] public List<ItemIntPair> cost { get; private set; }
     [field: SerializeField] public bool isNotDestroyable { get; private set; }
     [field: SerializeField, Range(0f, 1f)] public float refundPenalty { get; private set; }
+    [field: SerializeField] public BuildingPopupEnum buildingPopupType { get; private set; }
 
     public Vector2Int GetRotationOffset(BuildingDir dir) {
         switch (dir) {
