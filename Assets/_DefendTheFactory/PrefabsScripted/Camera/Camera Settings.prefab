@@ -47,14 +47,14 @@ MonoBehaviour:
   cinemachineCamera: {fileID: 0}
   moveOnEdge: 0
   edgeScrollSize: 7
-  moveSpeed: 25
+  moveSpeed: 22
   moveSpeedOnDrag: 0.8
   rotateSpeed: 100
   rotateSpeedOnDrag: 1.9
   zoomSpeed: 15
   zoomScrollWheelClamp: 35
   zoomLerpSpeed: 5
-  zoomRange: {x: 2.5, y: 25}
+  zoomRange: {x: 1.25, y: 9.5}
   zoomRotationCurve:
     serializedVersion: 2
     m_Curve:

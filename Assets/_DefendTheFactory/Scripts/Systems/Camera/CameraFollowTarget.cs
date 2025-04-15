@@ -1,7 +1,7 @@
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class CameraFollowTarget : MonoBehaviour {
+public class CameraFollowTarget : DependencyMonoBehaviour<CameraFollowTarget> {
     [SerializeField] private CinemachineCamera cinemachineCamera;
     [SerializeField] private bool moveOnEdge;
     [SerializeField] private int edgeScrollSize;
@@ -43,6 +43,14 @@ public class CameraFollowTarget : MonoBehaviour {
         MoveCamera();
         RotateCamera();
         ZoomCamera();
+    }
+
+    public void SetCameraPosition(Vector2 position) {
+        transform.position = new Vector3(position.x, transform.position.y, position.y);
+    }
+
+    public void SetCameraPosition(Vector3 position) {
+        transform.position = new Vector3(position.x, transform.position.y, position.y);
     }
 
     private void CalculateScrollBounds() {

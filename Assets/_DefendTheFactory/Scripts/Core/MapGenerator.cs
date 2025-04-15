@@ -595,8 +595,10 @@ public class MapGenerator {
                 basePaddingCells.Add(new Vector2Int(x, y));
             }
         }
+        
+        Injector.Resolve<CameraFollowTarget>().SetCameraPosition(baseCenterPosition);
     }
-
+    
     private void SpawnVegetation() {
         List<Vector2Int> allCells = new List<Vector2Int>();
 
