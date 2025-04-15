@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Mouse3D : DependencyMonoBehaviour<Mouse3D> {
+public class MouseWorldPosition : DependencyMonoBehaviour<MouseWorldPosition> {
     private Camera cam;
 
     private void Start() {

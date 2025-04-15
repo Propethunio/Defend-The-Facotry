@@ -19,14 +19,14 @@ public class BuildingSystem {
     private bool isBuildingSystemActive;
     private bool isDemolishActive;
     private TilemapVisual tilemapVisual;
-    private Mouse3D mouse3D;
+    private MouseWorldPosition mouseWorldPosition;
 
     public void Init(int width, int height) {
         grid = new Grid<GridCell>(width, height, (_, _, _) => new GridCell());
         inputManager = Injector.Resolve<InputManager>();
         itemsManager = Injector.Resolve<ItemsManager>();
         tilemapVisual = Injector.Resolve<TilemapVisual>();
-        mouse3D = Injector.Resolve<Mouse3D>();
+        mouseWorldPosition = Injector.Resolve<MouseWorldPosition>();
         Injector.Resolve<BuildingGhost>().Init();
     }
 
@@ -76,7 +76,7 @@ public class BuildingSystem {
     }
 
     private void HandleObjectPlacement() {
-        if (MyUtils.IsPointerOverUI() || !mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
+        if (MyUtils.IsPointerOverUI() || !mouseWorldPosition.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
 
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);
@@ -89,7 +89,7 @@ public class BuildingSystem {
     }
 
     public void HandleDemolish() {
-        if (!mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
+        if (!mouseWorldPosition.TryGetMouseWorldPosition(out Vector3 mousePosition)) return;
 
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);
@@ -263,7 +263,7 @@ public class BuildingSystem {
     }
 
     public Vector3 GetMouseWorldSnappedPosition() {
-        if (!mouse3D.TryGetMouseWorldPosition(out Vector3 mousePosition)) return Vector3.back;
+        if (!mouseWorldPosition.TryGetMouseWorldPosition(out Vector3 mousePosition)) return Vector3.back;
 
         int x = Mathf.FloorToInt(mousePosition.x);
         int z = Mathf.FloorToInt(mousePosition.z);
