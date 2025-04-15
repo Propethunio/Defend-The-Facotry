@@ -4,9 +4,12 @@ using UnityEngine;
 public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseBuildableObjectSO {
     public T buildableDataSO { get; private set; }
     private ObjectOutline outline;
+    private BuildingPopupManager popupManager;
 
     public virtual void Start() {
-        if (!buildableDataSO.shouldHighlight) return;
+        popupManager = Injector.Resolve<BuildingPopupManager>();
+
+        if (buildableDataSO == null || !buildableDataSO.shouldHighlight) return;
 
         outline = GetComponent<ObjectOutline>();
     }
@@ -21,6 +24,10 @@ public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseB
 
     public override void MouseExitObject() {
         outline.SetOutline(false);
+    }
+
+    public override void MouseLeftClickObject() {
+        popupManager.ShowBuildingPopup(this);
     }
 
     public static BasePlacedObject Create(Vector3 worldPosition, BuildingDir dir, T placedObjectDataSO) {

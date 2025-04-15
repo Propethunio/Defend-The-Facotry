@@ -582,6 +582,7 @@ MonoBehaviour:
   progressBar: {fileID: 4768130847404057396}
   machineNameText: {fileID: 2570770906676193868}
   resourceNameText: {fileID: 6784709042692240687}
+  resourceAmountText: {fileID: 4478999322202871309}
   resourceRatioText: {fileID: 2245516435123412823}
   resourcesLeftText: {fileID: 4867515535401918215}
   progressPercentText: {fileID: 9139156368653649098}

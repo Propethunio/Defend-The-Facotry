@@ -11,9 +11,11 @@ public class ResourceNode : BaseDataPlacedObject<ResourceNodeSO> {
     [SerializeField] private float maxScaleFactor;
     [SerializeField] private MMFeedbacks onClickFeedback;
 
-    private int amountLeft;
+    public int amountLeft { get; private set; }
     private int clicksLeft;
 
+    public event Action ResourcesGathered; 
+    
     public override void Start() {
         base.Start();
         model.rotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
@@ -42,6 +44,7 @@ public class ResourceNode : BaseDataPlacedObject<ResourceNodeSO> {
 
     public void MineResource() {
         amountLeft--;
+        ResourcesGathered?.Invoke();
 
         if (amountLeft == 0) {
             DestroySelf();

@@ -8,6 +8,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
     private List<WorldItem> itemsReadyToGo = new();
     private Dictionary<LogisticDir, IItemProvider> inputMachines = new();
     private Dictionary<LogisticDir, Vector2Int> inputPositions = new();
+    private const int maxStoredItems = 4;
 
     protected override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
@@ -104,7 +105,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
 
         int storedItems = items.Count + itemsReadyToGo.Count;
 
-        if (storedItems == 3) return;
+        if (storedItems == maxStoredItems) return;
 
         for (int i = 3; i > 0; i--) {
             if (inputMachines[logisticDir] == null || !inputMachines[logisticDir].HasItem()) {
@@ -118,7 +119,7 @@ public class Merger : LogisticMachine<BaseBuildableObjectSO> {
             logisticDir = GetNextDir(logisticDir);
             storedItems++;
 
-            if (storedItems == 3) return;
+            if (storedItems == maxStoredItems) return;
         }
     }
 

@@ -12,19 +12,6 @@ public class ConveyorBelt : BaseDataPlacedObject<BaseBuildableObjectSO>, IItemPr
 
     private BuildingSystem buildingSystem;
     private BeltManager beltManager;
-    private ObjectOutline outline;
-
-    private void Start() {
-        outline = GetComponent<ObjectOutline>();
-    }
-    
-    public override void MouseEnterObject() {
-        outline.SetOutline(true);
-    }
-
-    public override void MouseExitObject() {
-        outline.SetOutline(false);
-    }
 
     protected override void Initialize(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
         BaseDataSet(origin, dir, placedObjectDataSO);

@@ -3,10 +3,7 @@ using UnityEngine;
 
 public class CameraFollowTarget : DependencyMonoBehaviour<CameraFollowTarget> {
     [SerializeField] private CinemachineFollow cinemachineFollow;
-
-    [Header("Screen Edge")] [SerializeField]
-    private bool moveOnEdge;
-
+    [Header("Screen Edge")] [SerializeField] private bool moveOnEdge;
     [SerializeField] private int edgeScrollSize;
     [Header("Movement")] [SerializeField] private float moveSpeed;
     [SerializeField] private float moveSpeedOnDrag;
@@ -17,10 +14,7 @@ public class CameraFollowTarget : DependencyMonoBehaviour<CameraFollowTarget> {
     [SerializeField] private float zoomLerpSpeed;
     [SerializeField] private Vector2 zoomRange;
     [SerializeField] private AnimationCurve zoomRotationCurve;
-
-    [Header("Map Border")] [SerializeField]
-    private float mapBorderSmoothPadding;
-
+    [Header("Map Border"), SerializeField] private float mapBorderSmoothPadding;
     [SerializeField] private float mapBorderHardPadding;
     [SerializeField] private float lerpSpeedOutsideBorder;
 

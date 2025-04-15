@@ -1,12 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
+    public int storedItemsCount { get; private set; }
+
+    private int productionTicks;
     private ConveyorBelt outputBelt;
     private List<ResourceNode> nodesInRange = new();
     private ResourceNode currentNode;
-    private int storedItemsCount;
-    private int productionTicks;
+
+    public event Action<int> StoredItemsCountChanged, ResourcesInRangeChanged;
+    public event Action<float> ProductionTicksChanged;
 
     protected override void Initialize(Vector2Int origin, BuildingDir dir, GatheringMachineSO buildableDataSO) {
         BaseDataSet(origin, dir, buildableDataSO);
@@ -31,6 +36,17 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         base.DestroySelf();
     }
 
+    public int GetResourcesInRangeAmount() {
+        int amount = 0;
+        int nodesCount = nodesInRange.Count;
+
+        for (var i = 0; i < nodesCount; i++) {
+            amount += nodesInRange[i].amountLeft;
+        }
+
+        return amount;
+    }
+
     private void SearchForResources() {
         Vector2 centerPosition = buildableDataSO.GetCenterPosition(origin, dir);
         GridCell[,] gridArray = Injector.Resolve<BuildingSystem>().grid.gridArray;
@@ -49,9 +65,14 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
                 if (node == null || node.buildableDataSO.resourceType != buildableDataSO.gatheredResource || nodesInRange.Contains(node)) continue;
 
                 nodesInRange.Add(node);
+                node.ResourcesGathered += OnResourcesInRangeChanged;
                 node.NodeGatheredCompletely += HandleNodeDestroyed;
             }
         }
+    }
+
+    private void OnResourcesInRangeChanged() {
+        ResourcesInRangeChanged?.Invoke(GetResourcesInRangeAmount());
     }
 
     private bool IsInsideCircle(Vector2 center, Vector2Int point) {
@@ -64,8 +85,10 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         Vector2 machineCenterPosition = buildableDataSO.GetCenterPosition(origin, dir);
         float currentDistance = Mathf.Infinity;
         currentNode = null;
+        int nodesCount = nodesInRange.Count;
 
-        foreach (ResourceNode node in nodesInRange) {
+        for (var i = 0; i < nodesCount; i++) {
+            ResourceNode node = nodesInRange[i];
             Vector2 nodeCenterPosition = node.buildableDataSO.GetCenterPosition(node.origin, node.dir);
             float distanceToNode = (machineCenterPosition - nodeCenterPosition).sqrMagnitude;
 
@@ -103,6 +126,7 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
 
         for (int i = 0; i < nodesAmount; i++) {
             nodesInRange[i].NodeGatheredCompletely -= HandleNodeDestroyed;
+            nodesInRange[i].ResourcesGathered -= OnResourcesInRangeChanged;
         }
     }
 
@@ -117,19 +141,36 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
 
         productionTicks++;
 
-        if (productionTicks != buildableDataSO.ticksForGather) return;
+        if (productionTicks == buildableDataSO.ticksForGather) {
+            productionTicks = 0;
+            Gather();
+        }
 
-        productionTicks = 0;
-        Gather();
+        ProductionTicksChanged?.Invoke(GetTargetProgressNormalized());
+    }
+
+    public float GetTargetProgressNormalized() {
+        return (float)(productionTicks + 1) / buildableDataSO.ticksForGather;
+    }
+
+    public float GetProgressNormalized() {
+        return (float)productionTicks / buildableDataSO.ticksForGather;
     }
 
     private void Gather() {
         currentNode.MineResource();
         storedItemsCount++;
+        StoredItemsCountChanged?.Invoke(storedItemsCount);
     }
 
     private void HandleNodeDestroyed(ResourceNode node) {
         node.NodeGatheredCompletely -= HandleNodeDestroyed;
+        node.ResourcesGathered -= OnResourcesInRangeChanged;
+
+        if (node.amountLeft > 0) {
+            ResourcesInRangeChanged?.Invoke(GetResourcesInRangeAmount());
+        }
+
         nodesInRange.Remove(node);
 
         if (node == currentNode) {
@@ -149,13 +190,6 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
         WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, buildableDataSO.producedItem);
         outputBelt.SetWorldItem(worldItem);
         storedItemsCount--;
-    }
-
-    public ItemSO GetMiningResourceItem() {
-        return new ItemSO();
-    }
-
-    public int GetItemStoredCount(ItemSO filterItemScriptableObject) {
-        return storedItemsCount;
+        StoredItemsCountChanged?.Invoke(storedItemsCount);
     }
 }
