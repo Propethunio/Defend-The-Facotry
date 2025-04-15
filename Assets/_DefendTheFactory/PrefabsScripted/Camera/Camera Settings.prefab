@@ -44,17 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a81becaf075b7d408f95ae3ea8eec2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cinemachineCamera: {fileID: 0}
+  cinemachineFollow: {fileID: 0}
   moveOnEdge: 0
   edgeScrollSize: 7
-  moveSpeed: 22
+  moveSpeed: 18
   moveSpeedOnDrag: 0.8
   rotateSpeed: 100
   rotateSpeedOnDrag: 1.9
-  zoomSpeed: 15
-  zoomScrollWheelClamp: 35
-  zoomLerpSpeed: 5
-  zoomRange: {x: 1.25, y: 9.5}
+  zoomSpeed: 10
+  zoomScrollWheelClamp: 20
+  zoomLerpSpeed: 6
+  zoomRange: {x: 1.25, y: 9.25}
   zoomRotationCurve:
     serializedVersion: 2
     m_Curve:
@@ -79,3 +79,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  mapBorderSmoothPadding: 3
+  mapBorderHardPadding: 2.5
+  lerpSpeedOutsideBorder: 2.5

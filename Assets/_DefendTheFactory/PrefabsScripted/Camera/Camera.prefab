@@ -399,6 +399,11 @@ PrefabInstance:
       propertyPath: cinemachineCamera
       value: 
       objectReference: {fileID: 8730599777444792590}
+    - target: {fileID: 7694436808174060936, guid: 8f9cef837e910444ea7c04db41580538,
+        type: 3}
+      propertyPath: cinemachineFollow
+      value: 
+      objectReference: {fileID: 866923428995790893}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -43,6 +43,7 @@ public class MapGenerator {
         resourcesParent.parent = mainParent;
         buildingSystem = Injector.Resolve<BuildingSystem>();
         waveManager = Injector.Resolve<WaveManager>();
+        Injector.Resolve<CameraFollowTarget>().SetMapSize(new Vector2Int(width, height));
     }
 
     public void GenerateMap(bool async) {
@@ -80,7 +81,7 @@ public class MapGenerator {
             GenerateAsync();
             return;
         }
-
+        
         PopulateMap();
         waveManager.SetPath(path);
     }
