@@ -50,7 +50,6 @@ public class SettingsPanel : BaseMenuPanel {
 	private void SetResolution(int index) {
 		string selected = resolutionDropdown.options[index].text;
 
-		// Ignore label lines like "-- 16:9 --"
 		if (selected.StartsWith("--")) return;
 
 		string[] parts = selected.Split('x');
@@ -88,27 +87,6 @@ public class SettingsPanel : BaseMenuPanel {
 	private void Start() {
 		SetupResolutions();
 	}
-
-	/*private void SetupResolutions() {
-		resolutionDropdown.ClearOptions();
-		resolutions = Screen.resolutions;
-		List<string> options = new List<string>();
-		int currentResolutionIndex = 0;
-		int resolutionLength = resolutions.Length;
-
-		for (int i = 0; i < resolutionLength; i++) {
-			string option = resolutions[i].width + " x " + resolutions[i].height;
-			options.Add(option);
-
-			if (resolutions[i].width == Screen.width && resolutions[i].height == Screen.height) {
-				currentResolutionIndex = i;
-			}
-		}
-
-		resolutionDropdown.AddOptions(options);
-		resolutionDropdown.value = currentResolutionIndex;
-		resolutionDropdown.RefreshShownValue();
-	}*/
 
 	protected override void SetupButtons() {
 		resetButton.onClick.AddListener(OnResetButtonClicked);
@@ -189,7 +167,7 @@ public class SettingsPanel : BaseMenuPanel {
 			if (width < 640 || height < 480) continue;
 
 			string aspectRatio = GetAspectRatio(width, height);
-			if (aspectRatio == null) continue; // Skip unknown/weird ratios
+			if (!allowedRatios.Contains(aspectRatio)) continue;
 
 			string key = width + "x" + height;
 			if (usedResolutions.Contains(key)) continue;
@@ -233,15 +211,16 @@ public class SettingsPanel : BaseMenuPanel {
 
 
 	private string GetAspectRatio(int width, int height) {
-		float ratio = (float)width / height;
+		int gcd = GetGCD(width, height);
+		return $"{width / gcd}:{height / gcd}";
+	}
 
-		if (Mathf.Approximately(ratio, 16f / 9f)) return "16:9";
-		if (Mathf.Approximately(ratio, 16f / 10f)) return "16:10";
-		if (Mathf.Approximately(ratio, 4f / 3f)) return "4:3";
-		if (Mathf.Approximately(ratio, 5f / 4f)) return "5:4";
-		if (Mathf.Approximately(ratio, 21f / 9f)) return "21:9";
-		if (Mathf.Approximately(ratio, 32f / 9f)) return "32:9";
-
-		return null;
+	private int GetGCD(int a, int b) {
+		while (b != 0) {
+			int temp = b;
+			b = a % b;
+			a = temp;
+		}
+		return a;
 	}
 }
