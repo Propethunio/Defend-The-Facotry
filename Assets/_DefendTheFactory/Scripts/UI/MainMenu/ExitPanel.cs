@@ -1,25 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ExitPanel : MonoBehaviour {
-    [SerializeField] private Button exitConfirmationButton;
+public class ExitPanel : BaseMenuPanel {
+    [SerializeField] private GameObject menuPanel;
+
+    [Header("Buttons")] [SerializeField] private Button exitConfirmationButton;
     [SerializeField] private Button exitCancelButton;
-    [SerializeField] private RectTransform menuPanel;
 
-    private void OnEnable() {
-        SetupButtons();
-    }
-
-    private void OnDisable() {
-        DisableButtons();
-    }
-
-    private void SetupButtons() {
+    protected override void SetupButtons() {
         exitConfirmationButton.onClick.AddListener(QuitGame);
         exitCancelButton.onClick.AddListener(() => ShowPanel(menuPanel));
     }
 
-    private void DisableButtons() {
+    protected override void DisableButtons() {
         exitConfirmationButton.onClick.RemoveAllListeners();
         exitCancelButton.onClick.RemoveAllListeners();
     }
@@ -30,10 +23,5 @@ public class ExitPanel : MonoBehaviour {
 #else
         Application.Quit();
 #endif
-    }
-
-    private void ShowPanel(RectTransform panel) {
-        gameObject.SetActive(false);
-        panel.gameObject.SetActive(true);
     }
 }

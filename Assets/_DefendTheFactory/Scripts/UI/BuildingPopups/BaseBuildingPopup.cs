@@ -9,6 +9,10 @@ public abstract class BaseBuildingPopup : MonoBehaviour {
         ticksPerMinute = ticksPerSecond * 60;
     }
 
+    private void Start() {
+        gameObject.SetActive(false);
+    }
+
     public void Show(BasePlacedObject placedObject) {
         gameObject.SetActive(true);
         Setup(placedObject);

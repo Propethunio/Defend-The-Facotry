@@ -2,36 +2,33 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuPanel : MonoBehaviour {
-    [SerializeField] private Button continueButton;
+public class MenuPanel : BaseMenuPanel {
+    [Header("Panels")] [SerializeField] private GameObject newGameWarningPanel;
+    [SerializeField] private GameObject upgradesPanel;
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject exitPanel;
+
+    [Header("Buttons")] [SerializeField] private Button continueButton;
     [SerializeField] private Button newGameButton;
     [SerializeField] private Button upgradesButton;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button exitButton;
-    [SerializeField] private RectTransform exitPanel;
-    [SerializeField] private TextMeshProUGUI versionText;
+
+    [Header("Text")] [SerializeField] private TextMeshProUGUI versionText;
 
     private void Start() {
         versionText.text = Application.version;
     }
 
-    private void OnEnable() {
-        SetupButtons();
-    }
-
-    private void OnDisable() {
-        DisableButtons();
-    }
-
-    private void SetupButtons() {
+    protected override void SetupButtons() {
         //continueButton.onClick.AddListener();
         newGameButton.onClick.AddListener(OnNewGameClicked);
-        //upgradesButton.onClick.AddListener();
-        //settingsButton.onClick.AddListener();
+        //upgradesButton.onClick.AddListener(() => ShowPanel(upgradesPanel));
+        settingsButton.onClick.AddListener(() => ShowPanel(settingsPanel));
         exitButton.onClick.AddListener(() => ShowPanel(exitPanel));
     }
 
-    private void DisableButtons() {
+    protected override void DisableButtons() {
         continueButton.onClick.RemoveAllListeners();
         newGameButton.onClick.RemoveAllListeners();
         upgradesButton.onClick.RemoveAllListeners();
@@ -41,10 +38,5 @@ public class MenuPanel : MonoBehaviour {
 
     private void OnNewGameClicked() {
         SceneLoader.Instance.LoadSceneGroup(1);
-    }
-
-    private void ShowPanel(RectTransform panel) {
-        gameObject.SetActive(false);
-        panel.gameObject.SetActive(true);
     }
 }

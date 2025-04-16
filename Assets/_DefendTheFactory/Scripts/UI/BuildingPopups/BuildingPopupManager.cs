@@ -1,62 +1,60 @@
 using UnityEngine;
 
 public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager> {
-    [SerializeField] private GatheringMachinePopup gatheringMachinePopup;
+	[SerializeField] private GatheringMachinePopup gatheringMachinePopup;
 
-    private BaseBuildingPopup currentBuildingPopup;
-    private BasePlacedObject currentSelectedObject;
+	private BaseBuildingPopup currentBuildingPopup;
+	private BasePlacedObject currentSelectedObject;
+	private InputManager inputManager;
 
-    private void Start() {
-        Injector.Resolve<InputManager>().rightClickPerformedAction += CloseActivePopup;
-    }
+	private void Start() {
+		inputManager = Injector.Resolve<InputManager>();
+	}
 
-    private void OnDestroy() {
-        Injector.Resolve<InputManager>().rightClickPerformedAction -= CloseActivePopup;
-    }
+	private void OnDestroy() {
+		inputManager.rightClickPerformedAction -= CloseActivePopup;
+	}
 
-    private void CloseActivePopup() {
-        if (currentBuildingPopup == null) return;
+	private void CloseActivePopup() {
+		if (currentBuildingPopup != null) {
+			currentBuildingPopup.Close();
+			currentBuildingPopup = null;
+		}
 
-        currentBuildingPopup.Close();
-        currentBuildingPopup = null;
-        currentSelectedObject = null;
-    }
+		currentSelectedObject = null;
+		inputManager.rightClickPerformedAction -= CloseActivePopup;
+	}
 
-    public void ShowBuildingPopup<T>(BaseDataPlacedObject<T> placedObject) where T : BaseBuildableObjectSO {
-        if (currentSelectedObject == placedObject) return;
+	public void ShowBuildingPopup<T>(BaseDataPlacedObject<T> placedObject) where T : BaseBuildableObjectSO {
+		if (currentSelectedObject == placedObject) return;
 
-        currentSelectedObject = placedObject;
-        BaseBuildingPopup popupToShow = null;
+		currentSelectedObject = placedObject;
+		BaseBuildingPopup popupToShow = GetPopupType(placedObject.buildableDataSO.buildingPopupType);
 
-        switch (placedObject.buildableDataSO.buildingPopupType) {
-            default:
-            case BuildingPopupEnum.None:
-                currentBuildingPopup.Close();
-                currentBuildingPopup = null;
-                return;
-            case BuildingPopupEnum.GatheringMachine:
-                popupToShow = gatheringMachinePopup;
-                break;
-            case BuildingPopupEnum.Constructor:
-                break;
-            case BuildingPopupEnum.MainBase:
-                break;
-            case BuildingPopupEnum.TowerTargetPicking:
-                break;
-            case BuildingPopupEnum.TowerAOE:
-                break;
-        }
+		if (popupToShow == null) {
+			CloseActivePopup();
+			return;
+		}
 
-        if (popupToShow == currentBuildingPopup) {
-            currentBuildingPopup.ChangeSelectedObject(placedObject);
-            return;
-        }
+		if (popupToShow == currentBuildingPopup) {
+			currentBuildingPopup.ChangeSelectedObject(placedObject);
+			return;
+		}
 
-        if (currentBuildingPopup != null) {
-            currentBuildingPopup.Close();
-        }
+		if (currentBuildingPopup != null) {
+			currentBuildingPopup.Close();
+		}
 
-        currentBuildingPopup = popupToShow;
-        currentBuildingPopup.Show(placedObject);
-    }
+		currentBuildingPopup = popupToShow;
+		currentBuildingPopup.Show(placedObject);
+		inputManager.rightClickPerformedAction += CloseActivePopup;
+	}
+
+	private BaseBuildingPopup GetPopupType(BuildingPopupEnum buildingPopupType) {
+		switch (buildingPopupType) {
+			default:
+			case BuildingPopupEnum.None: return null;
+			case BuildingPopupEnum.GatheringMachine: return gatheringMachinePopup;
+		}
+	}
 }

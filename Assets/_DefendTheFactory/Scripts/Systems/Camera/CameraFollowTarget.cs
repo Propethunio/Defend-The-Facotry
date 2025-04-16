@@ -3,17 +3,21 @@ using UnityEngine;
 
 public class CameraFollowTarget : DependencyMonoBehaviour<CameraFollowTarget> {
     [SerializeField] private CinemachineFollow cinemachineFollow;
+    
     [Header("Screen Edge")] [SerializeField] private bool moveOnEdge;
     [SerializeField] private int edgeScrollSize;
+    
     [Header("Movement")] [SerializeField] private float moveSpeed;
     [SerializeField] private float moveSpeedOnDrag;
     [SerializeField] private float rotateSpeed;
     [SerializeField] private float rotateSpeedOnDrag;
+    
     [Header("Zoom")] [SerializeField] private float zoomSpeed;
     [SerializeField] private float zoomScrollWheelClamp;
     [SerializeField] private float zoomLerpSpeed;
     [SerializeField] private Vector2 zoomRange;
     [SerializeField] private AnimationCurve zoomRotationCurve;
+    
     [Header("Map Border"), SerializeField] private float mapBorderSmoothPadding;
     [SerializeField] private float mapBorderHardPadding;
     [SerializeField] private float lerpSpeedOutsideBorder;
