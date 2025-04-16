@@ -7,7 +7,7 @@ public class GatheringMachine : BaseDataPlacedObject<GatheringMachineSO> {
 
     private int productionTicks;
     private ConveyorBelt outputBelt;
-    private List<ResourceNode> nodesInRange = new();
+    private List<ResourceNode> nodesInRange = new List<ResourceNode>();
     private ResourceNode currentNode;
 
     public event Action<int> StoredItemsCountChanged, ResourcesInRangeChanged;

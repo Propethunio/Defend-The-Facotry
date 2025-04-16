@@ -1,95 +1,115 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Constructor : BaseDataPlacedObject<ConstructorSO> {
-    private ConveyorBelt inputBelt;
-    private ConveyorBelt outputBelt;
-    private int storedInputItems;
-    private int maxStoredInputItems;
-    private int storedOutputItems;
-    private SimpleItemRecipeSO currentRecipe;
-    private int productionTicks;
+	public SimpleItemRecipeSO currentRecipe { get; private set; }
+	public int storedInputItems { get; private set; }
+	public int storedOutputItems { get; private set; }
 
-    protected override void Initialize(Vector2Int origin, BuildingDir dir, ConstructorSO buildableDataSO) {
-        BaseDataSet(origin, dir, buildableDataSO);
-    }
+	private ConveyorBelt inputBelt;
+	private ConveyorBelt outputBelt;
+	private int maxStoredInputItems;
+	private int productionTicks;
 
-    private void OnDestroy() {
-        Unsubscribe();
-    }
+	public event Action<int> StoredInputItemsCountChanged, StoredOutputItemsCountChanged;
+	public event Action<float> ProductionTicksChanged;
 
-    public override void GridSetupDone() {
-        SetupBelts();
-        SetupRecipe(0);
-        Subscribe();
-    }
+	protected override void Initialize(Vector2Int origin, BuildingDir dir, ConstructorSO buildableDataSO) {
+		BaseDataSet(origin, dir, buildableDataSO);
+	}
 
-    public override void DestroySelf() {
-        inputBelt.DestroySelf();
-        outputBelt.DestroySelf();
-        base.DestroySelf();
-    }
+	private void OnDestroy() {
+		Unsubscribe();
+	}
 
-    private void SetupBelts() {
-        inputBelt = gameObject.AddComponent<ConveyorBelt>();
-        outputBelt = gameObject.AddComponent<ConveyorBelt>();
-        Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.inputBeltPosition, dir);
-        inputBelt.SetupBuildingBelt(beltPos, dir, this);
-        beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.outputBeltPosition, dir);
-        outputBelt.SetupBuildingBelt(beltPos, dir, this);
-    }
+	public override void GridSetupDone() {
+		SetupBelts();
+		SetupRecipe(0);
+		Subscribe();
+	}
 
-    private void Subscribe() {
-        TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
-        timeTickSystem.OnMicroTick += OnMicroTick;
-        timeTickSystem.OnEarlyTick += OnEarlyTick;
-    }
+	public override void DestroySelf() {
+		inputBelt.DestroySelf();
+		outputBelt.DestroySelf();
+		base.DestroySelf();
+	}
 
-    private void Unsubscribe() {
-        TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
-        timeTickSystem.OnMicroTick -= OnMicroTick;
-        timeTickSystem.OnEarlyTick -= OnEarlyTick;
-    }
+	private void SetupBelts() {
+		inputBelt = gameObject.AddComponent<ConveyorBelt>();
+		outputBelt = gameObject.AddComponent<ConveyorBelt>();
+		Vector2Int beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.inputBeltPosition, dir);
+		inputBelt.SetupBuildingBelt(beltPos, dir, this);
+		beltPos = buildableDataSO.GetMachineBeltPosition(origin, buildableDataSO.outputBeltPosition, dir);
+		outputBelt.SetupBuildingBelt(beltPos, dir, this);
+	}
 
-    public void SetupRecipe(int index) {
-        currentRecipe = buildableDataSO.itemRecipeList[index];
-        maxStoredInputItems = currentRecipe.inputItem.amount * 2;
-        storedInputItems = 0;
-        storedOutputItems = 0;
-    }
+	private void Subscribe() {
+		TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
+		timeTickSystem.OnMicroTick += OnMicroTick;
+		timeTickSystem.OnEarlyTick += OnEarlyTick;
+	}
 
-    private void OnMicroTick() {
-        if (storedInputItems < currentRecipe.inputItem.amount || storedOutputItems > currentRecipe.outputItem.amount) return;
+	private void Unsubscribe() {
+		TimeTickSystem timeTickSystem = Injector.Resolve<TimeTickSystem>();
+		timeTickSystem.OnMicroTick -= OnMicroTick;
+		timeTickSystem.OnEarlyTick -= OnEarlyTick;
+	}
 
-        productionTicks++;
+	public void SetupRecipe(int index) {
+		currentRecipe = buildableDataSO.itemRecipeList[index];
+		maxStoredInputItems = currentRecipe.inputItem.amount * 2;
+		storedInputItems = 0;
+		storedOutputItems = 0;
+		productionTicks = 0;
+	}
 
-        if (productionTicks != currentRecipe.craftingTicks) return;
+	private void OnMicroTick() {
+		if (storedInputItems < currentRecipe.inputItem.amount || storedOutputItems > currentRecipe.outputItem.amount) return;
 
-        productionTicks = 0;
-        Craft();
-    }
+		productionTicks++;
 
-    private void Craft() {
-        storedInputItems -= currentRecipe.inputItem.amount;
-        storedOutputItems += currentRecipe.outputItem.amount;
-    }
+		if (productionTicks == currentRecipe.craftingTicks) {
+			productionTicks = 0;
+			Craft();
+		}
 
-    private void OnEarlyTick() {
-        TryGetItemFromInputBelt();
-        TryPutItemOnOutputBelt();
-    }
+		ProductionTicksChanged?.Invoke(productionTicks);
+	}
 
-    private void TryGetItemFromInputBelt() {
-        if (inputBelt.endItem == null || storedInputItems == maxStoredInputItems || inputBelt.endItem.itemSO != currentRecipe.inputItem.item) return;
+	private void Craft() {
+		storedInputItems -= currentRecipe.inputItem.amount;
+		storedOutputItems += currentRecipe.outputItem.amount;
+		StoredInputItemsCountChanged?.Invoke(storedInputItems);
+		StoredOutputItemsCountChanged?.Invoke(storedOutputItems);
+	}
 
-        inputBelt.endItem.DestroySelf();
-        storedInputItems++;
-    }
+	private void OnEarlyTick() {
+		TryGetItemFromInputBelt();
+		TryPutItemOnOutputBelt();
+	}
 
-    private void TryPutItemOnOutputBelt() {
-        if (outputBelt.startItem != null || storedOutputItems == 0) return;
+	private void TryGetItemFromInputBelt() {
+		if (inputBelt.endItem == null || storedInputItems == maxStoredInputItems || inputBelt.endItem.itemSO != currentRecipe.inputItem.item) return;
 
-        WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, currentRecipe.outputItem.item);
-        outputBelt.SetWorldItem(worldItem);
-        storedOutputItems--;
-    }
+		inputBelt.endItem.DestroySelf();
+		storedInputItems++;
+		StoredInputItemsCountChanged?.Invoke(storedInputItems);
+	}
+
+	private void TryPutItemOnOutputBelt() {
+		if (outputBelt.startItem != null || storedOutputItems == 0) return;
+
+		WorldItem worldItem = WorldItem.Create(outputBelt.origin, dir, currentRecipe.outputItem.item);
+		outputBelt.SetWorldItem(worldItem);
+		storedOutputItems--;
+		StoredOutputItemsCountChanged?.Invoke(storedOutputItems);
+	}
+
+	public float GetTargetProgressNormalized() {
+		return (float)(productionTicks + 1) / currentRecipe.craftingTicks;
+	}
+
+	public float GetProgressNormalized() {
+		return (float)productionTicks / currentRecipe.craftingTicks;
+	}
 }

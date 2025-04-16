@@ -27,7 +27,7 @@ public class SettingsPanel : BaseMenuPanel {
 	private bool changed;
 	private int qualityLevel;
 	private Resolution[] resolutions;
-	HashSet<string> allowedRatios = new HashSet<string> { "16:9", "16:10", "4:3", "5:4", "21:9", "32:9" };
+	private HashSet<string> allowedRatios = new HashSet<string> { "16:9", "16:10", "4:3", "5:4", "21:9", "32:9" };
 
 	private void SetupOptions() {
 		resolutionDropdown.onValueChanged.AddListener(SetResolution);

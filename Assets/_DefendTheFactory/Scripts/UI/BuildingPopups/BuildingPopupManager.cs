@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager> {
 	[SerializeField] private GatheringMachinePopup gatheringMachinePopup;
+	[SerializeField] private ConstructorPopup constructorPopup;
 
 	private BaseBuildingPopup currentBuildingPopup;
 	private BasePlacedObject currentSelectedObject;
@@ -55,6 +56,7 @@ public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager
 			default:
 			case BuildingPopupEnum.None: return null;
 			case BuildingPopupEnum.GatheringMachine: return gatheringMachinePopup;
+			case BuildingPopupEnum.Constructor: return constructorPopup;
 		}
 	}
 }
