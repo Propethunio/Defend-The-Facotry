@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,23 +17,111 @@ public class SettingsPanel : BaseMenuPanel {
 
 	[Header("Text")] [SerializeField] private TextMeshProUGUI warningText;
 
+	[Header("Options")] [SerializeField] private TMP_Dropdown resolutionDropdown;
+	[SerializeField] private TMP_Dropdown qualityDropdown;
+	[SerializeField] private Toggle fullscreenToggle;
+	[SerializeField] private Slider scaleSlider;
+	[SerializeField] private TMP_InputField scaleInput;
+	[SerializeField] private TMP_Dropdown languageDropdown;
+
 	private bool changed;
+	private int qualityLevel;
+	private Resolution[] resolutions;
+	HashSet<string> allowedRatios = new HashSet<string> { "16:9", "16:10", "4:3", "5:4", "21:9", "32:9" };
+
+	private void SetupOptions() {
+		resolutionDropdown.onValueChanged.AddListener(SetResolution);
+		qualityDropdown.onValueChanged.AddListener(SetQualityLevel);
+		fullscreenToggle.onValueChanged.AddListener(SetFullScreen);
+		scaleSlider.onValueChanged.AddListener(SetScaleFromSlider);
+		scaleInput.onValueChanged.AddListener(SetScaleFromInputField);
+		languageDropdown.onValueChanged.AddListener(SetLanguage);
+	}
+
+	private void DisableOptions() {
+		resolutionDropdown.onValueChanged.RemoveAllListeners();
+		qualityDropdown.onValueChanged.RemoveAllListeners();
+		fullscreenToggle.onValueChanged.RemoveAllListeners();
+		scaleSlider.onValueChanged.RemoveAllListeners();
+		scaleInput.onValueChanged.RemoveAllListeners();
+		languageDropdown.onValueChanged.RemoveAllListeners();
+	}
+
+	private void SetResolution(int index) {
+		string selected = resolutionDropdown.options[index].text;
+
+		// Ignore label lines like "-- 16:9 --"
+		if (selected.StartsWith("--")) return;
+
+		string[] parts = selected.Split('x');
+		if (parts.Length < 2) return;
+
+		if (int.TryParse(parts[0].Trim(), out int width) && int.TryParse(parts[1].Trim(), out int height)) {
+			Screen.SetResolution(width, height, Screen.fullScreen);
+		}
+	}
+
+	private void SetQualityLevel(int qualityIndex) {
+		qualityLevel = qualityIndex;
+		changed = true;
+	}
+
+	private void SetFullScreen(bool fullScreen) {
+		Screen.fullScreen = fullScreen;
+	}
+
+	private void SetScaleFromSlider(float scale) {
+		changed = true;
+	}
+
+	private void SetScaleFromInputField(string input) {
+		changed = true;
+	}
+
+	private void SetLanguage(int languageIndex) { }
+
+	private void OnApplyClicked() {
+		QualitySettings.SetQualityLevel(qualityLevel);
+		changed = false;
+	}
+
+	private void Start() {
+		SetupResolutions();
+	}
+
+	/*private void SetupResolutions() {
+		resolutionDropdown.ClearOptions();
+		resolutions = Screen.resolutions;
+		List<string> options = new List<string>();
+		int currentResolutionIndex = 0;
+		int resolutionLength = resolutions.Length;
+
+		for (int i = 0; i < resolutionLength; i++) {
+			string option = resolutions[i].width + " x " + resolutions[i].height;
+			options.Add(option);
+
+			if (resolutions[i].width == Screen.width && resolutions[i].height == Screen.height) {
+				currentResolutionIndex = i;
+			}
+		}
+
+		resolutionDropdown.AddOptions(options);
+		resolutionDropdown.value = currentResolutionIndex;
+		resolutionDropdown.RefreshShownValue();
+	}*/
 
 	protected override void SetupButtons() {
 		resetButton.onClick.AddListener(OnResetButtonClicked);
 		backButton.onClick.AddListener(OnBackButtonClicked);
 		applyButton.onClick.AddListener(OnApplyClicked);
+		SetupOptions();
 	}
 
 	protected override void DisableButtons() {
 		resetButton.onClick.RemoveAllListeners();
 		backButton.onClick.RemoveAllListeners();
 		applyButton.onClick.RemoveAllListeners();
-	}
-
-	private void OnApplyClicked() {
-		//APPLY AND SAVE
-		changed = false;
+		DisableOptions();
 	}
 
 	private void OnResetButtonClicked() {
@@ -76,5 +166,82 @@ public class SettingsPanel : BaseMenuPanel {
 	private void BackWarningOnConfirm() {
 		HideWarningPop();
 		ShowPanel(menuPanel);
+	}
+
+	private void SetupResolutions() {
+		resolutionDropdown.ClearOptions();
+
+		resolutions = Screen.resolutions;
+		Dictionary<string, List<(int width, int height)>> groupedResolutions = new Dictionary<string, List<(int, int)>>();
+		HashSet<string> usedResolutions = new HashSet<string>();
+		List<string> options = new List<string>();
+		int currentResolutionIndex = 0;
+		int indexCounter = 0;
+
+		// Get current screen aspect ratio
+		string currentAspect = GetAspectRatio(Screen.width, Screen.height);
+
+		for (int i = 0; i < resolutions.Length; i++) {
+			int width = resolutions[i].width;
+			int height = resolutions[i].height;
+
+			// Skip tiny resolutions
+			if (width < 640 || height < 480) continue;
+
+			string aspectRatio = GetAspectRatio(width, height);
+			if (aspectRatio == null) continue; // Skip unknown/weird ratios
+
+			string key = width + "x" + height;
+			if (usedResolutions.Contains(key)) continue;
+			usedResolutions.Add(key);
+
+			if (!groupedResolutions.ContainsKey(aspectRatio)) {
+				groupedResolutions[aspectRatio] = new List<(int, int)>();
+			}
+
+			groupedResolutions[aspectRatio].Add((width, height));
+		}
+
+		// Order aspect groups: current one first
+		var orderedAspects = groupedResolutions.Keys.OrderBy(r => r != currentAspect) // current aspect ratio first
+			.ThenBy(r => r) // others alphabetically
+			.ToList();
+
+		foreach (var aspect in orderedAspects) {
+			options.Add($"<i><color=#888888>-- {aspect} --</color></i>");
+
+			var sortedGroup = groupedResolutions[aspect].OrderBy(r => r.width).ThenBy(r => r.height).ToList();
+
+			foreach (var res in sortedGroup) {
+				string option = $"{res.width} x {res.height}";
+				options.Add(option);
+
+				if (res.width == Screen.width && res.height == Screen.height) {
+					currentResolutionIndex = indexCounter + 1; // offset for label
+				}
+
+				indexCounter++;
+			}
+
+			indexCounter++; // account for label itself
+		}
+
+		resolutionDropdown.AddOptions(options);
+		resolutionDropdown.value = currentResolutionIndex;
+		resolutionDropdown.RefreshShownValue();
+	}
+
+
+	private string GetAspectRatio(int width, int height) {
+		float ratio = (float)width / height;
+
+		if (Mathf.Approximately(ratio, 16f / 9f)) return "16:9";
+		if (Mathf.Approximately(ratio, 16f / 10f)) return "16:10";
+		if (Mathf.Approximately(ratio, 4f / 3f)) return "4:3";
+		if (Mathf.Approximately(ratio, 5f / 4f)) return "5:4";
+		if (Mathf.Approximately(ratio, 21f / 9f)) return "21:9";
+		if (Mathf.Approximately(ratio, 32f / 9f)) return "32:9";
+
+		return null;
 	}
 }
