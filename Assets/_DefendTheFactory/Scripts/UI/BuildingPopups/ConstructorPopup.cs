@@ -9,6 +9,7 @@ public class ConstructorPopup : BaseBuildingPopup {
 	[SerializeField] private Image recipeTwoHighlight;
 	[SerializeField] private Image inputIcon;
 	[SerializeField] private Image outputIcon;
+	[SerializeField] private GameObject recipeTwoLock;
 	[SerializeField] private Slider progressBar;
 	[SerializeField] private Button recipeOneButton;
 	[SerializeField] private Button recipeTwoButton;
@@ -22,7 +23,9 @@ public class ConstructorPopup : BaseBuildingPopup {
 	[SerializeField] private TextMeshProUGUI progressPercentText;
 	[SerializeField] private TextMeshProUGUI cycleLengthText;
 
-	private Constructor machine;
+    [SerializeField] private Button upgradeTestButton;
+
+    private Constructor machine;
 	private float targetProgress;
 	private float interpolationSpeed;
 	private int currentRecipeIndex;
@@ -44,7 +47,8 @@ public class ConstructorPopup : BaseBuildingPopup {
 		if (machine.currentRecipe == machine.buildableDataSO.itemRecipeList[0]) {
 			recipeOneHighlight.enabled = true;
 			recipeTwoHighlight.enabled = false;
-		}
+            currentRecipeIndex = 0;
+        }
 		else {
 			recipeOneHighlight.enabled = false;
 			recipeTwoHighlight.enabled = true;
@@ -71,15 +75,27 @@ public class ConstructorPopup : BaseBuildingPopup {
 		machine.StoredInputItemsCountChanged += UpdateStoredInputItems;
 		machine.StoredOutputItemsCountChanged += UpdateStoredOutputItems;
 		machine.ProductionTicksChanged += UpdateProgress;
+		machine.BuildingUpgraded += UnlockRecipe;
 		recipeOneButton.onClick.AddListener(() => ChangeMachineRecipe(0));
-		recipeTwoButton.onClick.AddListener(() => ChangeMachineRecipe(1));
+		if(machine.buildingLevel == 2) {
+            recipeTwoButton.onClick.AddListener(() => ChangeMachineRecipe(1));
+            recipeTwoLock.SetActive(false);
+        } else {
+			recipeTwoLock.SetActive(true);
+		}
+		upgradeTestButton.onClick.AddListener(() => Upgrade());
+	}
+
+	private void Upgrade() {
+		machine.UpgradeLvl();
 	}
 
 	protected override void Unsubscribe() {
 		machine.StoredInputItemsCountChanged -= UpdateStoredInputItems;
 		machine.StoredOutputItemsCountChanged -= UpdateStoredOutputItems;
 		machine.ProductionTicksChanged -= UpdateProgress;
-		recipeOneButton.onClick.RemoveAllListeners();
+        machine.BuildingUpgraded -= UnlockRecipe;
+        recipeOneButton.onClick.RemoveAllListeners();
 		recipeTwoButton.onClick.RemoveAllListeners();
 	}
 
@@ -106,4 +122,9 @@ public class ConstructorPopup : BaseBuildingPopup {
 
 		targetProgress = progress;
 	}
+
+	private void UnlockRecipe() {
+        recipeTwoButton.onClick.AddListener(() => ChangeMachineRecipe(1));
+        recipeTwoLock.SetActive(false);
+    }
 }

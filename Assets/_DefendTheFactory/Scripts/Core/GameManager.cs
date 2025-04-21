@@ -8,7 +8,6 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private bool generateMapAsync;
     [SerializeField] private bool addResources;
 
-    public EnemyLogic enemyPrefab;
     public List<ItemSO> items;
 
     private void Awake() {
@@ -21,7 +20,7 @@ public class GameManager : MonoBehaviour {
 
     private void Init() {
         SceneLoader.Instance.OnSceneGroupLoaded -= Init;
-        Injector.Resolve<WaveManager>().Init(enemyPrefab);
+        Injector.Resolve<WaveManager>().Init();
         MapGenerator mapGenerator = new MapGenerator(data);
         Injector.Resolve<BuildingSystem>().Init(mapGenerator.width, mapGenerator.height);
         Injector.Resolve<BeltManager>().Init(showBeltDebug);

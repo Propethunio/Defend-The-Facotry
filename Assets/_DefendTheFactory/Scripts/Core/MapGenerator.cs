@@ -84,6 +84,7 @@ public class MapGenerator {
         
         PopulateMap();
         waveManager.SetPath(path);
+        waveManager.SetEnemiesData(data.enemiesWavesData);
     }
 
     private void GeneratePath(int x, int y, int portalX, int portalBorder) {

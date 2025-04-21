@@ -5,4 +5,5 @@ using UnityEngine;
 public class ConstructorSO : BaseMachineSO {
     [field: SerializeField] public Vector2Int inputBeltPosition { get; private set; }
     [field: SerializeField] public List<SimpleItemRecipeSO> itemRecipeList { get; private set; }
+    [field: SerializeField] public GameObject upgradedModel { get; private set; }
 }

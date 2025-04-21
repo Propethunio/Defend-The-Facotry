@@ -31,6 +31,7 @@ public class MapDataSO : ScriptableObject {
     [field: SerializeField] public PortalSO portalData { get; private set; }
     [field: SerializeField] public int resourcesOnMapPercent { get; private set; }
     [field: SerializeField] public List<ResourceWeightPair> resourcesOnMap { get; private set; }
+    [field: SerializeField] public EnemyWavesSO enemiesWavesData { get; private set; }
 }
 
 [Serializable]

@@ -75,6 +75,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dir: 0
+  modelTransform: {fileID: 619288903392833302}
 --- !u!114 &-5536942214310283840
 MonoBehaviour:
   m_ObjectHideFlags: 0

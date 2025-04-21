@@ -34,3 +34,5 @@ MonoBehaviour:
   <itemRecipeList>k__BackingField:
   - {fileID: 11400000, guid: bafcc7a83d0b04841a23bb36405a7678, type: 2}
   - {fileID: 11400000, guid: 5cc1a1e12b3cf964fbbadea6e0bf3062, type: 2}
+  <upgradedModel>k__BackingField: {fileID: 5638528141640626486, guid: 14c784af4e9326e4aab8f6b0ceac4602,
+    type: 3}

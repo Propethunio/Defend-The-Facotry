@@ -2,19 +2,23 @@
 using UnityEngine;
 
 public class Constructor : BaseDataPlacedObject<ConstructorSO> {
+	[SerializeField] private Transform modelTransform;
+
 	public SimpleItemRecipeSO currentRecipe { get; private set; }
 	public int storedInputItems { get; private set; }
 	public int storedOutputItems { get; private set; }
+	public int buildingLevel { get; private set; } = 1;
 
-	private ConveyorBelt inputBelt;
+    private ConveyorBelt inputBelt;
 	private ConveyorBelt outputBelt;
 	private int maxStoredInputItems;
 	private int productionTicks;
 
 	public event Action<int> StoredInputItemsCountChanged, StoredOutputItemsCountChanged;
 	public event Action<float> ProductionTicksChanged;
+	public event Action BuildingUpgraded;
 
-	protected override void Initialize(Vector2Int origin, BuildingDir dir, ConstructorSO buildableDataSO) {
+    protected override void Initialize(Vector2Int origin, BuildingDir dir, ConstructorSO buildableDataSO) {
 		BaseDataSet(origin, dir, buildableDataSO);
 	}
 
@@ -73,7 +77,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
 			Craft();
 		}
 
-		ProductionTicksChanged?.Invoke(productionTicks);
+		ProductionTicksChanged?.Invoke(GetTargetProgressNormalized());
 	}
 
 	private void Craft() {
@@ -111,5 +115,14 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
 
 	public float GetProgressNormalized() {
 		return (float)productionTicks / currentRecipe.craftingTicks;
+	}
+
+	public void UpgradeLvl() {
+		Quaternion tmpQaterion = modelTransform.rotation;
+		Vector3 tmpPosition = modelTransform.position;
+		Destroy(modelTransform.gameObject);
+		Instantiate(buildableDataSO.upgradedModel, tmpPosition, tmpQaterion, transform);
+		buildingLevel++;
+		BuildingUpgraded?.Invoke();
 	}
 }
