@@ -46,6 +46,18 @@ public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseB
 		}
 	}
 
+	public override bool isDestroyable() {
+		return !buildableDataSO.isNotDestroyable;
+	}
+
+	public override List<ItemIntPair> GetItemCost() {
+		return buildableDataSO.cost;
+	}
+
+	public override float GetRefundPenalty() {
+		return buildableDataSO.refundPenalty;
+	}
+
 	protected void BaseDataSet(Vector2Int origin, BuildingDir dir, T placedObjectDataSO) {
 		this.origin = origin;
 		this.dir = dir;
