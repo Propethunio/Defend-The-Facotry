@@ -2,63 +2,64 @@
 using UnityEngine;
 
 public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseBuildableObjectSO {
-    public T buildableDataSO { get; private set; }
-    private ObjectOutline outline;
-    private BuildingPopupManager popupManager;
+	public T buildableDataSO { get; private set; }
 
-    public virtual void Start() {
-        popupManager = Injector.Resolve<BuildingPopupManager>();
+	private ObjectOutline outline;
+	private BuildingPopupManager popupManager;
 
-        if (buildableDataSO == null || !buildableDataSO.shouldHighlight) return;
+	public virtual void Start() {
+		popupManager = Injector.Resolve<BuildingPopupManager>();
 
-        outline = GetComponent<ObjectOutline>();
-    }
+		if (buildableDataSO == null || !buildableDataSO.shouldHighlight) return;
 
-    public override bool ShouldHighlight() {
-        return buildableDataSO.shouldHighlight;
-    }
+		outline = GetComponent<ObjectOutline>();
+	}
 
-    public override void MouseEnterObject() {
-        outline.SetOutline(true);
-    }
+	public override bool ShouldHighlight() {
+		return buildableDataSO.shouldHighlight;
+	}
 
-    public override void MouseExitObject() {
-        outline.SetOutline(false);
-    }
+	public override void MouseEnterObject() {
+		outline.SetOutline(true);
+	}
 
-    public override void MouseLeftClickObject() {
-        popupManager.ShowBuildingPopup(this);
-    }
+	public override void MouseExitObject() {
+		outline.SetOutline(false);
+	}
 
-    public static BasePlacedObject Create(Vector3 worldPosition, BuildingDir dir, T placedObjectDataSO) {
-        return Instantiate(placedObjectDataSO.prefab, worldPosition, Quaternion.Euler(0, Injector.Resolve<BuildingSystem>().GetRotationAngle(dir), 0)).GetComponent<BasePlacedObject>();
-    }
+	public override void MouseLeftClickObject() {
+		popupManager.ShowBuildingPopup(this);
+	}
 
-    protected abstract void Initialize(Vector2Int origin, BuildingDir dir, T placedObjectDataSO);
+	public static BasePlacedObject Create(Vector3 worldPosition, BuildingDir dir, T placedObjectDataSO) {
+		return Instantiate(placedObjectDataSO.prefab, worldPosition, Quaternion.Euler(0, Injector.Resolve<BuildingSystem>().GetRotationAngle(dir), 0)).GetComponent<BasePlacedObject>();
+	}
 
-    public override void SetData(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
-        if (placedObjectDataSO is T castedDataSO) {
-            Initialize(origin, dir, castedDataSO);
-        }
-        else {
-            Debug.LogError($"Invalid type passed to Initialize. Expected {typeof(T)} but got {placedObjectDataSO.GetType()}");
-        }
-    }
+	protected abstract void Initialize(Vector2Int origin, BuildingDir dir, T placedObjectDataSO);
 
-    protected void BaseDataSet(Vector2Int origin, BuildingDir dir, T placedObjectDataSO) {
-        this.origin = origin;
-        this.dir = dir;
-        buildableDataSO = placedObjectDataSO;
-        Setup();
-    }
+	public override void SetData(Vector2Int origin, BuildingDir dir, BaseBuildableObjectSO placedObjectDataSO) {
+		if (placedObjectDataSO is T castedDataSO) {
+			Initialize(origin, dir, castedDataSO);
+		}
+		else {
+			Debug.LogError($"Invalid type passed to Initialize. Expected {typeof(T)} but got {placedObjectDataSO.GetType()}");
+		}
+	}
 
-    protected virtual void TriggerGridObjectChanged() {
-        foreach (Vector2Int gridPosition in GetGridPositionList()) {
-            Injector.Resolve<BuildingSystem>().grid.TriggerGridObjectChanged(gridPosition.x, gridPosition.y);
-        }
-    }
+	protected void BaseDataSet(Vector2Int origin, BuildingDir dir, T placedObjectDataSO) {
+		this.origin = origin;
+		this.dir = dir;
+		buildableDataSO = placedObjectDataSO;
+		Setup();
+	}
 
-    public override List<Vector2Int> GetGridPositionList() {
-        return buildableDataSO.GetGridPositionList(origin, dir);
-    }
+	protected virtual void TriggerGridObjectChanged() {
+		foreach (Vector2Int gridPosition in GetGridPositionList()) {
+			Injector.Resolve<BuildingSystem>().grid.TriggerGridObjectChanged(gridPosition.x, gridPosition.y);
+		}
+	}
+
+	public override List<Vector2Int> GetGridPositionList() {
+		return buildableDataSO.GetGridPositionList(origin, dir);
+	}
 }

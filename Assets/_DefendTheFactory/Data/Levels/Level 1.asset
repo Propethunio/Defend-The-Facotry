@@ -54,3 +54,5 @@ MonoBehaviour:
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: 29b7cb6e4c205e44bb75fb07acd25462,
       type: 2}
     <weight>k__BackingField: 1
+  <enemiesWavesData>k__BackingField: {fileID: 11400000, guid: 8e85f9b261cb94048b3e5a622a3deb70,
+    type: 2}

@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
         BasePlacedObject placedObject = Injector.Resolve<BuildingSystem>().GetGridObject(Injector.Resolve<BuildingSystem>().GetMouseWorldSnappedPosition()).placedObject;
         if (!placedObject || placedObject is not ConveyorBelt belt || belt.startItem) return;
 
-        WorldItem worldItem = WorldItem.Create(belt.origin, belt.dir, GameAssets.i.itemSO_Refs.ironOre);
+        WorldItem worldItem = Injector.Resolve<FlyweightFactory>().CreateWorldItem(belt.origin, belt.dir, GameAssets.i.itemSO_Refs.ironOre);
         belt.TrySetWorldItem(worldItem);
     }
 

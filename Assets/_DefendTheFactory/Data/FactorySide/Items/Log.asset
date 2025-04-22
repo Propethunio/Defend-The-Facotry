@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1abca38e197a3845be27e2eabab9723, type: 3}
   m_Name: Log
   m_EditorClassIdentifier: 
+  type: 0
+  prefab: {fileID: 574782149111966503, guid: 0bb4a37c755832f45bec95d910441129, type: 3}
   <icon>k__BackingField: {fileID: 21300000, guid: 56d4930fdb2f1f146be3fcac00da111e,
     type: 3}
   <itemName>k__BackingField: Log
-  <prefab>k__BackingField: {fileID: 574782149111966503, guid: 0bb4a37c755832f45bec95d910441129,
-    type: 3}

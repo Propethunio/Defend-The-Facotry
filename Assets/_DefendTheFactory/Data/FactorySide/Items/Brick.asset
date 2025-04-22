@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1abca38e197a3845be27e2eabab9723, type: 3}
   m_Name: Brick
   m_EditorClassIdentifier: 
+  type: 4
+  prefab: {fileID: 5102993921385397761, guid: 5b44dd4f4506c2e40949b1123678cb9a, type: 3}
   <icon>k__BackingField: {fileID: 0}
   <itemName>k__BackingField: Brick
-  <prefab>k__BackingField: {fileID: 5102993921385397761, guid: 5b44dd4f4506c2e40949b1123678cb9a,
-    type: 3}

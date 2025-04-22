@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1abca38e197a3845be27e2eabab9723, type: 3}
   m_Name: StoneGravel
   m_EditorClassIdentifier: 
+  type: 5
+  prefab: {fileID: 2002821952129657682, guid: 46f5b37c0d748e045bdf06a3a1605cd6, type: 3}
   <icon>k__BackingField: {fileID: 0}
   <itemName>k__BackingField: Stone Gravel
-  <prefab>k__BackingField: {fileID: 2002821952129657682, guid: 46f5b37c0d748e045bdf06a3a1605cd6,
-    type: 3}
