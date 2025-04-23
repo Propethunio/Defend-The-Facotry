@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace SingularityGroup.HotReload.Editor {
-internal static class ExponentialBackoff {
+    static class ExponentialBackoff {
         
         public static TimeSpan GetTimeout(int attempt, int minBackoff = 250, int maxBackoff = 60000, int deltaBackoff = 400) {
             attempt = Math.Min(25, attempt); // safety to avoid overflow below

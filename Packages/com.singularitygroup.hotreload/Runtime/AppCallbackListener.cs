@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace SingularityGroup.HotReload {
-internal class AppCallbackListener : MonoBehaviour {
+    class AppCallbackListener : MonoBehaviour {
         /// <summary>
         /// Reliable on Android and in the editor.
         /// </summary>
@@ -18,8 +18,8 @@ internal class AppCallbackListener : MonoBehaviour {
         /// Reliable on Android, iOS and in the editor.
         /// </summary>
         public static event Action<bool> onApplicationFocus;
-
-        private static AppCallbackListener instance;
+        
+        static AppCallbackListener instance;
         public static AppCallbackListener I => instance;
         
         // Must be called early from Unity main thread (before any usages of the singleton I).
@@ -36,18 +36,18 @@ internal class AppCallbackListener : MonoBehaviour {
         public void DelayedQuit(float seconds) {
             StartCoroutine(delayedQuitRoutine(seconds));
         }
-
-        private IEnumerator delayedQuitRoutine(float seconds) {
+        
+        IEnumerator delayedQuitRoutine(float seconds) {
             yield return new WaitForSeconds(seconds);
             Application.Quit();
         }
-
-        private void OnApplicationPause(bool paused) {
+        
+        void OnApplicationPause(bool paused) {
             Paused = paused;
             onApplicationPause?.Invoke(paused);
         }
-
-        private void OnApplicationFocus(bool playing) {
+        
+        void OnApplicationFocus(bool playing) {
             onApplicationFocus?.Invoke(playing);
         }
     }

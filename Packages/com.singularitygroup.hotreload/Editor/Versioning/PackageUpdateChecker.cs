@@ -13,10 +13,11 @@ using UnityEngine.Networking;
 
 namespace SingularityGroup.HotReload.Editor {
     internal class PackageUpdateChecker {
-        private const string persistedFile = PackageConst.LibraryCachePath + "/updateChecker.json";
-        private readonly JsonSerializer jsonSerializer = JsonSerializer.CreateDefault();
-        private SemVersion newVersionDetected;
-        private bool started;
+        const string persistedFile = PackageConst.LibraryCachePath + "/updateChecker.json";
+        readonly JsonSerializer jsonSerializer = JsonSerializer.CreateDefault();
+        SemVersion newVersionDetected;
+        bool started;
+        bool warnedVersionCheckFailed;
 
         private static TimeSpan RetryInterval => TimeSpan.FromSeconds(30);
         private static TimeSpan CheckInterval => TimeSpan.FromHours(1);
@@ -50,8 +51,8 @@ namespace SingularityGroup.HotReload.Editor {
             var currentVersion = SemVersion.Parse(PackageConst.Version, strict: true);
             return !ReferenceEquals(version = newVersionDetected, null) && newVersionDetected > currentVersion;
         }
-
-        private async Task PerformVersionCheck() { 
+        
+        async Task PerformVersionCheck() { 
             var state = await LoadPersistedState();
             var currentVersion = SemVersion.Parse(PackageConst.Version, strict: true);
             if(state != null) {
@@ -70,8 +71,9 @@ namespace SingularityGroup.HotReload.Editor {
             if(response.err != null) {
                 if(response.statusCode == 0 || response.statusCode == 404) {
                     // probably no internet, fail silently and retry
-                } else {
+                } else if (!warnedVersionCheckFailed) {
                     Log.Warning("version check failed: {0}", response.err);
+                    warnedVersionCheckFailed = true;
                 }
             } else {
                 var newVersion = response.data;
@@ -82,7 +84,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private void PersistState(SemVersion newVersion) {
+        void PersistState(SemVersion newVersion) {
             // ReSharper disable once AssignNullToNotNullAttribute
             var fi = new FileInfo(persistedFile);
             fi.Directory.Create();
@@ -94,8 +96,8 @@ namespace SingularityGroup.HotReload.Editor {
                 });
             }
         }
-
-        private Task<State> LoadPersistedState() {
+        
+        Task<State> LoadPersistedState() {
             return Task.Run(() => {
                 var fi = new FileInfo(persistedFile);
                 if(!fi.Exists) {
@@ -108,8 +110,10 @@ namespace SingularityGroup.HotReload.Editor {
                 }
             });
         }
+        
 
-        private static async Task<Response<SemVersion>> GetLatestPackageVersion() {
+
+        static async Task<Response<SemVersion>> GetLatestPackageVersion() {
             string versionUrl;
             
             if (PackageConst.IsAssetStoreBuild) {
@@ -178,8 +182,8 @@ namespace SingularityGroup.HotReload.Editor {
                 HotReloadWindow.Current.SelectTab(typeof(HotReloadAboutTab));
             }
         }
-
-        private string UpdateGitUrlInManifest(SemVersion newVersion) {
+        
+        string UpdateGitUrlInManifest(SemVersion newVersion) {
             const string repoUrl = "git+https://gitlab.hotreload.net/root/hot-reload-releases.git";
             const string manifestJsonPath = "Packages/manifest.json";
             var repoUrlToNewVersion = $"{repoUrl}#{newVersion}";
@@ -198,8 +202,8 @@ namespace SingularityGroup.HotReload.Editor {
             File.WriteAllText(manifestJsonPath, root.ToString(Formatting.Indented));
             return null;
         }
-
-        private static string TryGetManfestDeps(JObject root, out JObject deps) {
+        
+        static string TryGetManfestDeps(JObject root, out JObject deps) {
             JToken value;
             if(!root.TryGetValue("dependencies", out value)) {
                 deps = null;
@@ -212,7 +216,7 @@ namespace SingularityGroup.HotReload.Editor {
             return null;
         }
 
-        private static async Task<bool> IsUsingGitRepo() {
+        static async Task<bool> IsUsingGitRepo() {
             var respose = await Task.Run(() => IsUsingGitRepoThreaded(PackageConst.PackageName));
             if(respose.err != null) {
                 Log.Warning("Unable to find package. message: {0}", respose.err);
@@ -221,8 +225,8 @@ namespace SingularityGroup.HotReload.Editor {
                 return respose.data;
             }
         }
-
-        private static Response<bool> IsUsingGitRepoThreaded(string packageId) {
+        
+        static Response<bool> IsUsingGitRepoThreaded(string packageId) {
             var fi = new FileInfo("Packages/manifest.json");
             if(!fi.Exists) {
                 return "Unable to find manifest.json";
@@ -252,7 +256,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private class Response<T> {
+        class Response<T> {
             public readonly T data;
             public readonly string err;
             public readonly long statusCode;
@@ -266,8 +270,8 @@ namespace SingularityGroup.HotReload.Editor {
                 return Response.FromError<T>(err);
             }
         }
-
-        private static class Response {
+        
+        static class Response {
             public static Response<T> FromError<T>(string error) {
                 return new Response<T>(default(T), error, -1);
             }
@@ -275,8 +279,8 @@ namespace SingularityGroup.HotReload.Editor {
                 return new Response<T>(result, null, 200);
             }
         }
-
-        private class State {
+        
+        class State {
             public DateTime lastVersionCheck;
             public string lastRemotePackageVersion;
         }

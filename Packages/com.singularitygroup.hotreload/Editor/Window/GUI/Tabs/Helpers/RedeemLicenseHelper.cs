@@ -42,15 +42,15 @@ namespace SingularityGroup.HotReload.Editor {
         private string status;
         private string error;
 
-        private const string statusSuccess = "success";
-        private const string statusAlreadyClaimed = "already redeemed by this user/device";
-        private const string unknownError = "We apologize, an error happened while redeeming your license. Please reach out to customer support for assistance.";
+        const string statusSuccess = "success";
+        const string statusAlreadyClaimed = "already redeemed by this user/device";
+        const string unknownError = "We apologize, an error happened while redeeming your license. Please reach out to customer support for assistance.";
 
         private GUILayoutOption[] secondaryButtonLayoutOptions = new[] { GUILayout.MaxWidth(100) };
 
         private bool requestingRedeem;
         private HttpClient redeemClient;
-        private const string redeemUrl = "https://vmhzj6jonn3qy7hk7tx7levpli0bstpj.lambda-url.us-east-1.on.aws/redeem";
+        const string redeemUrl = "https://vmhzj6jonn3qy7hk7tx7levpli0bstpj.lambda-url.us-east-1.on.aws/redeem";
 
         public RedeemLicenseHelper() {
             if (File.Exists(registerFlagPath)) {
@@ -90,7 +90,7 @@ namespace SingularityGroup.HotReload.Editor {
             EditorGUILayout.Space();
             EditorGUILayout.Space();
 
-            EditorGUILayout.LabelField("Comany size (number of employees)");
+            EditorGUILayout.LabelField("Company size (number of employees)");
             GUI.SetNextControlName("company_size");
             _pendingCompanySize = EditorGUILayout.TextField(_pendingCompanySize)?.Trim();
             EditorGUILayout.Space();
@@ -106,7 +106,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private void HandleRegistration(int companySize) {
+        void HandleRegistration(int companySize) {
             RequestHelper.RequestEditorEvent(new Stat(StatSource.Client, StatLevel.Debug, StatFeature.Licensing, StatEventType.Register), new EditorExtraData { { StatKey.CompanySize, companySize } });
             if (companySize > 10) {
                 FinishRegistration(RegistrationOutcome.Business);
@@ -155,7 +155,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private async Task RedeemLicense(string email, string invoiceNumber) {
+        async Task RedeemLicense(string email, string invoiceNumber) {
             string validationError;
             if (string.IsNullOrEmpty(invoiceNumber)) {
                 validationError = "Please enter invoice number / order ID.";
@@ -190,7 +190,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private string GetPrettyError(RedeemResponse response) {
+        string GetPrettyError(RedeemResponse response) {
             var err = response?.error;
             if (err == null) {
                 return unknownError;
@@ -210,7 +210,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private async Task<RedeemResponse> RequestRedeem(string email, string invoiceNumber) {
+        async Task<RedeemResponse> RequestRedeem(string email, string invoiceNumber) {
             requestingRedeem = true;
             await ThreadUtility.SwitchToThreadPool();
             try {
@@ -289,13 +289,13 @@ namespace SingularityGroup.HotReload.Editor {
             Cleanup();
         }
 
-        private void SwitchToStage(RedeemStage stage) {
+        void SwitchToStage(RedeemStage stage) {
             // remove focus so that the input field re-renders
             GUI.FocusControl(null);
             RedeemStage = stage;
         }
 
-        private void Cleanup() {
+        void Cleanup() {
             redeemClient?.Dispose();
             redeemClient = null;
             _pendingCompanySize = null;

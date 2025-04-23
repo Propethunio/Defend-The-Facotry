@@ -3,8 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace SingularityGroup.HotReload.Editor.Cli {
-internal class WindowsCliController : ICliController {
-    private Process process;
+    class WindowsCliController : ICliController {
+        Process process;
 
         public string BinaryFileName => "CodePatcherCLI.exe";
         public string PlatformName => "win-x64";

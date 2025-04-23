@@ -16,7 +16,7 @@ namespace SingularityGroup.HotReload.Editor {
         private MethodInfo setMethod;
         private Type settingsType;
         private Type prefColorType;
-        private const string currentPlaymodeTintPrefKey = "Playmode tint";
+        const string currentPlaymodeTintPrefKey = "Playmode tint";
 
         internal bool playmodeTintSupported => EditorCodePatcher.config.changePlaymodeTint && EnsureInitialized();
 

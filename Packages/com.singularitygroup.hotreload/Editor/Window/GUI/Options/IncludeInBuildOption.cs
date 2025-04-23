@@ -2,7 +2,7 @@
 
 namespace SingularityGroup.HotReload.Editor {
     internal class IncludeInBuildOption : ProjectOptionBase, ISerializedProjectOption {
-        private static IncludeInBuildOption _I;
+        static IncludeInBuildOption _I;
         public static IncludeInBuildOption I = _I ?? (_I = new IncludeInBuildOption());
         public override string ShortSummary => "Include Hot Reload in player builds";
         public override string Summary => ShortSummary;

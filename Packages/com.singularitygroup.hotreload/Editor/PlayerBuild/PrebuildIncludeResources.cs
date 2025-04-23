@@ -21,7 +21,7 @@ namespace SingularityGroup.HotReload.Editor {
         public int callbackOrder => 10;
 
         // Preprocess warnings don't show up in console
-        private bool warnSettingsNotSupported;
+        bool warnSettingsNotSupported;
         
         public void OnPreprocessBuild(BuildTarget target, string path) {
             try {

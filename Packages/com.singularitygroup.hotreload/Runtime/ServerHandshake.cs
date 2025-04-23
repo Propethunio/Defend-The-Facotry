@@ -82,7 +82,7 @@ namespace SingularityGroup.HotReload {
         /// <remarks>
         /// Must be called on main thread because it uses Unity UI methods.
         /// </remarks>
-        private async Task<bool> VerifyResults(Result results, PatchServerInfo server) {
+        async Task<bool> VerifyResults(Result results, PatchServerInfo server) {
             if (results.HasFlag(Result.QuietWarning)) {
                 // can handle here if needed later
             }
@@ -134,7 +134,7 @@ namespace SingularityGroup.HotReload {
             return true;
         }
 
-        private void OnVerified(PatchServerInfo serverToCheck) {
+        void OnVerified(PatchServerInfo serverToCheck) {
             verifiedServer = serverToCheck;
         }
 
@@ -171,8 +171,8 @@ namespace SingularityGroup.HotReload {
             QuietWarning     = 1 << 5,
             Verified         = 1 << 6,
         }
-
-        private static async Task<Result> RequestHandshake(PatchServerInfo info) {
+        
+        static async Task<Result> RequestHandshake(PatchServerInfo info) {
             var buildInfo = PlayerEntrypoint.PlayerBuildInfo;
             var results = Result.None;
             var verified = true;

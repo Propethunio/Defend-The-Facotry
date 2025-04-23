@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace SingularityGroup.HotReload {
-internal class InstallQRDialog : MonoBehaviour {
+    class InstallQRDialog : MonoBehaviour {
         public Button buttonGo;
         public Button buttonHide;
 
@@ -19,7 +19,7 @@ internal class InstallQRDialog : MonoBehaviour {
         }
 
         /// hide this dialog
-        private void Hide() {
+        void Hide() {
             gameObject.SetActive(false); // this should disable the Update loop?
         }
     }

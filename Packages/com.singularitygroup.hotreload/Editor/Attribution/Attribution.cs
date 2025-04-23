@@ -11,11 +11,11 @@ namespace SingularityGroup.HotReload.Editor {
          internal const string LastLoginKey = "HotReload.Attribution.LastAttributionEventAt";
          
          //Resend attribution event every 12 hours to be safe
-         private static readonly TimeSpan resendPeriod = TimeSpan.FromHours(12);
+         static readonly TimeSpan resendPeriod = TimeSpan.FromHours(12);
          
          //The last time the attribution event was sent.
          //Returns unix epoch in case it has never been sent before.
-         private static DateTime LastAttributionEventAt {
+         static DateTime LastAttributionEventAt {
              get {
                  if(EditorPrefs.HasKey(LastLoginKey)) {
                      return DateTime.ParseExact(EditorPrefs.GetString(LastLoginKey), "o", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
@@ -26,9 +26,10 @@ namespace SingularityGroup.HotReload.Editor {
                  EditorPrefs.SetString(LastLoginKey, value.ToUniversalTime().ToString("o"));
              }
          }
-
-         private const string actionName = "Login";
-         private const string partnerName = "The Naughty Cult Ltd.";
+         
+         
+         const string actionName = "Login";
+         const string partnerName = "The Naughty Cult Ltd.";
          
          public static void RegisterLogin(LoginStatusResponse response) {
              //Licensing might not be initialized yet.

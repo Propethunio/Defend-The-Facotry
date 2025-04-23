@@ -7,10 +7,10 @@ using UnityEditor.Compilation;
 using UnityEngine;
 
 namespace SingularityGroup.HotReload.Editor {
-internal class DefaultCompileChecker : ICompileChecker {
-    private const string recompileFilePath = PackageConst.LibraryCachePath + "/recompile.txt";
+    class DefaultCompileChecker : ICompileChecker {
+        const string recompileFilePath = PackageConst.LibraryCachePath + "/recompile.txt";
         public bool hasCompileErrors { get; private set;  }
-        private bool recompile;
+        bool recompile;
         public DefaultCompileChecker() {
             CompilationPipeline.assemblyCompilationFinished += DetectCompileErrors;
             CompilationPipeline.compilationFinished += OnCompilationFinished;
@@ -34,8 +34,8 @@ internal class DefaultCompileChecker : ICompileChecker {
                 }
             });
         }
-
-        private void DetectCompileErrors(string _, CompilerMessage[] messages) {
+        
+        void DetectCompileErrors(string _, CompilerMessage[] messages) {
             for (int i = 0; i < messages.Length; i++) {
                 if (messages[i].type == CompilerMessageType.Error) {
                     hasCompileErrors = true;
@@ -45,7 +45,7 @@ internal class DefaultCompileChecker : ICompileChecker {
             hasCompileErrors = false;
         }
 
-        private void OnCompilationFinished(object _) {
+        void OnCompilationFinished(object _) {
             //Don't recompile on compile errors
             if(!hasCompileErrors) {
                 Directory.CreateDirectory(Path.GetDirectoryName(recompileFilePath));
@@ -53,7 +53,7 @@ internal class DefaultCompileChecker : ICompileChecker {
             }
         }
 
-        private Action _onCompilationFinished;
+        Action _onCompilationFinished;
         public event Action onCompilationFinished {
             add {
                 if(recompile && value != null) {

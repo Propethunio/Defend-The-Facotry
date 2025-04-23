@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using SingularityGroup.HotReload.DTO;
 
 namespace SingularityGroup.HotReload {
-internal static class PlayerCodePatcher {
-    private static Timer timer;
+    
+    static class PlayerCodePatcher {
+        static Timer timer;
 
         static PlayerCodePatcher() {
             if (PlayerEntrypoint.IsPlayerWithHotReload()) {
@@ -52,16 +53,15 @@ internal static class PlayerCodePatcher {
 
         public static Task Disconnect() => UpdateHost(null);
 
-        private static void OnIntervalThreaded(object o) {
+        static void OnIntervalThreaded(object o) {
             ServerHandshake.I.CheckHandshake();
             ServerHealthCheck.I.CheckHealthAsync().Forget();
 
             ThreadUtility.RunOnMainThread((Action)o);
         }
-
-        private static string lastPatchId = string.Empty;
-
-        private static void OnIntervalMainThread() {
+        
+        static string lastPatchId = string.Empty;
+        static void OnIntervalMainThread() {
             PatchServerInfo verifiedServer;
             if(ServerHandshake.I.TryGetVerifiedServer(out verifiedServer)) {
                 // now that handshake verified, we are connected.
@@ -96,11 +96,10 @@ internal static class PlayerCodePatcher {
                 }
             }
         }
-
-        private static void HandleResponseReceived(MethodPatchResponse response) {
+        
+        static void HandleResponseReceived(MethodPatchResponse response) {
             Log.Debug("PollMethodPatches handling MethodPatchResponse id:{0} response.patches.Length:{1} response.failures.Length:{2}",
                 response.id, response.patches.Length, response.failures.Length);
-            // TODO handle new response data (removed methods etc.)
             if(response.patches.Length > 0) {
                 CodePatcher.I.RegisterPatches(response, persist: true);
             }

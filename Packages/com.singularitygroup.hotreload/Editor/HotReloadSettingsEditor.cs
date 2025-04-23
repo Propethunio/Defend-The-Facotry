@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SingularityGroup.HotReload.Editor {
-internal static class HotReloadSettingsEditor {
+    static class HotReloadSettingsEditor {
         /// Ensure settings asset file is created and saved
         public static void EnsureSettingsCreated(HotReloadSettingsObject asset) {
             if (!SettingsExists()) {
@@ -26,7 +26,7 @@ internal static class HotReloadSettingsEditor {
         /// </summary>
         /// <remarks>Assume that settings asset doesn't exist yet</remarks>
         /// <returns>The settings asset</returns>
-        private static void CreateNewSettingsFile(HotReloadSettingsObject asset, string editorAssetPath) {
+        static void CreateNewSettingsFile(HotReloadSettingsObject asset, string editorAssetPath) {
             // create new settings asset
             // ReSharper disable once AssignNullToNotNullAttribute
             Directory.CreateDirectory(Path.GetDirectoryName(editorAssetPath));

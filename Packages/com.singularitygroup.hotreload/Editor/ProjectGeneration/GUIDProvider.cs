@@ -1,5 +1,5 @@
 namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
-internal class GUIDProvider : IGUIDGenerator
+  class GUIDProvider : IGUIDGenerator
   {
     public string ProjectGuid(string name)
     {

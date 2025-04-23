@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 
 namespace SingularityGroup.HotReload.Editor.Cli {
-internal class FallbackCliController : ICliController {
+    class FallbackCliController : ICliController {
         public string BinaryFileName => "";
         public string PlatformName => "";
         public bool CanOpenInBackground => false;

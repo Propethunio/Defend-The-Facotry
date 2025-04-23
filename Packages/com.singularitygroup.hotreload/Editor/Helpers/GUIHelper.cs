@@ -95,8 +95,8 @@ namespace SingularityGroup.HotReload.Editor {
             }
             return iconTexture;
         }
-
-        private static Texture2D CombineImages(Texture2D image1, Texture2D image2) {
+        
+        static Texture2D CombineImages(Texture2D image1, Texture2D image2) {
             if (!image1 || !image2) {
                 return image1;
             }

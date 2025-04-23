@@ -11,8 +11,8 @@ using Unity.CodeEditor;
 #endif
 
 namespace SingularityGroup.HotReload.Editor {
-internal static class InstallUtility {
-    private const string installFlagPath = PackageConst.LibraryCachePath + "/installFlag.txt";
+    static class InstallUtility {
+        const string installFlagPath = PackageConst.LibraryCachePath + "/installFlag.txt";
 
         public static void DebugClearInstallState() {
             File.Delete(installFlagPath);
@@ -24,11 +24,11 @@ internal static class InstallUtility {
             if (showOnStartup == ShowOnStartupEnum.Always || (showOnStartup == ShowOnStartupEnum.OnNewVersion && !String.IsNullOrEmpty(updatedFromVersion))) {
                 // Don't open Hot Reload window inside Virtual Player folder
                 // This is a heuristic since user might have the main player inside VP user-created folder, but that will be rare
-                if (new DirectoryInfo(Path.GetFullPath("..")).Name != "VP") {
+                if (new DirectoryInfo(Path.GetFullPath("..")).Name != "VP" && !HotReloadPrefs.DeactivateHotReload) {
                     HotReloadWindow.Open();
                 }
             }
-            if (HotReloadPrefs.LaunchOnEditorStart) {
+            if (HotReloadPrefs.LaunchOnEditorStart && !HotReloadPrefs.DeactivateHotReload) {
                 EditorCodePatcher.DownloadAndRun().Forget();
             }
             
@@ -44,8 +44,8 @@ internal static class InstallUtility {
             //Avoid opening the window on domain reload
             EditorApplication.delayCall += HandleNewInstall;
         }
-
-        private static void HandleNewInstall() {
+        
+        static void HandleNewInstall() {
             if (EditorCodePatcher.licenseType == UnityLicenseType.UnityPro) {
                 RedeemLicenseHelper.I.StartRegistration();
             }

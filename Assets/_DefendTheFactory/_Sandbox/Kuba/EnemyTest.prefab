@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63ce0275f5cbd0e41bc99e453caa29f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings: {fileID: 0}
   statBars: {fileID: 62677313627044686}
 --- !u!1001 &7630178274395941307
 PrefabInstance:
@@ -159,6 +160,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1374631494496891994}
     m_Modifications:
+    - target: {fileID: 277778649384411048, guid: a63df60a7860ba848bb89909f2fe9d4e,
+        type: 3}
+      propertyPath: maxDistance
+      value: 9.25
+      objectReference: {fileID: 0}
     - target: {fileID: 555085282926882862, guid: a63df60a7860ba848bb89909f2fe9d4e,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -168,6 +174,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2922181439080455912, guid: a63df60a7860ba848bb89909f2fe9d4e,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4659511599480688753, guid: a63df60a7860ba848bb89909f2fe9d4e,
         type: 3}
@@ -212,12 +223,12 @@ PrefabInstance:
     - target: {fileID: 6460700891439112307, guid: a63df60a7860ba848bb89909f2fe9d4e,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1.6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6460700891439112307, guid: a63df60a7860ba848bb89909f2fe9d4e,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.25
+      value: 0.165
       objectReference: {fileID: 0}
     - target: {fileID: 6460700891439112307, guid: a63df60a7860ba848bb89909f2fe9d4e,
         type: 3}

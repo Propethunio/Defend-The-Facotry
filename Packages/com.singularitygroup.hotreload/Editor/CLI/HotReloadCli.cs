@@ -2,8 +2,11 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+#if UNITY_EDITOR_WIN
 using System.Net.NetworkInformation;
+#else
 using System.Net.Sockets;
+#endif
 using System.Threading.Tasks;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using UnityEditor;
@@ -34,17 +37,19 @@ namespace SingularityGroup.HotReload.Editor.Cli {
         /// </summary>
         public static Task StartAsync() {
             return StartAsync(
+                isReleaseMode: RequestHelper.IsReleaseMode(),
                 exposeServerToNetwork: HotReloadPrefs.ExposeServerToLocalNetwork, 
                 allAssetChanges: HotReloadPrefs.AllAssetChanges, 
-                createNoWindow: HotReloadPrefs.DisableConsoleWindow
+                createNoWindow: HotReloadPrefs.DisableConsoleWindow,
+                detailedErrorReporting: !HotReloadPrefs.DisableDetailedErrorReporting
             );
         }
         
-        internal static async Task StartAsync(bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, LoginData loginData = null) {
+        internal static async Task StartAsync(bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, bool isReleaseMode, bool detailedErrorReporting, LoginData loginData = null) {
             var port = await Prepare().ConfigureAwait(false);
             await ThreadUtility.SwitchToThreadPool();
             StartArgs args;
-            if (TryGetStartArgs(UnityHelper.DataPath, exposeServerToNetwork, allAssetChanges, createNoWindow, loginData, port, out args)) {
+            if (TryGetStartArgs(UnityHelper.DataPath, exposeServerToNetwork, allAssetChanges, createNoWindow, isReleaseMode, detailedErrorReporting, loginData, port, out args)) {
                 await controller.Start(args);
             }
         }
@@ -58,14 +63,14 @@ namespace SingularityGroup.HotReload.Editor.Cli {
         public static Task StopAsync() {
             return controller.Stop();
         }
-
-        private class Config {
+        
+        class Config {
 #pragma warning disable CS0649
             public bool useBuiltInProjectGeneration;
 #pragma warning restore CS0649
         }
-
-        private static bool TryGetStartArgs(string dataPath, bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, LoginData loginData, int port, out StartArgs args) {
+        
+        static bool TryGetStartArgs(string dataPath, bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, bool isReleaseMode, bool detailedErrorReporting, LoginData loginData, int port, out StartArgs args) {
             string serverDir;
             if(!CliUtils.TryFindServerDir(out serverDir)) {
                 Log.Warning($"Failed to start the Hot Reload Server. " +
@@ -114,7 +119,7 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             }
             
             var searchAssemblies = string.Join(";", CodePatcher.I.GetAssemblySearchPaths());
-            var cliArguments = $@"-u ""{unityProjDir}"" -s ""{slnPath}"" -t ""{cliTempDir}"" -a ""{searchAssemblies}"" -ver ""{PackageConst.Version}"" -proc ""{Process.GetCurrentProcess().Id}"" -assets ""{allAssetChanges}"" -p ""{port}""";
+            var cliArguments = $@"-u ""{unityProjDir}"" -s ""{slnPath}"" -t ""{cliTempDir}"" -a ""{searchAssemblies}"" -ver ""{PackageConst.Version}"" -proc ""{Process.GetCurrentProcess().Id}"" -assets ""{allAssetChanges}"" -p ""{port}"" -r {isReleaseMode} -detailed-error-reporting {detailedErrorReporting}";
             if (loginData != null) {
                 cliArguments += $@" -email ""{loginData.email}"" -pass ""{loginData.password}""";
             }
@@ -176,8 +181,9 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             }
 #endif
         }
-
-        private static async Task<int> Prepare() {
+        
+        
+        static async Task<int> Prepare() {
             await ThreadUtility.SwitchToMainThread();
             
             var dataPath = UnityHelper.DataPath;
@@ -191,7 +197,7 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             return port;
         }
 
-        private static bool didLogWarning;
+        static bool didLogWarning;
         internal static async Task PrepareBuildInfoAsync() {
             await ThreadUtility.SwitchToMainThread();
             var buildInfoInput = await BuildInfoHelper.GetGenerateBuildInfoInput();
@@ -219,8 +225,8 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             Directory.CreateDirectory(cliTempDir);
             File.WriteAllText(Path.Combine(cliTempDir, "playerdata.json"), json);
         }
-
-        private static void PrepareSystemPathsFile() {
+        
+        static void PrepareSystemPathsFile() {
 #pragma warning disable CS0618 // obsolete since 2023
             var lvl = PlayerSettings.GetApiCompatibilityLevel(EditorUserBuildSettings.selectedBuildTargetGroup);
 #pragma warning restore CS0618

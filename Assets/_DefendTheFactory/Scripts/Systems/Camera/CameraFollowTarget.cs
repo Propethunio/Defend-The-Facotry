@@ -89,6 +89,10 @@ public class CameraFollowTarget : DependencyMonoBehaviour<CameraFollowTarget> {
         mapSize = size;
     }
 
+    public Vector2 GetZoomRange() {
+        return zoomRange;
+    }
+
     private void CalculateScrollBounds() {
         screenRightScroll = Screen.width - edgeScrollSize;
         screenTopScroll = Screen.height - edgeScrollSize;

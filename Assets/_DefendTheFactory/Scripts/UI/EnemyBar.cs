@@ -6,8 +6,8 @@ public class EnemyBar : MonoBehaviour {
     [SerializeField] private Slider shieldBar;
 
     private void Start() {
-        healthBar.gameObject.SetActive(false);
-        shieldBar.gameObject.SetActive(false);
+        //healthBar.gameObject.SetActive(false);
+        //shieldBar.gameObject.SetActive(false);
     }
 
     public void SetHealthBar(float value) {

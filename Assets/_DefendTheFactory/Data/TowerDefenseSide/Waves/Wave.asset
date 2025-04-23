@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16869dcb21a24314d86a8746452ccc6b, type: 3}
-  m_Name: New Enemy Waves SO
+  m_Name: Wave
   m_EditorClassIdentifier: 
   <dayLength>k__BackingField: 4000
   <waveDayData>k__BackingField:
-  - <startSpawnAfter>k__BackingField: 20
-    <chanceToSpawnDay>k__BackingField: 5
+  - <startSpawnAfter>k__BackingField: 1
+    <chanceToSpawnDay>k__BackingField: 15
     <enemiesDuringDay>k__BackingField:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 26cb6c43fb8ab4340a3f62c42559b181,
         type: 2}

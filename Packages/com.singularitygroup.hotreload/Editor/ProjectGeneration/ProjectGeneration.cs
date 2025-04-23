@@ -21,14 +21,14 @@ using System.Reflection;
 #endif
 
 namespace SingularityGroup.HotReload.Editor.ProjectGeneration {
-internal class ProjectGeneration {
+    class ProjectGeneration {
         private enum ScriptingLanguage {
             None,
             CSharp
         }
 
         [Serializable]
-        private class Config {
+        class Config {
             public string projectExclusionRegex;
             public HashSet<string> projectBlacklist;
             public HashSet<string> polyfillSourceFiles;
@@ -215,7 +215,7 @@ internal class ProjectGeneration {
             return k_BuiltinSupportedExtensions.ContainsKey(extension) || m_ProjectSupportedExtensions.Contains(extension);
         }
 
-        private async Task GenerateAndWriteSolutionAndProjects(Config config) {
+        async Task GenerateAndWriteSolutionAndProjects(Config config) {
             await ThreadUtility.SwitchToThreadPool();
             
             var projectExclusionRegex = config.projectExclusionRegex != null ? new Regex(config.projectExclusionRegex, RegexOptions.Compiled | RegexOptions.Singleline) : null;
@@ -430,7 +430,7 @@ internal class ProjectGeneration {
             }
         }
 
-        private string[] RetrieveRoslynAnalyzers(ProjectPart assembly, ILookup<string, string> otherResponseFilesData) {
+        string[] RetrieveRoslynAnalyzers(ProjectPart assembly, ILookup<string, string> otherResponseFilesData) {
             var otherAnalyzers = otherResponseFilesData["a"] ?? Array.Empty<string>();
         #if UNITY_2020_2_OR_NEWER
               return otherResponseFilesData["analyzer"].Concat(otherAnalyzers)
@@ -438,7 +438,7 @@ internal class ProjectGeneration {
         // #if !ROSLYN_ANALYZER_FIX
         //         .Concat(GetRoslynAnalyzerPaths())
         // #else
-                .Concat(assembly.CompilerOptions.RoslynAnalyzerDllPaths)
+                .Concat(assembly.CompilerOptions.RoslynAnalyzerDllPaths ?? Array.Empty<string>())
         // #endif
                 .Select(MakeAbsolutePath)
                 .Distinct()
@@ -655,7 +655,7 @@ internal class ProjectGeneration {
                             var index = b.IndexOf(":", StringComparison.Ordinal);
                             if (index > 0 && b.Length > index) {
                                 var key = b.Substring(1, index - 1);
-                                return new KeyValuePair<string, string>(key, b.Substring(index + 1));
+                                return new KeyValuePair<string, string>(key.ToLowerInvariant(), b.Substring(index + 1));
                             }
 
                             const string warnaserror = "warnaserror";
@@ -811,7 +811,7 @@ internal class ProjectGeneration {
             return null;
         }
 
-        private async Task BuildPackageInfoCache() {
+        async Task BuildPackageInfoCache() {
 #if UNITY_2019_4_OR_NEWER
             m_PackageInfoCache.Clear();
             var parentAssetPaths = new HashSet<string>();
@@ -839,7 +839,7 @@ internal class ProjectGeneration {
 #endif
         }
 
-        private async Task BuildPostProcessors() {
+        async Task BuildPostProcessors() {
 #if UNITY_2019_1_OR_NEWER
             var types = TypeCache.GetTypesDerivedFrom<IHotReloadProjectGenerationPostProcessor>();
             m_PostProcessors = await Task.Run(() => {

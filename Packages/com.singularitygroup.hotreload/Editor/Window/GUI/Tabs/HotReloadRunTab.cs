@@ -79,22 +79,30 @@ namespace SingularityGroup.HotReload.Editor {
             } catch {
                 // ignore
             }
-            
+
             // Get relative path
             TextAsset file = null;
-            foreach (var path in supportedPaths) {
-                int lastprojectIndex = 0;
-                int attempt = 0;
-                while (attempt++ < 100 && !file) {
-                    lastprojectIndex = errorString.IndexOf(path, lastprojectIndex + 1, StringComparison.Ordinal);
-                    if (lastprojectIndex == -1) {
-                        break;
+            try {
+                foreach (var path in supportedPaths) {
+                    int lastprojectIndex = 0;
+                    int attempt = 0;
+                    while (attempt++ < 100 && !file) {
+                        lastprojectIndex = errorString.IndexOf(path, lastprojectIndex + 1, StringComparison.Ordinal);
+                        if (lastprojectIndex == -1) {
+                            break;
+                        }
+                        var fullCsIndex = errorString.IndexOf(".cs", lastprojectIndex, StringComparison.Ordinal);
+                        var l = fullCsIndex - lastprojectIndex + ".cs".Length;
+                        if (l <= 0) {
+                            continue;
+                        }
+                        var candidateAbsolutePath = errorString.Substring(lastprojectIndex, fullCsIndex - lastprojectIndex + ".cs".Length);
+                        var candidateRelativePath = EditorCodePatcher.GetRelativePath(filespec: candidateAbsolutePath, folder: path);
+                        file = AssetDatabase.LoadAssetAtPath<TextAsset>(candidateRelativePath);
                     }
-                    var fullCsIndex = errorString.IndexOf(".cs", lastprojectIndex, StringComparison.Ordinal);
-                    var candidateAbsolutePath = errorString.Substring(lastprojectIndex, fullCsIndex - lastprojectIndex + ".cs".Length);
-                    var candidateRelativePath = EditorCodePatcher.GetRelativePath(filespec: candidateAbsolutePath, folder: path);
-                    file = AssetDatabase.LoadAssetAtPath<TextAsset>(candidateRelativePath);
                 }
+            } catch {
+                // ignore
             }
             
             // Get the line number
@@ -259,8 +267,8 @@ namespace SingularityGroup.HotReload.Editor {
         }
 
         internal static bool ShouldRenderConsumption(HotReloadRunTabState currentState) => (currentState.running && !currentState.starting && !currentState.stopping && currentState.loginStatus?.isLicensed != true && currentState.loginStatus?.isFree != true && !EditorCodePatcher.LoginNotRequired) && !(currentState.loginStatus == null || currentState.loginStatus.isFree);
-
-        private void OnGUICore() {
+        
+        void OnGUICore() {
             using (var scope = new EditorGUILayout.ScrollViewScope(_runTabScrollPos, GUI.skin.horizontalScrollbar, GUI.skin.verticalScrollbar, GUILayout.MaxHeight(Math.Max(HotReloadWindowStyles.windowScreenHeight, 800)), GUILayout.MaxWidth(Math.Max(HotReloadWindowStyles.windowScreenWidth, 800)))) {
                 _runTabScrollPos.x = scope.scrollPosition.x;
                 _runTabScrollPos.y = scope.scrollPosition.y;
@@ -324,24 +332,24 @@ namespace SingularityGroup.HotReload.Editor {
                 && !currentState.requestingDownloadAndRun
             ;
         }
-
-        private static Texture2D GetFoldoutIcon(AlertEntry alertEntry) {
+        
+        static Texture2D GetFoldoutIcon(AlertEntry alertEntry) {
             InvertibleIcon alertIcon = InvertibleIcon.FoldoutClosed;
             if (HotReloadTimelineHelper.expandedEntries.Contains(alertEntry)) {
                 alertIcon = InvertibleIcon.FoldoutOpen;
             }
             return GUIHelper.GetInvertibleIcon(alertIcon);
         }
-
-        private static void ToggleEntry(AlertEntry alertEntry) {
+        
+        static void ToggleEntry(AlertEntry alertEntry) {
             if (HotReloadTimelineHelper.expandedEntries.Contains(alertEntry)) {
                 HotReloadTimelineHelper.expandedEntries.Remove(alertEntry);
             } else {
                 HotReloadTimelineHelper.expandedEntries.Add(alertEntry);
             }
         }
-
-        private static void RenderEntries(TimelineType timelineType) {
+        
+        static void RenderEntries(TimelineType timelineType) {
             List<AlertEntry> alertEntries;
             
             alertEntries = timelineType == TimelineType.Suggestions ? HotReloadTimelineHelper.Suggestions : HotReloadTimelineHelper.EventsTimeline;
@@ -397,17 +405,14 @@ namespace SingularityGroup.HotReload.Editor {
                     GUI.Label(startRect, new GUIContent(title, icon), style);
                 }
 
-                bool clickableDescription = alertEntry.title == "Unsupported change" || alertEntry.title == "Compile error" || alertEntry.title == "Failed applying patch to method";
+                bool clickableDescription = (alertEntry.title == "Unsupported change" || alertEntry.title == "Compile error" || alertEntry.title == "Failed applying patch to method") && alertEntry.alertData.alertEntryType != AlertEntryType.InlinedMethod;
                 
                 if (HotReloadTimelineHelper.expandedEntries.Contains(alertEntry) || alertEntry.alertType == AlertType.CompileError) {
                     using (new EditorGUILayout.VerticalScope()) {
                         using (new EditorGUILayout.HorizontalScope()) {
                             using (new EditorGUILayout.VerticalScope(entryType == EntryType.Child ? HotReloadWindowStyles.ChildEntryBoxStyle : HotReloadWindowStyles.EntryBoxStyle)) {
-                                if (alertEntry.alertType == AlertType.Suggestion) {
+                                if (alertEntry.alertType == AlertType.Suggestion || !clickableDescription) {
                                     GUILayout.Label(alertEntry.description, HotReloadWindowStyles.LabelStyle);
-                                } else if (!clickableDescription) {
-                                    string text = alertEntry.description;
-                                    GUILayout.Label(text, HotReloadWindowStyles.LabelStyle);
                                 }
                                 if (alertEntry.actionData != null) {
                                     alertEntry.actionData.Invoke();
@@ -489,7 +494,7 @@ namespace SingularityGroup.HotReload.Editor {
         }
         
         private Vector2 suggestionsScroll;
-        private static GUILayoutOption[] timelineButtonOptions = new[] { GUILayout.Height(27), GUILayout.Width(100) };
+        static GUILayoutOption[] timelineButtonOptions = new[] { GUILayout.Height(27), GUILayout.Width(100) };
 
         internal static void RenderBars(HotReloadRunTabState currentState) {
             if (currentState.suggestionCount > 0) {
@@ -588,9 +593,9 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private static bool _repaint;
-        private static bool _instantRepaint;
-        private static DateTime _lastRepaint;
+        static bool _repaint;
+        static bool _instantRepaint;
+        static DateTime _lastRepaint;
         private EditorIndicationState.IndicationStatus _lastStatus;
         public override void Update() {
             if (EditorIndicationState.SpinnerActive) {
@@ -659,16 +664,27 @@ namespace SingularityGroup.HotReload.Editor {
             if (!firstDialoguePass) {
                 return;
             }
-            var secondDialoguePass = !Application.isPlaying
-                || EditorUtility.DisplayDialog(
-                    title: "Stop Play Mode and Recompile?",
-                    message: "Using the Recompile button will stop Play Mode.\n\nDo you wish to proceed?",
-                    ok: "Stop and Recompile",
-                    cancel: "Cancel");
-            if (!secondDialoguePass) {
+            if (!ConfirmExitPlaymode("Using the Recompile button will stop Play Mode.\n\nDo you wish to proceed?")) {
                 return;
             }
             Recompile();
+        }
+
+        #if UNITY_2020_1_OR_NEWER
+        public static void SwitchToDebugMode() {
+            CompilationPipeline.codeOptimization = CodeOptimization.Debug;
+            HotReloadRunTab.Recompile();
+            HotReloadSuggestionsHelper.SetSuggestionInactive(HotReloadSuggestionKind.SwitchToDebugModeForInlinedMethods);
+        }
+        #endif
+
+        public static bool ConfirmExitPlaymode(string message) {
+            return !Application.isPlaying
+                || EditorUtility.DisplayDialog(
+                    title: "Stop Play Mode and Recompile?",
+                    message: message,
+                    ok: "Stop and Recompile",
+                    cancel: "Cancel");
         }
 
         public static bool recompiling;
@@ -697,7 +713,7 @@ namespace SingularityGroup.HotReload.Editor {
                     EditorCodePatcher.DownloadAndRun().Forget();
                 }
             } else if (currentState.running && !currentState.starting) {
-                if (HotReloadWindowStyles.windowScreenWidth > 150 && HotReloadTimelineHelper.CompileErrorsCount == 0) {
+                if (HotReloadWindowStyles.windowScreenWidth > 150) {
                     RenderRecompileButton();
                 }
                 string stopText = HotReloadWindowStyles.windowScreenWidth > Constants.StartButtonTextHideWidth ? " Stop" : "";
@@ -709,7 +725,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private void RenderIndicationPanel() {
+        void RenderIndicationPanel() {
             using (new EditorGUILayout.HorizontalScope(HotReloadWindowStyles.SectionInnerBox)) {
                 RenderIndication();
                 if (HotReloadWindowStyles.windowScreenWidth > Constants.IndicationTextHideWidth) {
@@ -778,15 +794,14 @@ namespace SingularityGroup.HotReload.Editor {
                 } 
             }
         }
-
-        private static GUIStyle _openSettingsStyle;
-
-        private static GUIStyle openSettingsStyle => _openSettingsStyle ?? (_openSettingsStyle = new GUIStyle(GUI.skin.button) {
+        
+        static GUIStyle _openSettingsStyle;
+        static GUIStyle openSettingsStyle => _openSettingsStyle ?? (_openSettingsStyle = new GUIStyle(GUI.skin.button) {
             fontStyle = FontStyle.Normal,
             fixedHeight = 25,
         });
-
-        private static GUILayoutOption[] _bigButtonHeight;
+        
+        static GUILayoutOption[] _bigButtonHeight;
         public static GUILayoutOption[] bigButtonHeight => _bigButtonHeight ?? (_bigButtonHeight = new [] {GUILayout.Height(25)});
         
         private static GUIContent indieLicenseContent;
@@ -871,7 +886,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private const string assetStoreProInfo = "Unity Pro/Enterprise users from company with your number of employees require a Business license. Please upgrade your license on our website.";
+        const string assetStoreProInfo = "Unity Pro/Enterprise users from company with your number of employees require a Business license. Please upgrade your license on our website.";
         internal static void RenderBusinessLicenseInfo(GUIStyle style) {
             GUILayout.Space(8);
             using (new EditorGUILayout.HorizontalScope()) {
@@ -906,10 +921,10 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private const string GetLicense = "Get License";
-        private const string ContactSupport = "Contact Support";
-        private const string UpgradeLicense = "Upgrade License";
-        private const string ManageLicense = "Manage License";
+        const string GetLicense = "Get License";
+        const string ContactSupport = "Contact Support";
+        const string UpgradeLicense = "Upgrade License";
+        const string ManageLicense = "Manage License";
         internal static Dictionary<string, LicenseErrorData> _licenseErrorData;
         internal static Dictionary<string, LicenseErrorData> LicenseErrorData => _licenseErrorData ?? (_licenseErrorData = new Dictionary<string, LicenseErrorData> {
             { "DeviceNotLicensedException", new LicenseErrorData(description: "Another device is using your license. Please reach out to customer support for assistance.", showSupportButton: true, supportButtonText: ContactSupport) },
@@ -960,7 +975,7 @@ namespace SingularityGroup.HotReload.Editor {
             OpenURLButton.Render(buyLicenseButton, Constants.ProductPurchaseURL);
         }
 
-        private static void RenderLicenseActionButtons(HotReloadRunTabState currentState) {
+        static void RenderLicenseActionButtons(HotReloadRunTabState currentState) {
             var errInfo = GetLicenseErrorDataOrDefault(currentState, currentState.loginStatus?.lastLicenseError);
             if (errInfo.showBuyButton || errInfo.showManageLicenseButton) {
                 using(new EditorGUILayout.HorizontalScope()) {
@@ -1044,7 +1059,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private PromoCodeErrorType ToErrorType(string error) {
+        PromoCodeErrorType ToErrorType(string error) {
             switch (error) {
                 case "Input is missing":           return PromoCodeErrorType.MISSING_INPUT;
                 case "only POST is supported":     return PromoCodeErrorType.INVALID_HTTP_METHOD;
@@ -1067,7 +1082,7 @@ namespace SingularityGroup.HotReload.Editor {
             return PromoCodeErrorType.NONE;
         }
 
-        private string ToPrettyErrorMessage(PromoCodeErrorType errorType) {
+        string ToPrettyErrorMessage(PromoCodeErrorType errorType) {
             var defaultMsg = "We apologize, an error happened while activating your promo code. Please reach out to customer support for assistance.";
             switch (errorType) {
                 case PromoCodeErrorType.MISSING_INPUT:
@@ -1089,7 +1104,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private MessageType ToMessageType(PromoCodeErrorType errorType) {
+        MessageType ToMessageType(PromoCodeErrorType errorType) {
             switch (errorType) {
                 case PromoCodeErrorType.MISSING_INPUT:            return MessageType.Error;
                 case PromoCodeErrorType.INVALID_HTTP_METHOD:      return MessageType.Error;
@@ -1193,8 +1208,8 @@ namespace SingularityGroup.HotReload.Editor {
                 }
             }
         }
-
-        private async static Task LoginOnDownloadAndRun(LoginData loginData = null) {
+        
+        async static Task LoginOnDownloadAndRun(LoginData loginData = null) {
             var ok = await EditorCodePatcher.DownloadAndRun(loginData);
             if (ok && loginData != null) {
                 HotReloadPrefs.ErrorHidden = false;
@@ -1203,7 +1218,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private async static Task LogoutOnDownloadAndRun() {
+        async static Task LogoutOnDownloadAndRun() {
             var ok = await EditorCodePatcher.DownloadAndRun();
             if (!ok) {
                 return;
@@ -1231,11 +1246,10 @@ namespace SingularityGroup.HotReload.Editor {
                 }
             }
         }
-
-        private Texture2D _greenTextureLight;
-        private Texture2D _greenTextureDark;
-
-        private Texture2D GreenTexture => EditorGUIUtility.isProSkin 
+        
+        Texture2D _greenTextureLight;
+        Texture2D _greenTextureDark;
+        Texture2D GreenTexture => EditorGUIUtility.isProSkin 
             ? _greenTextureDark ? _greenTextureDark : (_greenTextureDark = MakeTexture(0.5f))
             : _greenTextureLight ? _greenTextureLight : (_greenTextureLight = MakeTexture(0.85f));
         

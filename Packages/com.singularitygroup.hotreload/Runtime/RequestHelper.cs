@@ -21,7 +21,7 @@ using UnityEngine.Networking;
 [assembly: InternalsVisibleTo("SingularityGroup.HotReload.EditorTests")]
 
 namespace SingularityGroup.HotReload {
-internal class HttpResponse {
+    class HttpResponse {
         public readonly HttpStatusCode statusCode;
         public readonly Exception exception;
         public readonly string responseText;
@@ -42,30 +42,30 @@ internal class HttpResponse {
         public string generalInfo;
     }
 
-    internal static class RequestHelper {
+    static class RequestHelper {
         internal const ushort defaultPort = 33242;
         internal const string defaultServerHost = "127.0.0.1";
-        private const string ChangelogURL = "https://d2tc55zjhw51ly.cloudfront.net/releases/latest/changelog.json";
-        private static readonly string defaultOrigin = Path.GetDirectoryName(UnityHelper.DataPath);
+        const string ChangelogURL = "https://d2tc55zjhw51ly.cloudfront.net/releases/latest/changelog.json";
+        static readonly string defaultOrigin = Path.GetDirectoryName(UnityHelper.DataPath);
         public static string origin { get; private set; } = defaultOrigin;
-
-        private static PatchServerInfo serverInfo = new PatchServerInfo(defaultServerHost, null, null);
+        
+        static PatchServerInfo serverInfo = new PatchServerInfo(defaultServerHost, null, null);
         public static PatchServerInfo ServerInfo => serverInfo;
-
-        private static string cachedUrl;
-        private static string url => cachedUrl ?? (cachedUrl = CreateUrl(serverInfo));
+        
+        static string cachedUrl;
+        static string url => cachedUrl ?? (cachedUrl = CreateUrl(serverInfo));
         
         public static int port => serverInfo?.port ?? defaultPort;
 
-        private static readonly HttpClient client = CreateHttpClientWithOrigin();
+        static readonly HttpClient client = CreateHttpClientWithOrigin();
         // separate client for each long polling request
-        private static readonly HttpClient clientPollPatches = CreateHttpClientWithOrigin();
-        private static readonly HttpClient clientPollAssets = CreateHttpClientWithOrigin();
-        private static readonly HttpClient clientPollStatus = CreateHttpClientWithOrigin();
-
-        private static readonly HttpClient[] allClients = new[] { client, clientPollPatches, clientPollAssets, clientPollStatus };
-
-        private static HttpClient CreateHttpClientWithOrigin() {
+        static readonly HttpClient clientPollPatches = CreateHttpClientWithOrigin();
+        static readonly HttpClient clientPollAssets = CreateHttpClientWithOrigin();
+        static readonly HttpClient clientPollStatus = CreateHttpClientWithOrigin();
+        
+        static readonly HttpClient[] allClients = new[] { client, clientPollPatches, clientPollAssets, clientPollStatus };
+        
+        static HttpClient CreateHttpClientWithOrigin() {
             var httpClient = HttpClientUtils.CreateHttpClient();
             httpClient.DefaultRequestHeaders.Add("origin", Path.GetDirectoryName(UnityHelper.DataPath));
 
@@ -96,7 +96,7 @@ internal class HttpResponse {
         }
 
         // This function is not thread safe but is currently called before the first request is sent so no issue.
-        private static void SetOrigin(string newOrigin) {
+        static void SetOrigin(string newOrigin) {
             if (newOrigin == origin) {
                 return;
             }
@@ -108,7 +108,7 @@ internal class HttpResponse {
             }
         }
 
-        private static string[] assemblySearchPaths;
+        static string[] assemblySearchPaths;
         public static void ChangeAssemblySearchPaths(string[] paths) {
             assemblySearchPaths = paths;
         }
@@ -134,7 +134,7 @@ internal class HttpResponse {
             return tcs.Task;
         }
 
-        private static bool pollPending;
+        static bool pollPending;
         internal static async void PollMethodPatches(string lastPatchId, Action<MethodPatchResponse> onResponseReceived) {
             if (pollPending) {
                 return;
@@ -167,8 +167,8 @@ internal class HttpResponse {
                 pollPending = false;
             }
         }
-
-        private static bool pollPatchStatusPending;
+        
+        static bool pollPatchStatusPending;
         internal static async void PollPatchStatus(Action<PatchStatusResponse> onResponseReceived, PatchStatus latestStatus) {
             if (pollPatchStatusPending) return;
 
@@ -195,8 +195,8 @@ internal class HttpResponse {
                 pollPatchStatusPending = false;
             }
         }
-
-        private static bool assetPollPending;
+        
+        static bool assetPollPending;
         internal static async void PollAssetChanges(Action<string> onResponseReceived) {
             if (assetPollPending) return;
         
@@ -345,14 +345,41 @@ internal class HttpResponse {
             }
         }
         
+        public static bool IsReleaseMode() {
+#           if (UNITY_EDITOR && UNITY_2022_1_OR_NEWER)
+                return UnityEditor.Compilation.CompilationPipeline.codeOptimization == UnityEditor.Compilation.CodeOptimization.Release;
+#           elif (UNITY_EDITOR)
+                return false;
+#           elif (DEBUG)
+                return false;
+#           else
+                return true;
+#endif
+        }
+        
         public static Task RequestClearPatches() {
-            var body = SerializeRequestBody(new CompileRequest(serverInfo.rootPath));
+            var body = SerializeRequestBody(new CompileRequest(serverInfo.rootPath, IsReleaseMode()));
             return PostJson(url + "/clearpatches", body, 10);
         }
         
-        public static Task RequestCompile() {
-            var body = SerializeRequestBody(new CompileRequest(serverInfo.rootPath));
-            return PostJson(url + "/compile", body, 10);
+        public static async Task RequestCompile(Action<string> onResponseReceived) {
+            var body = SerializeRequestBody(new CompileRequest(serverInfo.rootPath, IsReleaseMode()));
+            var result = await PostJson(url + "/compile", body, 10);
+            if (result.statusCode == HttpStatusCode.OK && !string.IsNullOrEmpty(result.responseText)) {
+                var responses = JsonConvert.DeserializeObject<List<string>>(result.responseText);
+                if (responses == null) {
+                    return;
+                }
+                await ThreadUtility.SwitchToMainThread();
+                foreach (var response in responses) {
+                    // Avoid importing assets twice
+                    if (responses.Contains(response + ".meta")) {
+                        Log.Debug($"Ignoring asset change inside Unity: {response}");
+                        continue;
+                    }
+                    onResponseReceived(response);
+                }
+            }
         }
         
         internal static async Task<List<ChangelogVersion>> FetchChangelog(int timeoutSeconds = 20) {
@@ -394,12 +421,12 @@ internal class HttpResponse {
                 return new MobileHandshakeResponse(null, resp.responseText);
             }
         }
-
-        private static string SerializeRequestBody<T>(T request) {
+        
+        static string SerializeRequestBody<T>(T request) {
             return JsonConvert.SerializeObject(request);
         }
-
-        private static async Task<HttpResponse> PostJson(string uri, string json, int timeoutSeconds, CancellationToken token = default(CancellationToken), HttpClient overrideClient = null) {
+        
+        static async Task<HttpResponse> PostJson(string uri, string json, int timeoutSeconds, CancellationToken token = default(CancellationToken), HttpClient overrideClient = null) {
             var httpClient = overrideClient ?? client;
             await ThreadUtility.SwitchToThreadPool();
             

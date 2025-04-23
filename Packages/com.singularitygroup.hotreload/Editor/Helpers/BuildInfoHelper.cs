@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SingularityGroup.HotReload.Editor {
-internal struct BuildInfoInput {
+    struct BuildInfoInput {
         public readonly string allDefineSymbols;
         public readonly BuildTarget activeBuildTarget;
         public readonly string[] omittedProjects;
@@ -20,8 +20,8 @@ internal struct BuildInfoInput {
             this.batchMode = batchMode;
         }
     }
-
-internal static class BuildInfoHelper {
+    
+    static class BuildInfoHelper {
         public static async Task<BuildInfoInput> GetGenerateBuildInfoInput() {
             var buildTarget = EditorUserBuildSettings.activeBuildTarget;
             var activeDefineSymbols = EditorUserBuildSettings.activeScriptCompilationDefines;

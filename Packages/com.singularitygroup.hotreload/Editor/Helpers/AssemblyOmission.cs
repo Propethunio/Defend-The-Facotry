@@ -133,7 +133,7 @@ namespace SingularityGroup.HotReload.Editor {
                 return shouldOmit.ToArray();
             }
 
-            private static AssemblyDefinitionJson ReadDefineConstraints(string path) {
+            static AssemblyDefinitionJson ReadDefineConstraints(string path) {
                 try {
                     var json = File.ReadAllText(path);
                     var asmdef = JsonConvert.DeserializeObject<AssemblyDefinitionJson>(json);
@@ -145,7 +145,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
 
             // Unity Define Constraints syntax is described in the docs https://docs.unity3d.com/Manual/class-AssemblyDefinitionImporter.html
-            private static readonly Dictionary<string, string> syntaxMap = new Dictionary<string, string> {
+            static readonly Dictionary<string, string> syntaxMap = new Dictionary<string, string> {
                     { "OR", "||" },
                     { "AND", "&&" },
                     { "NOT", "!" }

@@ -76,7 +76,7 @@ public class InspectorFreezeFix
         }
     }
 
-    private static void RefreshInspectors(System.Type inspectorType) {
+    static void RefreshInspectors(System.Type inspectorType) {
         var allInspectorsField = inspectorType.GetField("m_AllInspectors", BindingFlags.NonPublic | BindingFlags.Static);
         
         if (allInspectorsField == null) {
@@ -103,7 +103,7 @@ public class InspectorFreezeFix
         }
     }
 
-    private static PropertyInfo FindFieldInHierarchy(System.Type type, string fieldName) {
+    static PropertyInfo FindFieldInHierarchy(System.Type type, string fieldName) {
         PropertyInfo field = null;
 
         while (type != null && field == null) {

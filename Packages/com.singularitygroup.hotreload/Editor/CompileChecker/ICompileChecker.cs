@@ -1,12 +1,12 @@
 using System;
 
 namespace SingularityGroup.HotReload.Editor {
-internal interface ICompileChecker {
+    interface ICompileChecker {
         event Action onCompilationFinished;
         bool hasCompileErrors { get; }
     }
-
-internal static class CompileChecker {
+    
+    static class CompileChecker {
         internal static ICompileChecker Create() {
             #if UNITY_2019_1_OR_NEWER
                 return new DefaultCompileChecker();

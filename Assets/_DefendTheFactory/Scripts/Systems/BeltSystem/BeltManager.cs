@@ -39,13 +39,13 @@ public class BeltManager {
         BeltPath connectingBeltPath = null;
         ConveyorBelt connectingBelt = TryGetConnectingBelt(newBelt.previousPosition);
 
-        if (connectingBelt != null && connectingBelt.nextPosition == newBelt.origin && (connectingBelt.parentBuilding == null || newBelt.parentBuilding == null)) {
+        if (connectingBelt != null && connectingBelt.nextPosition == newBelt.origin && CheckForParentBuildings(connectingBelt, newBelt)) {
             ConnectToPreviousBelt(newBelt, connectingBelt, ref connectingBeltPath);
         }
 
         connectingBelt = TryGetConnectingBelt(newBelt.nextPosition);
 
-        if (connectingBelt != null && (connectingBelt.parentBuilding == null || newBelt.parentBuilding == null)) {
+        if (connectingBelt != null && CheckForParentBuildings(connectingBelt, newBelt)) {
             ConnectToNextBelt(newBelt, connectingBelt, ref connectingBeltPath);
         }
 
@@ -56,6 +56,11 @@ public class BeltManager {
         OnBeltAdded?.Invoke();
     }
 
+    private bool CheckForParentBuildings(ConveyorBelt beltOne, ConveyorBelt beltTwo) {
+        if (beltOne.parentBuilding == null || beltTwo.parentBuilding == null) return true;
+        return beltOne.parentBuilding != beltTwo.parentBuilding;
+    }
+    
     private ConveyorBelt TryGetConnectingBelt(Vector2Int connectingPosition) {
         if (connectingPosition.x >= 0 && connectingPosition.x < gridArray.GetLength(0) && connectingPosition.y >= 0 && connectingPosition.y < gridArray.GetLength(1)) {
             return gridArray[connectingPosition.x, connectingPosition.y].placedObject as ConveyorBelt;

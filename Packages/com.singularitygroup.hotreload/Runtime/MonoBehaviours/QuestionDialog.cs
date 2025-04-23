@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace SingularityGroup.HotReload {
-internal class QuestionDialog : MonoBehaviour {
+    class QuestionDialog : MonoBehaviour {
 
         [Header("Information")]
         public Text textSummary;
@@ -56,7 +56,7 @@ internal class QuestionDialog : MonoBehaviour {
         }
 
         /// hide this dialog
-        private void Hide() {
+        void Hide() {
             gameObject.SetActive(false); // this should disable the Update loop?
         }
     }

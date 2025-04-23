@@ -11,18 +11,18 @@ namespace SingularityGroup.HotReload.Editor {
     [Overlay(typeof(SceneView), "Hot Reload", true)]
     [Icon("Assets/HotReload/Editor/Resources/Icon_DarkMode.png")]
     internal class HotReloadOverlay : ToolbarOverlay {
-        private HotReloadOverlay() : base(HotReloadToolbarIndicationButton.id, HotReloadToolbarEventsButton.id, HotReloadToolbarRecompileButton.id) {
+        HotReloadOverlay() : base(HotReloadToolbarIndicationButton.id, HotReloadToolbarEventsButton.id, HotReloadToolbarRecompileButton.id) {
             EditorApplication.update += Update;
         }
-
-        private EditorIndicationState.IndicationStatus lastIndicationStatus;
+        
+        EditorIndicationState.IndicationStatus lastIndicationStatus;
         
         [EditorToolbarElement(id, typeof(SceneView))]
-        private class HotReloadToolbarIndicationButton : EditorToolbarButton, IAccessContainerWindow {
+        class HotReloadToolbarIndicationButton : EditorToolbarButton, IAccessContainerWindow {
             internal const string id = "HotReloadOverlay/LogoButton";
             public EditorWindow containerWindow { get; set; }
 
-            private EditorIndicationState.IndicationStatus lastIndicationStatus;
+            EditorIndicationState.IndicationStatus lastIndicationStatus;
             
             internal HotReloadToolbarIndicationButton() {
                 icon = GetIndicationIcon();
@@ -31,12 +31,12 @@ namespace SingularityGroup.HotReload.Editor {
                 EditorApplication.update += Update;
             }
 
-            private void OnClick() {
+            void OnClick() {
                 EditorWindow.GetWindow<HotReloadWindow>().Show();
                 EditorWindow.GetWindow<HotReloadWindow>().SelectTab(typeof(HotReloadRunTab));
             }
-
-            private void Update() {
+       
+            void Update() {
                 if (lastIndicationStatus != EditorIndicationState.CurrentIndicationStatus) {
                     icon = GetIndicationIcon();
                     tooltip = EditorIndicationState.IndicationStatusText;
@@ -51,11 +51,11 @@ namespace SingularityGroup.HotReload.Editor {
         }
         
         [EditorToolbarElement(id, typeof(SceneView))]
-        private class HotReloadToolbarEventsButton : EditorToolbarButton, IAccessContainerWindow {
+        class HotReloadToolbarEventsButton : EditorToolbarButton, IAccessContainerWindow {
             internal const string id = "HotReloadOverlay/EventsButton";
             public EditorWindow containerWindow { get; set; }
-
-            private bool lastShowingRedDot;
+            
+            bool lastShowingRedDot;
             
             internal HotReloadToolbarEventsButton() {
                 icon = HotReloadState.ShowingRedDot ? GUIHelper.GetInvertibleIcon(InvertibleIcon.EventsNew) : GUIHelper.GetInvertibleIcon(InvertibleIcon.Events);
@@ -64,11 +64,11 @@ namespace SingularityGroup.HotReload.Editor {
                 EditorApplication.update += Update;
             }
 
-            private void OnClick() {
+            void OnClick() {
                 HotReloadEventPopup.Open(PopupSource.Overlay, Event.current.mousePosition);
             }
-
-            private void Update() {
+       
+            void Update() {
                 if (lastShowingRedDot != HotReloadState.ShowingRedDot) {
                     icon = HotReloadState.ShowingRedDot ? GUIHelper.GetInvertibleIcon(InvertibleIcon.EventsNew) : GUIHelper.GetInvertibleIcon(InvertibleIcon.Events);
                     lastShowingRedDot = HotReloadState.ShowingRedDot;
@@ -83,7 +83,7 @@ namespace SingularityGroup.HotReload.Editor {
         
         
         [EditorToolbarElement(id, typeof(SceneView))]
-        private class HotReloadToolbarRecompileButton : EditorToolbarButton, IAccessContainerWindow {
+        class HotReloadToolbarRecompileButton : EditorToolbarButton, IAccessContainerWindow {
             internal const string id = "HotReloadOverlay/RecompileButton";
             
             public EditorWindow containerWindow { get; set; }
@@ -111,7 +111,7 @@ namespace SingularityGroup.HotReload.Editor {
         private static Image indicationIcon;
         private static Label indicationText;
 
-        private bool initialized;
+        bool initialized;
         /// <summary>
         /// Create Hot Reload overlay panel.
         /// </summary>
@@ -139,9 +139,9 @@ namespace SingularityGroup.HotReload.Editor {
             return root;
         }
 
-        private static bool _repaint;
-        private static bool _instantRepaint;
-        private static DateTime _lastRepaint;
+        static bool _repaint;
+        static bool _instantRepaint;
+        static DateTime _lastRepaint;
         private void Update() {
             if (!initialized) {
                 return;

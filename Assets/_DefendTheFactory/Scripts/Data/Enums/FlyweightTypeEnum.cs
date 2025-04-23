@@ -5,6 +5,8 @@ public enum FlyweightType {
 	ItemStone,
 	ItemStoneBlock,
 	ItemGravel,
-	EnemyBase,
-	EnemyTank,
+	EnemyEgg,
+	EnemyClaw,
+	EnemyGhost,
+	EnemyOgre,
 }

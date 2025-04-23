@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 
 namespace SingularityGroup.HotReload.Editor.Cli {
-internal interface ICliController {
+    interface ICliController {
         string BinaryFileName {get;}
         string PlatformName {get;}
         bool CanOpenInBackground {get;}

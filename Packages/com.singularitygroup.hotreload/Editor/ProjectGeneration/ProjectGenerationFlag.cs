@@ -3,7 +3,7 @@ using System;
 namespace SingularityGroup.HotReload.Editor.ProjectGeneration
 {
   [Flags]
-  internal enum ProjectGenerationFlag
+  enum ProjectGenerationFlag
   {
     None = 0,
     Embedded = 1,

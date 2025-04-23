@@ -31,7 +31,7 @@ namespace SingularityGroup.HotReload.Editor {
             }
         }
 
-        private static void DrawOption(IOption option, SerializedObject so) {
+        static void DrawOption(IOption option, SerializedObject so) {
             EditorGUILayout.BeginVertical(HotReloadWindowStyles.BoxStyle);
 
             var before = option.GetValue(so);
