@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SingleItemUI : MonoBehaviour {
+public class SingleResourceUI : MonoBehaviour {
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text amountText;
 
