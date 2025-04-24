@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e067cb39f592b2e4c9715625936463b4, type: 3}
   m_Name: Merger
   m_EditorClassIdentifier: 
-  <icon>k__BackingField: {fileID: 0}
+  <icon>k__BackingField: {fileID: 21300000, guid: 6b06aaa7d640ce944a309837a6d66ac9,
+    type: 3}
   <nameString>k__BackingField: Merger
   <prefab>k__BackingField: {fileID: 6328227677590226635, guid: 63e83d06868227c4ab8102d01b7fbac9,
     type: 3}

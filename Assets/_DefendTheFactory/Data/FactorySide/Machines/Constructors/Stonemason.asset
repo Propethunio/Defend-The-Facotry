@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b5c0e13240f92240a4bbbea3ac239f5, type: 3}
   m_Name: Stonemason
   m_EditorClassIdentifier: 
-  <icon>k__BackingField: {fileID: 0}
+  <icon>k__BackingField: {fileID: 21300000, guid: 05f2a2d7ffdf0ff438b931f4adec0064,
+    type: 3}
   <nameString>k__BackingField: Stonemason
   <prefab>k__BackingField: {fileID: 312247860716316089, guid: edb7a344082671b4b8b8da264d6a71c5,
     type: 3}
