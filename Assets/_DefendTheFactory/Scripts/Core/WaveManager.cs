@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WaveManager {
 	public List<Vector2Int> pathPoints { get; private set; } = new List<Vector2Int>();
@@ -14,6 +16,9 @@ public class WaveManager {
 	private int daysSurvived;
 	private FlyweightFactory factory;
 
+	public event Action<bool> OnNightActive;
+	public event Action<int> OnWaveTick;
+	
 	public void Init() {
 		factory = Injector.Resolve<FlyweightFactory>();
 		Injector.Resolve<TimeTickSystem>().OnTick += OnTick;
@@ -55,6 +60,7 @@ public class WaveManager {
 
 	private void HandleDayTick() {
 		ticksAmount++;
+		OnWaveTick?.Invoke((wavesData.dayLength - ticksAmount) / 2);
 		if (ticksAmount == wavesData.dayLength) {
 			ChangeDayIntoNight();
 		}
@@ -66,6 +72,7 @@ public class WaveManager {
 
 	private void ChangeDayIntoNight() {
 		isNight = true;
+		OnNightActive?.Invoke(isNight);
 		ticksAmount = 0;
 		spawnWeightCombined = 0;
 		int enemiesCount = currentDayData.enemiesDuringNight.Count;
@@ -108,6 +115,7 @@ public class WaveManager {
 
 	private void ChangeNightIntoDay() {
 		isNight = false;
+		OnNightActive?.Invoke(isNight);
 		ticksAmount = 0;
 		spawnWeightCombined = 0;
 		daysSurvived++;
@@ -137,6 +145,7 @@ public class WaveManager {
 			enemy.OnDeath += RemoveEnemyFromNightList;
 			nightEnemiesList.Add(enemy);
 			ticksAmount++;
+			OnWaveTick?.Invoke(ticksAmount);
 		}
 	}
 
