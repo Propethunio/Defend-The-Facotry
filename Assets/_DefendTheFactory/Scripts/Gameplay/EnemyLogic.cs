@@ -12,6 +12,7 @@ public class EnemyLogic : Flyweight {
 	public int shield { get; private set; }
 	public float speed { get; private set; }
 
+	private Quaternion targetRotation;
 	private Vector3 nextPoint;
 	private WaveManager waveManager;
 	private FlyweightFactory factory;
@@ -34,6 +35,8 @@ public class EnemyLogic : Flyweight {
 		health = maxHealth;
 		shield = maxShield;
 		SetNextPoint();
+		SetDirection();
+		transform.rotation = targetRotation;
 	}
 
 	private void Update() {
@@ -44,9 +47,15 @@ public class EnemyLogic : Flyweight {
 			}
 
 			SetNextPoint();
+			SetDirection();
 		}
 
+		Rotate();
 		Move();
+	}
+
+	private void Rotate() {
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
 	}
 
 	private void Move() {
@@ -57,6 +66,12 @@ public class EnemyLogic : Flyweight {
 		Vector2Int nextPoint2D = waveManager.pathPoints[pathPointIndex];
 		nextPoint = new Vector3(nextPoint2D.x + 0.5f, transform.position.y, nextPoint2D.y + 0.5f);
 		pathPointIndex++;
+	}
+
+	private void SetDirection() {
+		Vector3 rotateDirection = transform.position - nextPoint;
+		rotateDirection.y = 0;
+		targetRotation = Quaternion.LookRotation(rotateDirection);
 	}
 
 	private void DamageBase() {
