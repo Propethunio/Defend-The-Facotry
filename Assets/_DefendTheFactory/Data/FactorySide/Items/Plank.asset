@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   prefab: {fileID: 268084208557166883, guid: 3d3f588418fe9b44290b5059f8eeee3e, type: 3}
-  <icon>k__BackingField: {fileID: 21300000, guid: 76159e366c5408c419e6c325b3288149,
+  <icon>k__BackingField: {fileID: 21300000, guid: 6fd0b649401ca5b419a5ebf5df170c0f,
     type: 3}
   <itemName>k__BackingField: Plank

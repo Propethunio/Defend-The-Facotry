@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   prefab: {fileID: 6788053349819902491, guid: 06c9ba10eabcb184e9614a8466476c1a, type: 3}
-  <icon>k__BackingField: {fileID: 21300000, guid: bc5edf95621ed6147a9cb1cbf48dc3f3,
+  <icon>k__BackingField: {fileID: 21300000, guid: 0e4040556b24d6040826b165baa18a21,
     type: 3}
   <itemName>k__BackingField: Sharp Log
