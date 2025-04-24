@@ -18,7 +18,7 @@ public class WaveManager {
 
 	public event Action<bool> OnNightActive;
 	public event Action<int> OnWaveTick;
-	
+
 	public void Init() {
 		factory = Injector.Resolve<FlyweightFactory>();
 		Injector.Resolve<TimeTickSystem>().OnTick += OnTick;
@@ -91,12 +91,13 @@ public class WaveManager {
 			EnemyWeightPair enemyWithWeight = currentDayData.enemiesDuringDay[i];
 			cumulative += enemyWithWeight.weight;
 
-			if (roll >= cumulative) continue;
-
-			EnemyLogic enemy = factory.Spawn(enemyWithWeight.enemy) as EnemyLogic;
-			enemy.transform.position = spawnPosition;
-			enemy.transform.rotation = Quaternion.identity;
-			enemy.Init();
+			if (roll < cumulative) {
+				EnemyLogic enemy = factory.Spawn(enemyWithWeight.enemy) as EnemyLogic;
+				enemy.transform.position = spawnPosition;
+				enemy.transform.rotation = Quaternion.identity;
+				enemy.Init();
+				break;
+			}
 		}
 	}
 
@@ -136,16 +137,17 @@ public class WaveManager {
 			EnemyWeightPair enemyWithWeight = currentDayData.enemiesDuringNight[i];
 			cumulative += enemyWithWeight.weight;
 
-			if (roll >= cumulative) continue;
-
-			EnemyLogic enemy = factory.Spawn(enemyWithWeight.enemy) as EnemyLogic;
-			enemy.transform.position = spawnPosition;
-			enemy.transform.rotation = Quaternion.identity;
-			enemy.Init();
-			enemy.OnDeath += RemoveEnemyFromNightList;
-			nightEnemiesList.Add(enemy);
-			ticksAmount++;
-			OnWaveTick?.Invoke(ticksAmount);
+			if (roll < cumulative) {
+				EnemyLogic enemy = factory.Spawn(enemyWithWeight.enemy) as EnemyLogic;
+				enemy.transform.position = spawnPosition;
+				enemy.transform.rotation = Quaternion.identity;
+				enemy.Init();
+				enemy.OnDeath += RemoveEnemyFromNightList;
+				nightEnemiesList.Add(enemy);
+				ticksAmount++;
+				OnWaveTick?.Invoke(currentDayData.spawnAtNightAmount - ticksAmount);
+				break;
+			}
 		}
 	}
 
