@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 5
   prefab: {fileID: 2002821952129657682, guid: 46f5b37c0d748e045bdf06a3a1605cd6, type: 3}
-  <icon>k__BackingField: {fileID: 0}
+  <icon>k__BackingField: {fileID: 21300000, guid: c949102a7ea25034c86b3270aab915e1,
+    type: 3}
   <itemName>k__BackingField: Stone Gravel

@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 4
   prefab: {fileID: 5102993921385397761, guid: 5b44dd4f4506c2e40949b1123678cb9a, type: 3}
-  <icon>k__BackingField: {fileID: 0}
+  <icon>k__BackingField: {fileID: 21300000, guid: a004c7d4a77e5d141847b1db263c5574,
+    type: 3}
   <itemName>k__BackingField: Brick
