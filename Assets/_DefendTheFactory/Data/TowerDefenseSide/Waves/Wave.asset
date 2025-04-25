@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16869dcb21a24314d86a8746452ccc6b, type: 3}
   m_Name: Wave
   m_EditorClassIdentifier: 
-  <dayLength>k__BackingField: 240
+  <dayLength>k__BackingField: 300
   <waveDayData>k__BackingField:
-  - <startSpawnAfter>k__BackingField: 120
+  - <startSpawnAfter>k__BackingField: 80
     <chanceToSpawnDay>k__BackingField: 5
     <enemiesDuringDay>k__BackingField:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 938bbe1e81d4a1642aa5ff3a5018da15,

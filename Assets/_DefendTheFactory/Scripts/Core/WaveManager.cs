@@ -16,8 +16,8 @@ public class WaveManager {
 	private int daysSurvived;
 	private FlyweightFactory factory;
 
-	public event Action<bool> OnNightActive;
-	public event Action<int> OnWaveTick;
+	public event Action OnDayStart, OnNightStart;
+	public event Action<float> OnDayTick, OnNightTick;
 
 	public void Init() {
 		factory = Injector.Resolve<FlyweightFactory>();
@@ -26,6 +26,18 @@ public class WaveManager {
 
 	~WaveManager() {
 		Injector.Resolve<TimeTickSystem>().OnTick -= OnTick;
+	}
+
+	public int GetDayLength() {
+		return wavesData.dayLength;
+	}
+
+	public int GetSpawnStartTime() {
+		return currentDayData.startSpawnAfter;
+	}
+
+	public int GetDaysSurvived() {
+		return daysSurvived;
 	}
 
 	public void SetEnemiesData(EnemyWavesSO enemiesData) {
@@ -37,6 +49,8 @@ public class WaveManager {
 		for (int i = 0; i < enemiesCount; i++) {
 			spawnWeightCombined += currentDayData.enemiesDuringDay[i].weight;
 		}
+
+		OnDayStart?.Invoke();
 	}
 
 	public void SetPath(List<Vector2Int> pathCells) {
@@ -60,7 +74,8 @@ public class WaveManager {
 
 	private void HandleDayTick() {
 		ticksAmount++;
-		OnWaveTick?.Invoke((wavesData.dayLength - ticksAmount) / 2);
+		OnDayTick?.Invoke((float)ticksAmount / wavesData.dayLength);
+
 		if (ticksAmount == wavesData.dayLength) {
 			ChangeDayIntoNight();
 		}
@@ -72,7 +87,6 @@ public class WaveManager {
 
 	private void ChangeDayIntoNight() {
 		isNight = true;
-		OnNightActive?.Invoke(isNight);
 		ticksAmount = 0;
 		spawnWeightCombined = 0;
 		int enemiesCount = currentDayData.enemiesDuringNight.Count;
@@ -80,6 +94,8 @@ public class WaveManager {
 		for (int i = 0; i < enemiesCount; i++) {
 			spawnWeightCombined += currentDayData.enemiesDuringNight[i].weight;
 		}
+
+		OnNightStart?.Invoke();
 	}
 
 	private void SpawnEnemyDay() {
@@ -116,7 +132,6 @@ public class WaveManager {
 
 	private void ChangeNightIntoDay() {
 		isNight = false;
-		OnNightActive?.Invoke(isNight);
 		ticksAmount = 0;
 		spawnWeightCombined = 0;
 		daysSurvived++;
@@ -126,6 +141,8 @@ public class WaveManager {
 		for (int i = 0; i < enemiesCount; i++) {
 			spawnWeightCombined += currentDayData.enemiesDuringDay[i].weight;
 		}
+
+		OnDayStart?.Invoke();
 	}
 
 	private void SpawnEnemyNight() {
@@ -145,7 +162,7 @@ public class WaveManager {
 				enemy.OnDeath += RemoveEnemyFromNightList;
 				nightEnemiesList.Add(enemy);
 				ticksAmount++;
-				OnWaveTick?.Invoke(currentDayData.spawnAtNightAmount - ticksAmount);
+				OnNightTick?.Invoke((float)ticksAmount / currentDayData.spawnAtNightAmount);
 				break;
 			}
 		}

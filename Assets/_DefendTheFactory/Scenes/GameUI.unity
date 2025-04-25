@@ -217,6 +217,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 901950709923484730, guid: bb38fd3047de34a409d01ca0990c2c3a,
+        type: 3}
+      propertyPath: smoothingSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 910373675701210198, guid: bb38fd3047de34a409d01ca0990c2c3a,
         type: 3}
       propertyPath: m_AnchorMax.y
