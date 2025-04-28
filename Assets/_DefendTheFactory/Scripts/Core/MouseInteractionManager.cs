@@ -21,16 +21,16 @@ public class MouseInteractionManager {
         BuildingSystem buildingSystem = Injector.Resolve<BuildingSystem>();
         buildingSystem.OnSystemEnabled += BuildingSystemEnabled;
         buildingSystem.OnSystemDisabled += BuildingSystemDisabled;
-        input.leftClickAction += HandleLeftClickAction;
-        input.mouseMoveAction += HandleMouseHover;
+        input.LeftClickAction += HandleLeftClickAction;
+        input.MouseMoveAction += HandleMouseHover;
     }
 
     private void Unsubscribe() {
         BuildingSystem buildingSystem = Injector.Resolve<BuildingSystem>();
         buildingSystem.OnSystemEnabled -= BuildingSystemEnabled;
         buildingSystem.OnSystemDisabled -= BuildingSystemDisabled;
-        input.leftClickAction -= HandleLeftClickAction;
-        input.mouseMoveAction -= HandleMouseHover;
+        input.LeftClickAction -= HandleLeftClickAction;
+        input.MouseMoveAction -= HandleMouseHover;
     }
 
     private void BuildingSystemEnabled() {

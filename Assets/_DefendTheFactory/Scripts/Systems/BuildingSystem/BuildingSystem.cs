@@ -34,11 +34,6 @@ public class BuildingSystem {
 		Unsubscribe();
 	}
 
-	public void Test(BaseBuildableObjectSO test) {
-		EnableBuildingSystem();
-		SetSelectedPlacedObject(test);
-	}
-
 	private void EnableBuildingSystem() {
 		if (isBuildingSystemActive) return;
 
@@ -49,7 +44,7 @@ public class BuildingSystem {
 		OnSystemEnabled?.Invoke();
 	}
 
-	private void DisableBuildingSystem() {
+	public void DisableBuildingSystem() {
 		if (!isBuildingSystemActive) return;
 
 		placedObjectTypeSO = null;
@@ -62,17 +57,17 @@ public class BuildingSystem {
 	}
 
 	private void Subscribe() {
-		inputManager.leftClickAction += HandleObjectPlacement;
-		inputManager.buildingRotationAction += HandleDirRotation;
-		inputManager.rightClickPerformedAction += DisableBuildingSystem;
-		inputManager.backClickAction += DisableBuildingSystem;
+		inputManager.LeftClickAction += HandleObjectPlacement;
+		inputManager.BuildingRotationAction += HandleDirRotation;
+		inputManager.RightClickPerformedAction += DisableBuildingSystem;
+		inputManager.BackClickAction += DisableBuildingSystem;
 	}
 
 	private void Unsubscribe() {
-		inputManager.leftClickAction -= HandleObjectPlacement;
-		inputManager.buildingRotationAction -= HandleDirRotation;
-		inputManager.rightClickPerformedAction -= DisableBuildingSystem;
-		inputManager.backClickAction -= DisableBuildingSystem;
+		inputManager.LeftClickAction -= HandleObjectPlacement;
+		inputManager.BuildingRotationAction -= HandleDirRotation;
+		inputManager.RightClickPerformedAction -= DisableBuildingSystem;
+		inputManager.BackClickAction -= DisableBuildingSystem;
 	}
 
 	private void HandleObjectPlacement() {
@@ -311,6 +306,7 @@ public class BuildingSystem {
 	}
 
 	public void SetSelectedPlacedObject(BaseBuildableObjectSO placedObjectTypeSO) {
+		EnableBuildingSystem();
 		this.placedObjectTypeSO = placedObjectTypeSO;
 		isDemolishActive = false;
 		RefreshSelectedObjectType();

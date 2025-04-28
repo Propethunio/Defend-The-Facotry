@@ -99,10 +99,10 @@ public class CameraFollowTarget : DependencyMonoBehaviour<CameraFollowTarget> {
     }
 
     private void SubscribeEvents() {
-        inputManager.rightClickPerformedAction += InputManager_rightClickPerformed;
-        inputManager.rightClickCanceledAction += InputManager_rightClickCanceled;
-        inputManager.scrollClickPerformedAction += InputManager_scrollClickPerformed;
-        inputManager.scrollClickCanceledAction += InputManager_scrollClickCanceled;
+        inputManager.RightClickPerformedAction += InputManager_rightClickPerformed;
+        inputManager.RightClickCanceledAction += InputManager_rightClickCanceled;
+        inputManager.ScrollClickPerformedAction += InputManager_scrollClickPerformed;
+        inputManager.ScrollClickCanceledAction += InputManager_scrollClickCanceled;
     }
 
     private void InputManager_rightClickPerformed() {

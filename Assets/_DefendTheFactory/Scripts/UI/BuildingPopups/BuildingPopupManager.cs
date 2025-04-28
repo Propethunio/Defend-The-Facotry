@@ -13,7 +13,7 @@ public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager
 	}
 
 	private void OnDestroy() {
-		inputManager.rightClickPerformedAction -= CloseActivePopup;
+		inputManager.RightClickPerformedAction -= CloseActivePopup;
 	}
 
 	private void CloseActivePopup() {
@@ -23,7 +23,7 @@ public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager
 		}
 
 		currentSelectedObject = null;
-		inputManager.rightClickPerformedAction -= CloseActivePopup;
+		inputManager.RightClickPerformedAction -= CloseActivePopup;
 	}
 
 	public void ShowBuildingPopup<T>(BaseDataPlacedObject<T> placedObject) where T : BaseBuildableObjectSO {
@@ -48,7 +48,7 @@ public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager
 
 		currentBuildingPopup = popupToShow;
 		currentBuildingPopup.Show(placedObject);
-		inputManager.rightClickPerformedAction += CloseActivePopup;
+		inputManager.RightClickPerformedAction += CloseActivePopup;
 	}
 
 	private BaseBuildingPopup GetPopupType(BuildingPopupEnum buildingPopupType) {
