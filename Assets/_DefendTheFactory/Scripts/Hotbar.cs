@@ -1,8 +1,9 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Hotbar : MonoBehaviour {
+	[SerializeField] private CostResourceUI costResourcePrefab;
+	[SerializeField] private RectTransform costPanel;
 	[SerializeField] private List<HotbarBtn> hotbarBtns;
 
 	private int btnsCount;
@@ -21,7 +22,7 @@ public class Hotbar : MonoBehaviour {
 		Injector.Resolve<BuildingSystem>().OnSystemDisabled += DisableHighlights;
 
 		for (int i = 0; i < btnsCount; i++) {
-			hotbarBtns[i].OnBtnClick += DisableHighlights;
+			hotbarBtns[i].OnBtnClick += OnBtnClick;
 		}
 	}
 
@@ -30,18 +31,41 @@ public class Hotbar : MonoBehaviour {
 		Injector.Resolve<BuildingSystem>().OnSystemDisabled -= DisableHighlights;
 
 		for (int i = 0; i < btnsCount; i++) {
-			hotbarBtns[i].OnBtnClick -= DisableHighlights;
+			hotbarBtns[i].OnBtnClick -= OnBtnClick;
 		}
+	}
+
+	private void OnBtnClick(BaseBuildableObjectSO buildableObject) {
+		DisableHighlights();
+		SetupCostPanel(buildableObject);
 	}
 
 	private void DisableHighlights() {
 		for (int i = 0; i < btnsCount; i++) {
 			hotbarBtns[i].SetHighlight(false);
 		}
+
+		costPanel.gameObject.SetActive(false);
 	}
 
 	private void OnHotbarAction(int index) {
 		DisableHighlights();
 		hotbarBtns[index].ButtonAction();
+	}
+
+	private void SetupCostPanel(BaseBuildableObjectSO buildableObject) {
+		if (buildableObject == null) return;
+
+		foreach (RectTransform child in costPanel) {
+			Destroy(child.gameObject);
+		}
+
+		int costItemsCounts = buildableObject.cost.Count;
+		for (int i = 0; i < costItemsCounts; i++) {
+			ItemIntPair itemCostPair = buildableObject.cost[i];
+			Instantiate(costResourcePrefab, costPanel).Init(itemCostPair);
+		}
+
+		costPanel.gameObject.SetActive(true);
 	}
 }

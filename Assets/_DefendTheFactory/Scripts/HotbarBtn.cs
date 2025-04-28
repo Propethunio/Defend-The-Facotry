@@ -10,20 +10,17 @@ public class HotbarBtn : MonoBehaviour {
 	private BaseBuildableObjectSO buildableObject;
 	private BuildingSystem buildingSystem;
 
-	public event Action OnBtnClick;
+	public event Action<BaseBuildableObjectSO> OnBtnClick;
 
 	private void Start() {
 		buildingSystem = Injector.Resolve<BuildingSystem>();
-		GetComponent<Button>().onClick.AddListener(OnClick);
+		GetComponent<Button>().onClick.AddListener(ButtonAction);
 		ChangeObject(defaultObject);
 	}
 
-	private void OnClick() {
-		OnBtnClick?.Invoke();
-		ButtonAction();
-	}
-
 	public void ButtonAction() {
+		OnBtnClick?.Invoke(buildableObject);
+
 		if (buildableObject == null) {
 			buildingSystem.DisableBuildingSystem();
 			return;

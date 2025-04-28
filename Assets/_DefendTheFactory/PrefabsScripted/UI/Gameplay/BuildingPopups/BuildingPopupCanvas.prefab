@@ -176,16 +176,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3764338387585856462}
     m_Modifications:
-    - target: {fileID: 1067577121661569820, guid: 55184e43e918a9343a9f5e3651af82c6,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.33
-      objectReference: {fileID: 0}
-    - target: {fileID: 1067577121661569820, guid: 55184e43e918a9343a9f5e3651af82c6,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2736206977968550753, guid: 55184e43e918a9343a9f5e3651af82c6,
         type: 3}
       propertyPath: m_Pivot.x
@@ -291,11 +281,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Constructor Popup
       objectReference: {fileID: 0}
-    - target: {fileID: 9003575631238465785, guid: 55184e43e918a9343a9f5e3651af82c6,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -331,11 +316,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Gathering Machine Popup
-      objectReference: {fileID: 0}
-    - target: {fileID: 1905396200326081427, guid: 26f649927de566644a727084b9a493d1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4862346447552974859, guid: 26f649927de566644a727084b9a493d1,
         type: 3}
@@ -435,16 +415,6 @@ PrefabInstance:
     - target: {fileID: 4862346447552974859, guid: 26f649927de566644a727084b9a493d1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7517273410603149430, guid: 26f649927de566644a727084b9a493d1,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7517273410603149430, guid: 26f649927de566644a727084b9a493d1,
-        type: 3}
-      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
