@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,9 +10,10 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 	public float zoomDir { get; private set; }
 
 	public event Action MouseMoveAction, LeftClickAction, RightClickPerformedAction, RightClickCanceledAction, ScrollClickPerformedAction, ScrollClickCanceledAction;
-	public event Action BackClickAction, BuildingMenuAction, BuildingRotationAction;
+	public event Action OpenMenuAction, BuildingMenuAction, BuildingRotationAction;
 	public event Action<int> HotbarAction, TimeChangeAction;
 
+	private Stack<Action> backStackActions = new Stack<Action>();
 	private InputMap input;
 
 	private void Start() {
@@ -64,6 +66,41 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 		input.GameInput.Hotbar6.performed += Hotbar6_performed;
 		input.GameInput.Hotbar7.performed += Hotbar7_performed;
 		input.GameInput.Hotbar8.performed += Hotbar8_performed;
+	}
+
+	public void RegisterBackAction(Action action) {
+		backStackActions.Push(action);
+	}
+
+	public void UnregisterBackAction(Action action) {
+		Stack<Action> tempStack = new Stack<Action>();
+
+		while (backStackActions.Count > 0) {
+			Action current = backStackActions.Pop();
+			if (current != action) {
+				tempStack.Push(current);
+			}
+		}
+
+		while (tempStack.Count > 0) {
+			backStackActions.Push(tempStack.Pop());
+		}
+	}
+
+	public void HandleResetBackState() {
+		if (backStackActions.Count == 0) return;
+		
+		HandleBack();
+	}
+	
+	private void HandleBack() {
+		if (backStackActions.Count > 0) {
+			backStackActions.Pop()?.Invoke();
+		}
+		else {
+			Debug.Log("Open Menu");
+			OpenMenuAction?.Invoke();
+		}
 	}
 
 	private void CameraMovement_performed(InputAction.CallbackContext obj) {
@@ -132,7 +169,7 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 	}
 
 	private void Back_performed(InputAction.CallbackContext obj) {
-		BackClickAction?.Invoke();
+		HandleBack();
 	}
 
 	private void BuildingMenu_performed(InputAction.CallbackContext obj) {

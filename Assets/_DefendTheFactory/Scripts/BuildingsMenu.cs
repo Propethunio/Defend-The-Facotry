@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class BuildingsMenu : MonoBehaviour {
+	[SerializeField] private GameObject buildingsMenu;
+	[SerializeField] private Button closeMenuButton;
 	[SerializeField] private Button factoryButton;
 	[SerializeField] private Button towersButton;
 	[SerializeField] private Image factoryActiveIcon;
@@ -14,9 +16,11 @@ public class BuildingsMenu : MonoBehaviour {
 	[SerializeField] private List<BaseBuildableObjectSO> factoryData;
 	[SerializeField] private List<BaseBuildableObjectSO> towersData;
 
+	private InputManager inputManager;
 	private RectTransform mainCanvasRect;
 
 	private void Start() {
+		inputManager = Injector.Resolve<InputManager>();
 		mainCanvasRect = GetComponent<RectTransform>();
 		GridLayoutGroup layoutGroup = factoryButtonsGrid.GetComponent<GridLayoutGroup>();
 		dragDropBuildingPanel.sizeDelta = layoutGroup.cellSize;
@@ -25,9 +29,39 @@ public class BuildingsMenu : MonoBehaviour {
 		Subscribe();
 	}
 
+	private void OnDestroy() {
+		Unsubscribe();
+	}
+
 	private void Subscribe() {
+		closeMenuButton.onClick.AddListener(HideBuildingsMenu);
 		factoryButton.onClick.AddListener(() => ShowTab(true));
 		towersButton.onClick.AddListener(() => ShowTab(false));
+		inputManager.BuildingMenuAction += ToggleBuildingsMenu;
+	}
+
+	private void Unsubscribe() {
+		inputManager.BuildingMenuAction -= ToggleBuildingsMenu;
+	}
+
+	private void ToggleBuildingsMenu() {
+		if (buildingsMenu.activeSelf) {
+			HideBuildingsMenu();
+		}
+		else {
+			ShowBuildingsMenu();
+		}
+	}
+
+	private void ShowBuildingsMenu() {
+		inputManager.HandleResetBackState();
+		inputManager.RegisterBackAction(HideBuildingsMenu);
+		buildingsMenu.SetActive(true);
+	}
+
+	private void HideBuildingsMenu() {
+		inputManager.UnregisterBackAction(HideBuildingsMenu);
+		buildingsMenu.SetActive(false);
 	}
 
 	private void SetupBuildingButtons(List<BaseBuildableObjectSO> buildings, RectTransform gridTransform, int gridConstraintCount) {

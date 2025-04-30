@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Hotbar : MonoBehaviour {
+	[SerializeField] private GameObject buildingsMenu;
 	[SerializeField] private CostResourceUI costResourcePrefab;
 	[SerializeField] private RectTransform costPanel;
 	[SerializeField] private List<HotbarBtn> hotbarBtns;
@@ -22,6 +23,7 @@ public class Hotbar : MonoBehaviour {
 		Injector.Resolve<BuildingSystem>().OnSystemDisabled += DisableHighlights;
 
 		for (int i = 0; i < btnsCount; i++) {
+			hotbarBtns[i].Init(this);
 			hotbarBtns[i].OnBtnClick += OnBtnClick;
 		}
 	}
@@ -35,6 +37,10 @@ public class Hotbar : MonoBehaviour {
 		}
 	}
 
+	public bool IsBtnClickBlocked() {
+		return buildingsMenu.activeSelf;
+	}
+	
 	private void OnBtnClick(BaseBuildableObjectSO buildableObject) {
 		DisableHighlights();
 		SetupCostPanel(buildableObject);

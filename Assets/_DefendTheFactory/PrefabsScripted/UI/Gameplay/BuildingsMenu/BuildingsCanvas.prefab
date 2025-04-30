@@ -2057,6 +2057,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52b139d100347a049b2fcfa6986fef83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buildingsMenu: {fileID: 8397362320696992567}
+  closeMenuButton: {fileID: 533485879765770755}
   factoryButton: {fileID: 1368509605852549622}
   towersButton: {fileID: 5049120589004513543}
   factoryActiveIcon: {fileID: 3759852516876917274}
@@ -2621,6 +2623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6be4256b202fe334abc5670019acefe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buildingsMenu: {fileID: 8397362320696992567}
   costResourcePrefab: {fileID: 6014046521746327795, guid: d27040d1412c97440a941c046bf77531,
     type: 3}
   costPanel: {fileID: 4224794659348682718}
@@ -4267,7 +4270,7 @@ PrefabInstance:
         type: 3}
       propertyPath: defaultObject
       value: 
-      objectReference: {fileID: 11400000, guid: 87fd528a15c596d4b85a6293d4f5f4c7,
+      objectReference: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273,
         type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4561,8 +4564,7 @@ PrefabInstance:
         type: 3}
       propertyPath: defaultObject
       value: 
-      objectReference: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273,
-        type: 2}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4855,8 +4857,7 @@ PrefabInstance:
         type: 3}
       propertyPath: defaultObject
       value: 
-      objectReference: {fileID: 11400000, guid: 9becd9a6d8334774ca7b0b355f08b11c,
-        type: 2}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5002,8 +5003,7 @@ PrefabInstance:
         type: 3}
       propertyPath: defaultObject
       value: 
-      objectReference: {fileID: 11400000, guid: 72acb772495fcf14ca7ab093284cba1b,
-        type: 2}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

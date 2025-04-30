@@ -60,14 +60,14 @@ public class BuildingSystem {
 		inputManager.LeftClickAction += HandleObjectPlacement;
 		inputManager.BuildingRotationAction += HandleDirRotation;
 		inputManager.RightClickPerformedAction += DisableBuildingSystem;
-		inputManager.BackClickAction += DisableBuildingSystem;
+		inputManager.RegisterBackAction(DisableBuildingSystem);
 	}
 
 	private void Unsubscribe() {
 		inputManager.LeftClickAction -= HandleObjectPlacement;
 		inputManager.BuildingRotationAction -= HandleDirRotation;
 		inputManager.RightClickPerformedAction -= DisableBuildingSystem;
-		inputManager.BackClickAction -= DisableBuildingSystem;
+		inputManager.UnregisterBackAction(DisableBuildingSystem);
 	}
 
 	private void HandleObjectPlacement() {

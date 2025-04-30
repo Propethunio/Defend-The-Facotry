@@ -140,7 +140,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: pre-alpha 1.3.5b
+  bundleVersion: pre-alpha 1.4.0 - Kinga demo
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -292,7 +292,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 092b2e67a62d9474ca64ff0d064dde31, type: 3}
+      m_Icon: {fileID: 2800000, guid: 011b0b16ceaf31d46b83fbdfaa2ff8f3, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0

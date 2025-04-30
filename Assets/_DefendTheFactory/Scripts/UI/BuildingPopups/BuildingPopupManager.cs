@@ -23,6 +23,7 @@ public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager
 		}
 
 		currentSelectedObject = null;
+		inputManager.UnregisterBackAction(CloseActivePopup);
 		inputManager.RightClickPerformedAction -= CloseActivePopup;
 	}
 
@@ -45,10 +46,13 @@ public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager
 		if (currentBuildingPopup != null) {
 			currentBuildingPopup.Close();
 		}
-
+		else {
+			inputManager.RegisterBackAction(CloseActivePopup);
+			inputManager.RightClickPerformedAction += CloseActivePopup;
+		}
+		
 		currentBuildingPopup = popupToShow;
 		currentBuildingPopup.Show(placedObject);
-		inputManager.RightClickPerformedAction += CloseActivePopup;
 	}
 
 	private BaseBuildingPopup GetPopupType(BuildingPopupEnum buildingPopupType) {

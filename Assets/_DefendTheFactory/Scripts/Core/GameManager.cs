@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void Update() {
-		HandleDebugSpawnItem();
+		//HandleDebugSpawnItem();
 		HandleDebugDeleteBuilding();
 	}
 
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void HandleDebugDeleteBuilding() {
-		if (Input.GetMouseButtonDown(1) && !MyUtils.IsPointerOverUI()) {
+		if (Input.GetKeyDown(KeyCode.F) && !MyUtils.IsPointerOverUI()) {
 			Injector.Resolve<BuildingSystem>().HandleDemolish();
 		}
 	}
