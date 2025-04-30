@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class HotbarBtn : MonoBehaviour {
+public class HotbarBtn : MonoBehaviour, IDropHandler {
 	[SerializeField] private Image highlight;
 	[SerializeField] private Image icon;
 	[SerializeField] private BaseBuildableObjectSO defaultObject;
@@ -16,6 +17,10 @@ public class HotbarBtn : MonoBehaviour {
 		buildingSystem = Injector.Resolve<BuildingSystem>();
 		GetComponent<Button>().onClick.AddListener(ButtonAction);
 		ChangeObject(defaultObject);
+	}
+
+	public void OnDrop(PointerEventData eventData) { 
+		ChangeObject(eventData.pointerDrag.GetComponent<BuildingBtn>().buildableObject);
 	}
 
 	public void ButtonAction() {
@@ -34,7 +39,7 @@ public class HotbarBtn : MonoBehaviour {
 		highlight.enabled = isActive;
 	}
 
-	public void ChangeObject(BaseBuildableObjectSO obj) {
+	private void ChangeObject(BaseBuildableObjectSO obj) {
 		buildableObject = obj;
 		icon.sprite = buildableObject.icon;
 		icon.enabled = true;
