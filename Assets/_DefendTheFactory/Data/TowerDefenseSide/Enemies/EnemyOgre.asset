@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 9
   prefab: {fileID: 7991304437738920029, guid: 7bd378da59c72094abca9c107065771d, type: 3}
-  <health>k__BackingField: 200
+  <health>k__BackingField: 300
   <shield>k__BackingField: 150
   <speed>k__BackingField: 0.5
   <isFlying>k__BackingField: 0
