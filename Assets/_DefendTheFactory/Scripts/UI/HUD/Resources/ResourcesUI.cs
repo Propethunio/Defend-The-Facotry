@@ -7,7 +7,7 @@ public class ResourcesUI : MonoBehaviour {
 
 	private ItemsManager itemsManager;
 	private float additionalHeight;
-	private int resorceUiCount;
+	private int resourceUiCount;
 
 	private void Start() {
 		itemsManager = Injector.Resolve<ItemsManager>();
@@ -24,7 +24,7 @@ public class ResourcesUI : MonoBehaviour {
 		SingleResourceUI res = Instantiate(resourcePrefab, resourcesContainer.transform);
 		res.Init(item);
 		res.Removed += OnResourceRemoved;
-		resorceUiCount++;
+		resourceUiCount++;
 		resourcesContainer.gameObject.SetActive(true);
 		IncreaseResourcesContainerSize();
 	}
@@ -39,9 +39,9 @@ public class ResourcesUI : MonoBehaviour {
 
 	private void OnResourceRemoved() {
 		DecreaseResourcesContainerSize();
-		resorceUiCount--;
+		resourceUiCount--;
 		
-		if (resorceUiCount == 0) {
+		if (resourceUiCount == 0) {
 			resourcesContainer.gameObject.SetActive(false);
 		}
 	}
