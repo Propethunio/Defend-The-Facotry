@@ -15,19 +15,29 @@ public class WaveManager {
 	private HashSet<EnemyLogic> nightEnemiesList = new HashSet<EnemyLogic>();
 	private int daysSurvived;
 	private FlyweightFactory factory;
+	private TimeTickSystem timeTickSystem;
+	private HealthManager healthManager;
 
 	public event Action OnDayStart, OnNightStart;
 	public event Action<float> OnDayTick, OnNightTick;
 
 	public void Init() {
 		factory = Injector.Resolve<FlyweightFactory>();
-		Injector.Resolve<TimeTickSystem>().OnTick += OnTick;
+		timeTickSystem = Injector.Resolve<TimeTickSystem>();
+		timeTickSystem.OnTick += OnTick;
+		healthManager = Injector.Resolve<HealthManager>();
+		healthManager.GameOver += StopSpawning;
 	}
 
 	~WaveManager() {
-		Injector.Resolve<TimeTickSystem>().OnTick -= OnTick;
+		timeTickSystem.OnTick -= OnTick;
+		healthManager.GameOver -= StopSpawning;
 	}
 
+	private void StopSpawning() {
+		timeTickSystem.OnTick -= OnTick;
+	}
+	
 	public int GetDayLength() {
 		return wavesData.dayLength;
 	}

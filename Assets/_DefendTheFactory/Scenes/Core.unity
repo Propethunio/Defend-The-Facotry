@@ -415,6 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: e74b6e4c28d327143948909efc68f967, type: 2}
+  startHp: 20
   showBeltDebug: 0
   generateMapAsync: 0
   addResources: 0

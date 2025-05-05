@@ -457,11 +457,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Settings Popup
       objectReference: {fileID: 0}
-    - target: {fileID: 407699335224580934, guid: 64413a76541fd0448b5a0e70030781cc,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1263440783700859466, guid: 64413a76541fd0448b5a0e70030781cc,
         type: 3}
       propertyPath: m_Pivot.x
@@ -562,31 +557,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1917282875947331672, guid: 64413a76541fd0448b5a0e70030781cc,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.66
-      objectReference: {fileID: 0}
-    - target: {fileID: 1917282875947331672, guid: 64413a76541fd0448b5a0e70030781cc,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2614615309200179392, guid: 64413a76541fd0448b5a0e70030781cc,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.518
-      objectReference: {fileID: 0}
-    - target: {fileID: 2614615309200179392, guid: 64413a76541fd0448b5a0e70030781cc,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2690422695096275368, guid: 64413a76541fd0448b5a0e70030781cc,
-        type: 3}
-      propertyPath: menuPanel
-      value: 
-      objectReference: {fileID: 774941479}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -710,11 +680,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Exit Popup
       objectReference: {fileID: 0}
-    - target: {fileID: 4613553334429474850, guid: ed58c42ef6119eb44b96fc7bca422152,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -728,40 +693,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 466741227}
     m_Modifications:
-    - target: {fileID: 745425636839917190, guid: 7cc5d6caf87d33848a610d99c90f41c6,
-        type: 3}
-      propertyPath: m_fontColor.a
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 745425636839917190, guid: 7cc5d6caf87d33848a610d99c90f41c6,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 871757301
-      objectReference: {fileID: 0}
     - target: {fileID: 2477312155878203766, guid: 7cc5d6caf87d33848a610d99c90f41c6,
         type: 3}
       propertyPath: m_Name
       value: Main Panel
-      objectReference: {fileID: 0}
-    - target: {fileID: 2477312155878203766, guid: 7cc5d6caf87d33848a610d99c90f41c6,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3371828493832462872, guid: 7cc5d6caf87d33848a610d99c90f41c6,
-        type: 3}
-      propertyPath: m_Name
-      value: Main Panel Buttons
-      objectReference: {fileID: 0}
-    - target: {fileID: 5154156865022884621, guid: 7cc5d6caf87d33848a610d99c90f41c6,
-        type: 3}
-      propertyPath: m_fontColor.a
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5154156865022884621, guid: 7cc5d6caf87d33848a610d99c90f41c6,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 871757301
       objectReference: {fileID: 0}
     - target: {fileID: 6630701554681930174, guid: 7cc5d6caf87d33848a610d99c90f41c6,
         type: 3}

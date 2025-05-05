@@ -28,8 +28,7 @@ public class SceneLoader : Singleton<SceneLoader> {
     }
 
     public async Task LoadSceneGroup(int index, bool loadImmediately = false) {
-        Scene activeScene = SceneManager.GetSceneByName("Bootstrapper");
-        SceneManager.SetActiveScene(activeScene);
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Bootstrapper"));
         LoadingScreen loadingScreen = Instantiate(loadingScreenPrefab);
 
         if (loadImmediately) {

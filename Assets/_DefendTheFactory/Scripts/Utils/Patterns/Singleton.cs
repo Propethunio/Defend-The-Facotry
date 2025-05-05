@@ -14,9 +14,8 @@ public class Singleton<T> : MonoBehaviour where T : Component {
 
             if (instance != null) return instance;
 
-            GameObject obj = new GameObject { name = typeof(T).Name + "( Singleton Auto Created)" };
-            instance = obj.AddComponent<T>();
-            return instance;
+            Debug.LogError($"Singleton {typeof(T).Name} not found");
+            return null;
         }
     }
 
