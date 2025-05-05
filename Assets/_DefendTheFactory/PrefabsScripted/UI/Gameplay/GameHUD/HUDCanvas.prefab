@@ -853,7 +853,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 0.666
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -2184,6 +2184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7879514733602480812}
+  - component: {fileID: 2009968845078474500}
   m_Layer: 0
   m_Name: Statistics
   m_TagString: Untagged
@@ -2212,6 +2213,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 50}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2009968845078474500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3605041602021609008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b979f021e148a94bb57830d8e3c3f6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  towersAmountText: {fileID: 6534011269744714667}
+  healthFill: {fileID: 7282098003392610099}
 --- !u!1 &3767206692282135578
 GameObject:
   m_ObjectHideFlags: 0

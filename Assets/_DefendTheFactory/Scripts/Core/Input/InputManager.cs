@@ -14,11 +14,13 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 	public event Action<int> HotbarAction, TimeChangeAction;
 
 	private Stack<Action> backStackActions = new Stack<Action>();
+	private HealthManager healthManager;
 	private InputMap input;
 
 	private void Start() {
+		healthManager = Injector.Resolve<HealthManager>();
 		input = new InputMap();
-		SubscribeEvents();
+		Subscribe();
 		EnableGameInput();
 	}
 
@@ -28,17 +30,21 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 		}
 	}
 
-	public void EnableMenuInput() {
-		input.Disable();
-		input.MenuInput.Enable();
+	private void OnDestroy() {
+		Unsubscribe();
 	}
 
-	public void EnableGameInput() {
+	private void EnableGameInput() {
 		input.Disable();
 		input.GameInput.Enable();
 	}
 
-	private void SubscribeEvents() {
+	private void DisableGameInput() {
+		input.Disable();
+	}
+
+	private void Subscribe() {
+		healthManager.GameOver += OnGameOver;
 		input.GameInput.CameraMovement.performed += CameraMovement_performed;
 		input.GameInput.CameraMovement.canceled += CameraMovement_canceled;
 		input.GameInput.CameraRotation.performed += CameraRotation_performed;
@@ -68,6 +74,42 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 		input.GameInput.Hotbar8.performed += Hotbar8_performed;
 	}
 
+	private void Unsubscribe() {
+		healthManager.GameOver -= OnGameOver;
+		input.GameInput.CameraMovement.performed -= CameraMovement_performed;
+		input.GameInput.CameraMovement.canceled -= CameraMovement_canceled;
+		input.GameInput.CameraRotation.performed -= CameraRotation_performed;
+		input.GameInput.CameraRotation.canceled -= CameraRotation_canceled;
+		input.GameInput.CameraZoom.performed -= CameraZoom_performed;
+		input.GameInput.CameraZoom.canceled -= CameraZoom_canceled;
+		input.GameInput.PointerPosition.performed -= PointerPosition_performed;
+		input.GameInput.LeftClick.performed -= LeftClick_performed;
+		input.GameInput.RightClick.performed -= RightClick_performed;
+		input.GameInput.RightClick.canceled -= RightClick_canceled;
+		input.GameInput.ScrollClick.performed -= ScrollClick_performed;
+		input.GameInput.ScrollClick.canceled -= ScrollClick_canceled;
+		input.GameInput.Pause.performed -= Pause_performed;
+		input.GameInput.TimeNormal.performed -= TimeNormal_performed;
+		input.GameInput.TimeFast.performed -= TimeFast_performed;
+		input.GameInput.TimeExtraFast.performed -= TimeExtraFast_performed;
+		input.GameInput.Back.performed -= Back_performed;
+		input.GameInput.BuildingMenu.performed -= BuildingMenu_performed;
+		input.GameInput.BuildingRotation.performed -= BuildingRotation_performed;
+		input.GameInput.Hotbar1.performed -= Hotbar1_performed;
+		input.GameInput.Hotbar2.performed -= Hotbar2_performed;
+		input.GameInput.Hotbar3.performed -= Hotbar3_performed;
+		input.GameInput.Hotbar4.performed -= Hotbar4_performed;
+		input.GameInput.Hotbar5.performed -= Hotbar5_performed;
+		input.GameInput.Hotbar6.performed -= Hotbar6_performed;
+		input.GameInput.Hotbar7.performed -= Hotbar7_performed;
+		input.GameInput.Hotbar8.performed -= Hotbar8_performed;
+	}
+
+	private void OnGameOver() {
+		HandleResetBackState();
+		DisableGameInput();
+	}
+	
 	public void RegisterBackAction(Action action) {
 		backStackActions.Push(action);
 	}
@@ -98,7 +140,6 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 			backStackActions.Pop()?.Invoke();
 		}
 		else {
-			Debug.Log("Open Menu");
 			OpenMenuAction?.Invoke();
 		}
 	}

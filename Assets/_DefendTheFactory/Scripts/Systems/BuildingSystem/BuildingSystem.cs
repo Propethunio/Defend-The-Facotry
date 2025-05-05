@@ -12,6 +12,8 @@ public class BuildingSystem {
 
 	public Grid<GridCell> grid { get; private set; }
 	public BuildingDir dir { get; private set; }
+	public int maxTowers { get; private set; } = 20;
+	public int currentTowers { get; private set; }
 
 	private BaseBuildableObjectSO placedObjectTypeSO;
 	private InputManager inputManager;
@@ -20,6 +22,8 @@ public class BuildingSystem {
 	private bool isDemolishActive;
 	private TilemapVisual tilemapVisual;
 	private MouseWorldPosition mouseWorldPosition;
+
+	public event Action<int, int> TowerAmountChanged;
 
 	public void Init(int width, int height) {
 		grid = new Grid<GridCell>(width, height, (_, _, _) => new GridCell());
@@ -106,6 +110,11 @@ public class BuildingSystem {
 			grid.gridArray[gridPosition.x, gridPosition.y].ClearPlacedObject();
 		}
 
+		if (placedObject is AoeTower or TargetPickingTower) {
+			currentTowers--;
+			TowerAmountChanged?.Invoke(currentTowers, maxTowers);
+		}
+		
 		ReturnItems(placedObject);
 		placedObject.DestroySelf();
 	}
@@ -140,10 +149,10 @@ public class BuildingSystem {
 	}
 
 	private void TryPlaceObject(Vector2Int placedObjectOrigin) {
-		if (!CanAfford()) return;
+		if (!CanAfford() || !CanBuildTower()) return;
 
 		List<Vector2Int> gridPositionList = placedObjectTypeSO.GetGridPositionList(placedObjectOrigin, dir);
-		List<ConveyorBelt> beltsToRemove = new();
+		List<ConveyorBelt> beltsToRemove = new List<ConveyorBelt>();
 
 		int gridPositionCount = gridPositionList.Count;
 
@@ -183,6 +192,11 @@ public class BuildingSystem {
 			grid.gridArray[gridPosition.x, gridPosition.y].SetPlacedObject(placedObject);
 		}
 
+		if (placedObjectTypeSO is BaseTowerSO) {
+			currentTowers++;
+			TowerAmountChanged?.Invoke(currentTowers, maxTowers);
+		}
+		
 		placedObject.GridSetupDone();
 		OnObjectPlaced?.Invoke();
 	}
@@ -230,6 +244,10 @@ public class BuildingSystem {
 		return true;
 	}
 
+	private bool CanBuildTower() {
+		return currentTowers < maxTowers || placedObjectTypeSO is not BaseTowerSO;
+	}
+	
 	private void ConsumeItems() {
 		int itemsCostCount = placedObjectTypeSO.cost.Count;
 

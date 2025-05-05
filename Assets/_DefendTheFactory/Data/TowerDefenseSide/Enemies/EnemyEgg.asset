@@ -16,5 +16,5 @@ MonoBehaviour:
   prefab: {fileID: 7991304437738920029, guid: 8a10663ff92a2f149bd8a4c11adb5c25, type: 3}
   <health>k__BackingField: 20
   <shield>k__BackingField: 0
-  <speed>k__BackingField: 1
+  <speed>k__BackingField: 0.9
   <isFlying>k__BackingField: 0

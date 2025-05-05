@@ -6,4 +6,5 @@ public class Provider : MonoBehaviour, IDependencyProvider {
 	[Provide] public BuildingSystem ProvideBuildingSystem() => new BuildingSystem();
 	[Provide] public BeltManager ProvideBeltManager() => new BeltManager();
 	[Provide] public FlyweightFactory ProvideFlyweightFactory() => new FlyweightFactory();
+	[Provide] public HealthManager ProvideHealthManager() => new HealthManager();
 }

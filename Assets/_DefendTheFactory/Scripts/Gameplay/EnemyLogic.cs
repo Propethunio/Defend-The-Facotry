@@ -19,6 +19,7 @@ public class EnemyLogic : Flyweight {
 	private int pathPointsCount;
 	private int maxHealth;
 	private int maxShield;
+	private int damage;
 
 	public void SetData(EnemySO data) {
 		factory = Injector.Resolve<FlyweightFactory>();
@@ -28,6 +29,7 @@ public class EnemyLogic : Flyweight {
 		maxShield = data.shield;
 		speed = data.speed;
 		isFlying = data.isFlying;
+		damage = data.damage;
 	}
 
 	public void Init() {
@@ -75,6 +77,7 @@ public class EnemyLogic : Flyweight {
 	}
 
 	private void DamageBase() {
+		Injector.Resolve<HealthManager>().Damage(damage);
 		DestroyMe();
 	}
 

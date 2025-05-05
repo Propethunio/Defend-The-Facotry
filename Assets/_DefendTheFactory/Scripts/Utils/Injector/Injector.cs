@@ -13,7 +13,7 @@ public sealed class ProvideAttribute : PropertyAttribute { }
 [DefaultExecutionOrder(-1000)]
 public class Injector : Singleton<Injector> {
     private const BindingFlags k_bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-    private readonly Dictionary<Type, object> registry = new();
+    private readonly Dictionary<Type, object> registry = new Dictionary<Type, object>();
 
     protected override void Awake() {
         base.Awake();

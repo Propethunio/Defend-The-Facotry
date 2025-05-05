@@ -4,11 +4,14 @@ using UtilsClass;
 
 public class GameManager : MonoBehaviour {
 	[SerializeField] private MapDataSO data;
+	[SerializeField] private int startHp;
 	[SerializeField] private bool showBeltDebug;
 	[SerializeField] private bool generateMapAsync;
 	[SerializeField] private bool addResources;
 
 	public List<ItemSO> items;
+	
+	private bool gameOver;
 
 	private void Awake() {
 		SceneLoader.Instance.OnSceneGroupLoaded += Init;
@@ -28,6 +31,8 @@ public class GameManager : MonoBehaviour {
 		mapGenerator.GenerateMap(generateMapAsync);
 		Injector.Resolve<MouseClickPlane>().Setup(mapGenerator.width, mapGenerator.height);
 		Injector.Resolve<TilemapVisual>().Init(mapGenerator.width, mapGenerator.height);
+		HealthManager healthManager = Injector.Resolve<HealthManager>();
+		healthManager.SetStartHealth(startHp);
 		Injector.Resolve<TimeTickSystem>().SetIsTicking(true);
 
 		if (!addResources) return;
@@ -40,10 +45,10 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void Update() {
-		//HandleDebugSpawnItem();
+		HandleDebugSpawnItem();
 		HandleDebugDeleteBuilding();
 	}
-
+	
 	private void HandleDebugSpawnItem() {
 		if (!Input.GetKeyDown(KeyCode.I)) return;
 

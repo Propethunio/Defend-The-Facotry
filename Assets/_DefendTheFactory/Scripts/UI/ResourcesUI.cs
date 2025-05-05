@@ -5,25 +5,44 @@ public class ResourcesUI : MonoBehaviour {
 	[SerializeField] private SingleResourceUI resourcePrefab;
 	[SerializeField] private LayoutElement resourcesContainer;
 
+	private ItemsManager itemsManager;
 	private float additionalHeight;
+	private int resorceUiCount;
 
 	private void Start() {
-		Injector.Resolve<ItemsManager>().ItemCreated += OnItemCreated;
+		itemsManager = Injector.Resolve<ItemsManager>();
+		itemsManager.ItemCreated += OnItemCreated;
 		resourcesContainer.gameObject.SetActive(false);
 		additionalHeight = resourcePrefab.GetComponent<RectTransform>().sizeDelta.y + resourcesContainer.GetComponent<VerticalLayoutGroup>().spacing;
 	}
 
 	private void OnDestroy() {
-		Injector.Resolve<ItemsManager>().ItemCreated -= OnItemCreated;
+		itemsManager.ItemCreated -= OnItemCreated;
 	}
 
 	private void OnItemCreated(ItemSO item) {
-		Instantiate(resourcePrefab, resourcesContainer.transform).Init(item);
+		SingleResourceUI res = Instantiate(resourcePrefab, resourcesContainer.transform);
+		res.Init(item);
+		res.Removed += OnResourceRemoved;
+		resorceUiCount++;
 		resourcesContainer.gameObject.SetActive(true);
-		CalculateResourcesContainerSize();
+		IncreaseResourcesContainerSize();
 	}
 
-	private void CalculateResourcesContainerSize() {
+	private void IncreaseResourcesContainerSize() {
 		resourcesContainer.minHeight += additionalHeight;
+	}
+
+	private void DecreaseResourcesContainerSize() {
+		resourcesContainer.minHeight -= additionalHeight;
+	}
+
+	private void OnResourceRemoved() {
+		DecreaseResourcesContainerSize();
+		resorceUiCount--;
+		
+		if (resorceUiCount == 0) {
+			resourcesContainer.gameObject.SetActive(false);
+		}
 	}
 }

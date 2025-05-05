@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16869dcb21a24314d86a8746452ccc6b, type: 3}
   m_Name: Wave
   m_EditorClassIdentifier: 
-  <dayLength>k__BackingField: 300
+  <dayLength>k__BackingField: 720
   <waveDayData>k__BackingField:
-  - <startSpawnAfter>k__BackingField: 80
-    <chanceToSpawnDay>k__BackingField: 5
+  - <startSpawnAfter>k__BackingField: 270
+    <chanceToSpawnDay>k__BackingField: 6
     <enemiesDuringDay>k__BackingField:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 938bbe1e81d4a1642aa5ff3a5018da15,
         type: 2}
@@ -23,20 +23,20 @@ MonoBehaviour:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 26cb6c43fb8ab4340a3f62c42559b181,
         type: 2}
       <weight>k__BackingField: 4
-    <spawnAtNightAmount>k__BackingField: 25
-    <chanceToSpawnNight>k__BackingField: 25
+    <spawnAtNightAmount>k__BackingField: 35
+    <chanceToSpawnNight>k__BackingField: 20
     <enemiesDuringNight>k__BackingField:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 26cb6c43fb8ab4340a3f62c42559b181,
         type: 2}
-      <weight>k__BackingField: 4
+      <weight>k__BackingField: 6
     - <enemy>k__BackingField: {fileID: 11400000, guid: 938bbe1e81d4a1642aa5ff3a5018da15,
         type: 2}
       <weight>k__BackingField: 3
     - <enemy>k__BackingField: {fileID: 11400000, guid: 2dd9f99d9237b304a9ac6b14ea198b59,
         type: 2}
-      <weight>k__BackingField: 2
-  - <startSpawnAfter>k__BackingField: 120
-    <chanceToSpawnDay>k__BackingField: 5
+      <weight>k__BackingField: 1
+  - <startSpawnAfter>k__BackingField: 150
+    <chanceToSpawnDay>k__BackingField: 6
     <enemiesDuringDay>k__BackingField:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 26cb6c43fb8ab4340a3f62c42559b181,
         type: 2}
@@ -47,12 +47,18 @@ MonoBehaviour:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 938bbe1e81d4a1642aa5ff3a5018da15,
         type: 2}
       <weight>k__BackingField: 1
-    <spawnAtNightAmount>k__BackingField: 50
+    <spawnAtNightAmount>k__BackingField: 40
     <chanceToSpawnNight>k__BackingField: 90
     <enemiesDuringNight>k__BackingField:
-    - <enemy>k__BackingField: {fileID: 11400000, guid: 70588ddaa9f5f3743a1ac993de32c02f,
-        type: 2}
-      <weight>k__BackingField: 1
     - <enemy>k__BackingField: {fileID: 11400000, guid: 26cb6c43fb8ab4340a3f62c42559b181,
         type: 2}
       <weight>k__BackingField: 10
+    - <enemy>k__BackingField: {fileID: 11400000, guid: 938bbe1e81d4a1642aa5ff3a5018da15,
+        type: 2}
+      <weight>k__BackingField: 6
+    - <enemy>k__BackingField: {fileID: 11400000, guid: 2dd9f99d9237b304a9ac6b14ea198b59,
+        type: 2}
+      <weight>k__BackingField: 4
+    - <enemy>k__BackingField: {fileID: 11400000, guid: 70588ddaa9f5f3743a1ac993de32c02f,
+        type: 2}
+      <weight>k__BackingField: 1

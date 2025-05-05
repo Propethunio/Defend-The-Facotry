@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 
 public class ItemsManager {
-    public event Action<ItemSO> ItemCreated;
-    public event Action<ItemSO, int> ItemAdded;
-    public event Action<ItemSO, int> ItemRemoved;
+    public event Action<ItemSO> ItemCreated, ItemRemoved;
     public event Action<ItemSO, int> ItemChanged;
 
-    private Dictionary<ItemSO, int> itemsAmounts { get; set; } = new();
+    private Dictionary<ItemSO, int> itemsAmounts { get; set; } = new Dictionary<ItemSO, int>();
 
     public void AddItems(ItemSO item, int amount) {
         if (!itemsAmounts.TryAdd(item, amount)) {
@@ -16,8 +14,7 @@ public class ItemsManager {
         else {
             ItemCreated?.Invoke(item);
         }
-
-        ItemAdded?.Invoke(item, itemsAmounts[item]);
+        
         ItemChanged?.Invoke(item, itemsAmounts[item]);
     }
 
@@ -27,8 +24,11 @@ public class ItemsManager {
 
     public void RemoveItems(ItemSO item, int amount) {
         itemsAmounts[item] -= amount;
-        ItemRemoved?.Invoke(item, itemsAmounts[item]);
         ItemChanged?.Invoke(item, itemsAmounts[item]);
+
+        if (itemsAmounts[item] != 0) return;
+        itemsAmounts.Remove(item);
+        ItemRemoved?.Invoke(item);
     }
 
     public int GetAmount(ItemSO item) {

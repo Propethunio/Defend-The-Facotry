@@ -1,82 +1,101 @@
+using System.Collections;
 using UnityEngine;
 using UtilsClass;
 
 public class MouseInteractionManager {
-    private bool isBuildingSystemEnabled;
-    private Camera cam;
-    private InputManager input;
-    private IReactOnMouse lastHoveredObject;
+	private bool isBuildingSystemEnabled;
+	private Camera cam;
+	private InputManager input;
+	private IReactOnMouse lastHoveredObject;
+	private bool restrictClickOnResource;
+	private float lastResourceClickTime = -Mathf.Infinity;
 
-    public MouseInteractionManager() {
-        cam = Camera.main;
-        input = Injector.Resolve<InputManager>();
-        Subscribe();
-    }
+	private const float RESOURCE_CLICK_COOLDOWN = 0.5f;
 
-    ~MouseInteractionManager() {
-        Unsubscribe();
-    }
+	public MouseInteractionManager() {
+		cam = Camera.main;
+		input = Injector.Resolve<InputManager>();
+		Subscribe();
+	}
 
-    private void Subscribe() {
-        BuildingSystem buildingSystem = Injector.Resolve<BuildingSystem>();
-        buildingSystem.OnSystemEnabled += BuildingSystemEnabled;
-        buildingSystem.OnSystemDisabled += BuildingSystemDisabled;
-        input.LeftClickAction += HandleLeftClickAction;
-        input.MouseMoveAction += HandleMouseHover;
-    }
+	~MouseInteractionManager() {
+		Unsubscribe();
+	}
 
-    private void Unsubscribe() {
-        BuildingSystem buildingSystem = Injector.Resolve<BuildingSystem>();
-        buildingSystem.OnSystemEnabled -= BuildingSystemEnabled;
-        buildingSystem.OnSystemDisabled -= BuildingSystemDisabled;
-        input.LeftClickAction -= HandleLeftClickAction;
-        input.MouseMoveAction -= HandleMouseHover;
-    }
+	private void Subscribe() {
+		BuildingSystem buildingSystem = Injector.Resolve<BuildingSystem>();
+		buildingSystem.OnSystemEnabled += BuildingSystemEnabled;
+		buildingSystem.OnSystemDisabled += BuildingSystemDisabled;
+		input.LeftClickAction += HandleLeftClickAction;
+		input.MouseMoveAction += HandleMouseHover;
+	}
 
-    private void BuildingSystemEnabled() {
-        isBuildingSystemEnabled = true;
-    }
+	private void Unsubscribe() {
+		BuildingSystem buildingSystem = Injector.Resolve<BuildingSystem>();
+		buildingSystem.OnSystemEnabled -= BuildingSystemEnabled;
+		buildingSystem.OnSystemDisabled -= BuildingSystemDisabled;
+		input.LeftClickAction -= HandleLeftClickAction;
+		input.MouseMoveAction -= HandleMouseHover;
+	}
 
-    private void BuildingSystemDisabled() {
-        isBuildingSystemEnabled = false;
-    }
+	private void BuildingSystemEnabled() {
+		isBuildingSystemEnabled = true;
+	}
 
-    private void HandleLeftClickAction() {
-        if (isBuildingSystemEnabled || MyUtils.IsPointerOverUI()) return;
+	private void BuildingSystemDisabled() {
+		isBuildingSystemEnabled = false;
+	}
 
-        Ray ray = cam.ScreenPointToRay(input.mousePos);
+	private void HandleLeftClickAction() {
+		if (isBuildingSystemEnabled || MyUtils.IsPointerOverUI()) return;
 
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6)) return;
+		Ray ray = cam.ScreenPointToRay(input.mousePos);
 
-        hit.transform.GetComponent<IReactOnMouse>().MouseLeftClickObject();
-    }
+		if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6)) return;
 
-    private void HandleMouseHover() {
-        if (isBuildingSystemEnabled || MyUtils.IsPointerOverUI()) {
-            if (lastHoveredObject == null) return;
+		IReactOnMouse mouseClickObject = hit.transform.GetComponent<IReactOnMouse>();
 
-            lastHoveredObject.MouseExitObject();
-            lastHoveredObject = null;
-            return;
-        }
+		if (mouseClickObject is ResourceNode) {
+			HandleResourceClick(mouseClickObject);
+		}
+		else {
+			mouseClickObject.MouseLeftClickObject();
+		}
+	}
 
-        Ray ray = cam.ScreenPointToRay(input.mousePos);
+	private void HandleResourceClick(IReactOnMouse mouseClickObject) {
+		if (Time.time - lastResourceClickTime < RESOURCE_CLICK_COOLDOWN) return;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6)) {
-            IReactOnMouse hoveredObject = hit.transform.GetComponent<IReactOnMouse>();
+		mouseClickObject.MouseLeftClickObject();
+		lastResourceClickTime = Time.time;
+	}
 
-            if (lastHoveredObject == hoveredObject) return;
+	private void HandleMouseHover() {
+		if (isBuildingSystemEnabled || MyUtils.IsPointerOverUI()) {
+			if (lastHoveredObject == null) return;
 
-            lastHoveredObject?.MouseExitObject();
+			lastHoveredObject.MouseExitObject();
+			lastHoveredObject = null;
+			return;
+		}
 
-            if (!hoveredObject.ShouldHighlight()) return;
+		Ray ray = cam.ScreenPointToRay(input.mousePos);
 
-            hoveredObject.MouseEnterObject();
-            lastHoveredObject = hoveredObject;
-        }
-        else if (lastHoveredObject != null) {
-            lastHoveredObject.MouseExitObject();
-            lastHoveredObject = null;
-        }
-    }
+		if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6)) {
+			IReactOnMouse hoveredObject = hit.transform.GetComponent<IReactOnMouse>();
+
+			if (lastHoveredObject == hoveredObject) return;
+
+			lastHoveredObject?.MouseExitObject();
+
+			if (!hoveredObject.ShouldHighlight()) return;
+
+			hoveredObject.MouseEnterObject();
+			lastHoveredObject = hoveredObject;
+		}
+		else if (lastHoveredObject != null) {
+			lastHoveredObject.MouseExitObject();
+			lastHoveredObject = null;
+		}
+	}
 }
