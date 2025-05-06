@@ -11,8 +11,8 @@ public class HotbarBtn : MonoBehaviour, IDropHandler {
 	private Hotbar hotbar;
 	private BaseBuildableObjectSO buildableObject;
 	private BuildingSystem buildingSystem;
-
-	public event Action<BaseBuildableObjectSO> OnBtnClick;
+	
+	public event Action<BaseBuildableObjectSO> OnBtnClick, OnOjbectChanged;
 
 	private void Start() {
 		buildingSystem = Injector.Resolve<BuildingSystem>();
@@ -52,5 +52,6 @@ public class HotbarBtn : MonoBehaviour, IDropHandler {
 		buildableObject = obj;
 		icon.sprite = buildableObject.icon;
 		icon.enabled = true;
+		OnOjbectChanged?.Invoke(buildableObject);
 	}
 }
