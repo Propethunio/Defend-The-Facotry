@@ -1,24 +1,27 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Quests/Move Building To Hotbar")]
 public class MoveBuildingToHotbarStepSO : QuestStepSO {
 	[SerializeField] private BaseBuildableObjectSO buildableObjectToSet;
 
-	private Hotbar hotbar;
+	private List<HotbarBtn> hotbar;
+	private int btnCount;
 
 	public override void Execute() {
-		hotbar = FindFirstObjectByType<Hotbar>();
-
-		for (int index = 0; index < hotbar.hotbarBtns.Count; index++) {
-			HotbarBtn hotbarBtn = hotbar.hotbarBtns[index];
+		hotbar = FindFirstObjectByType<Hotbar>().GetHotbarBtns();
+		btnCount = hotbar.Count;
+		
+		for (int index = 0; index < btnCount; index++) {
+			HotbarBtn hotbarBtn = hotbar[index];
 			hotbarBtn.OnOjbectChanged += OnObjectChanged;
 		}
 	}
 
 	protected override void CompleteStep() {
-		for (int index = 0; index < hotbar.hotbarBtns.Count; index++) {
-			HotbarBtn hotbarBtn = hotbar.hotbarBtns[index];
-			hotbarBtn.OnOjbectChanged += OnObjectChanged;
+		for (int index = 0; index < btnCount; index++) {
+			HotbarBtn hotbarBtn = hotbar[index];
+			hotbarBtn.OnOjbectChanged -= OnObjectChanged;
 		}
 
 		base.CompleteStep();

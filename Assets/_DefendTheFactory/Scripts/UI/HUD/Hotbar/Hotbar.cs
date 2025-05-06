@@ -5,8 +5,7 @@ public class Hotbar : MonoBehaviour {
 	[SerializeField] private GameObject buildingsMenu;
 	[SerializeField] private CostResourceUI costResourcePrefab;
 	[SerializeField] private RectTransform costPanel;
-	
-	public List<HotbarBtn> hotbarBtns { get; private set; }
+	[SerializeField] private List<HotbarBtn> hotbarBtns;
 
 	private int btnsCount;
 
@@ -74,5 +73,9 @@ public class Hotbar : MonoBehaviour {
 		}
 
 		costPanel.gameObject.SetActive(true);
+	}
+
+	public List<HotbarBtn> GetHotbarBtns() {
+		return hotbarBtns;
 	}
 }
