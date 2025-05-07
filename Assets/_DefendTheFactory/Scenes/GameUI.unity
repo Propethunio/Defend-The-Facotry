@@ -119,6 +119,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!224 &216180849 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5214482027059733566, guid: 2c563877bd4a7cb4ca2009f383f16928,
+    type: 3}
+  m_PrefabInstance: {fileID: 1148983208679665209}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &561328565
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,6 +346,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2560859747519287718, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2560859747519287718, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2560859747519287718, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2560859747519287718, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3542478597019375923, guid: 2c563877bd4a7cb4ca2009f383f16928,
         type: 3}
       propertyPath: m_Name
@@ -444,6 +470,46 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5214482027059733566, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5214482027059733566, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5214482027059733566, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5214482027059733566, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5934455378257824571, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: questPanel
+      value: 
+      objectReference: {fileID: 216180849}
+    - target: {fileID: 9169025796592001167, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9169025796592001167, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9169025796592001167, guid: 2c563877bd4a7cb4ca2009f383f16928,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

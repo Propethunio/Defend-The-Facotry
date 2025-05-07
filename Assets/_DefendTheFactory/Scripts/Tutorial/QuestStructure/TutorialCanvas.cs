@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TutorialCanvas : MonoBehaviour {
 	[SerializeField] private QuestListSO questChain;
+	[SerializeField] private RectTransform questPanel;
 	[SerializeField] private RectTransform questStepsContainer;
 	[SerializeField] private QuestStepUi questStepUiPrefab;
 	[SerializeField] private TMP_Text questTitleText;
@@ -17,16 +19,10 @@ public class TutorialCanvas : MonoBehaviour {
 	private readonly Dictionary<QuestStepSO, Action> stepCallbacks = new Dictionary<QuestStepSO, Action>();
 
 	private void Start() {
-		ExecuteNextQuest();
+		LoadNextQuest();
 	}
 
-	private void ExecuteNextQuest() {
-		if (currentQuestIndex >= questChain.Quests.Count) {
-			Debug.Log("WIN");
-			// END TUTORIAL
-			return;
-		}
-		
+	private void LoadNextQuest() {
 		foreach (Transform child in questStepsContainer) {
 			Destroy(child.gameObject);
 		}
@@ -35,7 +31,7 @@ public class TutorialCanvas : MonoBehaviour {
 		Quest quest = questChain.Quests[currentQuestIndex];
 		questTitleText.text = quest.QuestTitle;
 		currentQuestStepsCount = quest.QuestSteps.Count;
-		
+
 		for (int index = 0; index < currentQuestStepsCount; index++) {
 			QuestStepSO step = quest.QuestSteps[index];
 			QuestStepUi stepUi = Instantiate(questStepUiPrefab, questStepsContainer);
@@ -45,10 +41,27 @@ public class TutorialCanvas : MonoBehaviour {
 			step.OnStepCompleted += callback;
 			step.Execute();
 		}
-		
+
 		Canvas.ForceUpdateCanvases();
 		LayoutRebuilder.ForceRebuildLayoutImmediate(questStepsContainer);
 		currentQuestIndex++;
+	}
+
+	private void ExecuteNextQuestWithAnimation() {
+		if (currentQuestIndex >= questChain.Quests.Count) {
+			Debug.Log("WIN");
+			// END TUTORIAL
+			return;
+		}
+
+		float containerWidth = questPanel.rect.width;
+		Vector2 originalPos = questPanel.anchoredPosition;
+		Vector2 offscreenLeft = originalPos + Vector2.left * (containerWidth + 50);
+		Sequence transition = DOTween.Sequence();
+		transition.Append(questPanel.DOAnchorPos(offscreenLeft, 0.4f).SetEase(Ease.InOutCubic));
+		transition.AppendInterval(0.3f);
+		transition.AppendCallback(LoadNextQuest);
+		transition.Append(questPanel.DOAnchorPos(originalPos, 0.4f).SetEase(Ease.InOutCubic));
 	}
 
 	private void OnStepCompleted(QuestStepSO step, QuestStepUi questStepUi) {
@@ -61,7 +74,7 @@ public class TutorialCanvas : MonoBehaviour {
 		currentStepsCompleted++;
 
 		if (currentStepsCompleted == currentQuestStepsCount) {
-			ExecuteNextQuest();
+			DOVirtual.DelayedCall(0.5f, ExecuteNextQuestWithAnimation);
 		}
 	}
 }
