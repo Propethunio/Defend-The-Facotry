@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questChain: {fileID: 11400000, guid: 0a639d1b31bb58c498d95db39e505a18, type: 2}
+  questPanel: {fileID: 5214482027059733566}
   questStepsContainer: {fileID: 9169025796592001167}
   questStepUiPrefab: {fileID: 8540080562046771598, guid: c7c56a9a84586264a8a6a80cd10ce117,
     type: 3}
@@ -246,7 +247,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 30, y: -30}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &3461945462897042781
