@@ -9,10 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01fd1c97b6db6cd43bfa68c933b2c88e, type: 3}
-  m_Name: BuildWoodcutter
+  m_Script: {fileID: 11500000, guid: 60b063bc4f68082438d62382482604ea, type: 3}
+  m_Name: RotateBuilding
   m_EditorClassIdentifier: 
-  <QuestStepDsc>k__BackingField: 'Build Lumberjack (tip: needs trees in range to
-    work)'
-  objectToBuild: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
-  count: 1
+  <QuestStepDsc>k__BackingField: Use R to rotate building

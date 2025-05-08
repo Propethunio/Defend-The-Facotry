@@ -13,7 +13,6 @@ public class BuildingSystem {
 	private InputManager inputManager;
 	private ItemsManager itemsManager;
 	private bool isBuildingSystemActive;
-	private bool isDemolishActive;
 	private TilemapVisual tilemapVisual;
 	private MouseWorldPosition mouseWorldPosition;
 
@@ -21,7 +20,8 @@ public class BuildingSystem {
 	public event Action OnSystemDisabled;
 	public event Action OnSelectedObject;
 	public event Action OnBuildCanceled;
-	public event Action<BaseBuildableObjectSO> OnObjectPlaced;
+	public event Action OnRotateObject;
+	public event Action<BaseBuildableObjectSO> OnObjectPlaced, OnObjectSelected;
 	public event Action<int, int> TowerAmountChanged;
 
 	public void Init(int width, int height) {
@@ -52,7 +52,6 @@ public class BuildingSystem {
 
 		placedObjectTypeSO = null;
 		isBuildingSystemActive = false;
-		isDemolishActive = false;
 		tilemapVisual.Hide();
 		OnBuildCanceled?.Invoke();
 		Unsubscribe();
@@ -84,6 +83,7 @@ public class BuildingSystem {
 
 	private void HandleDirRotation() {
 		dir = GetNextDir(dir);
+		OnRotateObject?.Invoke();
 	}
 
 	public void HandleDemolish() {
@@ -113,7 +113,7 @@ public class BuildingSystem {
 			currentTowers--;
 			TowerAmountChanged?.Invoke(currentTowers, maxTowers);
 		}
-		
+
 		ReturnItems(placedObject);
 		placedObject.DestroySelf();
 	}
@@ -125,13 +125,6 @@ public class BuildingSystem {
 				tilemapVisual.SetTilemapSprite(new Vector3(x, y), grid.gridArray[x, y].placedObject == null ? TilemapSprite.CanBuild : TilemapSprite.CannotBuild);
 			}
 		}
-	}
-
-	public void DeselectObjectType() {
-		placedObjectTypeSO = null;
-
-		isDemolishActive = false;
-		RefreshSelectedObjectType();
 	}
 
 	private void RefreshSelectedObjectType() {
@@ -195,7 +188,7 @@ public class BuildingSystem {
 			currentTowers++;
 			TowerAmountChanged?.Invoke(currentTowers, maxTowers);
 		}
-		
+
 		placedObject.GridSetupDone();
 		OnObjectPlaced?.Invoke(placedObjectTypeSO);
 	}
@@ -246,7 +239,7 @@ public class BuildingSystem {
 	private bool CanBuildTower() {
 		return currentTowers < maxTowers || placedObjectTypeSO is not BaseTowerSO;
 	}
-	
+
 	private void ConsumeItems() {
 		int itemsCostCount = placedObjectTypeSO.cost.Count;
 
@@ -272,12 +265,6 @@ public class BuildingSystem {
 				itemsManager.AddItems(cost[i].item, cost[i].amount);
 			}
 		}
-	}
-
-	public Vector2Int GetGridPosition(Vector3 worldPosition) {
-		int x = Mathf.FloorToInt(worldPosition.x);
-		int z = Mathf.FloorToInt(worldPosition.z);
-		return new Vector2Int(x, z);
 	}
 
 	public Vector3 GetWorldPosition(Vector2Int gridPosition) {
@@ -325,18 +312,8 @@ public class BuildingSystem {
 	public void SetSelectedPlacedObject(BaseBuildableObjectSO placedObjectTypeSO) {
 		EnableBuildingSystem();
 		this.placedObjectTypeSO = placedObjectTypeSO;
-		isDemolishActive = false;
+		OnObjectSelected?.Invoke(placedObjectTypeSO);
 		RefreshSelectedObjectType();
-	}
-
-	public void SetDemolishActive() {
-		placedObjectTypeSO = null;
-		isDemolishActive = true;
-		RefreshSelectedObjectType();
-	}
-
-	public bool IsDemolishActive() {
-		return isDemolishActive;
 	}
 
 	public void AddGhostBeltToGrid(Vector2Int beltPosition, BaseDataPlacedObject<BaseBuildableObjectSO> belt) {

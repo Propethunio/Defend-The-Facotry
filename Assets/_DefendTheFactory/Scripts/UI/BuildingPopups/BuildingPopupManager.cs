@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager> {
@@ -7,6 +8,8 @@ public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager
 	private BaseBuildingPopup currentBuildingPopup;
 	private BasePlacedObject currentSelectedObject;
 	private InputManager inputManager;
+	
+	public event Action<BuildingPopupEnum> OnBuildingPopupOpened;
 
 	private void Start() {
 		inputManager = Injector.Resolve<InputManager>();
@@ -32,6 +35,7 @@ public class BuildingPopupManager : DependencyMonoBehaviour<BuildingPopupManager
 
 		currentSelectedObject = placedObject;
 		BaseBuildingPopup popupToShow = GetPopupType(placedObject.buildableDataSO.buildingPopupType);
+		OnBuildingPopupOpened?.Invoke(placedObject.buildableDataSO.buildingPopupType);
 
 		if (popupToShow == null) {
 			CloseActivePopup();
