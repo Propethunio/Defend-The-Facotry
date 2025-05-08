@@ -5,12 +5,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+[DefaultExecutionOrder(1000)]
 public class TutorialCanvas : MonoBehaviour {
 	[SerializeField] private QuestListSO questChain;
 	[SerializeField] private RectTransform questPanel;
 	[SerializeField] private RectTransform questStepsContainer;
 	[SerializeField] private QuestStepUi questStepUiPrefab;
 	[SerializeField] private TMP_Text questTitleText;
+	
+	[Header("Refs")][field: SerializeField] public Clock clock { get; private set; }
 
 	private int currentQuestIndex;
 	private int currentQuestStepsCount;
@@ -19,6 +22,7 @@ public class TutorialCanvas : MonoBehaviour {
 	private readonly Dictionary<QuestStepSO, Action> stepCallbacks = new Dictionary<QuestStepSO, Action>();
 
 	private void Start() {
+		//Init;
 		LoadNextQuest();
 	}
 

@@ -67,4 +67,10 @@ public class Clock : MonoBehaviour {
 	private void SetCurrentDay() {
 		progressText.text = (waveManager.GetDaysSurvived() + 1).ToString();
 	}
+
+	public void TutorialInit() {
+		Unsubscribe();
+		waveIcon.gameObject.SetActive(false);
+		gameObject.SetActive(false);
+	}
 }

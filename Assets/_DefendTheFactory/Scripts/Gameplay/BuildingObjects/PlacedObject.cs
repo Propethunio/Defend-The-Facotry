@@ -74,4 +74,8 @@ public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseB
 	public override List<Vector2Int> GetGridPositionList() {
 		return buildableDataSO.GetGridPositionList(origin, dir);
 	}
+	
+	public override bool IsDataTheSame(BaseBuildableObjectSO data) {
+		return data == buildableDataSO;
+	}
 }

@@ -20,6 +20,7 @@ public class WaveManager {
 
 	public event Action OnDayStart, OnNightStart;
 	public event Action<float> OnDayTick, OnNightTick;
+	public event Action<EnemyLogic> OnEnemyDeath;
 
 	public void Init() {
 		factory = Injector.Resolve<FlyweightFactory>();
@@ -119,6 +120,7 @@ public class WaveManager {
 
 			if (roll < cumulative) {
 				EnemyLogic enemy = factory.Spawn(enemyWithWeight.enemy) as EnemyLogic;
+				enemy.OnDeath += EnemyDeath;
 				enemy.transform.position = spawnPosition;
 				enemy.transform.rotation = Quaternion.identity;
 				enemy.Init();
@@ -179,7 +181,13 @@ public class WaveManager {
 	}
 
 	private void RemoveEnemyFromNightList(EnemyLogic enemy) {
+		OnEnemyDeath?.Invoke(enemy);
 		enemy.OnDeath -= RemoveEnemyFromNightList;
 		nightEnemiesList.Remove(enemy);
+	}
+
+	private void EnemyDeath(EnemyLogic enemy) {
+		OnEnemyDeath?.Invoke(enemy);
+		enemy.OnDeath -= EnemyDeath;
 	}
 }

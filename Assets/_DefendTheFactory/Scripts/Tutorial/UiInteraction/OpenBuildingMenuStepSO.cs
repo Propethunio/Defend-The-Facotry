@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Quests/Open Building Menu")]
+[CreateAssetMenu(menuName = "Quests/UI Interaction/Open Building Menu")]
 public class OpenBuildingMenuStepSO : QuestStepSO {
 	private InputManager inputManager;
 

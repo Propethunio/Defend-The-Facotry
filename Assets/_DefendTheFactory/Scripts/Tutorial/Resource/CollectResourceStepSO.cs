@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Quests/Collect Resource")]
+[CreateAssetMenu(menuName = "Quests/Resources/Collect Resource")]
 public class CollectResourceStepSO : QuestStepSO {
 	[SerializeField] private ItemSO itemToCollect;
 	[SerializeField] private int targetCount;

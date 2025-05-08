@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eb11a4e429c8064d86ac9a68e378afe, type: 3}
-  m_Name: CollectSingleWood
+  m_Script: {fileID: 11500000, guid: 4c0b66c167879e3408aafcb021e7f964, type: 3}
+  m_Name: MoveWoodcutterToHotbar
   m_EditorClassIdentifier: 
-  <QuestStepDsc>k__BackingField: Collect wooden log by pressing LMB on tree
-  itemToCollect: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
-  targetCount: 1
+  <QuestStepDsc>k__BackingField: Drag Lumberjack to hotbar
+  buildableObjectToSet: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273,
+    type: 2}

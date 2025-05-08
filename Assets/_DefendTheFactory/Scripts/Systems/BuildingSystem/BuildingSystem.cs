@@ -4,12 +4,6 @@ using UnityEngine;
 using UtilsClass;
 
 public class BuildingSystem {
-	public event Action OnSystemEnabled;
-	public event Action OnSystemDisabled;
-	public Action OnSelectedObject;
-	public Action OnBuildCanceled;
-	public Action OnObjectPlaced;
-
 	public Grid<GridCell> grid { get; private set; }
 	public BuildingDir dir { get; private set; }
 	public int maxTowers { get; private set; } = 20;
@@ -23,6 +17,11 @@ public class BuildingSystem {
 	private TilemapVisual tilemapVisual;
 	private MouseWorldPosition mouseWorldPosition;
 
+	public event Action OnSystemEnabled;
+	public event Action OnSystemDisabled;
+	public event Action OnSelectedObject;
+	public event Action OnBuildCanceled;
+	public event Action<BaseBuildableObjectSO> OnObjectPlaced;
 	public event Action<int, int> TowerAmountChanged;
 
 	public void Init(int width, int height) {
@@ -198,7 +197,7 @@ public class BuildingSystem {
 		}
 		
 		placedObject.GridSetupDone();
-		OnObjectPlaced?.Invoke();
+		OnObjectPlaced?.Invoke(placedObjectTypeSO);
 	}
 
 	public void TryPlaceMapGeneratedObject(Vector2Int placedObjectOrigin, BaseBuildableObjectSO generatedObject, BuildingDir dir, Transform parent = null) {

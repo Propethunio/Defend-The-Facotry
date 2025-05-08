@@ -120,7 +120,7 @@ public class GhostBeltVisualController : MonoBehaviour {
         rightTurnVisual.SetActive(true);
     }
 
-    private void ResetModifiedBelt() {
+    private void ResetModifiedBelt(BaseBuildableObjectSO obj) {
         modifiedBeltVisual = null;
     }
 }

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4eb11a4e429c8064d86ac9a68e378afe, type: 3}
-  m_Name: CollectSingleWood
+  m_Name: CollectRock
   m_EditorClassIdentifier: 
-  <QuestStepDsc>k__BackingField: Collect wooden log by pressing LMB on tree
-  itemToCollect: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
-  targetCount: 1
+  <QuestStepDsc>k__BackingField: Collect 5 stone
+  itemToCollect: {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23, type: 2}
+  targetCount: 5

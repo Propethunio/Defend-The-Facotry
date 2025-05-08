@@ -18,4 +18,7 @@ public abstract class BasePlacedObject : MonoBehaviour, IReactOnMouse {
 	public virtual void MouseExitObject() { }
 	public virtual void MouseLeftClickObject() { }
 	public virtual void MouseScrollClickObject() { }
+	public virtual bool IsDataTheSame(BaseBuildableObjectSO data) {
+		return false;
+	}
 }

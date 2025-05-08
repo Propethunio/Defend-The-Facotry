@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Quests/Move Building To Hotbar")]
+[CreateAssetMenu(menuName = "Quests/UI Interaction/Move Building To Hotbar")]
 public class MoveBuildingToHotbarStepSO : QuestStepSO {
 	[SerializeField] private BaseBuildableObjectSO buildableObjectToSet;
 

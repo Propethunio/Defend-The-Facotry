@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Quests/Move Camera")]
+[CreateAssetMenu(menuName = "Quests/Camera/Move Camera")]
 public class MoveCameraStepSO : QuestStepSO {
 	private CameraFollowTarget cameraFollowTarget;
 
