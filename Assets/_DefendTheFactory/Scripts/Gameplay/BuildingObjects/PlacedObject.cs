@@ -78,4 +78,22 @@ public abstract class BaseDataPlacedObject<T> : BasePlacedObject where T : BaseB
 	public override bool IsDataTheSame(BaseBuildableObjectSO data) {
 		return data == buildableDataSO;
 	}
+
+    protected BuildingDir GetRotatedBeltDir(BuildingDir beltDir)
+    {
+        switch (dir)
+        {
+            default:
+            case BuildingDir.Up: return beltDir;
+            case BuildingDir.Left: return RotateDirectionClockwise(beltDir, 3);
+            case BuildingDir.Down: return RotateDirectionClockwise(beltDir, 2);
+            case BuildingDir.Right: return RotateDirectionClockwise(beltDir, 1);
+        }
+    }
+
+    protected BuildingDir RotateDirectionClockwise(BuildingDir dir, int steps)
+    {
+        int newDir = ((int)dir + steps) % 4;
+        return (BuildingDir)newDir;
+    }
 }
