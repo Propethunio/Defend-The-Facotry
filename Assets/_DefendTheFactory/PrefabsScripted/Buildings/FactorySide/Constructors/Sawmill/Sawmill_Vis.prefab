@@ -95,7 +95,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tartak
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8380957284488049756, guid: 14c784af4e9326e4aab8f6b0ceac4602, type: 3}
     m_RemovedGameObjects:
     - {fileID: 337430939551407160, guid: 14c784af4e9326e4aab8f6b0ceac4602, type: 3}
     - {fileID: 8577429123192844675, guid: 14c784af4e9326e4aab8f6b0ceac4602, type: 3}

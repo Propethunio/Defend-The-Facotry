@@ -17,7 +17,7 @@ public class WaveManager {
 	private FlyweightFactory factory;
 	private TimeTickSystem timeTickSystem;
 	private HealthManager healthManager;
-
+	
 	public event Action OnDayStart, OnNightStart;
 	public event Action<float> OnDayTick, OnNightTick;
 	public event Action<EnemyLogic> OnEnemyDeath;
