@@ -154,7 +154,7 @@ public class BeltManager {
 
 		int beltIndex = beltPath.beltList.IndexOf(belt);
 
-		if (beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition) {
+		if (beltPath.beltList[^1].origin == beltPath.beltList[0].previousPosition && beltPath.beltList[0].origin == beltPath.beltList[^1].nextPosition) {
 			RemoveFromLoop(beltIndex, beltPath, ref newStartBelt, ref newEndBelt);
 		}
 		else if (beltIndex == 0) {
