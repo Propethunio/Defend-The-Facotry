@@ -97,7 +97,7 @@ Animator:
   m_GameObject: {fileID: 1480704038368386144}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f923feb7f2d3d584d8e5cd9b7b3070a9, type: 2}
+  m_Controller: {fileID: 9100000, guid: f053ae610909dc7438845b4a01822327, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 2298514190210106506}
   - component: {fileID: 2903183414794652463}
   - component: {fileID: 1130080967155056613}
+  - component: {fileID: 3947339430610974423}
   m_Layer: 0
   m_Name: Belt woodcuter
   m_TagString: Untagged
@@ -195,6 +196,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3947339430610974423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1490171230494088752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4121cf6b59c5fc438903b3a32bce434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollSpeedX: 0
+  scrollSpeedY: 0.2
+  targetMaterial: {fileID: 2100000, guid: b9b78b4dd62657e428af2881210afbae, type: 2}
 --- !u!1 &7901175332924485820
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +236,7 @@ Transform:
   m_GameObject: {fileID: 7901175332924485820}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16, y: 0, z: 0}
+  m_LocalPosition: {x: 32, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
