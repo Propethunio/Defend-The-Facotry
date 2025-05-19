@@ -66,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 84376dd1c4bb2bc4cad77c0769eca444,
         type: 3}
       propertyPath: m_Name
-      value: Balista_Tartak_Kamieniolom (1)
+      value: Belt
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -90,7 +90,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 26f4e5fd7744ba24c8b7a27c11124b24,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 38
+      value: 50.000893
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 26f4e5fd7744ba24c8b7a27c11124b24,
         type: 3}

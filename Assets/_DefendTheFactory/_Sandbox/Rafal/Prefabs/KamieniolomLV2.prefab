@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 463549103213608486}
   - component: {fileID: 2416792794752322284}
   m_Layer: 0
-  m_Name: Cylinder.002
+  m_Name: piston
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 254913618173236856}
   - component: {fileID: 2624848561773273778}
   m_Layer: 0
-  m_Name: Cube.002
+  m_Name: lever
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 6628424321887538394}
   - component: {fileID: 7515405745719918876}
   m_Layer: 0
-  m_Name: Balista_Tartak_Kamieniolom (1)
+  m_Name: belt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 5949833070869781006}
   - component: {fileID: 8464228451610554052}
   m_Layer: 0
-  m_Name: Cylinder.040
+  m_Name: Pressure Press
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 4718835425332067822}
   - component: {fileID: 7392760598555167012}
   m_Layer: 0
-  m_Name: Cylinder.001
+  m_Name: base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

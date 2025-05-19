@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2815539452730984332}
   - component: {fileID: 132552618845996336}
   m_Layer: 0
-  m_Name: Cube.003_Baked
+  m_Name: ax
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 9171067395207041459}
   - component: {fileID: 2636692747273542257}
   m_Layer: 0
-  m_Name: Cube.002_Baked
+  m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
