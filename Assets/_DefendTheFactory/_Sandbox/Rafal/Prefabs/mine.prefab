@@ -58,6 +58,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8024105391987944645, guid: b91f32db8e9c1d840986742193b546ac,
+        type: 3}
+      propertyPath: m_Name
+      value: base
+      objectReference: {fileID: 0}
+    - target: {fileID: -7759907644319121091, guid: b91f32db8e9c1d840986742193b546ac,
+        type: 3}
+      propertyPath: m_Name
+      value: Stone crushing wheel
+      objectReference: {fileID: 0}
     - target: {fileID: -4230159399460968880, guid: b91f32db8e9c1d840986742193b546ac,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -68,6 +78,11 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 3f77bf6e4b09f1547a520378824de53f, type: 2}
+    - target: {fileID: -1946543702341928495, guid: b91f32db8e9c1d840986742193b546ac,
+        type: 3}
+      propertyPath: m_Name
+      value: rock
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b91f32db8e9c1d840986742193b546ac,
         type: 3}
       propertyPath: m_Name
@@ -83,6 +98,11 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 3f77bf6e4b09f1547a520378824de53f, type: 2}
+    - target: {fileID: 7237648746586206928, guid: b91f32db8e9c1d840986742193b546ac,
+        type: 3}
+      propertyPath: m_Name
+      value: Stone crushing wheel
+      objectReference: {fileID: 0}
     - target: {fileID: 8402719145797176695, guid: b91f32db8e9c1d840986742193b546ac,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -112,6 +132,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8842856889051370049, guid: b91f32db8e9c1d840986742193b546ac,
+        type: 3}
+      propertyPath: m_Name
+      value: pick
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -58,6 +58,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8024105391987944645, guid: 782a46a1961b5e4448a4d575e88f0aa6,
+        type: 3}
+      propertyPath: m_Name
+      value: base
+      objectReference: {fileID: 0}
     - target: {fileID: -7726838271421355851, guid: 782a46a1961b5e4448a4d575e88f0aa6,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -73,10 +78,25 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: fe96f1b34cfe8c247bf2afc784daf30c, type: 2}
+    - target: {fileID: -4095440265688524774, guid: 782a46a1961b5e4448a4d575e88f0aa6,
+        type: 3}
+      propertyPath: m_Name
+      value: hammer
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 782a46a1961b5e4448a4d575e88f0aa6,
         type: 3}
       propertyPath: m_Name
       value: iron mine
+      objectReference: {fileID: 0}
+    - target: {fileID: 927841348026482837, guid: 782a46a1961b5e4448a4d575e88f0aa6,
+        type: 3}
+      propertyPath: m_Name
+      value: iron
+      objectReference: {fileID: 0}
+    - target: {fileID: 1820873638880092199, guid: 782a46a1961b5e4448a4d575e88f0aa6,
+        type: 3}
+      propertyPath: m_Name
+      value: rock
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

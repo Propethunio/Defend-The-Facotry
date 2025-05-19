@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 5404597915658415964}
   - component: {fileID: 3725448847170796553}
   m_Layer: 0
-  m_Name: Cube.004_Baked
+  m_Name: base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

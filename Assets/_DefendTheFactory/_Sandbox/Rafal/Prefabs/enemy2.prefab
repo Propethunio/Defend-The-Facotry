@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 60a81b325da17ac44866d1c977ab568f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24
+      value: 24.52
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60a81b325da17ac44866d1c977ab568f,
         type: 3}
@@ -21,7 +21,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 60a81b325da17ac44866d1c977ab568f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.67
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60a81b325da17ac44866d1c977ab568f,
         type: 3}
@@ -63,6 +63,16 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 37540b812b48f414b9d294d5eaaa16bd, type: 2}
+    - target: {fileID: -726363005764710003, guid: 60a81b325da17ac44866d1c977ab568f,
+        type: 3}
+      propertyPath: m_Name
+      value: enemy hands
+      objectReference: {fileID: 0}
+    - target: {fileID: 808493281532925055, guid: 60a81b325da17ac44866d1c977ab568f,
+        type: 3}
+      propertyPath: m_Name
+      value: enemy base
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 60a81b325da17ac44866d1c977ab568f,
         type: 3}
       propertyPath: m_Name

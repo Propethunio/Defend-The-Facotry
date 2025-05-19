@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ogre
       objectReference: {fileID: 0}
+    - target: {fileID: 2228959301221845152, guid: fe5c4ac985e9ff646ad8ecb3e0108bf3,
+        type: 3}
+      propertyPath: m_Name
+      value: OgreMesh
+      objectReference: {fileID: 0}
     - target: {fileID: 5200413024394658944, guid: fe5c4ac985e9ff646ad8ecb3e0108bf3,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
