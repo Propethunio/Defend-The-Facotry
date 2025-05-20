@@ -10,16 +10,17 @@ public class DayNightManager : MonoBehaviour {
 	[SerializeField] private AnimationCurve lightIntensityCurve;
 	[SerializeField] private float maxSunIntensity;
 	[SerializeField] private float maxMoonIntensity;
+	[SerializeField] private float maxShadowStrength;
 	[SerializeField] private Color dayAmbientLight;
 	[SerializeField] private Color nightAmbientLight;
 	[SerializeField] private Volume globalVolume;
 	[SerializeField] private Material skyboxMaterial;
 
 	private ColorAdjustments colorAdjustments;
-	private Tween sunTween;
 	private WaveManager waveManager;
-	private float sunAngle;
 	private float valueOnCurve;
+	private float sunX;
+	private float sunY;
 
 	private static readonly int _blend = Shader.PropertyToID("_Blend");
 
@@ -48,12 +49,20 @@ public class DayNightManager : MonoBehaviour {
 	}
 
 	private void RotateSun(float percent) {
-		if (sunTween != null && sunTween.IsActive()) sunTween.Kill();
+		float targetX = Mathf.Lerp(0f, 180f, percent);
+		float targetY = Mathf.Sin(percent * Mathf.PI) * 23.5f;
+		DOTween.Kill("SunX");
+		DOTween.Kill("SunY");
 
-		sunTween = DOTween.To(() => sunAngle, x => {
-			sunAngle = x;
-			sunPivot.localRotation = Quaternion.Euler(sunAngle, 0, 23.5f);
-		}, Mathf.Lerp(0f, 180f, percent), 0.5f).SetEase(Ease.Linear);
+		DOVirtual.Float(sunX, targetX, 0.5f, x => {
+			sunX = x;
+			sunPivot.localRotation = Quaternion.Euler(sunX, sunY, 0);
+		}).SetEase(Ease.Linear).SetId("SunX");
+
+		DOVirtual.Float(sunY, targetY, 0.5f, y => {
+			sunY = y;
+			sunPivot.localRotation = Quaternion.Euler(sunX, sunY, 0);
+		}).SetEase(Ease.Linear).SetId("SunY");
 	}
 
 	private void EvaluatePointOnCurve() {
@@ -62,8 +71,9 @@ public class DayNightManager : MonoBehaviour {
 
 	private void UpdateLightSettings() {
 		sun.intensity = Mathf.Lerp(0, maxSunIntensity, valueOnCurve);
-		moon.intensity = Mathf.Lerp(0, maxMoonIntensity, valueOnCurve);
+		moon.intensity = Mathf.Lerp(0, maxMoonIntensity, 1 - valueOnCurve);
 		colorAdjustments.colorFilter.value = Color.Lerp(nightAmbientLight, dayAmbientLight, valueOnCurve);
+		sun.shadowStrength = Mathf.Lerp(0, maxShadowStrength, valueOnCurve);
 	}
 
 	private void UpdateSkybox() {
