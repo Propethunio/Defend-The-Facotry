@@ -47,11 +47,14 @@ MonoBehaviour:
   <resourcesOnMap>k__BackingField:
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: 8809047efe3d2d944b4e66ccb2185303,
       type: 2}
-    <weight>k__BackingField: 7
+    <weight>k__BackingField: 21
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: 0ba2dd04846207b4e9a3bf145d3c03d9,
       type: 2}
-    <weight>k__BackingField: 2
+    <weight>k__BackingField: 5
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: 29b7cb6e4c205e44bb75fb07acd25462,
+      type: 2}
+    <weight>k__BackingField: 2
+  - <resourceNode>k__BackingField: {fileID: 11400000, guid: 8551d8a7ed042f44f935b51ec6446a73,
       type: 2}
     <weight>k__BackingField: 1
   <enemiesWavesData>k__BackingField: {fileID: 11400000, guid: 8e85f9b261cb94048b3e5a622a3deb70,

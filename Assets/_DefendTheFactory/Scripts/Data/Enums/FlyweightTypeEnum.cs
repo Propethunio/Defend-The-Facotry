@@ -9,4 +9,9 @@ public enum FlyweightType {
 	EnemyClaw,
 	EnemyGhost,
 	EnemyOgre,
+	ItemIronOre,
+	ItemCoal,
+	ItemSteelIngot,
+	ItemSteelPlate,
+	ItemSteelRod,
 }

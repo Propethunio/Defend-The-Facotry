@@ -21,7 +21,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cc54598f4b1667e4b9e07e5e1e667267, type: 2}
   - {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
   - {fileID: 11400000, guid: 87fd528a15c596d4b85a6293d4f5f4c7, type: 2}
+  - {fileID: 11400000, guid: 90186e8a61d6ce2419155c284bb950d7, type: 2}
   - {fileID: 11400000, guid: 9becd9a6d8334774ca7b0b355f08b11c, type: 2}
   - {fileID: 11400000, guid: 72acb772495fcf14ca7ab093284cba1b, type: 2}
+  - {fileID: 11400000, guid: 27c915c93806e3b47ac86234740f43d1, type: 2}
   <towersData>k__BackingField:
   - {fileID: 11400000, guid: fc016d76b8cda3d478bf2760b87e63c3, type: 2}

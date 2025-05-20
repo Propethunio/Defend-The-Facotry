@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbb41197560568c4ea4b2fb32e44d390, type: 3}
+  m_Name: Foundry_1
+  m_EditorClassIdentifier: 
+  <inputItemList>k__BackingField:
+  - item: {fileID: 11400000, guid: d6d94929f4f543e49b8c80466c393f9f, type: 2}
+    amount: 2
+  - item: {fileID: 11400000, guid: 52eb737f9cd26bb448ed9e83ad53d263, type: 2}
+    amount: 3
+  <outputItemList>k__BackingField:
+  - item: {fileID: 11400000, guid: c7f8df6c3da392644994f4fca9f75334, type: 2}
+    amount: 1
+  <craftingTicks>k__BackingField: 10

@@ -625,7 +625,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.4
+    m_Strength: 0.35
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -822,13 +822,13 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.17139857
-      value: 0.896873
-      inSlope: 0.4187115
-      outSlope: 0.4187115
+      time: 0.17899229
+      value: 0.8794178
+      inSlope: 0.42768785
+      outSlope: 0.42768785
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.24638158
+      inWeight: 0.24659996
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
@@ -844,7 +844,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   maxSunIntensity: 1.6
   maxMoonIntensity: 1.4
-  maxShadowStrength: 0.75
+  maxShadowStrength: 0.7
   dayAmbientLight: {r: 1, g: 0.9839677, b: 0.8820755, a: 0}
   nightAmbientLight: {r: 0.62352943, g: 0.6862745, b: 0.85490197, a: 0}
   globalVolume: {fileID: 832575518}

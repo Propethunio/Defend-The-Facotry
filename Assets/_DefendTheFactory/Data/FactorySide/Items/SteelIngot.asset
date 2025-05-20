@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1abca38e197a3845be27e2eabab9723, type: 3}
-  m_Name: StoneGravel
+  m_Name: SteelIngot
   m_EditorClassIdentifier: 
-  type: 5
-  prefab: {fileID: 2002821952129657682, guid: a1413d91998db7c43a42fb73368b7756, type: 3}
-  <icon>k__BackingField: {fileID: 21300000, guid: f48e9d16f42efe148b04eeb04a67899b,
+  type: 12
+  prefab: {fileID: 2002821952129657682, guid: b2fdb0b9c52d86149a36e89e154b08b5, type: 3}
+  <icon>k__BackingField: {fileID: 21300000, guid: 802db850aa1bcba4886987b9bde60b7a,
     type: 3}
-  <itemName>k__BackingField: Stone Gravel
+  <itemName>k__BackingField: Steel Ingot
