@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7771232389171552263}
   - component: {fileID: 776141934337118095}
   m_Layer: 0
-  m_Name: Cylinder.029_Baked
+  m_Name: sprocket smal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 3666105979468014170}
   - component: {fileID: 8929999114527421549}
   m_Layer: 0
-  m_Name: Cylinder.030_Baked
+  m_Name: sprocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 3558528330340154504}
   - component: {fileID: 5636363187972797961}
   m_Layer: 0
-  m_Name: Balista_Tartak_Kamieniolom (2)
+  m_Name: Belt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -317,7 +317,7 @@ GameObject:
   - component: {fileID: 3694391564554332598}
   - component: {fileID: 4707454436788306053}
   m_Layer: 0
-  m_Name: Cylinder.025_Baked
+  m_Name: Pressure Press
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -425,7 +425,7 @@ GameObject:
   - component: {fileID: 5631078533449581175}
   - component: {fileID: 5433787493736954271}
   m_Layer: 0
-  m_Name: Plane.001_Baked
+  m_Name: lever part2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -512,7 +512,7 @@ GameObject:
   - component: {fileID: 6367206162579717980}
   - component: {fileID: 7815581773761809322}
   m_Layer: 0
-  m_Name: Cylinder.026_Baked
+  m_Name: Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -620,7 +620,7 @@ GameObject:
   - component: {fileID: 5547966236527399531}
   - component: {fileID: 7716104383752443566}
   m_Layer: 0
-  m_Name: Cylinder.031_Baked
+  m_Name: lever part1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -706,7 +706,7 @@ GameObject:
   - component: {fileID: 5310819294954852031}
   - component: {fileID: 6136111633708050820}
   m_Layer: 0
-  m_Name: Cylinder.028_Baked
+  m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 8367760373646454956}
   - component: {fileID: 9213855011604308709}
   m_Layer: 0
-  m_Name: Balista_Tartak_Kamieniolom
+  m_Name: KamieniolomLV1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

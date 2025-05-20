@@ -173,12 +173,12 @@ PrefabInstance:
     - target: {fileID: -6491617621687793066, guid: d96fe81a8770f824199ff4632b5c352f,
         type: 3}
       propertyPath: m_Name
-      value: Stone crushing wheel
+      value: Coal crushing wheel 1
       objectReference: {fileID: 0}
     - target: {fileID: -4095440265688524774, guid: d96fe81a8770f824199ff4632b5c352f,
         type: 3}
       propertyPath: m_Name
-      value: Stone crushing wheel
+      value: Coal crushing wheel 2
       objectReference: {fileID: 0}
     - target: {fileID: -3209336417839277449, guid: d96fe81a8770f824199ff4632b5c352f,
         type: 3}

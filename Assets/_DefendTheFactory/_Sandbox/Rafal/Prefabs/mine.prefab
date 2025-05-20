@@ -66,7 +66,7 @@ PrefabInstance:
     - target: {fileID: -7759907644319121091, guid: b91f32db8e9c1d840986742193b546ac,
         type: 3}
       propertyPath: m_Name
-      value: Stone crushing wheel
+      value: Stone crushing wheel 2
       objectReference: {fileID: 0}
     - target: {fileID: -4230159399460968880, guid: b91f32db8e9c1d840986742193b546ac,
         type: 3}
@@ -78,6 +78,26 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 3f77bf6e4b09f1547a520378824de53f, type: 2}
+    - target: {fileID: -2625383832104231560, guid: b91f32db8e9c1d840986742193b546ac,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2625383832104231560, guid: b91f32db8e9c1d840986742193b546ac,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2625383832104231560, guid: b91f32db8e9c1d840986742193b546ac,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2625383832104231560, guid: b91f32db8e9c1d840986742193b546ac,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: -1946543702341928495, guid: b91f32db8e9c1d840986742193b546ac,
         type: 3}
       propertyPath: m_Name
@@ -101,7 +121,7 @@ PrefabInstance:
     - target: {fileID: 7237648746586206928, guid: b91f32db8e9c1d840986742193b546ac,
         type: 3}
       propertyPath: m_Name
-      value: Stone crushing wheel
+      value: Stone crushing wheel 1
       objectReference: {fileID: 0}
     - target: {fileID: 8402719145797176695, guid: b91f32db8e9c1d840986742193b546ac,
         type: 3}
