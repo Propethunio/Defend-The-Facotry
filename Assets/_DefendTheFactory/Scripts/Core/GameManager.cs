@@ -3,12 +3,11 @@ using UnityEngine;
 using UtilsClass;
 
 public class GameManager : MonoBehaviour {
-	[SerializeField] private MapDataSO data;
 	[SerializeField] private int startHp;
 	[SerializeField] private bool showBeltDebug;
 	[SerializeField] private bool generateMapAsync;
 	[SerializeField] private bool addResources;
-
+	
 	public List<ItemSO> items;
 	
 	private bool gameOver;
@@ -24,7 +23,7 @@ public class GameManager : MonoBehaviour {
 	private void Init() {
 		SceneLoader.Instance.OnSceneGroupLoaded -= Init;
 		Injector.Resolve<WaveManager>().Init();
-		MapGenerator mapGenerator = new MapGenerator(data);
+		MapGenerator mapGenerator = new MapGenerator(GameSetupData.Instance.GetLevelData());
 		Injector.Resolve<BuildingSystem>().Init(mapGenerator.width, mapGenerator.height);
 		Injector.Resolve<BeltManager>().Init(showBeltDebug);
 		new MouseInteractionManager();

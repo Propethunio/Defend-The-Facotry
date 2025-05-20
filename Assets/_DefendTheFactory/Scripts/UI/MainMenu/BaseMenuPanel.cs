@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public abstract class BaseMenuPanel : MonoBehaviour {
-    private void OnEnable() {
+    protected virtual void OnEnable() {
         SetupButtons();
     }
 

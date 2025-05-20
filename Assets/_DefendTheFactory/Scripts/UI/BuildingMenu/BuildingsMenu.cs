@@ -13,8 +13,6 @@ public class BuildingsMenu : MonoBehaviour {
 	[SerializeField] private RectTransform factoryButtonsGrid;
 	[SerializeField] private RectTransform towersButtonsGrid;
 	[SerializeField] private BuildingBtn buildingBtnPrefab;
-	[SerializeField] private List<BaseBuildableObjectSO> factoryData;
-	[SerializeField] private List<BaseBuildableObjectSO> towersData;
 
 	private InputManager inputManager;
 	private RectTransform mainCanvasRect;
@@ -24,8 +22,9 @@ public class BuildingsMenu : MonoBehaviour {
 		mainCanvasRect = GetComponent<RectTransform>();
 		GridLayoutGroup layoutGroup = factoryButtonsGrid.GetComponent<GridLayoutGroup>();
 		dragDropBuildingPanel.sizeDelta = layoutGroup.cellSize;
-		SetupBuildingButtons(factoryData, factoryButtonsGrid, layoutGroup.constraintCount);
-		SetupBuildingButtons(towersData, towersButtonsGrid, layoutGroup.constraintCount);
+		GameSetupData gameSetupData = GameSetupData.Instance;
+		SetupBuildingButtons(gameSetupData.GetFactoryBuildingsData(), factoryButtonsGrid, layoutGroup.constraintCount);
+		SetupBuildingButtons(gameSetupData.GetTowersData(), towersButtonsGrid, layoutGroup.constraintCount);
 		Subscribe();
 	}
 

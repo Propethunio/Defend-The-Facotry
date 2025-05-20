@@ -21,8 +21,13 @@ public class TutorialCanvas : MonoBehaviour {
 
 	private readonly Dictionary<QuestStepSO, Action> stepCallbacks = new Dictionary<QuestStepSO, Action>();
 
+	private void Awake() {
+		if (!GameSetupData.Instance.IsTutorialLevel()) {
+			Destroy(gameObject);
+		}
+	}
+
 	private void Start() {
-		//Init;
 		LoadNextQuest();
 	}
 
@@ -54,7 +59,7 @@ public class TutorialCanvas : MonoBehaviour {
 	private void ExecuteNextQuestWithAnimation() {
 		if (currentQuestIndex >= questChain.Quests.Count) {
 			Debug.Log("WIN");
-			// END TUTORIAL
+			// TODO: END TUTORIAL
 			return;
 		}
 

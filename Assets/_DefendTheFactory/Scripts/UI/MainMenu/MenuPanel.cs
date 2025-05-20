@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class MenuPanel : BaseMenuPanel {
     [Header("Panels")] [SerializeField] private GameObject newGameWarningPanel;
+    [SerializeField] private GameObject newGamePanel;
     [SerializeField] private GameObject upgradesPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject exitPanel;
@@ -22,7 +23,7 @@ public class MenuPanel : BaseMenuPanel {
 
     protected override void SetupButtons() {
         //continueButton.onClick.AddListener();
-        newGameButton.onClick.AddListener(OnNewGameClicked);
+        newGameButton.onClick.AddListener(() => ShowPanel(newGamePanel));
         //upgradesButton.onClick.AddListener(() => ShowPanel(upgradesPanel));
         settingsButton.onClick.AddListener(() => ShowPanel(settingsPanel));
         exitButton.onClick.AddListener(() => ShowPanel(exitPanel));
@@ -34,9 +35,5 @@ public class MenuPanel : BaseMenuPanel {
         upgradesButton.onClick.RemoveAllListeners();
         settingsButton.onClick.RemoveAllListeners();
         exitButton.onClick.RemoveAllListeners();
-    }
-
-    private void OnNewGameClicked() {
-        SceneLoader.Instance.LoadSceneGroup(1);
     }
 }

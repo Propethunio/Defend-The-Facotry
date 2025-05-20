@@ -48,7 +48,6 @@ public class DayNightManager : MonoBehaviour {
 	}
 
 	private void RotateSun(float percent) {
-		Debug.Log(percent);
 		if (sunTween != null && sunTween.IsActive()) sunTween.Kill();
 
 		sunTween = DOTween.To(() => sunAngle, x => {

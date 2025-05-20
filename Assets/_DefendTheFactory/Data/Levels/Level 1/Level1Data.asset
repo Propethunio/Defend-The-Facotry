@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbaf081cc9713b44a897750af5f2c11, type: 3}
+  m_Name: Level1Data
+  m_EditorClassIdentifier: 
+  <isTutorialLevel>k__BackingField: 0
+  <mapData>k__BackingField: {fileID: 11400000, guid: b03c830290f5e294fb353afd5be56d0b,
+    type: 2}
+  <factoryBuildingsData>k__BackingField:
+  - {fileID: 11400000, guid: 4a586f58758f89145bd61c678aeaad28, type: 2}
+  - {fileID: 11400000, guid: 0e7d8342e26c7754ab10f55d2e0506f9, type: 2}
+  - {fileID: 11400000, guid: cc54598f4b1667e4b9e07e5e1e667267, type: 2}
+  - {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
+  - {fileID: 11400000, guid: 87fd528a15c596d4b85a6293d4f5f4c7, type: 2}
+  - {fileID: 11400000, guid: 9becd9a6d8334774ca7b0b355f08b11c, type: 2}
+  - {fileID: 11400000, guid: 72acb772495fcf14ca7ab093284cba1b, type: 2}
+  <towersData>k__BackingField:
+  - {fileID: 11400000, guid: fc016d76b8cda3d478bf2760b87e63c3, type: 2}
