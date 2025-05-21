@@ -320,6 +320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newGameWarningPanel: {fileID: 0}
+  newGamePanel: {fileID: 0}
   upgradesPanel: {fileID: 0}
   settingsPanel: {fileID: 0}
   exitPanel: {fileID: 0}
