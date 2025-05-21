@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <inputItem>k__BackingField:
     item: {fileID: 11400000, guid: c7f8df6c3da392644994f4fca9f75334, type: 2}
-    amount: 2
+    amount: 1
   <outputItem>k__BackingField:
     item: {fileID: 11400000, guid: 4db6787ce26c29b4dbbd8ea6de7000a5, type: 2}
-    amount: 3
+    amount: 2
   <craftingTicks>k__BackingField: 60

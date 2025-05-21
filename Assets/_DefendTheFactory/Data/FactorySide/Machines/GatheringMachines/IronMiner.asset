@@ -33,6 +33,6 @@ MonoBehaviour:
   <outputBeltPosition>k__BackingField: {x: 0, y: 0}
   <gatheredResource>k__BackingField: 2
   <resourceSearchRange>k__BackingField: 3
-  <ticksForGather>k__BackingField: 40
+  <ticksForGather>k__BackingField: 45
   <producedItem>k__BackingField: {fileID: 11400000, guid: d6d94929f4f543e49b8c80466c393f9f,
     type: 2}
