@@ -17,7 +17,7 @@ public class WaveManager {
 	private FlyweightFactory factory;
 	private TimeTickSystem timeTickSystem;
 	private HealthManager healthManager;
-	
+
 	public event Action OnDayStart, OnNightStart;
 	public event Action<float> OnDayTick, OnNightTick;
 	public event Action<EnemyLogic> OnEnemyDeath;
@@ -25,20 +25,43 @@ public class WaveManager {
 	public void Init() {
 		factory = Injector.Resolve<FlyweightFactory>();
 		timeTickSystem = Injector.Resolve<TimeTickSystem>();
-		timeTickSystem.OnTick += OnTick;
 		healthManager = Injector.Resolve<HealthManager>();
 		healthManager.GameOver += StopSpawning;
+
+		if (!GameSetupData.Instance.IsTutorialLevel()) {
+			timeTickSystem.OnTick += OnTick;
+		}
+		else {
+			Injector.Register(this);
+		}
 	}
 
 	~WaveManager() {
 		timeTickSystem.OnTick -= OnTick;
 		healthManager.GameOver -= StopSpawning;
+		timeTickSystem.OnTick -= StopTickingTutorial;
+	}
+
+	public void StartTickingTutorial() {
+		timeTickSystem.OnTick += OnTick;
+		timeTickSystem.OnTick += StopTickingTutorial;
+	}
+
+	public void SpawnTutorialEnemy() {
+		SpawnEnemyDay();
+	}
+
+	private void StopTickingTutorial() {
+		if ((float)ticksAmount / currentDayData.spawnAtNightAmount >= .7f) return;
+
+		timeTickSystem.OnTick -= OnTick;
+		timeTickSystem.OnTick -= StopTickingTutorial;
 	}
 
 	private void StopSpawning() {
 		timeTickSystem.OnTick -= OnTick;
 	}
-	
+
 	public int GetDayLength() {
 		return wavesData.dayLength;
 	}

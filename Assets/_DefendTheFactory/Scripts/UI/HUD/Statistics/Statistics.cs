@@ -14,6 +14,10 @@ public class Statistics : MonoBehaviour {
 		buildingSystem = Injector.Resolve<BuildingSystem>();
 		OnTowerAmountChanged(0, buildingSystem.maxTowers);
 		Subscribe();
+		
+		if (GameSetupData.Instance.IsTutorialLevel()) {
+			gameObject.SetActive(false);
+		}
 	}
 
 	private void OnDestroy() {

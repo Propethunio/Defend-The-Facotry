@@ -10,5 +10,6 @@ public class QuestListSO : ScriptableObject {
 [Serializable]
 public class Quest {
 	[field: SerializeField] public string QuestTitle { get; private set; }
+	[field: SerializeField] public List<QuestStartActionSO> QuestStartAction { get; private set; }
 	[field: SerializeField] public List<QuestStepSO> QuestSteps { get; private set; }
 }

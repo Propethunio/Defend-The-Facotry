@@ -14,43 +14,61 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Quests>k__BackingField:
   - <QuestTitle>k__BackingField: Camera Movement
+    <QuestStartAction>k__BackingField: []
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: 346aaad71cc87904ea46d24cef916d71, type: 2}
     - {fileID: 11400000, guid: f487892ed1f81764ab94945b3c23ed53, type: 2}
     - {fileID: 11400000, guid: 1b991e0f25c2eba4b854b12a2aee84c8, type: 2}
   - <QuestTitle>k__BackingField: First Resources
+    <QuestStartAction>k__BackingField: []
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: d2e4fad162d658741b1ab7a934378792, type: 2}
     - {fileID: 11400000, guid: 3130b7fcb1494b34999a4b33fc626c4c, type: 2}
   - <QuestTitle>k__BackingField: Building Basics part 1
+    <QuestStartAction>k__BackingField:
+    - {fileID: 11400000, guid: f5dc7365b988460439c1c466e1f12aa4, type: 2}
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: 90587504ddd059042aa15450e900fed1, type: 2}
     - {fileID: 11400000, guid: 3f3dd24a3bd6b794987da3fe7072577c, type: 2}
     - {fileID: 11400000, guid: 32c9f5d8073d542489b9f64c078c0259, type: 2}
   - <QuestTitle>k__BackingField: Building Basics part 2
+    <QuestStartAction>k__BackingField: []
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: 1106419e6f5857b4095599e1e68669bd, type: 2}
     - {fileID: 11400000, guid: 86590aa7763a84247bcf82b45737bf9b, type: 2}
     - {fileID: 11400000, guid: 5dd8b5f12b85f8b4cace49b7f9611783, type: 2}
-  - <QuestTitle>k__BackingField: Automation Part 1
+  - <QuestTitle>k__BackingField: Automation part 1
+    <QuestStartAction>k__BackingField: []
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: a480a07880b68f54b8639c3c56f68e2b, type: 2}
     - {fileID: 11400000, guid: 274c45ef89a03f14fb6be35552b32938, type: 2}
-  - <QuestTitle>k__BackingField: Tower Defense
+  - <QuestTitle>k__BackingField: Tower Defense part 1
+    <QuestStartAction>k__BackingField:
+    - {fileID: 11400000, guid: 670c59d98ad46e544832e3d9d5d515ec, type: 2}
+    - {fileID: 11400000, guid: 0844a5a7fcd17b34989651f1c7664ca1, type: 2}
+    - {fileID: 11400000, guid: 23be9917fb60b7c4ab0d4f47b8046436, type: 2}
+    - {fileID: 11400000, guid: b484a69ed2ad74d49991a21e601ada3b, type: 2}
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: 41a6b425a72fe9845a757d0d65b2ffee, type: 2}
     - {fileID: 11400000, guid: b9688e4a75fd3c9479b2887247a204d4, type: 2}
+  - <QuestTitle>k__BackingField: Tower Defense part 2
+    <QuestStartAction>k__BackingField:
+    - {fileID: 11400000, guid: 818ed2e9a5c8e804a8899361b1200afe, type: 2}
+    <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: 4aa9abb271b21d144b801d2cc1607d7c, type: 2}
   - <QuestTitle>k__BackingField: Automation Part 2
+    <QuestStartAction>k__BackingField: []
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: 74366a982066d18498c10b6c82a3cadc, type: 2}
     - {fileID: 11400000, guid: 97c5605d833b81c48b1348b7f779c683, type: 2}
     - {fileID: 11400000, guid: be7b4df22aba2c5449d749e4ecfa8c80, type: 2}
     - {fileID: 11400000, guid: 9e28d398070975b44bc202718afde8bb, type: 2}
   - <QuestTitle>k__BackingField: Advanced Resources
+    <QuestStartAction>k__BackingField: []
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: 11a7266b1c2c6b349aef27665bfb68b8, type: 2}
     - {fileID: 11400000, guid: 374de396250b6be47b3f9d01e3077f18, type: 2}
   - <QuestTitle>k__BackingField: Base Upgrade
+    <QuestStartAction>k__BackingField: []
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: e83212e2854cc9c43bc1afd53afebeaf, type: 2}

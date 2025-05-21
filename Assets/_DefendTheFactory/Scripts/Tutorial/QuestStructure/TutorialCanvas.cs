@@ -11,9 +11,11 @@ public class TutorialCanvas : MonoBehaviour {
 	[SerializeField] private RectTransform questPanel;
 	[SerializeField] private RectTransform questStepsContainer;
 	[SerializeField] private QuestStepUi questStepUiPrefab;
-	[SerializeField] private TMP_Text questTitleText;
+	[SerializeField] private TMP_Text questTitleText; 
 	
-	[Header("Refs")][field: SerializeField] public Clock clock { get; private set; }
+	[field: SerializeField] public Clock hudClock {get; private set;}
+	[field: SerializeField] public BuildingsMenu hudBuildingsMenu {get; private set;}
+	[field: SerializeField] public Statistics hudStatistics {get; private set;}
 
 	private int currentQuestIndex;
 	private int currentQuestStepsCount;
@@ -40,6 +42,11 @@ public class TutorialCanvas : MonoBehaviour {
 		Quest quest = questChain.Quests[currentQuestIndex];
 		questTitleText.text = quest.QuestTitle;
 		currentQuestStepsCount = quest.QuestSteps.Count;
+		int questStartActionsCount = quest.QuestStartAction.Count;
+
+		for (int i = 0; i < questStartActionsCount; i++) {
+			quest.QuestStartAction[i].Execute(this);
+		}
 
 		for (int index = 0; index < currentQuestStepsCount; index++) {
 			QuestStepSO step = quest.QuestSteps[index];

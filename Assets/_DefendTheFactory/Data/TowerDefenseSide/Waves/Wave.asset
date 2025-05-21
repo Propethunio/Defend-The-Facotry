@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16869dcb21a24314d86a8746452ccc6b, type: 3}
   m_Name: Wave
   m_EditorClassIdentifier: 
-  <dayLength>k__BackingField: 60
+  <dayLength>k__BackingField: 840
   <waveDayData>k__BackingField:
   - <startSpawnAfter>k__BackingField: 270
     <chanceToSpawnDay>k__BackingField: 6

@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8db0e067fec294040ba5f4ad32e1724f, type: 3}
-  m_Name: Kill3Enemies
+  m_Script: {fileID: 11500000, guid: caa25fe115c42d84f96bf0658882dce1, type: 3}
+  m_Name: StartWaveTicking
   m_EditorClassIdentifier: 
-  <QuestStepDsc>k__BackingField: Clear enemy wave
-  targetCount: 3

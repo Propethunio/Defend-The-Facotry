@@ -20,7 +20,13 @@ public class Clock : MonoBehaviour {
 		waveManager = Injector.Resolve<WaveManager>();
 		dayNightSlideSize = dayNightSlide.sizeDelta.y;
 		dayNightSlideX = dayNightSlide.anchoredPosition.x;
-		Subscribe();
+		
+		if (GameSetupData.Instance.IsTutorialLevel()) {
+			StartTutorial();
+		}
+		else {
+			Subscribe();	
+		}
 	}
 
 	private void OnDestroy() {
@@ -37,6 +43,11 @@ public class Clock : MonoBehaviour {
 		waveManager.OnDayTick -= SetDayTimeProgress;
 	}
 
+	private void StartTutorial() {
+		SetDayTimeProgress(.7f);
+		gameObject.SetActive(false);
+	}
+	
 	private void SetDayTimeProgress(float progress) {
 		progressBar.fillAmount = progress;
 		dayNightSlide.anchoredPosition = new Vector2(dayNightSlideX, progress * dayNightSlideSize);
@@ -66,11 +77,5 @@ public class Clock : MonoBehaviour {
 
 	private void SetCurrentDay() {
 		progressText.text = (waveManager.GetDaysSurvived() + 1).ToString();
-	}
-
-	public void TutorialInit() {
-		Unsubscribe();
-		waveIcon.gameObject.SetActive(false);
-		gameObject.SetActive(false);
 	}
 }

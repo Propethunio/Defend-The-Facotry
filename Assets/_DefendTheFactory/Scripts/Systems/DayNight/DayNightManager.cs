@@ -28,6 +28,10 @@ public class DayNightManager : MonoBehaviour {
 		waveManager = Injector.Resolve<WaveManager>();
 		globalVolume.profile.TryGet(out colorAdjustments);
 		Subscribe();
+		
+		if (GameSetupData.Instance.IsTutorialLevel()) {
+			RotateSun(.7f);
+		}
 	}
 
 	private void Update() {

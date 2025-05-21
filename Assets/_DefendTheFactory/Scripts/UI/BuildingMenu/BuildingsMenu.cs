@@ -25,7 +25,13 @@ public class BuildingsMenu : MonoBehaviour {
 		GameSetupData gameSetupData = GameSetupData.Instance;
 		SetupBuildingButtons(gameSetupData.GetFactoryBuildingsData(), factoryButtonsGrid, layoutGroup.constraintCount);
 		SetupBuildingButtons(gameSetupData.GetTowersData(), towersButtonsGrid, layoutGroup.constraintCount);
-		Subscribe();
+		
+		if (GameSetupData.Instance.IsTutorialLevel()) {
+			gameObject.SetActive(false);
+		}
+		else {
+			Subscribe();	
+		}
 	}
 
 	private void OnDestroy() {
@@ -38,11 +44,21 @@ public class BuildingsMenu : MonoBehaviour {
 		towersButton.onClick.AddListener(() => ShowTab(false));
 		inputManager.BuildingMenuAction += ToggleBuildingsMenu;
 	}
-
+	
 	private void Unsubscribe() {
 		inputManager.BuildingMenuAction -= ToggleBuildingsMenu;
 	}
 
+	public void EnableFromTutorial() {
+		gameObject.SetActive(true);
+		Subscribe();
+		towersButton.onClick.RemoveAllListeners();
+	}
+
+	public void EnableTowersMenu() {
+		towersButton.onClick.AddListener(() => ShowTab(false));
+	}
+	
 	private void ToggleBuildingsMenu() {
 		if (buildingsMenu.activeSelf) {
 			HideBuildingsMenu();
