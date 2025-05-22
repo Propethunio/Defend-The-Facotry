@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16869dcb21a24314d86a8746452ccc6b, type: 3}
   m_Name: Tutorial
   m_EditorClassIdentifier: 
-  <dayLength>k__BackingField: 90
+  <dayLength>k__BackingField: 60
   <waveDayData>k__BackingField:
-  - <startSpawnAfter>k__BackingField: 21
-    <chanceToSpawnDay>k__BackingField: 63
+  - <startSpawnAfter>k__BackingField: 42
+    <chanceToSpawnDay>k__BackingField: 0
     <enemiesDuringDay>k__BackingField:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 938bbe1e81d4a1642aa5ff3a5018da15,
         type: 2}
       <weight>k__BackingField: 1
     <spawnAtNightAmount>k__BackingField: 3
-    <chanceToSpawnNight>k__BackingField: 20
+    <chanceToSpawnNight>k__BackingField: 17
     <enemiesDuringNight>k__BackingField:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 26cb6c43fb8ab4340a3f62c42559b181,
         type: 2}
       <weight>k__BackingField: 1
-  - <startSpawnAfter>k__BackingField: 63
+  - <startSpawnAfter>k__BackingField: 42
     <chanceToSpawnDay>k__BackingField: 0
     <enemiesDuringDay>k__BackingField: []
     <spawnAtNightAmount>k__BackingField: 0

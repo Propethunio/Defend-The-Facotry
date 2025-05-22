@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58a43df204524ce4aa7d7884669b6c16, type: 3}
   m_Name: TutorialMapData
   m_EditorClassIdentifier: 
-  <widthRange>k__BackingField: {x: 36, y: 36}
+  <widthRange>k__BackingField: {x: 30, y: 30}
   <heightRange>k__BackingField: {x: 26, y: 26}
   <portalPaddingRange>k__BackingField: {x: 5, y: 5}
   <basePaddingRange>k__BackingField: {x: 12, y: 12}
-  <PathLenghtRange>k__BackingField: {x: 32, y: 38}
+  <PathLenghtRange>k__BackingField: {x: 20, y: 28}
   <heightPadding>k__BackingField: 10
-  <minimumStraightLenghtOnPortal>k__BackingField: 3
-  <minimumStraightLenghtOnBase>k__BackingField: 3
-  <maximumStraightPathLenght>k__BackingField: 6
+  <minimumStraightLenghtOnPortal>k__BackingField: 2
+  <minimumStraightLenghtOnBase>k__BackingField: 2
+  <maximumStraightPathLenght>k__BackingField: 4
   <maximumBacktrackingPathLenght>k__BackingField: 4
   <backtrackingPreventingPadding>k__BackingField: 8
-  <backtracksAmountRange>k__BackingField: {x: 1, y: 1}
+  <backtracksAmountRange>k__BackingField: {x: 0, y: 0}
   <shouldPreventSquareLoops>k__BackingField: 1
   <shouldAllowPathSplits>k__BackingField: 1
   <splitsAmountRange>k__BackingField: {x: 1, y: 1}
