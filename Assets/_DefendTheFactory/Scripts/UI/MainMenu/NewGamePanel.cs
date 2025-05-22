@@ -9,9 +9,11 @@ public class NewGamePanel : BaseMenuPanel {
 
 	[Header("Level Buttons")] [SerializeField] private Button tutorialButton;
 	[SerializeField] private Button level1Button;
+	[SerializeField] private Button levelNikodemButton;
 
 	private Image tutorialImage;
 	private Image level1Image;
+	private Image levelNikodemImage;
 	private int selectedLevelIndex;
 	private Color notSelectedColor;
 	private Color selectedColor;
@@ -19,6 +21,7 @@ public class NewGamePanel : BaseMenuPanel {
 	private void Awake() {
 		tutorialImage = tutorialButton.GetComponent<Image>();
 		level1Image = level1Button.GetComponent<Image>();
+		levelNikodemImage = levelNikodemButton.GetComponent<Image>();
 		notSelectedColor = tutorialImage.color;
 		selectedColor = notSelectedColor;
 		selectedColor.a = 1f;
@@ -29,6 +32,7 @@ public class NewGamePanel : BaseMenuPanel {
 		selectedLevelIndex = -1;
 		tutorialImage.color = notSelectedColor;
 		level1Image.color = notSelectedColor;
+		levelNikodemImage.color = notSelectedColor;
 	}
 
 	protected override void SetupButtons() {
@@ -36,6 +40,7 @@ public class NewGamePanel : BaseMenuPanel {
 		backButton.onClick.AddListener(OnBackButtonClicked);
 		tutorialButton.onClick.AddListener(() => OnLevelButtonClicked(0));
 		level1Button.onClick.AddListener(() => OnLevelButtonClicked(1));
+		levelNikodemButton.onClick.AddListener(() => OnLevelButtonClicked(2));
 	}
 
 	protected override void DisableButtons() {
@@ -43,6 +48,7 @@ public class NewGamePanel : BaseMenuPanel {
 		backButton.onClick.RemoveAllListeners();
 		tutorialButton.onClick.RemoveAllListeners();
 		level1Button.onClick.RemoveAllListeners();
+		levelNikodemButton.onClick.RemoveAllListeners();
 	}
 
 	private void OnStartButtonClicked() {
@@ -61,10 +67,17 @@ public class NewGamePanel : BaseMenuPanel {
 		if (index == 0) {
 			tutorialImage.color = selectedColor;
 			level1Image.color = notSelectedColor;
+			levelNikodemImage.color = notSelectedColor;
+		}
+		else if (index == 1) {
+			tutorialImage.color = notSelectedColor;
+			level1Image.color = selectedColor;
+			levelNikodemImage.color = notSelectedColor;
 		}
 		else {
 			tutorialImage.color = notSelectedColor;
-			level1Image.color = selectedColor;
+			level1Image.color = notSelectedColor;
+			levelNikodemImage.color = selectedColor;
 		}
 	}
 }

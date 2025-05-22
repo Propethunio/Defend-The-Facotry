@@ -1,5 +1,6 @@
 public enum ResourcesEnum {
     Wood,
     Stone,
-    Iron
+    Iron,
+    Coal,
 }
