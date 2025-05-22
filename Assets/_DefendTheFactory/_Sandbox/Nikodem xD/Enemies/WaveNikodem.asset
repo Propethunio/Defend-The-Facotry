@@ -35,6 +35,30 @@ MonoBehaviour:
     - <enemy>k__BackingField: {fileID: 11400000, guid: dc440f4670b0dc440a3286b50ea05838,
         type: 2}
       <weight>k__BackingField: 1
+  - <startSpawnAfter>k__BackingField: 270
+    <chanceToSpawnDay>k__BackingField: 6
+    <enemiesDuringDay>k__BackingField:
+    - <enemy>k__BackingField: {fileID: 11400000, guid: 7e6406de02cbfff4f8f3310eb017d7ec,
+        type: 2}
+      <weight>k__BackingField: 1
+    - <enemy>k__BackingField: {fileID: 11400000, guid: affe00cc49dcb004fb4efe15ccf71386,
+        type: 2}
+      <weight>k__BackingField: 2
+    - <enemy>k__BackingField: {fileID: 11400000, guid: dc440f4670b0dc440a3286b50ea05838,
+        type: 2}
+      <weight>k__BackingField: 5
+    <spawnAtNightAmount>k__BackingField: 40
+    <chanceToSpawnNight>k__BackingField: 35
+    <enemiesDuringNight>k__BackingField:
+    - <enemy>k__BackingField: {fileID: 11400000, guid: 7e6406de02cbfff4f8f3310eb017d7ec,
+        type: 2}
+      <weight>k__BackingField: 1
+    - <enemy>k__BackingField: {fileID: 11400000, guid: affe00cc49dcb004fb4efe15ccf71386,
+        type: 2}
+      <weight>k__BackingField: 2
+    - <enemy>k__BackingField: {fileID: 11400000, guid: dc440f4670b0dc440a3286b50ea05838,
+        type: 2}
+      <weight>k__BackingField: 3
   - <startSpawnAfter>k__BackingField: 150
     <chanceToSpawnDay>k__BackingField: 6
     <enemiesDuringDay>k__BackingField:
@@ -47,8 +71,8 @@ MonoBehaviour:
     - <enemy>k__BackingField: {fileID: 11400000, guid: affe00cc49dcb004fb4efe15ccf71386,
         type: 2}
       <weight>k__BackingField: 1
-    <spawnAtNightAmount>k__BackingField: 40
-    <chanceToSpawnNight>k__BackingField: 90
+    <spawnAtNightAmount>k__BackingField: 50
+    <chanceToSpawnNight>k__BackingField: 50
     <enemiesDuringNight>k__BackingField:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 7e6406de02cbfff4f8f3310eb017d7ec,
         type: 2}
