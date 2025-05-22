@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BuildSawmill
   m_EditorClassIdentifier: 
   <QuestStepDsc>k__BackingField: Build Sawmill
-  objectToBuild: {fileID: 11400000, guid: 9becd9a6d8334774ca7b0b355f08b11c, type: 2}
+  objectToBuild: {fileID: 11400000, guid: aa346f56cc58142478df67b691f9a87f, type: 2}
   count: 1

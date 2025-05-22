@@ -40,19 +40,22 @@ public class WaveManager {
 		timeTickSystem.OnTick -= OnTick;
 		healthManager.GameOver -= StopSpawning;
 		timeTickSystem.OnTick -= StopTickingTutorial;
+		OnDayStart -= StartTickingToSetTime;
 	}
 
 	public void StartTickingTutorial() {
+		ticksAmount = currentDayData.startSpawnAfter;
 		timeTickSystem.OnTick += OnTick;
+		OnDayStart += StartTickingToSetTime;
+	}
+
+	private void StartTickingToSetTime() {
+		OnDayStart -= StartTickingToSetTime;
 		timeTickSystem.OnTick += StopTickingTutorial;
 	}
 
-	public void SpawnTutorialEnemy() {
-		SpawnEnemyDay();
-	}
-
 	private void StopTickingTutorial() {
-		if ((float)ticksAmount / currentDayData.spawnAtNightAmount >= .7f) return;
+		if ((float)ticksAmount / wavesData.dayLength < .7f) return;
 
 		timeTickSystem.OnTick -= OnTick;
 		timeTickSystem.OnTick -= StopTickingTutorial;
@@ -62,6 +65,10 @@ public class WaveManager {
 		timeTickSystem.OnTick -= OnTick;
 	}
 
+	public void SpawnTutorialEnemy() {
+		SpawnEnemyDay();
+	}
+	
 	public int GetDayLength() {
 		return wavesData.dayLength;
 	}

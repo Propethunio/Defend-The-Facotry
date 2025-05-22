@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <QuestStepDsc>k__BackingField: Select Luberjack (click on hotbar button or use
     1-8 keys)
-  buildingToSelect: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
+  buildingToSelect: {fileID: 11400000, guid: 79da1a098836b2443a6717b938bf8c33, type: 2}

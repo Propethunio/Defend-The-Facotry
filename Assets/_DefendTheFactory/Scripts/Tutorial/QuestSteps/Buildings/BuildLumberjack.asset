@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <QuestStepDsc>k__BackingField: 'Build Lumberjack (tip: needs trees in range to
     work)'
-  objectToBuild: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
+  objectToBuild: {fileID: 11400000, guid: 79da1a098836b2443a6717b938bf8c33, type: 2}
   count: 1

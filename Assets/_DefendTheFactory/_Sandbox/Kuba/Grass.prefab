@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e254e4d3319fe2d4480f91d653eb2f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grassAmountRange: {x: 17, y: 24}
+  grassAmountRange: {x: 17, y: 0}
   grassPrefabs:
   - {fileID: 4584435218644164156, guid: 04bd40d3ccd5b514ba9d29ec2fce0eb6, type: 3}
   - {fileID: 954004906151214281, guid: aef09ea5297288948a0e71e69946c265, type: 3}

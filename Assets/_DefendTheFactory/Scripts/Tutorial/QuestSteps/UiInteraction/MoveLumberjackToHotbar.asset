@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MoveLumberjackToHotbar
   m_EditorClassIdentifier: 
   <QuestStepDsc>k__BackingField: Drag Lumberjack to hotbar
-  buildableObjectToSet: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273,
+  buildableObjectToSet: {fileID: 11400000, guid: 79da1a098836b2443a6717b938bf8c33,
     type: 2}

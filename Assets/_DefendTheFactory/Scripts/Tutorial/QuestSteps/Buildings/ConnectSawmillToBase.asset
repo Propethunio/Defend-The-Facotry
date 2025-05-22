@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ConnectSawmillToBase
   m_EditorClassIdentifier: 
   <QuestStepDsc>k__BackingField: Connect Sawmill to Main Base
-  buildingOne: {fileID: 11400000, guid: 9becd9a6d8334774ca7b0b355f08b11c, type: 2}
+  buildingOne: {fileID: 11400000, guid: aa346f56cc58142478df67b691f9a87f, type: 2}
   buildingTwo: {fileID: 11400000, guid: 880c3e562302de4458612e4919efea08, type: 2}

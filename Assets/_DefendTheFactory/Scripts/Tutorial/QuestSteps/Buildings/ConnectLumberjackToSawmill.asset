@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ConnectLumberjackToSawmill
   m_EditorClassIdentifier: 
   <QuestStepDsc>k__BackingField: Connect Lumberjack to Sawmill
-  buildingOne: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
-  buildingTwo: {fileID: 11400000, guid: 9becd9a6d8334774ca7b0b355f08b11c, type: 2}
+  buildingOne: {fileID: 11400000, guid: 79da1a098836b2443a6717b938bf8c33, type: 2}
+  buildingTwo: {fileID: 11400000, guid: aa346f56cc58142478df67b691f9a87f, type: 2}

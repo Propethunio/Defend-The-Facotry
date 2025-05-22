@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 13
   prefab: {fileID: 2002821952129657682, guid: d485058ceb52ec24ca2eab3acaf6ab5e, type: 3}
-  <icon>k__BackingField: {fileID: 21300000, guid: 802db850aa1bcba4886987b9bde60b7a,
+  <icon>k__BackingField: {fileID: 21300000, guid: 9bf2cc7d1bc8fa44284846340af32f52,
     type: 3}
   <itemName>k__BackingField: Steel Plate
