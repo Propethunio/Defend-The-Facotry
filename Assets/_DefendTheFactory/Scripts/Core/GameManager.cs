@@ -1,18 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UtilsClass;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : DependencyMonoBehaviour<GameManager> {
 	[SerializeField] private int startHp;
 	[SerializeField] private bool showBeltDebug;
 	[SerializeField] private bool generateMapAsync;
 	[SerializeField] private bool addResources;
 	
 	public List<ItemSO> items;
-	
-	private bool gameOver;
 
-	private void Awake() {
+	public event Action OnGameWon;
+
+	protected override void Awake() {
+		base.Awake();
 		SceneLoader.Instance.OnSceneGroupLoaded += Init;
 	}
 
@@ -46,6 +48,10 @@ public class GameManager : MonoBehaviour {
 	private void Update() {
 		HandleDebugSpawnItem();
 		HandleDebugDeleteBuilding();
+	}
+
+	public void GameWon() {
+		OnGameWon?.Invoke();
 	}
 	
 	private void HandleDebugSpawnItem() {

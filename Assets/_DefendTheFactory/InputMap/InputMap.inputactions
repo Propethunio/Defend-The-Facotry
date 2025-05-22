@@ -4,8 +4,30 @@
         {
             "name": "MenuInput",
             "id": "d4469d69-1bff-454a-960e-5fabf12c3b10",
-            "actions": [],
-            "bindings": []
+            "actions": [
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "d50df736-4c07-4a8f-b81a-a974e475d6ba",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0965d5af-20f4-425d-9e06-0dd32ed14904",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         },
         {
             "name": "GameInput",
