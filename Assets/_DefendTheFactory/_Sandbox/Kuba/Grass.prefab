@@ -46,16 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grassAmountRange: {x: 17, y: 24}
   grassPrefabs:
-  - {fileID: 4584435218644164156, guid: 04bd40d3ccd5b514ba9d29ec2fce0eb6, type: 3}
-  - {fileID: 954004906151214281, guid: aef09ea5297288948a0e71e69946c265, type: 3}
-  - {fileID: 13444587784001924, guid: a052d004698fc8f429bf53f816f704ce, type: 3}
-  - {fileID: 7978152168800194353, guid: a0b5148f1ab0a4a40926b0e269e708ee, type: 3}
-  - {fileID: 6762783889069880283, guid: 09676c9cae4f9574ebeabb9920df65b0, type: 3}
-  - {fileID: 1033994848619547918, guid: b16f8e353d0678742acf0bca563618d6, type: 3}
-  - {fileID: 1433506332688115372, guid: b87692fa0fb82c942afa6ad3d069b365, type: 3}
-  - {fileID: 3942097915231479620, guid: 38f5ba221c67a154fad314e7e7dcd957, type: 3}
-  - {fileID: 4988838858337539290, guid: 7a3feb1e98a30c945a0c0f2ece0afc7f, type: 3}
-  - {fileID: 3022879686688886268, guid: c40f35a77fe049c4d9fe8a333a4b5c92, type: 3}
-  - {fileID: 4936880515600770922, guid: 1ae90734ac4b9d4459a26929950c1891, type: 3}
-  - {fileID: 2970748423520979906, guid: 972c2b8515074c34f975aaa6fc2a25cc, type: 3}
+  - {fileID: 5990842916055297660, guid: 9966b54e287064449a77932f4fde59a9, type: 3}
+  - {fileID: 179536390929946498, guid: 75255af9a8c45954b905589a732763a2, type: 3}
+  - {fileID: 313759845700580619, guid: 50522acc2c27489449aa448d3d716477, type: 3}
+  - {fileID: 8321172209612746925, guid: b2fb1db46a2789c4d8e7ffa2fbfe51fd, type: 3}
   randomScaleRange: {x: 0.75, y: 1.15}
