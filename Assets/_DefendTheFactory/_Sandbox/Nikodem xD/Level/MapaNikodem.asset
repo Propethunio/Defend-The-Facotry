@@ -43,19 +43,19 @@ MonoBehaviour:
   <basePaddingPreventingObjectGeneration>k__BackingField: 3
   <portalData>k__BackingField: {fileID: 11400000, guid: 1c4118d133fbf1f4f88da15bdfa8e85e,
     type: 2}
-  <resourcesOnMapPercent>k__BackingField: 85
+  <resourcesOnMapPercent>k__BackingField: 10
   <resourcesOnMap>k__BackingField:
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: bdad98570a9d1444e858291bbf4f1582,
       type: 2}
     <weight>k__BackingField: 21
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: ba632ce8ea010a04b9a2e8d7a6372627,
       type: 2}
-    <weight>k__BackingField: 5
+    <weight>k__BackingField: 10
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: ca2af38a62568524c87d4b6f0006e9bc,
       type: 2}
-    <weight>k__BackingField: 2
+    <weight>k__BackingField: 4
   - <resourceNode>k__BackingField: {fileID: 11400000, guid: 7b5bbe3fb83f0bf4aa20363f9fe40f01,
       type: 2}
-    <weight>k__BackingField: 1
+    <weight>k__BackingField: 2
   <enemiesWavesData>k__BackingField: {fileID: 11400000, guid: 2f8b104e31e467a49b14f068e5a81988,
     type: 2}
