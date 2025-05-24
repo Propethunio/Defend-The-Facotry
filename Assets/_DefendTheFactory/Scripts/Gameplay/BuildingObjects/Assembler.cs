@@ -131,6 +131,9 @@ public class Assembler : BaseDataPlacedObject<AssemblerSO> {
 		for (int i = 0; i < inputBeltsCount; i++)
 		{
 			ConveyorBelt belt = inputBelts[i];
+
+			if (belt.endItem == null) continue;
+
 			ItemSO incomingItem = belt.endItem.itemSO;
 
 			if (storedInputItems.ContainsKey(incomingItem) && storedInputItems[incomingItem] < maxStoredInputItems[incomingItem])

@@ -1206,7 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemSO_Refs:
-    ironOre: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
+    ironOre: {fileID: 11400000, guid: 52eb737f9cd26bb448ed9e83ad53d263, type: 2}
   pfBeltDebugVisualNode: {fileID: 3320042585266239494, guid: 91bc3ec5c613ad040bec8a3aa6b03c08,
     type: 3}
   pfBeltDebugVisualLine: {fileID: 3320042585266239494, guid: 05f21454b993e99498de2ef39a7d26f9,
