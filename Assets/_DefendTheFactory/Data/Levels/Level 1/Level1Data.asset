@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bbaf081cc9713b44a897750af5f2c11, type: 3}
   m_Name: Level1Data
   m_EditorClassIdentifier: 
-  <isTutorialLevel>k__BackingField: 0
   <mapData>k__BackingField: {fileID: 11400000, guid: b03c830290f5e294fb353afd5be56d0b,
     type: 2}
   <factoryBuildingsData>k__BackingField:
@@ -25,5 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9becd9a6d8334774ca7b0b355f08b11c, type: 2}
   - {fileID: 11400000, guid: 72acb772495fcf14ca7ab093284cba1b, type: 2}
   - {fileID: 11400000, guid: 27c915c93806e3b47ac86234740f43d1, type: 2}
+  - {fileID: 11400000, guid: f82bee4d2263be441a74bf183aa84368, type: 2}
   <towersData>k__BackingField:
   - {fileID: 11400000, guid: fc016d76b8cda3d478bf2760b87e63c3, type: 2}

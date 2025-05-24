@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e254e4d3319fe2d4480f91d653eb2f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grassAmountRange: {x: 17, y: 24}
+  grassAmountRange: {x: 5, y: 8}
   grassPrefabs:
   - {fileID: 5990842916055297660, guid: 9966b54e287064449a77932f4fde59a9, type: 3}
   - {fileID: 179536390929946498, guid: 75255af9a8c45954b905589a732763a2, type: 3}
   - {fileID: 313759845700580619, guid: 50522acc2c27489449aa448d3d716477, type: 3}
   - {fileID: 8321172209612746925, guid: b2fb1db46a2789c4d8e7ffa2fbfe51fd, type: 3}
-  randomScaleRange: {x: 0.75, y: 1.15}
+  randomScaleRange: {x: 1.5, y: 1.8}
