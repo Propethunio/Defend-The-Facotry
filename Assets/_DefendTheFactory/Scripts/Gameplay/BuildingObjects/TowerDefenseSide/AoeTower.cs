@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class AoeTower : BaseTower<AoeTowerSO> {
@@ -9,6 +9,9 @@ public class AoeTower : BaseTower<AoeTowerSO> {
 
     public override void GridSetupDone() {
         base.GridSetupDone();
+    }
+    protected override IEnumerator AttackCycle() {
+        throw new NotImplementedException();
     }
 
     protected override void Attack() {

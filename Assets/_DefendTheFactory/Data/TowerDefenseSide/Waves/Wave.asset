@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <dayLength>k__BackingField: 840
   <waveDayData>k__BackingField:
-  - <startSpawnAfter>k__BackingField: 270
+  - <startSpawnAfter>k__BackingField: 0
     <chanceToSpawnDay>k__BackingField: 6
     <enemiesDuringDay>k__BackingField:
     - <enemy>k__BackingField: {fileID: 11400000, guid: 938bbe1e81d4a1642aa5ff3a5018da15,
