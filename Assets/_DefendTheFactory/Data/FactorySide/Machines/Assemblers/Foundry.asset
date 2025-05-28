@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70be6f0d75d8ec84184a5b13050e096a, type: 3}
+  m_Name: Foundry
+  m_EditorClassIdentifier: 
+  <icon>k__BackingField: {fileID: 21300000, guid: 772b372b4357155428f6feebcb00ca5b,
+    type: 3}
+  <nameString>k__BackingField: Foundry
+  <prefab>k__BackingField: {fileID: 312247860716316089, guid: 010075b2cbda79a42bca5f51af55131a,
+    type: 3}
+  <visual>k__BackingField: {fileID: 312247860716316089, guid: cc677269a0d306c43bbe69603ea7ca31,
+    type: 3}
+  <width>k__BackingField: 2
+  <height>k__BackingField: 2
+  <cost>k__BackingField:
+  - item: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
+    amount: 2
+  <isNotDestroyable>k__BackingField: 0
+  <refundPenalty>k__BackingField: 0
+  <shouldHighlight>k__BackingField: 1
+  <buildingPopupType>k__BackingField: 0
+  <outputBeltPosition>k__BackingField: {x: 1, y: 0}
+  <inputBeltPositions>k__BackingField:
+  - <beltPosition>k__BackingField: {x: 0, y: 1}
+    <beltDir>k__BackingField: 2
+  - <beltPosition>k__BackingField: {x: 1, y: 1}
+    <beltDir>k__BackingField: 2
+  <itemRecipeList>k__BackingField:
+  - {fileID: 11400000, guid: 531681ebd36211645884f603cff71917, type: 2}
+  - {fileID: 11400000, guid: 6b184362799a5fa458461e9714dc470d, type: 2}
+  <upgradedModel>k__BackingField: {fileID: 0}

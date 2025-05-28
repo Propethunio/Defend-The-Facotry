@@ -40,6 +40,7 @@ public class Assembler : BaseDataPlacedObject<AssemblerSO> {
 		for (int i = 0; i < inputBeltsCount; i++) {
 			inputBelts[i].DestroySelf();
 		}
+
 		outputBelt.DestroySelf();
 		base.DestroySelf();
 	}
@@ -121,17 +122,8 @@ public class Assembler : BaseDataPlacedObject<AssemblerSO> {
 	}
 
 	private void OnEarlyTick() {
-		TryGetItemFromInputBelt();
+		TryGetItemFromInputBelts();
 		TryPutItemOnOutputBelt();
-	}
-
-	private void TryGetItemFromInputBelt() {
-		// if (inputBelt.endItem == null || storedInputItems == maxStoredInputItems || inputBelt.endItem.itemSO != currentRecipe.inputItem.item) return;
-
-		// inputBelt.endItem.DestroySelf();
-		//  inputBelt.ResetWorldItem();
-		//   storedInputItems++;
-		//  StoredInputItemsCountChanged?.Invoke(storedInputItems);
 	}
 	
 	private void TryGetItemFromInputBelts()
@@ -139,7 +131,8 @@ public class Assembler : BaseDataPlacedObject<AssemblerSO> {
 		for (int i = 0; i < inputBeltsCount; i++)
 		{
 			ConveyorBelt belt = inputBelts[i];
-	//		if (belt.endItem == null|| belt.endItem.itemSO != currentRecipe.inputItem.item) continue;
+
+			if (belt.endItem == null) continue;
 
 			ItemSO incomingItem = belt.endItem.itemSO;
 
@@ -149,28 +142,14 @@ public class Assembler : BaseDataPlacedObject<AssemblerSO> {
 				belt.ResetWorldItem();
 				storedInputItems[incomingItem]++;
 				StoredInputItemsCountChanged?.Invoke(storedInputItems[incomingItem]);
-				// Only take one item per tick per belt
-				break;
 			}
 		}
-	}
-
-	private bool CanTakeInputItem(ItemSO item) {
-		for (int index = 0; index < currentRecipe.inputItemList.Count; index++) {
-			ItemIntPair recipeItem = currentRecipe.inputItemList[index];
-			
-			//if(recipeItem.item == item && recipeItem.amount) return true;
-		}
-		
-		//currentRecipe.inputItemList
-
-		return false;
 	}
 
 	private void TryPutItemOnOutputBelt() {
 		if (outputBelt.startItem != null || storedOutputItems == 0) return;
 
-		//  outputBelt.SetWorldItem(factory.CreateWorldItem(outputBelt.origin, dir, currentRecipe.outputItem.item));
+		outputBelt.SetWorldItem(factory.CreateWorldItem(outputBelt.origin, dir, currentRecipe.outputItemList[0].item));
 		storedOutputItems--;
 		StoredOutputItemsCountChanged?.Invoke(storedOutputItems);
 	}
