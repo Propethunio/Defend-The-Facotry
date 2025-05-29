@@ -848,7 +848,7 @@ MonoBehaviour:
   dayAmbientLight: {r: 1, g: 0.9839677, b: 0.8820755, a: 0}
   nightAmbientLight: {r: 0.62352943, g: 0.6862745, b: 0.85490197, a: 0}
   globalVolume: {fileID: 832575518}
-  skyboxMaterial: {fileID: 2100000, guid: 2947bf502fef59b4c8b23ddb146500cb, type: 2}
+  skyboxMaterial: {fileID: 2100000, guid: e99a06fd88afa6547b3d12455f596ef6, type: 2}
 --- !u!1 &1730453760
 GameObject:
   m_ObjectHideFlags: 0
