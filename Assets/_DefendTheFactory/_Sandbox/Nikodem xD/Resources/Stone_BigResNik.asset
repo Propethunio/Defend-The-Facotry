@@ -26,7 +26,7 @@ MonoBehaviour:
   <shouldHighlight>k__BackingField: 1
   <buildingPopupType>k__BackingField: 0
   <resourceType>k__BackingField: 1
-  <amount>k__BackingField: 200
+  <amount>k__BackingField: 250
   <itemGatheredOnClick>k__BackingField: {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23,
     type: 2}
   <clicksToGather>k__BackingField: 3
