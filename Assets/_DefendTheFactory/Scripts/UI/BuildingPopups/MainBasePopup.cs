@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,8 @@ public class MainBasePopup : BaseBuildingPopup {
 	[SerializeField] private Button UpgradeBtn;
 
 	private MainBase machine;
+
+	public event Action OnUpgrade;
 
 	protected override void SetupStaticData(BasePlacedObject placedObject) {
 		machine = placedObject as MainBase;
@@ -46,5 +49,6 @@ public class MainBasePopup : BaseBuildingPopup {
 	private void UpgradeBtnClicked() {
 		machine.UpgradeLevel();
 		ChangeSelectedObject(machine);
+		OnUpgrade?.Invoke();
 	}
 }

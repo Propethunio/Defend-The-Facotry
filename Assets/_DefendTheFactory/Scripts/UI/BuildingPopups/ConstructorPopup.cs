@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,8 @@ public class ConstructorPopup : BaseBuildingPopup {
 	private float targetProgress;
 	private float interpolationSpeed;
 	private int currentRecipeIndex;
+	
+	public event Action<int> OnRecipeChanged;
 
 	private void Update() {
 		progressBar.value = Mathf.MoveTowards(progressBar.value, targetProgress, interpolationSpeed * Time.deltaTime);
@@ -102,6 +105,7 @@ public class ConstructorPopup : BaseBuildingPopup {
 		machine.SetupRecipe(recipeIndex);
 		SetupStaticData(machine);
 		SetupDynamicData();
+		OnRecipeChanged?.Invoke(currentRecipeIndex);
 	}
 	
 	private void UpdateStoredInputItems(int amount) {

@@ -68,7 +68,14 @@ MonoBehaviour:
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: 11a7266b1c2c6b349aef27665bfb68b8, type: 2}
     - {fileID: 11400000, guid: 374de396250b6be47b3f9d01e3077f18, type: 2}
+  - <QuestTitle>k__BackingField: Recipe Change
+    <QuestStartAction>k__BackingField: []
+    <QuestSteps>k__BackingField:
+    - {fileID: 11400000, guid: da1b934c1df7fbd4989d771f66e85145, type: 2}
+    - {fileID: 11400000, guid: 24de9a7ac13714041a66a55be7980da7, type: 2}
+    - {fileID: 11400000, guid: 0ae17ea197887d84b82df0658b92e508, type: 2}
   - <QuestTitle>k__BackingField: Base Upgrade
     <QuestStartAction>k__BackingField: []
     <QuestSteps>k__BackingField:
     - {fileID: 11400000, guid: e83212e2854cc9c43bc1afd53afebeaf, type: 2}
+    - {fileID: 11400000, guid: 1342112fae0a9234b975d30d4c5049b5, type: 2}

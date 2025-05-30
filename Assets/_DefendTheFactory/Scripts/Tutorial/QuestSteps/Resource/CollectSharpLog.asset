@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb11a4e429c8064d86ac9a68e378afe, type: 3}
+  m_Name: CollectSharpLog
+  m_EditorClassIdentifier: 
+  <QuestStepDsc>k__BackingField: Deliver Sharp Log
+  itemToCollect: {fileID: 11400000, guid: 6203c45e750880a49a09c88a567eaa4e, type: 2}
+  targetCount: 1
