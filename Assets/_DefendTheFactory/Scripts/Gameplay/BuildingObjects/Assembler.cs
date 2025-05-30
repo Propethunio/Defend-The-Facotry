@@ -8,7 +8,7 @@ public class Assembler : BaseDataPlacedObject<AssemblerSO> {
 	public ItemRecipeSO currentRecipe { get; private set; }
 	public Dictionary<ItemSO, int> storedInputItems { get; private set; } = new Dictionary<ItemSO, int>();
 	public int storedOutputItems { get; private set; }
-	public int buildingLevel { get; private set; } = 1;
+	public int buildingLevel { get; private set; } = 2;
 
 	private List<ConveyorBelt> inputBelts = new List<ConveyorBelt>();
 	private ConveyorBelt outputBelt;
@@ -117,7 +117,7 @@ public class Assembler : BaseDataPlacedObject<AssemblerSO> {
 		}
 
 		storedOutputItems += currentRecipe.outputItemList[0].amount;
-		//StoredInputItemsCountChanged?.Invoke(storedInputItems);
+		StoredInputItemsCountChanged?.Invoke(1);
 		StoredOutputItemsCountChanged?.Invoke(storedOutputItems);
 	}
 
@@ -141,7 +141,7 @@ public class Assembler : BaseDataPlacedObject<AssemblerSO> {
 				belt.endItem.DestroySelf();
 				belt.ResetWorldItem();
 				storedInputItems[incomingItem]++;
-				StoredInputItemsCountChanged?.Invoke(storedInputItems[incomingItem]);
+				StoredInputItemsCountChanged?.Invoke(1);
 			}
 		}
 	}

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da33822df6ed16f43a36a3594a11e969, type: 3}
   m_Name: BaseTower
   m_EditorClassIdentifier: 
-  <icon>k__BackingField: {fileID: 21300000, guid: a9431166cf20d8f479af0274b1a8ffcc,
+  <icon>k__BackingField: {fileID: 21300000, guid: 5c0ae7744a943854d92b780d5c339877,
     type: 3}
-  <nameString>k__BackingField: Tower
+  <nameString>k__BackingField: Basic Tower
   <prefab>k__BackingField: {fileID: 5560026393050196790, guid: 063a38bb406a3aa4ebbea57cfb4215ab,
     type: 3}
   <visual>k__BackingField: {fileID: 5560026393050196790, guid: 465486dcb24a82c43b4f2020d5a94748,

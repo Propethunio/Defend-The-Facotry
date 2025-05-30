@@ -7,7 +7,7 @@ public class Constructor : BaseDataPlacedObject<ConstructorSO> {
 	public SimpleItemRecipeSO currentRecipe { get; private set; }
 	public int storedInputItems { get; private set; }
 	public int storedOutputItems { get; private set; }
-	public int buildingLevel { get; private set; } = 1;
+	public int buildingLevel { get; private set; } = 2;
 
 	private ConveyorBelt inputBelt;
 	private ConveyorBelt outputBelt;

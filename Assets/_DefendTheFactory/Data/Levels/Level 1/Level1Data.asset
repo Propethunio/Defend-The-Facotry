@@ -28,3 +28,5 @@ MonoBehaviour:
   <towersData>k__BackingField:
   - {fileID: 11400000, guid: caea665c83a12654aa871aa7be162c99, type: 2}
   - {fileID: 11400000, guid: fc016d76b8cda3d478bf2760b87e63c3, type: 2}
+  - {fileID: 11400000, guid: 0cd2c239836efe1498c296a2611e09e6, type: 2}
+  - {fileID: 11400000, guid: 277580d86e9e3894dbbc4cc9470352ab, type: 2}

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da33822df6ed16f43a36a3594a11e969, type: 3}
-  m_Name: ArcherTower
+  m_Name: CatapultTower
   m_EditorClassIdentifier: 
-  <icon>k__BackingField: {fileID: 21300000, guid: d9ade2c2d22b05d4c91e702aa89ff5f2,
+  <icon>k__BackingField: {fileID: 21300000, guid: cfcbba85256556a418884f7252c35058,
     type: 3}
-  <nameString>k__BackingField: Archer Tower
-  <prefab>k__BackingField: {fileID: 5560026393050196790, guid: 772d2a5cbcc06ea4da28052cc6a5244b,
+  <nameString>k__BackingField: Catapult
+  <prefab>k__BackingField: {fileID: 5560026393050196790, guid: e452cc9c23f03624a8bdc88a08f2da16,
     type: 3}
-  <visual>k__BackingField: {fileID: 5560026393050196790, guid: bade24733a32b9b408210b46aeb1499d,
+  <visual>k__BackingField: {fileID: 5560026393050196790, guid: b97032d51e153ee4bb1413a37ab2d4f0,
     type: 3}
   <width>k__BackingField: 2
   <height>k__BackingField: 2
@@ -33,7 +33,7 @@ MonoBehaviour:
   <damage>k__BackingField: 12
   <attackSpeed>k__BackingField: 0.3
   <range>k__BackingField: 5.5
-  <canTargetFlying>k__BackingField: 1
+  <canTargetFlying>k__BackingField: 0
   <shouldRotate>k__BackingField: 0
   <rotationSpeed>k__BackingField: 0
   <projectile>k__BackingField: {fileID: 0}

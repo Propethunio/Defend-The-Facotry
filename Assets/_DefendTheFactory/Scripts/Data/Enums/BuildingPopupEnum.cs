@@ -4,5 +4,6 @@ public enum BuildingPopupEnum {
     Constructor,
     MainBase,
     TowerTargetPicking,
-    TowerAOE
+    TowerAOE,
+    Assembler
 }

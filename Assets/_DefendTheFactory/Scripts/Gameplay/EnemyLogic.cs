@@ -11,6 +11,7 @@ public class EnemyLogic : Flyweight {
 	public int health { get; private set; }
 	public int shield { get; private set; }
 	public float speed { get; private set; }
+	public bool isDead { get; private set; }
 
 	private Quaternion targetRotation;
 	private Vector3 nextPoint;
@@ -39,6 +40,7 @@ public class EnemyLogic : Flyweight {
 		SetNextPoint();
 		SetDirection();
 		transform.rotation = targetRotation;
+		isDead = false;
 	}
 
 	private void Update() {
@@ -82,6 +84,7 @@ public class EnemyLogic : Flyweight {
 	}
 
 	private void DestroyMe() {
+		isDead = true;
 		OnDeath?.Invoke(this);
 		factory.ReturnToPool(this);
 	}

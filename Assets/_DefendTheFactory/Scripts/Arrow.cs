@@ -16,7 +16,7 @@ public class Arrow : MonoBehaviour
 
 	private void Update()
 	{
-		if (target == null)
+		if (target.isDead)
 		{
 			Destroy(gameObject);
 			return;

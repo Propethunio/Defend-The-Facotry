@@ -740,10 +740,19 @@ MonoBehaviour:
   startHp: 20
   showBeltDebug: 0
   generateMapAsync: 0
-  addResources: 0
+  addResources: 1
   items:
   - {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
   - {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23, type: 2}
+  - {fileID: 11400000, guid: 18cd4d4cff9723c4681468654ae6d1d6, type: 2}
+  - {fileID: 11400000, guid: 6203c45e750880a49a09c88a567eaa4e, type: 2}
+  - {fileID: 11400000, guid: c7f8df6c3da392644994f4fca9f75334, type: 2}
+  - {fileID: 11400000, guid: 4db6787ce26c29b4dbbd8ea6de7000a5, type: 2}
+  - {fileID: 11400000, guid: 16651d4578cdbb54a919b0296c318bde, type: 2}
+  - {fileID: 11400000, guid: 8fc0b69270915cf4cb148a6a2f71cad5, type: 2}
+  - {fileID: 11400000, guid: 52eb737f9cd26bb448ed9e83ad53d263, type: 2}
+  - {fileID: 11400000, guid: 4062207f85e27274381c1b79b43f5ad8, type: 2}
+  - {fileID: 11400000, guid: d6d94929f4f543e49b8c80466c393f9f, type: 2}
 --- !u!4 &1329027455
 Transform:
   m_ObjectHideFlags: 0

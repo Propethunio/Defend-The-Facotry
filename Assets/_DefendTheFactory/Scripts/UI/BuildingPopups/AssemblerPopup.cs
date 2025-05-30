@@ -2,12 +2,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConstructorPopup : BaseBuildingPopup {
+public class AssemblerPopup : BaseBuildingPopup {
 	[SerializeField] private Image recipeOneIcon;
 	[SerializeField] private Image recipeOneHighlight;
 	[SerializeField] private Image recipeTwoIcon;
 	[SerializeField] private Image recipeTwoHighlight;
 	[SerializeField] private Image inputIcon;
+	[SerializeField] private Image input2Icon;
 	[SerializeField] private Image outputIcon;
 	[SerializeField] private GameObject recipeTwoLock;
 	[SerializeField] private Slider progressBar;
@@ -15,15 +16,18 @@ public class ConstructorPopup : BaseBuildingPopup {
 	[SerializeField] private Button recipeTwoButton;
 	[SerializeField] private TextMeshProUGUI machineNameText;
 	[SerializeField] private TextMeshProUGUI inputResourceText;
+	[SerializeField] private TextMeshProUGUI input2ResourceText;
 	[SerializeField] private TextMeshProUGUI inputResourceAmountText;
+	[SerializeField] private TextMeshProUGUI input2ResourceAmountText;
 	[SerializeField] private TextMeshProUGUI inputResourceRatioText;
+	[SerializeField] private TextMeshProUGUI input2ResourceRatioText;
 	[SerializeField] private TextMeshProUGUI outputResourceText;
 	[SerializeField] private TextMeshProUGUI outputResourceAmountText;
 	[SerializeField] private TextMeshProUGUI outputResourceRatioText;
 	[SerializeField] private TextMeshProUGUI progressPercentText;
 	[SerializeField] private TextMeshProUGUI cycleLengthText;
-	
-    private Constructor machine;
+
+    private Assembler machine;
 	private float targetProgress;
 	private float interpolationSpeed;
 	private int currentRecipeIndex;
@@ -34,13 +38,14 @@ public class ConstructorPopup : BaseBuildingPopup {
 	}
 
 	protected override void SetupStaticData(BasePlacedObject placedObject) {
-		machine = placedObject as Constructor;
+		machine = placedObject as Assembler;
 		float cycleTime = (float)machine.currentRecipe.craftingTicks / ticksPerSecond;
 		interpolationSpeed = 1f / (cycleTime * 0.9f);
-		recipeOneIcon.sprite = machine.buildableDataSO.itemRecipeList[0].outputItem.item.icon;
-		recipeTwoIcon.sprite = machine.buildableDataSO.itemRecipeList[1].outputItem.item.icon;
-		inputIcon.sprite = machine.currentRecipe.inputItem.item.icon;
-		outputIcon.sprite = machine.currentRecipe.outputItem.item.icon;
+		recipeOneIcon.sprite = machine.buildableDataSO.itemRecipeList[0].outputItemList[0].item.icon;
+		recipeTwoIcon.sprite = machine.buildableDataSO.itemRecipeList[1].outputItemList[0].item.icon;
+		inputIcon.sprite = machine.currentRecipe.inputItemList[0].item.icon;
+		input2Icon.sprite = machine.currentRecipe.inputItemList[1].item.icon;
+		outputIcon.sprite = machine.currentRecipe.outputItemList[0].item.icon;
 
 		if (machine.currentRecipe == machine.buildableDataSO.itemRecipeList[0]) {
 			recipeOneHighlight.enabled = true;
@@ -54,15 +59,18 @@ public class ConstructorPopup : BaseBuildingPopup {
 		}
 
 		machineNameText.text = machine.buildableDataSO.nameString;
-		inputResourceText.text = machine.currentRecipe.inputItem.amount + " x " + machine.currentRecipe.inputItem.item.name;
-		outputResourceText.text = machine.currentRecipe.outputItem.amount + " x " + machine.currentRecipe.outputItem.item.name;
-		inputResourceRatioText.text = FormatFloatSmart((float)ticksPerMinute / machine.currentRecipe.craftingTicks * machine.currentRecipe.inputItem.amount) + "/min";
-		outputResourceRatioText.text = FormatFloatSmart((float)ticksPerMinute / machine.currentRecipe.craftingTicks * machine.currentRecipe.outputItem.amount) + "/min";
+		inputResourceText.text = machine.currentRecipe.inputItemList[0].amount + " x " + machine.currentRecipe.inputItemList[0].item.name;
+		input2ResourceText.text = machine.currentRecipe.inputItemList[1].amount + " x " + machine.currentRecipe.inputItemList[1].item.name;
+		outputResourceText.text = machine.currentRecipe.outputItemList[0].amount + " x " + machine.currentRecipe.outputItemList[0].item.name;
+		inputResourceRatioText.text = FormatFloatSmart((float)ticksPerMinute / machine.currentRecipe.craftingTicks * machine.currentRecipe.inputItemList[0].amount) + "/min";
+		inputResourceRatioText.text = FormatFloatSmart((float)ticksPerMinute / machine.currentRecipe.craftingTicks * machine.currentRecipe.inputItemList[1].amount) + "/min";
+		outputResourceRatioText.text = FormatFloatSmart((float)ticksPerMinute / machine.currentRecipe.craftingTicks * machine.currentRecipe.outputItemList[0].amount) + "/min";
 		cycleLengthText.text = FormatFloatSmart(cycleTime) + "s";
 	}
 
 	protected override void SetupDynamicData() {
-		inputResourceAmountText.text = machine.storedInputItems.ToString();
+		inputResourceAmountText.text = machine.storedInputItems[machine.currentRecipe.inputItemList[0].item].ToString();
+		input2ResourceAmountText.text = machine.storedInputItems[machine.currentRecipe.inputItemList[1].item].ToString();
 		outputResourceAmountText.text = machine.storedOutputItems.ToString();
 		progressBar.value = machine.GetProgressNormalized();
 		progressPercentText.text = (progressBar.value * 100).ToString("0") + "%";
@@ -83,10 +91,6 @@ public class ConstructorPopup : BaseBuildingPopup {
 		}
 	}
 
-	private void Upgrade() {
-		machine.UpgradeLvl();
-	}
-
 	protected override void Unsubscribe() {
 		machine.StoredInputItemsCountChanged -= UpdateStoredInputItems;
 		machine.StoredOutputItemsCountChanged -= UpdateStoredOutputItems;
@@ -105,7 +109,8 @@ public class ConstructorPopup : BaseBuildingPopup {
 	}
 	
 	private void UpdateStoredInputItems(int amount) {
-		inputResourceAmountText.text = amount.ToString();
+		inputResourceAmountText.text = machine.storedInputItems[machine.currentRecipe.inputItemList[0].item].ToString();
+		input2ResourceAmountText.text = machine.storedInputItems[machine.currentRecipe.inputItemList[1].item].ToString();
 	}
 
 	private void UpdateStoredOutputItems(int amount) {
