@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da33822df6ed16f43a36a3594a11e969, type: 3}
-  m_Name: BaseTower
+  m_Name: BaseTower_Tut
   m_EditorClassIdentifier: 
   <icon>k__BackingField: {fileID: 21300000, guid: 5c0ae7744a943854d92b780d5c339877,
     type: 3}
@@ -23,14 +23,14 @@ MonoBehaviour:
   <height>k__BackingField: 1
   <cost>k__BackingField:
   - item: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
-    amount: 40
+    amount: 5
   <isNotDestroyable>k__BackingField: 0
   <refundPenalty>k__BackingField: 0.5
   <shouldHighlight>k__BackingField: 1
   <buildingPopupType>k__BackingField: 4
-  <damage>k__BackingField: 8
-  <attackSpeed>k__BackingField: 0.7
-  <range>k__BackingField: 3.5
+  <damage>k__BackingField: 12
+  <attackSpeed>k__BackingField: 0.4
+  <range>k__BackingField: 4.5
   <canTargetFlying>k__BackingField: 1
   <shouldRotate>k__BackingField: 1
   <rotationSpeed>k__BackingField: 20

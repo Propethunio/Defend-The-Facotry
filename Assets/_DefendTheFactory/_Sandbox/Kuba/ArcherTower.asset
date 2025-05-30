@@ -30,9 +30,9 @@ MonoBehaviour:
   <refundPenalty>k__BackingField: 0.5
   <shouldHighlight>k__BackingField: 1
   <buildingPopupType>k__BackingField: 4
-  <damage>k__BackingField: 12
-  <attackSpeed>k__BackingField: 0.3
-  <range>k__BackingField: 5.5
+  <damage>k__BackingField: 14
+  <attackSpeed>k__BackingField: 0.5
+  <range>k__BackingField: 6.5
   <canTargetFlying>k__BackingField: 1
   <shouldRotate>k__BackingField: 0
   <rotationSpeed>k__BackingField: 0

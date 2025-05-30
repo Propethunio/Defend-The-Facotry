@@ -37,26 +37,26 @@ MonoBehaviour:
       type: 3}
     <cost>k__BackingField:
     - item: {fileID: 11400000, guid: 18cd4d4cff9723c4681468654ae6d1d6, type: 2}
-      amount: 30
-    - item: {fileID: 11400000, guid: 6203c45e750880a49a09c88a567eaa4e, type: 2}
       amount: 20
     - item: {fileID: 11400000, guid: 4062207f85e27274381c1b79b43f5ad8, type: 2}
       amount: 20
+    - item: {fileID: 11400000, guid: 6203c45e750880a49a09c88a567eaa4e, type: 2}
+      amount: 10
   - <upgradePrefab>k__BackingField: {fileID: 4342290428432907471, guid: d1f44247107c9ad40886c8c5934d6e95,
       type: 3}
     <cost>k__BackingField:
     - item: {fileID: 11400000, guid: 8fc0b69270915cf4cb148a6a2f71cad5, type: 2}
-      amount: 75
+      amount: 40
     - item: {fileID: 11400000, guid: 4db6787ce26c29b4dbbd8ea6de7000a5, type: 2}
-      amount: 25
-    - item: {fileID: 11400000, guid: c7f8df6c3da392644994f4fca9f75334, type: 2}
-      amount: 15
+      amount: 20
+    - item: {fileID: 11400000, guid: 6203c45e750880a49a09c88a567eaa4e, type: 2}
+      amount: 20
   - <upgradePrefab>k__BackingField: {fileID: 5583848635333652745, guid: 4aea6211b5ad7e7469aec6434ba1aa6a,
       type: 3}
     <cost>k__BackingField:
-    - item: {fileID: 11400000, guid: 4db6787ce26c29b4dbbd8ea6de7000a5, type: 2}
-      amount: 20
+    - item: {fileID: 11400000, guid: c7f8df6c3da392644994f4fca9f75334, type: 2}
+      amount: 40
     - item: {fileID: 11400000, guid: 314f28f3d5dd6cc418f701a27e5cb6f0, type: 2}
-      amount: 10
+      amount: 20
     - item: {fileID: 11400000, guid: f30ee9ccd2868204a8f77ae30e7d979e, type: 2}
-      amount: 5
+      amount: 15

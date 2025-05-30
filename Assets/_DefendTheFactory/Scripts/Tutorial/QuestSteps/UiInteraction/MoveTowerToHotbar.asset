@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <QuestStepDsc>k__BackingField: Drag Tower to hotbar (it is in Towers tab in building
     menu)
-  buildableObjectToSet: {fileID: 11400000, guid: caea665c83a12654aa871aa7be162c99,
+  buildableObjectToSet: {fileID: 11400000, guid: 632eb294b57acfb4999a8cf51a2b80e3,
     type: 2}

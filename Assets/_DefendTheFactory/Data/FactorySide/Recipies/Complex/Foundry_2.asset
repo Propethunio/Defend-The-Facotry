@@ -19,5 +19,5 @@ MonoBehaviour:
     amount: 1
   <outputItemList>k__BackingField:
   - item: {fileID: 11400000, guid: 52eb737f9cd26bb448ed9e83ad53d263, type: 2}
-    amount: 3
+    amount: 4
   <craftingTicks>k__BackingField: 90

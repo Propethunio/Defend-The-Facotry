@@ -22,8 +22,12 @@ MonoBehaviour:
   <width>k__BackingField: 2
   <height>k__BackingField: 2
   <cost>k__BackingField:
-  - item: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
-    amount: 2
+  - item: {fileID: 11400000, guid: 8fc0b69270915cf4cb148a6a2f71cad5, type: 2}
+    amount: 15
+  - item: {fileID: 11400000, guid: 4db6787ce26c29b4dbbd8ea6de7000a5, type: 2}
+    amount: 10
+  - item: {fileID: 11400000, guid: c7f8df6c3da392644994f4fca9f75334, type: 2}
+    amount: 5
   <isNotDestroyable>k__BackingField: 0
   <refundPenalty>k__BackingField: 0
   <shouldHighlight>k__BackingField: 1

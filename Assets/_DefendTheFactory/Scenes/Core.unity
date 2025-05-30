@@ -740,7 +740,7 @@ MonoBehaviour:
   startHp: 20
   showBeltDebug: 0
   generateMapAsync: 0
-  addResources: 1
+  addResources: 0
   items:
   - {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
   - {fileID: 11400000, guid: 1809c66aaf2dd1d448b21fe6857d4d23, type: 2}

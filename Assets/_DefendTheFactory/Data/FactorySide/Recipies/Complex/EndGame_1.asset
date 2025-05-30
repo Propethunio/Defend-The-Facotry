@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <inputItemList>k__BackingField:
   - item: {fileID: 11400000, guid: 18cd4d4cff9723c4681468654ae6d1d6, type: 2}
-    amount: 12
+    amount: 2
   - item: {fileID: 11400000, guid: 4db6787ce26c29b4dbbd8ea6de7000a5, type: 2}
-    amount: 4
+    amount: 1
   <outputItemList>k__BackingField:
   - item: {fileID: 11400000, guid: 314f28f3d5dd6cc418f701a27e5cb6f0, type: 2}
     amount: 1
-  <craftingTicks>k__BackingField: 150
+  <craftingTicks>k__BackingField: 120
