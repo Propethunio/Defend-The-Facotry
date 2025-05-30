@@ -43,6 +43,11 @@ public class WaveManager {
 		OnDayStart -= StartTickingToSetTime;
 	}
 
+	public void SetFirstDay() {
+		ticksAmount = (int)(wavesData.dayLength * .2f);
+		OnDayTick?.Invoke((float)ticksAmount / wavesData.dayLength);
+	}
+	
 	public void StartTickingTutorial() {
 		ticksAmount = currentDayData.startSpawnAfter;
 		timeTickSystem.OnTick += OnTick;

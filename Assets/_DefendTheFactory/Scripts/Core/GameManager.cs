@@ -24,7 +24,8 @@ public class GameManager : DependencyMonoBehaviour<GameManager> {
 
 	private void Init() {
 		SceneLoader.Instance.OnSceneGroupLoaded -= Init;
-		Injector.Resolve<WaveManager>().Init();
+		WaveManager waveManager = Injector.Resolve<WaveManager>();
+		waveManager.Init();
 		MapGenerator mapGenerator = new MapGenerator(GameSetupData.Instance.GetLevelData());
 		Injector.Resolve<BuildingSystem>().Init(mapGenerator.width, mapGenerator.height);
 		Injector.Resolve<BeltManager>().Init(showBeltDebug);
@@ -35,6 +36,7 @@ public class GameManager : DependencyMonoBehaviour<GameManager> {
 		HealthManager healthManager = Injector.Resolve<HealthManager>();
 		healthManager.SetStartHealth(startHp);
 		Injector.Resolve<TimeTickSystem>().SetIsTicking(true);
+		waveManager.SetFirstDay();
 
 		if (!addResources) return;
 

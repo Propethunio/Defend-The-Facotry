@@ -14,4 +14,6 @@ public enum FlyweightType {
 	ItemSteelIngot,
 	ItemSteelPlate,
 	ItemSteelRod,
+	IndustrialPlank,
+	ModularFrame,
 }

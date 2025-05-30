@@ -18,6 +18,7 @@ public class MainBasePopup : BaseBuildingPopup {
 
 	protected override void SetupStaticData(BasePlacedObject placedObject) {
 		machine = placedObject as MainBase;
+		if(machine.buildableDataSO.UpgradesList.Count == machine.level) return;
 		Res1Image.sprite = machine.buildableDataSO.UpgradesList[machine.level].cost[0].item.icon;
 		Res2Image.sprite = machine.buildableDataSO.UpgradesList[machine.level].cost[1].item.icon;
 		Res3Image.sprite = machine.buildableDataSO.UpgradesList[machine.level].cost[2].item.icon;
@@ -27,12 +28,14 @@ public class MainBasePopup : BaseBuildingPopup {
 	}
 
 	protected override void SetupDynamicData() {
+		if(machine.buildableDataSO.UpgradesList.Count == machine.level) return;
 		Res1AmountText.text = machine.buildableDataSO.UpgradesList[machine.level].cost[0].amount.ToString();
 		Res2AmountText.text = machine.buildableDataSO.UpgradesList[machine.level].cost[1].amount.ToString();
 		Res3AmountText.text = machine.buildableDataSO.UpgradesList[machine.level].cost[2].amount.ToString();
 	}
 
 	protected override void Subscribe() {
+		if(machine.buildableDataSO.UpgradesList.Count == machine.level) return;
 		UpgradeBtn.onClick.AddListener(UpgradeBtnClicked);
 	}
 

@@ -7,6 +7,7 @@ public class MainBase : BaseDataPlacedObject<MainBaseSO> {
 	private ItemsManager itemsManager;
 	private List<ConveyorBelt> inputBelts = new List<ConveyorBelt>();
 	private int beltsCount;
+	private ObjectOutline outline;
 
 	public int level { get; private set; }
 
@@ -20,6 +21,7 @@ public class MainBase : BaseDataPlacedObject<MainBaseSO> {
 
 	protected override void Setup() {
 		itemsManager = Injector.Resolve<ItemsManager>();
+		outline = GetComponent<ObjectOutline>();
 	}
 
 	public override void GridSetupDone() {
@@ -61,8 +63,8 @@ public class MainBase : BaseDataPlacedObject<MainBaseSO> {
 	}
 
 	public void UpgradeLevel() {
-		if(!CanUpgrade()) return;
-		
+		if (!CanUpgrade()) return;
+
 		for (int index = 0; index < buildableDataSO.UpgradesList[level].cost.Count; index++) {
 			ItemIntPair cost = buildableDataSO.UpgradesList[level].cost[index];
 			itemsManager.RemoveItems(cost.item, cost.amount);
@@ -70,15 +72,15 @@ public class MainBase : BaseDataPlacedObject<MainBaseSO> {
 
 		level++;
 
-		if (level > buildableDataSO.UpgradesList.Count) {
-			//WIN
-			Debug.Log("WIN!!!!!");
+		if (level == buildableDataSO.UpgradesList.Count) {
+			Injector.Resolve<GameManager>().GameWon();
+			return;
 		}
-		else {
-			GameObject newVis = Instantiate(buildableDataSO.UpgradesList[level - 1].upgradePrefab, visual.transform.position, visual.transform.rotation);
-			Destroy(visual);
-			visual = newVis;
-		}
+
+		GameObject newVis = Instantiate(buildableDataSO.UpgradesList[level - 1].upgradePrefab, visual.transform.position, visual.transform.rotation, transform);
+		Destroy(visual);
+		visual = newVis;
+		outline.Refresh();
 	}
 
 	private bool CanUpgrade() {
@@ -86,7 +88,7 @@ public class MainBase : BaseDataPlacedObject<MainBaseSO> {
 			ItemIntPair cost = buildableDataSO.UpgradesList[level].cost[index];
 			if (!itemsManager.CanAfford(cost.item, cost.amount)) return false;
 		}
-		
+
 		return true;
 	}
 }

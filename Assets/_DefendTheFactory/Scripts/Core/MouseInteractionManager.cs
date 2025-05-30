@@ -10,7 +10,7 @@ public class MouseInteractionManager {
 	private bool restrictClickOnResource;
 	private float lastResourceClickTime = -Mathf.Infinity;
 
-	private const float RESOURCE_CLICK_COOLDOWN = 0.5f;
+	private const float RESOURCE_CLICK_COOLDOWN = 0.33f;
 
 	public MouseInteractionManager() {
 		cam = Camera.main;

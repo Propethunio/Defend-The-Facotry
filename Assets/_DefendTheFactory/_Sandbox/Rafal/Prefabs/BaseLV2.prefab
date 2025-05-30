@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseLV2
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a488ce971519b30458e0c475385fe60d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -83,8 +88,40 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7417649408339631508}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a488ce971519b30458e0c475385fe60d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9108279233777792223}
   m_SourcePrefab: {fileID: 100100000, guid: a488ce971519b30458e0c475385fe60d, type: 3}
+--- !u!1 &2705843238868326281 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a488ce971519b30458e0c475385fe60d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2975893946639493848}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &9108279233777792223
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2705843238868326281}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 854843085989038667, guid: a488ce971519b30458e0c475385fe60d, type: 3}
 --- !u!4 &3370599875247066419 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a488ce971519b30458e0c475385fe60d,
@@ -153,6 +190,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Belt (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888960444931477414, guid: 27f79e08f7b1fe04695bc5632e07030a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -228,6 +270,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Belt
       objectReference: {fileID: 0}
+    - target: {fileID: 2888960444931477414, guid: 27f79e08f7b1fe04695bc5632e07030a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -301,6 +348,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Belt (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888960444931477414, guid: 27f79e08f7b1fe04695bc5632e07030a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1abca38e197a3845be27e2eabab9723, type: 3}
+  m_Name: IndustrailPlank
+  m_EditorClassIdentifier: 
+  type: 15
+  prefab: {fileID: 5102993921385397761, guid: 38413fc0752477145ac1e1ede8fda35c, type: 3}
+  <icon>k__BackingField: {fileID: 21300000, guid: 7f8265dabdd78634fb5f79d8a8d09e14,
+    type: 3}
+  <itemName>k__BackingField: IndustrailPlank

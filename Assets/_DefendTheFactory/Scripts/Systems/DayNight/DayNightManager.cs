@@ -63,6 +63,10 @@ public class DayNightManager : MonoBehaviour {
 		sunX = 0;
 		sunY = 0;
 	}
+
+	public void RotateSunPublic(float percent) {
+		RotateSun(percent);
+	}
 	
 	private void RotateSun(float percent) {
 		float targetX = Mathf.Lerp(0f, 180f, percent);

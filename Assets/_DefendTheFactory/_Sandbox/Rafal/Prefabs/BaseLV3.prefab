@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Belt (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2888960444931477414, guid: 27f79e08f7b1fe04695bc5632e07030a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -142,6 +147,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseLV3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8306ecec46940c74e8fde5731b99a43c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -157,7 +167,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 536637446403040245}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8306ecec46940c74e8fde5731b99a43c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1117257887359564889}
   m_SourcePrefab: {fileID: 100100000, guid: 8306ecec46940c74e8fde5731b99a43c, type: 3}
 --- !u!4 &5059231314313276339 stripped
 Transform:
@@ -165,6 +179,34 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4736864790999305304}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5583848635333652745 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8306ecec46940c74e8fde5731b99a43c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4736864790999305304}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1117257887359564889
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5583848635333652745}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2102418436322741429, guid: 8306ecec46940c74e8fde5731b99a43c, type: 3}
 --- !u!1001 &5001864170757250188
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -227,6 +269,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Belt (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888960444931477414, guid: 27f79e08f7b1fe04695bc5632e07030a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -301,6 +348,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Belt
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888960444931477414, guid: 27f79e08f7b1fe04695bc5632e07030a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

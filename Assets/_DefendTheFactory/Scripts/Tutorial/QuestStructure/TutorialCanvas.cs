@@ -64,10 +64,7 @@ public class TutorialCanvas : MonoBehaviour {
 	}
 
 	private void ExecuteNextQuestWithAnimation() {
-		if (currentQuestIndex >= questChain.Quests.Count) {
-			Injector.Resolve<GameManager>().GameWon();
-			return;
-		}
+		if (currentQuestIndex >= questChain.Quests.Count) return;
 
 		float containerWidth = questPanel.rect.width;
 		Vector2 originalPos = questPanel.anchoredPosition;

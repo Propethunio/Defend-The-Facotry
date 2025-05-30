@@ -38,7 +38,7 @@ MonoBehaviour:
     type: 3}
   <groundPrefab>k__BackingField: {fileID: 8733235323630270510, guid: d8df5d0e31d3d824cb092aee26932333,
     type: 3}
-  <baseData>k__BackingField: {fileID: 11400000, guid: 880c3e562302de4458612e4919efea08,
+  <baseData>k__BackingField: {fileID: 11400000, guid: 6007c0d1287b0014dbf8e895b383508b,
     type: 2}
   <basePaddingPreventingObjectGeneration>k__BackingField: 3
   <portalData>k__BackingField: {fileID: 11400000, guid: 1c4118d133fbf1f4f88da15bdfa8e85e,

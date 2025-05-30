@@ -23,4 +23,9 @@ public class ObjectOutline : MonoBehaviour {
             rend.renderingLayerMask = enable ? originalLayer | outlineLayer : originalLayer;
         }
     }
+
+    public void Refresh() {
+        renderers = TryGetComponent<Renderer>(out var meshRenderer) ? new[] { meshRenderer } : GetComponentsInChildren<Renderer>();
+        originalLayer = renderers[0].renderingLayerMask;
+    }
 }

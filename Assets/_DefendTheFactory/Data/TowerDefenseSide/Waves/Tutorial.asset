@@ -23,7 +23,7 @@ MonoBehaviour:
     <spawnAtNightAmount>k__BackingField: 3
     <chanceToSpawnNight>k__BackingField: 17
     <enemiesDuringNight>k__BackingField:
-    - <enemy>k__BackingField: {fileID: 11400000, guid: 26cb6c43fb8ab4340a3f62c42559b181,
+    - <enemy>k__BackingField: {fileID: 11400000, guid: dae0971d52e9c5d4c80e964af546f1da,
         type: 2}
       <weight>k__BackingField: 1
   - <startSpawnAfter>k__BackingField: 42

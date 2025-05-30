@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <QuestStepDsc>k__BackingField: Connect Lumberjack to Main Base using Conveyor Belts
   buildingOne: {fileID: 11400000, guid: 79da1a098836b2443a6717b938bf8c33, type: 2}
-  buildingTwo: {fileID: 11400000, guid: 880c3e562302de4458612e4919efea08, type: 2}
+  buildingTwo: {fileID: 11400000, guid: 6007c0d1287b0014dbf8e895b383508b, type: 2}
