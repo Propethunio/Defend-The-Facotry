@@ -1,18 +1,37 @@
 using UnityEngine;
 
-public class MinerVisualRange : MonoBehaviour {
-    [SerializeField] private Transform centerPosition;
-    [SerializeField] private GatheringMachineSO _data;
-    [SerializeField] private Color _discColor;
-    [SerializeField] private Color _circleColor;
+public class MinerRangeCircle : MonoBehaviour {
+	[SerializeField] private GatheringMachineSO _data;
+	[SerializeField] private int segments = 64;
+	[SerializeField] private Color circleColor = Color.yellow;
 
-    private void OnDrawGizmos() {
-        Gizmos.color = _discColor;
+	private LineRenderer lineRenderer;
 
-        // Draw a filled disc (use Handles for better visualization in Scene view)
-#if UNITY_EDITOR
-        UnityEditor.Handles.color = _discColor;
-        UnityEditor.Handles.DrawSolidDisc(centerPosition.position, Vector3.up, _data.resourceSearchRange);
-#endif
-    }
+	private void Awake() {
+		lineRenderer = gameObject.AddComponent<LineRenderer>();
+		lineRenderer.useWorldSpace = false;
+		lineRenderer.loop = true;
+		lineRenderer.positionCount = segments;
+		lineRenderer.startWidth = 0.15f;
+		lineRenderer.endWidth = 0.15f;
+		lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+		lineRenderer.startColor = circleColor;
+		lineRenderer.endColor = circleColor;
+	}
+
+	private void Start() {
+		DrawCircle();
+	}
+
+	private void DrawCircle() {
+		float radius = _data.resourceSearchRange;
+		Vector3[] points = new Vector3[segments];
+
+		for (int i = 0; i < segments; i++) {
+			float angle = i * Mathf.PI * 2f / segments;
+			points[i] = new Vector3(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius);
+		}
+
+		lineRenderer.SetPositions(points);
+	}
 }

@@ -134,7 +134,9 @@ MonoBehaviour:
   questStepUiPrefab: {fileID: 8540080562046771598, guid: c7c56a9a84586264a8a6a80cd10ce117,
     type: 3}
   questTitleText: {fileID: 6585416727274591668}
-  <clock>k__BackingField: {fileID: 0}
+  <hudClock>k__BackingField: {fileID: 0}
+  <hudBuildingsMenu>k__BackingField: {fileID: 0}
+  <hudStatistics>k__BackingField: {fileID: 0}
 --- !u!1 &4375014759433171367
 GameObject:
   m_ObjectHideFlags: 0

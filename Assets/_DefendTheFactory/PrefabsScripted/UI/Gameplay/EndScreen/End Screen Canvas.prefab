@@ -472,7 +472,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &1787593220695392385
 MonoBehaviour:
@@ -527,6 +527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   endScreen: {fileID: 4962774630824862697}
+  endText: {fileID: 646862840434689967}
   playAgainButton: {fileID: 6641232716203500665}
   mainMenuButton: {fileID: 3377580777933008167}
 --- !u!1 &4962774630824862697

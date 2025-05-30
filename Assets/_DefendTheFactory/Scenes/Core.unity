@@ -848,7 +848,7 @@ MonoBehaviour:
   dayAmbientLight: {r: 1, g: 0.9839677, b: 0.8820755, a: 0}
   nightAmbientLight: {r: 0.62352943, g: 0.6862745, b: 0.85490197, a: 0}
   globalVolume: {fileID: 832575518}
-  skyboxMaterial: {fileID: 2100000, guid: 2947bf502fef59b4c8b23ddb146500cb, type: 2}
+  skyboxMaterial: {fileID: 2100000, guid: e99a06fd88afa6547b3d12455f596ef6, type: 2}
 --- !u!1 &1730453760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,7 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemSO_Refs:
-    ironOre: {fileID: 11400000, guid: 71bf827624f06f945adcd66d1503fdbc, type: 2}
+    ironOre: {fileID: 11400000, guid: 52eb737f9cd26bb448ed9e83ad53d263, type: 2}
   pfBeltDebugVisualNode: {fileID: 3320042585266239494, guid: 91bc3ec5c613ad040bec8a3aa6b03c08,
     type: 3}
   pfBeltDebugVisualLine: {fileID: 3320042585266239494, guid: 05f21454b993e99498de2ef39a7d26f9,

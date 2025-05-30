@@ -39,7 +39,12 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 		input.GameInput.Enable();
 	}
 
-	private void DisableGameInput() {
+	private void EnableMenuInput() {
+		input.Disable();
+		input.MenuInput.Enable();
+	}
+
+	private void DisableAllInput() {
 		input.Disable();
 	}
 
@@ -62,6 +67,7 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 		input.GameInput.TimeFast.performed += TimeFast_performed;
 		input.GameInput.TimeExtraFast.performed += TimeExtraFast_performed;
 		input.GameInput.Back.performed += Back_performed;
+		input.MenuInput.Back.performed += Back_performed;
 		input.GameInput.BuildingMenu.performed += BuildingMenu_performed;
 		input.GameInput.BuildingRotation.performed += BuildingRotation_performed;
 		input.GameInput.Hotbar1.performed += Hotbar1_performed;
@@ -93,6 +99,7 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 		input.GameInput.TimeFast.performed -= TimeFast_performed;
 		input.GameInput.TimeExtraFast.performed -= TimeExtraFast_performed;
 		input.GameInput.Back.performed -= Back_performed;
+		input.MenuInput.Back.performed -= Back_performed;
 		input.GameInput.BuildingMenu.performed -= BuildingMenu_performed;
 		input.GameInput.BuildingRotation.performed -= BuildingRotation_performed;
 		input.GameInput.Hotbar1.performed -= Hotbar1_performed;
@@ -107,9 +114,18 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 
 	private void OnGameOver() {
 		HandleResetBackState();
-		DisableGameInput();
+		DisableAllInput();
 	}
-	
+
+	public void ToggleMenuInput(bool toggle) {
+		if (toggle) {
+			EnableMenuInput();
+		}
+		else {
+			EnableGameInput();
+		}
+	}
+
 	public void RegisterBackAction(Action action) {
 		backStackActions.Push(action);
 	}
@@ -131,10 +147,10 @@ public class InputManager : DependencyMonoBehaviour<InputManager> {
 
 	public void HandleResetBackState() {
 		if (backStackActions.Count == 0) return;
-		
+
 		HandleBack();
 	}
-	
+
 	private void HandleBack() {
 		if (backStackActions.Count > 0) {
 			backStackActions.Pop()?.Invoke();

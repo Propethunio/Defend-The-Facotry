@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 312247860716316089}
-  - component: {fileID: 7004525309900853952}
   m_Layer: 0
   m_Name: Lumberjack_Vis
   m_TagString: Untagged
@@ -35,22 +34,6 @@ Transform:
   - {fileID: 5376463596900321243}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7004525309900853952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5879861430182639634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2447defee34d0504ba937b30bd0dc9c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  centerPosition: {fileID: 5376463596900321243}
-  _data: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
-  _discColor: {r: 0, g: 1, b: 0.34432507, a: 0.14901961}
-  _circleColor: {r: 0.9622642, g: 0.09531862, b: 0.09531862, a: 0.6}
 --- !u!1 &7640757976539325041
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,8 +43,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5376463596900321243}
+  - component: {fileID: 7119793765053543836}
+  - component: {fileID: 5225100421066369562}
   m_Layer: 0
-  m_Name: Conter
+  m_Name: Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,6 +67,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 312247860716316089}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7119793765053543836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640757976539325041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a989a17330b04c6fb8f91aa41ac14471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5225100421066369562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640757976539325041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2447defee34d0504ba937b30bd0dc9c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  centerPosition: {fileID: 0}
+  _data: {fileID: 11400000, guid: 0bdeae164eec76d4da97eb4a6d8e3273, type: 2}
+  segments: 64
+  circleColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1001 &2745734227013624478
 PrefabInstance:
   m_ObjectHideFlags: 0

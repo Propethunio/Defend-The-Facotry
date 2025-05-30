@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class TargetPickingTower : BaseTower<TargetPickingTowerSO> {
     [SerializeField] private Transform rotatePointTransform;
+    [SerializeField] private Arrow arrowPrefab;
+    [SerializeField] private Transform arrowSpawnPoint;
+    public float arrowSpeed;
 
     private EnemyLogic currentTarget;
     private TowerFocusType focusType;
@@ -23,9 +26,32 @@ public class TargetPickingTower : BaseTower<TargetPickingTowerSO> {
         base.DestroySelf();
     }
 
-    protected override void Attack() {
-        CalculateTarget();
-        currentTarget.DamageMe(buildableDataSO.damage);
+    protected override IEnumerator AttackCycle() {
+        readyToAttack = false;
+
+        while (enemiesInRange.Count > 0) {
+            if (buildableDataSO.shouldRotate) {
+                if (IsFacingTarget()) {
+                    Attack();
+                    yield return new WaitForSeconds(cooldownTimer);   
+                }
+                else {
+                    yield return null;   
+                }
+            }
+            else {
+                Attack();
+                yield return new WaitForSeconds(cooldownTimer);   
+            }
+        }
+
+        readyToAttack = true;
+    }
+
+    protected override void Attack()
+    {
+        Arrow arrow = Instantiate(arrowPrefab, arrowSpawnPoint.position, Quaternion.identity);
+        arrow.Initialize(currentTarget, buildableDataSO.damage, arrowSpeed);
     }
 
     private IEnumerator RotateToTarget() {
@@ -42,6 +68,20 @@ public class TargetPickingTower : BaseTower<TargetPickingTowerSO> {
         }
 
         rotationCoroutine = null;
+    }
+    
+    private bool IsFacingTarget() {
+        if (currentTarget == null) return false;
+
+        Vector3 directionToTarget = currentTarget.transform.position - rotatePointTransform.position;
+        directionToTarget.y = 0;
+
+        Vector3 forward = rotatePointTransform.forward;
+        directionToTarget.Normalize();
+
+        float angle = Vector3.Angle(forward, -directionToTarget);
+
+        return angle <= 5f;
     }
 
     private void Subscribe() {

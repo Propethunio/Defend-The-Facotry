@@ -65,8 +65,7 @@ public class TutorialCanvas : MonoBehaviour {
 
 	private void ExecuteNextQuestWithAnimation() {
 		if (currentQuestIndex >= questChain.Quests.Count) {
-			Debug.Log("WIN");
-			// TODO: END TUTORIAL
+			Injector.Resolve<GameManager>().GameWon();
 			return;
 		}
 

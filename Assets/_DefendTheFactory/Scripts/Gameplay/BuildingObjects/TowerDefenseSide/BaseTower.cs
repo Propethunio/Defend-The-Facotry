@@ -5,8 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public abstract class BaseTower<T> : BaseDataPlacedObject<T> where T : BaseTowerSO {
     protected HashSet<EnemyLogic> enemiesInRange = new HashSet<EnemyLogic>();
-    private bool readyToAttack = true;
-    private float cooldownTimer;
+    protected bool readyToAttack = true;
+    protected float cooldownTimer;
 
     protected override void Initialize(Vector2Int origin, BuildingDir dir, T buildableDataSO) { }
 
@@ -17,6 +17,10 @@ public abstract class BaseTower<T> : BaseDataPlacedObject<T> where T : BaseTower
         rangeCollider.radius = buildableDataSO.range;
         cooldownTimer = 1f / buildableDataSO.attackSpeed;
     }
+    
+    protected abstract IEnumerator AttackCycle();
+    
+    protected abstract void Attack();
 
     private void OnTriggerEnter(Collider other) {
         EnemyLogic enemy = other.gameObject.GetComponent<EnemyLogic>();
@@ -37,21 +41,8 @@ public abstract class BaseTower<T> : BaseDataPlacedObject<T> where T : BaseTower
         enemiesInRange.Remove(enemy);
     }
 
-    private IEnumerator AttackCycle() {
-        readyToAttack = false;
-
-        while (enemiesInRange.Count > 0) {
-            Attack();
-            yield return new WaitForSeconds(cooldownTimer);
-        }
-
-        readyToAttack = true;
-    }
-
     private void RemoveKilledEnemy(EnemyLogic enemy) {
         enemy.OnDeath -= RemoveKilledEnemy;
         enemiesInRange.Remove(enemy);
     }
-
-    protected abstract void Attack();
 }

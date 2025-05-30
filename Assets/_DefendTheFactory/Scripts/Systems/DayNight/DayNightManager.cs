@@ -42,16 +42,28 @@ public class DayNightManager : MonoBehaviour {
 
 	private void OnDestroy() {
 		Unsubscribe();
+		DOTween.Kill("SunX");
+		DOTween.Kill("SunY");
 	}
 
 	private void Subscribe() {
 		waveManager.OnDayTick += RotateSun;
+		waveManager.OnNightStart += ResetSunPivot;
 	}
 
 	private void Unsubscribe() {
 		waveManager.OnDayTick -= RotateSun;
+		waveManager.OnNightStart -= ResetSunPivot;
 	}
 
+	private void ResetSunPivot() {
+		DOTween.Kill("SunX");
+		DOTween.Kill("SunY");
+		sunPivot.localRotation = Quaternion.Euler(0, 0, 0);
+		sunX = 0;
+		sunY = 0;
+	}
+	
 	private void RotateSun(float percent) {
 		float targetX = Mathf.Lerp(0f, 180f, percent);
 		float targetY = Mathf.Sin(percent * Mathf.PI) * 23.5f;
