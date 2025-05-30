@@ -32,7 +32,7 @@ MonoBehaviour:
   <refundPenalty>k__BackingField: 0
   <shouldHighlight>k__BackingField: 1
   <buildingPopupType>k__BackingField: 6
-  <outputBeltPosition>k__BackingField: {x: 0, y: 0}
+  <outputBeltPosition>k__BackingField: {x: 1, y: 0}
   <inputBeltPositions>k__BackingField:
   - <beltPosition>k__BackingField: {x: 0, y: 1}
     <beltDir>k__BackingField: 2
