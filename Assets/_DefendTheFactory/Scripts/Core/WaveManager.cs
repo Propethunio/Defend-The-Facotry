@@ -44,6 +44,8 @@ public class WaveManager {
 	}
 
 	public void SetFirstDay() {
+		if(GameSetupData.Instance.IsTutorialLevel()) return;
+		
 		ticksAmount = (int)(wavesData.dayLength * .2f);
 		OnDayTick?.Invoke((float)ticksAmount / wavesData.dayLength);
 	}

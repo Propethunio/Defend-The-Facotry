@@ -30,5 +30,5 @@ MonoBehaviour:
   <buildingPopupType>k__BackingField: 5
   <damage>k__BackingField: 6
   <attackSpeed>k__BackingField: 1
-  <range>k__BackingField: 1
+  <range>k__BackingField: 1.5
   <canTargetFlying>k__BackingField: 0

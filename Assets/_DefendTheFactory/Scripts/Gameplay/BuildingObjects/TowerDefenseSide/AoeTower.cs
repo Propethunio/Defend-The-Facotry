@@ -24,7 +24,9 @@ public class AoeTower : BaseTower<AoeTowerSO> {
 	}
 
 	protected override void Attack() {
-		foreach (EnemyLogic enemy in enemiesInRange) {
+		HashSet<EnemyLogic> enemiesInRangeBuffer = enemiesInRange;
+		
+		foreach (EnemyLogic enemy in enemiesInRangeBuffer) {
 			enemy.DamageMe(buildableDataSO.damage);
 		}
 
