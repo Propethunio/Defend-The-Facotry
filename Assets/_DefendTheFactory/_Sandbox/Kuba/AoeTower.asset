@@ -15,6 +15,7 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: a9431166cf20d8f479af0274b1a8ffcc,
     type: 3}
   <nameString>k__BackingField: Spike Tower
+  <description>k__BackingField: Short range tower that shoots all enemies in range
   <prefab>k__BackingField: {fileID: 5560026393050196790, guid: 4d014494a75adc442955a351580c1914,
     type: 3}
   <visual>k__BackingField: {fileID: 5560026393050196790, guid: 81b1c502de20fca4aab05aaf8c155948,
@@ -31,6 +32,6 @@ MonoBehaviour:
   <shouldHighlight>k__BackingField: 0
   <buildingPopupType>k__BackingField: 5
   <damage>k__BackingField: 4
-  <attackSpeed>k__BackingField: 1
+  <attackSpeed>k__BackingField: 0.4
   <range>k__BackingField: 1.5
   <canTargetFlying>k__BackingField: 0

@@ -15,6 +15,7 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: 1619c494a9795be45b9d17c65f8b7a33,
     type: 3}
   <nameString>k__BackingField: Conveyor Belt
+  <description>k__BackingField: Moves items across the factory
   <prefab>k__BackingField: {fileID: 7788273569947618330, guid: d7a93aabf0fd4954681931fb8e54feee,
     type: 3}
   <visual>k__BackingField: {fileID: 7788273569947618330, guid: 59b18ac08f34144498c33c2dcb9b8acf,

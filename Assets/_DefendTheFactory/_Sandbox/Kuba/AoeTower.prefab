@@ -107,7 +107,7 @@ MonoBehaviour:
   - {fileID: 2840541934056649248}
   - {fileID: 3013084691549461176}
   - {fileID: 1076127624026573792}
-  arrowSpeed: 8
+  arrowSpeed: 7
 --- !u!1 &1400676529126493742
 GameObject:
   m_ObjectHideFlags: 0

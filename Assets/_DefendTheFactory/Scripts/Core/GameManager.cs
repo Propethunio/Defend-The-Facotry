@@ -8,6 +8,7 @@ public class GameManager : DependencyMonoBehaviour<GameManager> {
 	[SerializeField] private bool showBeltDebug;
 	[SerializeField] private bool generateMapAsync;
 	[SerializeField] private bool addResources;
+	[SerializeField] private bool debugSpawnItem;
 	
 	public List<ItemSO> items;
 
@@ -57,7 +58,7 @@ public class GameManager : DependencyMonoBehaviour<GameManager> {
 	}
 	
 	private void HandleDebugSpawnItem() {
-		if (!Input.GetKeyDown(KeyCode.I)) return;
+		if(!debugSpawnItem || !Input.GetKeyDown(KeyCode.I)) return;
 
 		BasePlacedObject placedObject = Injector.Resolve<BuildingSystem>().GetGridObject(Injector.Resolve<BuildingSystem>().GetMouseWorldSnappedPosition()).placedObject;
 		if (!placedObject || placedObject is not ConveyorBelt belt || belt.startItem) return;

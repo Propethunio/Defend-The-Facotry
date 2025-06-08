@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BuildingBtn : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+public class BuildingBtn : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler {
 	[SerializeField] private Image glow;
 	[SerializeField] private Image icon;
 
@@ -12,6 +13,8 @@ public class BuildingBtn : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 	private RectTransform canvasRect;
 	private Image image;
 	private bool isDummy = true;
+
+	public event Action<BaseBuildableObjectSO, BuildingBtn> onBtnClick;
 
 	public void Init(BaseBuildableObjectSO data, RectTransform dragDropPanel, RectTransform mainCanvasRect) {
 		buildableObject = data;
@@ -28,6 +31,12 @@ public class BuildingBtn : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 	}
 
 	public void OnPointerDown(PointerEventData eventData) { }
+
+	public void OnPointerClick(PointerEventData eventData) {
+		if (isDummy) return;
+
+		onBtnClick?.Invoke(buildableObject, this);
+	}
 
 	public void OnBeginDrag(PointerEventData eventData) {
 		if (isDummy) return;

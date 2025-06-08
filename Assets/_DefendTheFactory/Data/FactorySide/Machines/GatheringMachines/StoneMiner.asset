@@ -15,6 +15,7 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: 743f9a292fc44ba46b0f0079bd8175f6,
     type: 3}
   <nameString>k__BackingField: Stone Miner
+  <description>k__BackingField: Extracts rock from stone deposits
   <prefab>k__BackingField: {fileID: 312247860716316089, guid: d41dcc8876bbef34daa0ff42a5f9f9ed,
     type: 3}
   <visual>k__BackingField: {fileID: 312247860716316089, guid: 053111e9e1e857f4da3da187c60df293,

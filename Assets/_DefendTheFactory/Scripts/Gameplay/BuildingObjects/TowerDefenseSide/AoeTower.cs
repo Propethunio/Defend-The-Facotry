@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AoeTower : BaseTower<AoeTowerSO> {
@@ -24,16 +25,16 @@ public class AoeTower : BaseTower<AoeTowerSO> {
 	}
 
 	protected override void Attack() {
-		HashSet<EnemyLogic> enemiesInRangeBuffer = enemiesInRange;
-		
-		foreach (EnemyLogic enemy in enemiesInRangeBuffer) {
+		var enemiesCopy = enemiesInRange.ToList();
+
+		foreach (EnemyLogic enemy in enemiesCopy) {
 			enemy.DamageMe(buildableDataSO.damage);
 		}
 
 		for (int index = 0; index < arrowSpawnPoints.Count; index++) {
 			Transform spawnPoint = arrowSpawnPoints[index];
 			AoeBullet arrow = Instantiate(arrowPrefab, spawnPoint.position, Quaternion.identity);
-			arrow.Initialize(towerCenter.position - spawnPoint.position, arrowSpeed);
+			arrow.Initialize(spawnPoint.position - towerCenter.position, arrowSpeed);
 		}
 	}
 }

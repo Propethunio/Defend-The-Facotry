@@ -15,6 +15,7 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: d9ade2c2d22b05d4c91e702aa89ff5f2,
     type: 3}
   <nameString>k__BackingField: Archer Tower
+  <description>k__BackingField: Single target tower that can shoot all enemies
   <prefab>k__BackingField: {fileID: 5560026393050196790, guid: 772d2a5cbcc06ea4da28052cc6a5244b,
     type: 3}
   <visual>k__BackingField: {fileID: 5560026393050196790, guid: bade24733a32b9b408210b46aeb1499d,
@@ -30,8 +31,8 @@ MonoBehaviour:
   <refundPenalty>k__BackingField: 0.5
   <shouldHighlight>k__BackingField: 1
   <buildingPopupType>k__BackingField: 4
-  <damage>k__BackingField: 14
-  <attackSpeed>k__BackingField: 0.5
+  <damage>k__BackingField: 10
+  <attackSpeed>k__BackingField: 0.45
   <range>k__BackingField: 6.5
   <canTargetFlying>k__BackingField: 1
   <shouldRotate>k__BackingField: 0

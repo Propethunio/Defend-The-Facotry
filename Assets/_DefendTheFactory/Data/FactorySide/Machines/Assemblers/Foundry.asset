@@ -15,6 +15,7 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: 772b372b4357155428f6feebcb00ca5b,
     type: 3}
   <nameString>k__BackingField: Foundry
+  <description>k__BackingField: Smelts steel ingots or burns wood into coal
   <prefab>k__BackingField: {fileID: 312247860716316089, guid: 010075b2cbda79a42bca5f51af55131a,
     type: 3}
   <visual>k__BackingField: {fileID: 312247860716316089, guid: cc677269a0d306c43bbe69603ea7ca31,

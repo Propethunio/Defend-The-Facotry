@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 16
   prefab: {fileID: 5102993921385397761, guid: c8147f98016bb554795532812198856e, type: 3}
-  <icon>k__BackingField: {fileID: 21300000, guid: 3e6150b89be7f484a9d108004e91e1c3,
+  <icon>k__BackingField: {fileID: 21300000, guid: 326275ec5f4861246bf0cb7384dd32cb,
     type: 3}
   <itemName>k__BackingField: Modular Frame

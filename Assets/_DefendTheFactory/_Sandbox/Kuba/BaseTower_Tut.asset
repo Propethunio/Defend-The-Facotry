@@ -15,6 +15,7 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: 5c0ae7744a943854d92b780d5c339877,
     type: 3}
   <nameString>k__BackingField: Basic Tower
+  <description>k__BackingField: Very simple tower that shoots rock at enemies
   <prefab>k__BackingField: {fileID: 5560026393050196790, guid: 063a38bb406a3aa4ebbea57cfb4215ab,
     type: 3}
   <visual>k__BackingField: {fileID: 5560026393050196790, guid: 465486dcb24a82c43b4f2020d5a94748,

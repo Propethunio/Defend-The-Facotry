@@ -15,6 +15,7 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: 3dda3c0191435c64494eaca61b0c0d33,
     type: 3}
   <nameString>k__BackingField: Architect Forge
+  <description>k__BackingField: Crafts advanced parts from wood and steel
   <prefab>k__BackingField: {fileID: 312247860716316089, guid: dbd0bb71cef63a24ab67a0931337e564,
     type: 3}
   <visual>k__BackingField: {fileID: 312247860716316089, guid: 37252ebe7396b0f448578db7b35be58f,

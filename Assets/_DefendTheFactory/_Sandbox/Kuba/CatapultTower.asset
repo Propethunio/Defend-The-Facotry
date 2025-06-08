@@ -15,6 +15,7 @@ MonoBehaviour:
   <icon>k__BackingField: {fileID: 21300000, guid: cfcbba85256556a418884f7252c35058,
     type: 3}
   <nameString>k__BackingField: Catapult
+  <description>k__BackingField: Deals splash damage but can target only ground enemies
   <prefab>k__BackingField: {fileID: 5560026393050196790, guid: e452cc9c23f03624a8bdc88a08f2da16,
     type: 3}
   <visual>k__BackingField: {fileID: 5560026393050196790, guid: b97032d51e153ee4bb1413a37ab2d4f0,
@@ -32,9 +33,9 @@ MonoBehaviour:
   <refundPenalty>k__BackingField: 0.5
   <shouldHighlight>k__BackingField: 1
   <buildingPopupType>k__BackingField: 4
-  <damage>k__BackingField: 20
-  <attackSpeed>k__BackingField: 0.25
-  <range>k__BackingField: 8.5
+  <damage>k__BackingField: 16
+  <attackSpeed>k__BackingField: 0.2
+  <range>k__BackingField: 18
   <canTargetFlying>k__BackingField: 0
   <shouldRotate>k__BackingField: 0
   <rotationSpeed>k__BackingField: 0

@@ -9,7 +9,7 @@ public class AoeBullet : MonoBehaviour {
 	public void Initialize(Vector3 direction, float moveSpeed) {
 		moveDirection = direction.normalized;
 		speed = moveSpeed;
-		transform.rotation = Quaternion.LookRotation(Vector3.forward, moveDirection); // 2D rotation
+		transform.rotation = Quaternion.LookRotation(moveDirection, Vector3.up);
 	}
 
 	private void Update() {

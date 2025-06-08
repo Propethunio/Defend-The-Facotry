@@ -5,6 +5,7 @@ using UnityEngine;
 public class BaseBuildableObjectSO : ScriptableObject {
 	[field: SerializeField] public Sprite icon { get; private set; }
 	[field: SerializeField, InspectorName("Name")] public string nameString { get; private set; }
+	[field: SerializeField] public string description { get; private set; }
 	[field: SerializeField] public Transform prefab { get; private set; }
 	[field: SerializeField] public Transform visual { get; private set; }
 	[field: SerializeField] public int width { get; private set; }
